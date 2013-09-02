@@ -17,5 +17,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
+        <activity android:theme="@style/Theme.AppCompat.Light"
+            android:name="edu.northwestern.cbits.ic_template.JavascriptActivity"
+            android:label="@string/app_name">
+        </activity>
+	</application>
 </manifest>
