@@ -26,13 +26,6 @@ public class JavascriptActivity extends ActionBarActivity implements CordovaInte
 		
 		CordovaWebView cordova = (CordovaWebView) this.findViewById(R.id.cordova_view);
 
-//		cordova.setStringProperty("loadingDialog", "Title,Message"); // show loading dialog
-//		cordova.setStringProperty("errorUrl", "file:///android_asset/www/error.html"); // if error loading file in super.loadUrl().
-
-		// super.appView.clearCache(true);
-
-		// super.setIntegerProperty("splashscreen", R.drawable.splash); // load splash.jpg image from the resource drawable directory
-
 		cordova.loadUrl("file:///android_asset/www/index.html", 100); // show splash screen 3 sec before loading app
 	}
 
@@ -83,7 +76,6 @@ public class JavascriptActivity extends ActionBarActivity implements CordovaInte
 	@Override
 	public Activity getActivity() 
 	{
-		// TODO Auto-generated method stub
 		return this;
 	}
 
