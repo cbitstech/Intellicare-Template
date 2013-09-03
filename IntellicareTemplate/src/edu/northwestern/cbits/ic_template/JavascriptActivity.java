@@ -3,18 +3,19 @@ package edu.northwestern.cbits.ic_template;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.apache.cordova.CordovaInterface;
-import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
+import org.apache.cordova.api.CordovaInterface;
+import org.apache.cordova.api.CordovaPlugin;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-public class JavascriptActivity extends Activity implements CordovaInterface
+public class JavascriptActivity extends ActionBarActivity implements CordovaInterface
 {
 	private final ExecutorService _threadPool = Executors.newCachedThreadPool();
 	
@@ -63,29 +64,36 @@ public class JavascriptActivity extends Activity implements CordovaInterface
 		return true;
 	}
 
+	@Override
 	public void startActivityForResult(CordovaPlugin command, Intent intent, int requestCode) 
 	{
 		// TODO Auto-generated method stub
 	}
 
+	@Override
 	public void setActivityResultCallback(CordovaPlugin plugin) 
 	{
 		// TODO Auto-generated method stub
 	}
 
+	@Override
 	public Activity getActivity() 
 	{
+		// TODO Auto-generated method stub
 		return this;
 	}
 
+	@Override
 	public Object onMessage(String id, Object data) 
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public ExecutorService getThreadPool() 
 	{
+		// TODO Auto-generated method stub
 		return this._threadPool;
 	}
 }
