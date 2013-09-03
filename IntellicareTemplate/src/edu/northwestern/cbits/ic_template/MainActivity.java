@@ -33,6 +33,11 @@ public class MainActivity extends ActionBarActivity
 				this.startActivity(cordovaIntent);
 				
 				break;
+			case R.id.action_drawables:
+				Intent drawablesIntent = new Intent(this, DrawablesActivity.class);
+				this.startActivity(drawablesIntent);
+				
+				break;
 				
 			case R.id.action_settings:
 				Toast.makeText(this, "tOdO: sEtTiNgS aCtiViTy", Toast.LENGTH_LONG).show();

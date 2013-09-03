@@ -5,6 +5,9 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     
+    <string name="action_drawables">Available Icons</string>
     <string name="action_native">Native Activity</string>
     <string name="action_cordova">Cordova/Javascript Activity</string>
+
+    <string name="title_drawables_activity">Available Icons</string>
 </resources>

@@ -54,7 +54,11 @@ public class JavascriptActivity extends ActionBarActivity implements CordovaInte
 				this.startActivity(nativeIntent);
 				
 				break;
+			case R.id.action_drawables:
+				Intent drawablesIntent = new Intent(this, DrawablesActivity.class);
+				this.startActivity(drawablesIntent);
 				
+				break;
 			case R.id.action_settings:
 				Toast.makeText(this, "tOdO: sEtTiNgS aCtiViTy", Toast.LENGTH_LONG).show();
 				
