@@ -1,5 +1,7 @@
 package edu.northwestern.cbits.ic_template;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -9,10 +11,21 @@ import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity 
 {
+	private static final String APP_ID = "429a32046c4a625e42bfa6aa00fa5f81";
+
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_main);
+
+		UpdateManager.register(this, APP_ID);
+	}
+	
+	public void onResume()
+	{
+		super.onResume();
+		
+		CrashManager.register(this, APP_ID);
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) 
