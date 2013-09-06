@@ -51,6 +51,11 @@ public class MainActivity extends ConsentedActivity
 				this.startActivity(drawablesIntent);
 				
 				break;
+			case R.id.action_rating:
+				Intent ratingIntent = new Intent(this, RatingActivity.class);
+				this.startActivity(ratingIntent);
+				
+				break;
 			case R.id.action_settings:
 				Toast.makeText(this, "tOdO: sEtTiNgS aCtiViTy", Toast.LENGTH_LONG).show();
 				

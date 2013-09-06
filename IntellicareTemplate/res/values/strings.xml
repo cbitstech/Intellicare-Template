@@ -8,6 +8,7 @@
     <string name="action_drawables">Available Icons</string>
     <string name="action_native">Native Activity</string>
     <string name="action_cordova">HTML5 Activity</string>
+    <string name="action_rating">Rating Activity</string>
     
     <string name="title_drawables_activity">Available Icons</string>
 
@@ -15,6 +16,15 @@
     <string name="action_consent">Consent Activity</string>
     <string name="button_consent">I consent. Continue&#8230;</string>
     <string name="button_quit">Exit</string>
+
+    <string name="title_rating">Rate your experience</string>
+    <string name="desc_rating">How well did this app work for you?</string>
+    <string name="terrible_rating">Terrible</string>
+    <string name="great_rating">Great</string>
+    <string name="doing_better">How can this app be better (for you)?</string>
+    <string name="doing_better_placeholder">Enter suggestions. (Optional)</string>
+    <string name="action_submit">Submit</string>
     
     <color name="bottom_bar_gray">#fff3f3f3</color>
+    <color name="test_color">#ff800000</color>
 </resources>

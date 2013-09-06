@@ -5,6 +5,11 @@
         robot:showAsAction="always"
         android:title="@string/action_drawables"/>
     <item
+        android:id="@+id/action_rating"
+        android:icon="@drawable/ic_action_star_5"
+        robot:showAsAction="always"
+        android:title="@string/action_rating"/>
+    <item
         android:id="@+id/action_cordova"
         android:icon="@drawable/ic_action_html5"
         robot:showAsAction="always"
