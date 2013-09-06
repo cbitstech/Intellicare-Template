@@ -8,6 +8,13 @@
     <string name="action_drawables">Available Icons</string>
     <string name="action_native">Native Activity</string>
     <string name="action_cordova">HTML5 Activity</string>
-
+    
     <string name="title_drawables_activity">Available Icons</string>
+
+    <string name="title_consent">Consent to participate</string>
+    <string name="action_consent">Consent Activity</string>
+    <string name="button_consent">I consent. Continue&#8230;</string>
+    <string name="button_quit">Exit</string>
+    
+    <color name="bottom_bar_gray">#fff3f3f3</color>
 </resources>

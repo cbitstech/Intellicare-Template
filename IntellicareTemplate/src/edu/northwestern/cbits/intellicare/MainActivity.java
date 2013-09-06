@@ -1,16 +1,15 @@
 package edu.northwestern.cbits.intellicare;
 
-import edu.northwestern.cbits.ic_template.R;
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.UpdateManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+import edu.northwestern.cbits.ic_template.R;
 
-public class MainActivity extends ActionBarActivity 
+public class MainActivity extends ConsentedActivity 
 {
 	private static final String APP_ID = "429a32046c4a625e42bfa6aa00fa5f81";
 
@@ -52,7 +51,6 @@ public class MainActivity extends ActionBarActivity
 				this.startActivity(drawablesIntent);
 				
 				break;
-				
 			case R.id.action_settings:
 				Toast.makeText(this, "tOdO: sEtTiNgS aCtiViTy", Toast.LENGTH_LONG).show();
 				
