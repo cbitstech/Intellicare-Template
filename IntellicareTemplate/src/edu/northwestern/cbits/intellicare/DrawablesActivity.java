@@ -1,7 +1,9 @@
-package edu.northwestern.cbits.ic_template;
+package edu.northwestern.cbits.intellicare;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+
+import edu.northwestern.cbits.ic_template.R;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;

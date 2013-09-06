@@ -1,5 +1,6 @@
-package edu.northwestern.cbits.ic_template;
+package edu.northwestern.cbits.intellicare;
 
+import edu.northwestern.cbits.ic_template.R;
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.UpdateManager;
 import android.content.Intent;

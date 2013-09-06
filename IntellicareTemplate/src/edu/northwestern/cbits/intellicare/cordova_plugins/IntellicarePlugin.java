@@ -1,4 +1,4 @@
-package edu.northwestern.cbits.ic_template.cordova_plugins;
+package edu.northwestern.cbits.intellicare.cordova_plugins;
 
 import org.apache.cordova.api.Plugin;
 import org.apache.cordova.api.PluginResult;

@@ -1,4 +1,4 @@
-package edu.northwestern.cbits.ic_template;
+package edu.northwestern.cbits.intellicare;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -6,6 +6,8 @@ import java.util.concurrent.Executors;
 import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.api.CordovaInterface;
 import org.apache.cordova.api.CordovaPlugin;
+
+import edu.northwestern.cbits.ic_template.R;
 
 import android.app.Activity;
 import android.content.Intent;
