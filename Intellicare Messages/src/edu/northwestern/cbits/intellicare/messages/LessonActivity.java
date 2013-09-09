@@ -2,9 +2,10 @@ package edu.northwestern.cbits.intellicare.messages;
 
 import java.util.ArrayList;
 
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.StatusNotificationManager;
 
 public class LessonActivity extends ConsentedActivity 
 {
@@ -24,6 +26,7 @@ public class LessonActivity extends ConsentedActivity
 	{
 		public String type = "";
 		public String message = "";
+		public int lessonId = 0;
 	}
 
 	protected void onCreate(Bundle savedInstanceState) 
@@ -51,26 +54,31 @@ public class LessonActivity extends ConsentedActivity
 			NotificationRow prompt = new NotificationRow();
 			prompt.type = this.getString(R.string.prompt_type);
 			prompt.message = cursor.getString(cursor.getColumnIndex("prompt"));
+			prompt.lessonId  = cursor.getInt(cursor.getColumnIndex("lesson_id"));
 			messages.add(prompt);
 
 			NotificationRow first = new NotificationRow();
 			first.type = this.getString(R.string.message_type);
 			first.message = cursor.getString(cursor.getColumnIndex("first"));
+			first.lessonId  = cursor.getInt(cursor.getColumnIndex("lesson_id"));
 			messages.add(first);
 
 			NotificationRow second = new NotificationRow();
 			second.type = this.getString(R.string.message_type);
 			second.message = cursor.getString(cursor.getColumnIndex("second"));
+			second.lessonId  = cursor.getInt(cursor.getColumnIndex("lesson_id"));
 			messages.add(second);
 
 			NotificationRow third = new NotificationRow();
 			third.type = this.getString(R.string.message_type);
 			third.message = cursor.getString(cursor.getColumnIndex("third"));
+			third.lessonId  = cursor.getInt(cursor.getColumnIndex("lesson_id"));
 			messages.add(third);
 
 			NotificationRow fourth = new NotificationRow();
 			fourth.type = this.getString(R.string.message_type);
 			fourth.message = cursor.getString(cursor.getColumnIndex("fourth"));
+			fourth.lessonId  = cursor.getInt(cursor.getColumnIndex("lesson_id"));
 			messages.add(fourth);
 		}
 		
@@ -101,13 +109,24 @@ public class LessonActivity extends ConsentedActivity
 		
 		list.setAdapter(adapter);
 		
+		final LessonActivity me = this;
+		
 		list.setOnItemClickListener(new OnItemClickListener()
 		{
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
 			{
 				NotificationRow row = messages.get(position);
 				
-				Log.e("IM", "MESSAGE: " + row.message);
+				Intent intent = new Intent(me, LessonContentActivity.class);
+				intent.setAction(Intent.ACTION_VIEW);
+				intent.putExtra(LessonContentActivity.LESSON_ID, row.lessonId);
+				intent.putExtra(LessonContentActivity.LESSON_TITLE, me.getSupportActionBar().getTitle());
+				
+				PendingIntent pi = PendingIntent.getActivity(me, 0, intent, 0);
+				
+				StatusNotificationManager note = StatusNotificationManager.getInstance(me);
+				
+				note.notifyBigText(12345, R.drawable.ic_notification, me.getIntent().getStringExtra(LessonActivity.LESSON_TITLE), row.message, pi);
 			}
 		});
 	}

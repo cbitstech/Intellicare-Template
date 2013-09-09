@@ -12,4 +12,8 @@
 
     <string name="prompt_type">Prompt</string>
     <string name="message_type">Message</string>
+
+    <string name="button_previous">&#171; Back</string>
+    <string name="button_next">Next &#187;</string>
+    <string name="button_close">Close</string>
 </resources>
