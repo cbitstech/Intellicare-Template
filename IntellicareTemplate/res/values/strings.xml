@@ -24,6 +24,8 @@
     <string name="doing_better">How can this app be better (for you)?</string>
     <string name="doing_better_placeholder">Enter suggestions. (Optional)</string>
     <string name="action_submit">Submit</string>
+
+    <string name="log_url">http://intellicare.aetherial.net/events/log</string>
     
     <color name="bottom_bar_gray">#fff3f3f3</color>
     <color name="test_color">#ff800000</color>

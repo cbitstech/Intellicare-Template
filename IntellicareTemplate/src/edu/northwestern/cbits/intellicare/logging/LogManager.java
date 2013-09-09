@@ -35,10 +35,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
+import edu.northwestern.cbits.ic_template.R;
+
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.location.Location;
@@ -92,93 +91,81 @@ public class LogManager
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
 
-		if (prefs.getBoolean("config_enable_log_server", false))
+		if (prefs.getBoolean("config_log_location", false))
 		{
-			String endpointUri = prefs.getString("config_log_server_uri", null);
+			LocationManager lm = (LocationManager) this._context.getSystemService(Context.LOCATION_SERVICE);
+		
+			Location lastLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 			
-			if (endpointUri != null)
+			Location backupLocation = null;
+		
+			if (lastLocation != null && now - lastLocation.getTime() > (1000 * 60 * 60))
 			{
-				if (prefs.getBoolean("config_log_location", false))
-				{
-					LocationManager lm = (LocationManager) this._context.getSystemService(Context.LOCATION_SERVICE);
-				
-					Location lastLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-					
-					Location backupLocation = null;
-				
-					if (lastLocation != null && now - lastLocation.getTime() > (1000 * 60 * 60))
-					{
-						backupLocation = lastLocation;
-					
-						lastLocation = null;
-					}
-					
-					if (lastLocation == null)
-						lastLocation = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-					
-					if (lastLocation == null)
-						lastLocation = backupLocation;
-					
-					if (lastLocation != null)
-					{
-						payload.put(LogManager.LATITUDE, lastLocation.getLatitude());
-						payload.put(LogManager.LONGITUDE, lastLocation.getLongitude());
-						payload.put(LogManager.ALTITUDE, lastLocation.getAltitude());
-						payload.put(LogManager.TIME_DRIFT, now - lastLocation.getTime());
-					}
-				}
-
-				payload.put(LogManager.EVENT_TYPE, event);
-				payload.put(LogManager.TIMESTAMP, now / 1000);
-				
-				if (payload.containsKey(LogManager.USER_ID) == false)
-					payload.put(LogManager.USER_ID, "todo_fetch_google_id");
-
-				try 
-				{
-					JSONArray pendingEvents = new JSONArray(prefs.getString(LogManager.LOG_QUEUE, "[]"));
-					JSONObject jsonEvent = new JSONObject();
-					
-					for (String key : payload.keySet())
-					{
-						jsonEvent.put(key, payload.get(key));
-					}
-
-					jsonEvent.put(LogManager.CONTENT_OBJECT, new JSONObject(jsonEvent.toString()));
-
-					pendingEvents.put(jsonEvent);
-					
-					Editor e = prefs.edit();
-					e.putString(LogManager.LOG_QUEUE, pendingEvents.toString());
-					e.commit();
-
-					pendingEvents = new JSONArray(prefs.getString(LogManager.LOG_QUEUE, "[]"));
-					
-					final LogManager me = this;
-					
-					Runnable r = new Runnable()
-					{
-						public void run() 
-						{
-							me.attemptUploads();
-						}
-					};
-					
-					Thread t = new Thread(r);
-					t.start();
-
-					return true;
-				}
-				catch (JSONException e) 
-				{
-					e.printStackTrace();
-				}
+				backupLocation = lastLocation;
+			
+				lastLocation = null;
 			}
-//			else
-//				Log.w("PR-LOGGING", "No logging endpoint provided.");
+			
+			if (lastLocation == null)
+				lastLocation = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+			
+			if (lastLocation == null)
+				lastLocation = backupLocation;
+			
+			if (lastLocation != null)
+			{
+				payload.put(LogManager.LATITUDE, lastLocation.getLatitude());
+				payload.put(LogManager.LONGITUDE, lastLocation.getLongitude());
+				payload.put(LogManager.ALTITUDE, lastLocation.getAltitude());
+				payload.put(LogManager.TIME_DRIFT, now - lastLocation.getTime());
+			}
 		}
-		else
-			Log.w("PR-LOGGING", "Logging is not currently enabled.");
+
+		payload.put(LogManager.EVENT_TYPE, event);
+		payload.put(LogManager.TIMESTAMP, now / 1000);
+		
+		if (payload.containsKey(LogManager.USER_ID) == false)
+			payload.put(LogManager.USER_ID, "todo_fetch_google_id");
+
+		try 
+		{
+			JSONArray pendingEvents = new JSONArray(prefs.getString(LogManager.LOG_QUEUE, "[]"));
+			JSONObject jsonEvent = new JSONObject();
+			
+			for (String key : payload.keySet())
+			{
+				jsonEvent.put(key, payload.get(key));
+			}
+
+			jsonEvent.put(LogManager.CONTENT_OBJECT, new JSONObject(jsonEvent.toString()));
+
+			pendingEvents.put(jsonEvent);
+			
+			Editor e = prefs.edit();
+			e.putString(LogManager.LOG_QUEUE, pendingEvents.toString());
+			e.commit();
+
+			pendingEvents = new JSONArray(prefs.getString(LogManager.LOG_QUEUE, "[]"));
+			
+			final LogManager me = this;
+			
+			Runnable r = new Runnable()
+			{
+				public void run() 
+				{
+					me.attemptUploads();
+				}
+			};
+			
+			Thread t = new Thread(r);
+			t.start();
+
+			return true;
+		}
+		catch (JSONException e) 
+		{
+			e.printStackTrace();
+		}
 
 		return false;
 	}
@@ -197,103 +184,96 @@ public class LogManager
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
 
-		if (prefs.getBoolean("config_restrict_log_wifi", true) && WiFiHelper.wifiAvailable(this._context) == false)
-			return;
-		
-		String endpointUri = prefs.getString("config_log_server_uri", null);
-		
-		if (endpointUri != null)
+		String endpointUri = this._context.getString(R.string.log_url);
+		try 
 		{
+			JSONArray pendingEvents = new JSONArray(prefs.getString(LogManager.LOG_QUEUE, "[]"));
+			
 			try 
 			{
-				JSONArray pendingEvents = new JSONArray(prefs.getString(LogManager.LOG_QUEUE, "[]"));
+				URI siteUri = new URI(endpointUri);
+			
+				AndroidHttpClient androidClient = AndroidHttpClient.newInstance("Purple Robot", this._context);
+
+				SchemeRegistry registry = new SchemeRegistry();
+				registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
 				
-				try 
-				{
-					URI siteUri = new URI(endpointUri);
+				SSLSocketFactory socketFactory = SSLSocketFactory.getSocketFactory();
 				
-					AndroidHttpClient androidClient = AndroidHttpClient.newInstance("Purple Robot", this._context);
+				if (prefs.getBoolean("config_http_liberal_ssl", true))
+				{
+			        KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+			        trustStore.load(null, null);
 
-					SchemeRegistry registry = new SchemeRegistry();
-					registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-					
-					SSLSocketFactory socketFactory = SSLSocketFactory.getSocketFactory();
-					
-					if (prefs.getBoolean("config_http_liberal_ssl", true))
-					{
-				        KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-				        trustStore.load(null, null);
-
-				        socketFactory = new LiberalSSLSocketFactory(trustStore);								
-					}
-
-					registry.register(new Scheme("https", socketFactory, 443));
-					
-					SingleClientConnManager mgr = new SingleClientConnManager(androidClient.getParams(), registry);
-					HttpClient httpClient = new DefaultHttpClient(mgr, androidClient.getParams());
-
-					androidClient.close();
-
-					for (int i = 0; i < pendingEvents.length(); i++)
-					{
-						JSONObject event = pendingEvents.getJSONObject(i);
-						
-						HttpPost httpPost = new HttpPost(siteUri);
-						
-						List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-						nameValuePairs.add(new BasicNameValuePair("logJSON", event.toString()));
-						nameValuePairs.add(new BasicNameValuePair("json", event.toString()));
-						HttpEntity entity = new UrlEncodedFormEntity(nameValuePairs, HTTP.US_ASCII);
-
-						httpPost.setEntity(entity);
-						
-						httpClient.execute(httpPost);
-						HttpResponse response = httpClient.execute(httpPost);
-
-						HttpEntity httpEntity = response.getEntity();
-						
-						Log.e("PR-LOGGING", "Log upload result: " + EntityUtils.toString(httpEntity));
-					}
-					
-					mgr.shutdown();
+			        socketFactory = new LiberalSSLSocketFactory(trustStore);								
 				}
-				catch (URISyntaxException e) 
+
+				registry.register(new Scheme("https", socketFactory, 443));
+				
+				SingleClientConnManager mgr = new SingleClientConnManager(androidClient.getParams(), registry);
+				HttpClient httpClient = new DefaultHttpClient(mgr, androidClient.getParams());
+
+				androidClient.close();
+
+				for (int i = 0; i < pendingEvents.length(); i++)
 				{
-					e.printStackTrace();
-				} 
-				catch (KeyStoreException e) 
-				{
-					e.printStackTrace();
-				} 
-				catch (NoSuchAlgorithmException e) 
-				{
-					e.printStackTrace();
-				}
-				catch (CertificateException e) 
-				{
-					e.printStackTrace();
-				} 
-				catch (IOException e) 
-				{
-					e.printStackTrace();
-				} 
-				catch (KeyManagementException e) 
-				{
-					e.printStackTrace();
-				}
-				catch (UnrecoverableKeyException e) 
-				{
-					e.printStackTrace();
+					JSONObject event = pendingEvents.getJSONObject(i);
+					
+					HttpPost httpPost = new HttpPost(siteUri);
+					
+					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+					nameValuePairs.add(new BasicNameValuePair("logJSON", event.toString()));
+					nameValuePairs.add(new BasicNameValuePair("json", event.toString()));
+					HttpEntity entity = new UrlEncodedFormEntity(nameValuePairs, HTTP.US_ASCII);
+
+					httpPost.setEntity(entity);
+					
+					httpClient.execute(httpPost);
+					HttpResponse response = httpClient.execute(httpPost);
+
+					HttpEntity httpEntity = response.getEntity();
+					
+					Log.e("PR-LOGGING", "Log upload result: " + EntityUtils.toString(httpEntity));
 				}
 				
-				Editor e = prefs.edit();
-				e.putString(LogManager.LOG_QUEUE, "[]");
-				e.commit();
+				mgr.shutdown();
 			}
-			catch (JSONException e)
+			catch (URISyntaxException e) 
+			{
+				e.printStackTrace();
+			} 
+			catch (KeyStoreException e) 
+			{
+				e.printStackTrace();
+			} 
+			catch (NoSuchAlgorithmException e) 
 			{
 				e.printStackTrace();
 			}
+			catch (CertificateException e) 
+			{
+				e.printStackTrace();
+			} 
+			catch (IOException e) 
+			{
+				e.printStackTrace();
+			} 
+			catch (KeyManagementException e) 
+			{
+				e.printStackTrace();
+			}
+			catch (UnrecoverableKeyException e) 
+			{
+				e.printStackTrace();
+			}
+			
+			Editor e = prefs.edit();
+			e.putString(LogManager.LOG_QUEUE, "[]");
+			e.commit();
+		}
+		catch (JSONException e)
+		{
+			e.printStackTrace();
 		}
 		
 		this._uploading = false;

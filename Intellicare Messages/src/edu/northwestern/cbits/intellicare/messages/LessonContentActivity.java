@@ -14,6 +14,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.RatingActivity;
 
 public class LessonContentActivity extends ConsentedActivity 
 {
@@ -142,6 +143,9 @@ public class LessonContentActivity extends ConsentedActivity
 			{
 				public void onClick(View view) 
 				{
+					Intent intent = new Intent(me, RatingActivity.class);
+					me.startActivity(intent);
+					
 					me.finish();
 				}
 			});

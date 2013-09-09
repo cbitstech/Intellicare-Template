@@ -1,11 +1,14 @@
 package edu.northwestern.cbits.intellicare;
 
+import java.util.HashMap;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import edu.northwestern.cbits.ic_template.R;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 import edu.northwestern.cbits.intellicare.views.StarRatingView;
 import edu.northwestern.cbits.intellicare.views.StarRatingView.OnRatingChangeListener;
 
@@ -41,7 +44,11 @@ public class RatingActivity extends ConsentedActivity
 	{
 		if (item.getItemId() ==  R.id.action_done)
 		{
-			Log.e("IT", "GOT RATING: " + this._rating);
+			HashMap<String, Object> payload = new HashMap<String, Object>();
+			payload.put("rating", Integer.valueOf(this._rating));
+			payload.put("app_package", this.getApplicationContext().getPackageName());
+			
+			LogManager.getInstance(this).log("app_rated", payload);
 			
 			this.finish();
 		}
