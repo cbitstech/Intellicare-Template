@@ -39,13 +39,11 @@ public class RatingActivity extends ConsentedActivity
 	
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-		switch (item.getItemId())
+		if (item.getItemId() ==  R.id.action_done)
 		{
-			case R.id.action_done:
-				Log.e("IT", "GOT RATING: " + this._rating);
-				
-				this.finish();
-				break;
+			Log.e("IT", "GOT RATING: " + this._rating);
+			
+			this.finish();
 		}
 
 		return true;

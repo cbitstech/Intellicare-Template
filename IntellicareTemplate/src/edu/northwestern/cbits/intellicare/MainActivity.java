@@ -39,29 +39,22 @@ public class MainActivity extends ConsentedActivity
 	
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-		switch (item.getItemId())
+		if (item.getItemId() == R.id.action_native)
 		{
-			case R.id.action_cordova:
-				Intent cordovaIntent = new Intent(this, JavascriptActivity.class);
-				this.startActivity(cordovaIntent);
-				
-				break;
-			case R.id.action_drawables:
-				Intent drawablesIntent = new Intent(this, DrawablesActivity.class);
-				this.startActivity(drawablesIntent);
-				
-				break;
-			case R.id.action_rating:
-				Intent ratingIntent = new Intent(this, RatingActivity.class);
-				this.startActivity(ratingIntent);
-				
-				break;
-			case R.id.action_settings:
-				Toast.makeText(this, "tOdO: sEtTiNgS aCtiViTy", Toast.LENGTH_LONG).show();
-				
-				break;
+			Intent nativeIntent = new Intent(this, MainActivity.class);
+			this.startActivity(nativeIntent);
 		}
-
+		else if (item.getItemId() == R.id.action_drawables)
+		{
+			Intent drawablesIntent = new Intent(this, DrawablesActivity.class);
+			this.startActivity(drawablesIntent);
+		}
+		else if (item.getItemId() == R.id.action_rating)
+		{
+			Intent ratingIntent = new Intent(this, RatingActivity.class);
+			this.startActivity(ratingIntent);
+		}
+		
 		return true;
 	}
 }

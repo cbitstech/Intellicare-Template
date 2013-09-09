@@ -49,37 +49,46 @@ public class StarRatingView extends RelativeLayout
 				two.setImageResource(R.drawable.ic_action_star_0);
 				one.setImageResource(R.drawable.ic_action_star_0);
 
-				switch (view.getId())
+				
+				if (view.getId() == R.id.five_star)
 				{
-					case R.id.five_star:
-						five.setImageResource(R.drawable.ic_action_star_10);
-					case R.id.four_star:
-						four.setImageResource(R.drawable.ic_action_star_10);
-					case R.id.three_star:
-						three.setImageResource(R.drawable.ic_action_star_10);
-					case R.id.two_star:
-						two.setImageResource(R.drawable.ic_action_star_10);
-					case R.id.one_star:
-						one.setImageResource(R.drawable.ic_action_star_10);
-				}
+					me._rating = 5;
 
-				switch (view.getId())
+					five.setImageResource(R.drawable.ic_action_star_10);
+					four.setImageResource(R.drawable.ic_action_star_10);
+					three.setImageResource(R.drawable.ic_action_star_10);
+					two.setImageResource(R.drawable.ic_action_star_10);
+					one.setImageResource(R.drawable.ic_action_star_10);
+				}
+				else if (view.getId() == R.id.four_star)
 				{
-					case R.id.five_star:
-						me._rating = 5;
-						break;
-					case R.id.four_star:
-						me._rating = 4;
-						break;
-					case R.id.three_star:
-						me._rating = 3;
-						break;
-					case R.id.two_star:
-						me._rating = 2;
-						break;
-					case R.id.one_star:
-						me._rating = 1;
-						break;
+					me._rating = 4;
+
+					four.setImageResource(R.drawable.ic_action_star_10);
+					three.setImageResource(R.drawable.ic_action_star_10);
+					two.setImageResource(R.drawable.ic_action_star_10);
+					one.setImageResource(R.drawable.ic_action_star_10);
+				}
+				else if (view.getId() == R.id.three_star)
+				{
+					me._rating = 3;
+					
+					three.setImageResource(R.drawable.ic_action_star_10);
+					two.setImageResource(R.drawable.ic_action_star_10);
+					one.setImageResource(R.drawable.ic_action_star_10);
+				}
+				else if (view.getId() == R.id.two_star)
+				{
+					me._rating = 2;
+
+					two.setImageResource(R.drawable.ic_action_star_10);
+					one.setImageResource(R.drawable.ic_action_star_10);
+				}
+				else if (view.getId() == R.id.one_star)
+				{
+					me._rating = 1;
+					
+					one.setImageResource(R.drawable.ic_action_star_10);
 				}
 				
 				if (me._listener != null)

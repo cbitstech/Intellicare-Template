@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 import edu.northwestern.cbits.ic_template.R;
 
 public class JavascriptActivity extends ConsentedActivity implements CordovaInterface
@@ -40,27 +39,20 @@ public class JavascriptActivity extends ConsentedActivity implements CordovaInte
 	
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-		switch (item.getItemId())
+		if (item.getItemId() == R.id.action_native)
 		{
-			case R.id.action_native:
-				Intent nativeIntent = new Intent(this, MainActivity.class);
-				this.startActivity(nativeIntent);
-				
-				break;
-			case R.id.action_drawables:
-				Intent drawablesIntent = new Intent(this, DrawablesActivity.class);
-				this.startActivity(drawablesIntent);
-				
-				break;
-			case R.id.action_rating:
-				Intent ratingIntent = new Intent(this, RatingActivity.class);
-				this.startActivity(ratingIntent);
-				
-				break;
-			case R.id.action_settings:
-				Toast.makeText(this, "tOdO: sEtTiNgS aCtiViTy", Toast.LENGTH_LONG).show();
-				
-				break;
+			Intent nativeIntent = new Intent(this, MainActivity.class);
+			this.startActivity(nativeIntent);
+		}
+		else if (item.getItemId() == R.id.action_drawables)
+		{
+			Intent drawablesIntent = new Intent(this, DrawablesActivity.class);
+			this.startActivity(drawablesIntent);
+		}
+		else if (item.getItemId() == R.id.action_rating)
+		{
+			Intent ratingIntent = new Intent(this, RatingActivity.class);
+			this.startActivity(ratingIntent);
 		}
 
 		return true;
