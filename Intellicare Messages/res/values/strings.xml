@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Intellicare Messages</string>
+    <string name="app_name">Day-to-Day</string>
     <string name="button_basic">Basic Notification</string>
     <string name="button_image">Image Notification</string>
     <string name="button_action">Action Notification</string>
@@ -16,4 +16,91 @@
     <string name="button_previous">&#171; Back</string>
     <string name="button_next">Next &#187;</string>
     <string name="button_close">Close</string>
+    
+    <!-- Lessons Resources -->
+    <string name="title_lessons">Day-to-Day: Lessons</string>
+    <string name="title_lesson_one">Lesson 1: Thoughts</string>
+    <string name="desc_lesson_one">(Lesson 1 short description goes here&#8230;)</string>
+    <string name="title_lesson_two">Lesson 2: Gratitude</string>
+    <string name="desc_lesson_two">(Lesson 2 short description goes here&#8230;)</string>
+    <string name="title_lesson_three">Lesson 3: ???</string>
+    <string name="desc_lesson_three">(Lesson 3 short description goes here&#8230;)</string>
+    <string name="title_lesson_four">Lesson 4: ???</string>
+    <string name="desc_lesson_four">(Lesson 4 short description goes here&#8230;)</string>
+    <string name="toast_lesson_incomplete">Please complete the earlier lessons before proceeding.</string>
+    
+    <!-- Lesson One Resources -->
+    <string-array name="one_urls">
+        <item>file:///android_asset/help_0.html</item>
+        <item>file:///android_asset/help_1.html</item>
+        <item>file:///android_asset/help_2.html</item>
+        <item>file:///android_asset/help_3.html</item>
+	</string-array>
+
+   	<string-array name="one_titles">
+        <item>Day-to-Day Introduction (1/4)</item>
+        <item>Day-to-Day Introduction (2/4)</item>
+        <item>Day-to-Day Introduction (3/4)</item>
+        <item>Day-to-Day Introduction (4/4)</item>
+    </string-array>
+
+    <!-- Lesson Two Resources -->
+    <string-array name="two_urls">
+        <item>file:///android_asset/help_0.html</item>
+        <item>file:///android_asset/help_1.html</item>
+        <item>file:///android_asset/help_2.html</item>
+        <item>file:///android_asset/help_3.html</item>
+	</string-array>
+
+   	<string-array name="two_titles">
+        <item>Day-to-Day Introduction (1/4)</item>
+        <item>Day-to-Day Introduction (2/4)</item>
+        <item>Day-to-Day Introduction (3/4)</item>
+        <item>Day-to-Day Introduction (4/4)</item>
+    </string-array>
+   	
+    <!-- Lesson Three Resources -->
+    <string-array name="three_urls">
+        <item>file:///android_asset/help_0.html</item>
+        <item>file:///android_asset/help_1.html</item>
+        <item>file:///android_asset/help_2.html</item>
+        <item>file:///android_asset/help_3.html</item>
+	</string-array>
+
+   	<string-array name="three_titles">
+        <item>Day-to-Day Introduction (1/4)</item>
+        <item>Day-to-Day Introduction (2/4)</item>
+        <item>Day-to-Day Introduction (3/4)</item>
+        <item>Day-to-Day Introduction (4/4)</item>
+    </string-array>
+   			
+    <!-- Lesson Four Resources -->
+    <string-array name="four_urls">
+        <item>file:///android_asset/help_0.html</item>
+        <item>file:///android_asset/help_1.html</item>
+        <item>file:///android_asset/help_2.html</item>
+        <item>file:///android_asset/help_3.html</item>
+	</string-array>
+
+   	<string-array name="four_titles">
+        <item>Day-to-Day Introduction (1/4)</item>
+        <item>Day-to-Day Introduction (2/4)</item>
+        <item>Day-to-Day Introduction (3/4)</item>
+        <item>Day-to-Day Introduction (4/4)</item>
+    </string-array>
+   	
+    <!-- Help Resources -->
+    <string-array name="help_urls">
+        <item>file:///android_asset/help_0.html</item>
+        <item>file:///android_asset/help_1.html</item>
+        <item>file:///android_asset/help_2.html</item>
+        <item>file:///android_asset/help_3.html</item>
+	</string-array>
+	<string-array name="help_titles">
+        <item>Day-to-Day Introduction (1/4)</item>
+        <item>Day-to-Day Introduction (2/4)</item>
+        <item>Day-to-Day Introduction (3/4)</item>
+        <item>Day-to-Day Introduction (4/4)</item>
+    </string-array>
+    
 </resources>

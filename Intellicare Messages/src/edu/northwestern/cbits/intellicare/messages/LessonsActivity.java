@@ -1,9 +1,11 @@
 package edu.northwestern.cbits.intellicare.messages;
 
-import android.content.Context;
+import java.util.ArrayList;
+
 import android.content.Intent;
-import android.database.Cursor;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,8 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.CursorAdapter;
-import android.widget.ListAdapter;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,38 +22,63 @@ import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 public class LessonsActivity extends ConsentedActivity 
 {
-	@SuppressWarnings("deprecation")
+	public static final String LESSON_LEVEL = "LESSON_LEVEL";
+
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
 
 		this.setContentView(R.layout.activity_lessons);
+		this.getSupportActionBar().setTitle(R.string.title_lessons);
+	}
+	
+	public void onResume()
+	{
+		super.onResume();
 		
-		ListView list = (ListView) this.findViewById(R.id.list_view);
-		
-		Cursor cursor = this.getContentResolver().query(ContentProvider.LESSONS_URI, null, null, null, "lesson_order");
-		
-		ListAdapter adapter = new CursorAdapter(this, cursor)
-		{
-			public void bindView(View view, Context context, Cursor cursor) 
-			{
-				TextView title = (TextView) view.findViewById(R.id.lesson_title);
-				
-				title.setText(cursor.getString(cursor.getColumnIndex("title")));
-			}
+		final ArrayList<String> titles = new ArrayList<String>();
+		titles.add(this.getString(R.string.title_lesson_one));
+		titles.add(this.getString(R.string.title_lesson_two));
+		titles.add(this.getString(R.string.title_lesson_three));
+		titles.add(this.getString(R.string.title_lesson_four));
 
-			public View newView(Context context, Cursor cursor, ViewGroup parent) 
+		final ArrayList<String> descriptions = new ArrayList<String>();
+		descriptions.add(this.getString(R.string.desc_lesson_one));
+		descriptions.add(this.getString(R.string.desc_lesson_two));
+		descriptions.add(this.getString(R.string.desc_lesson_three));
+		descriptions.add(this.getString(R.string.desc_lesson_four));
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		final int lessonLevel = prefs.getInt(LessonsActivity.LESSON_LEVEL, 0);
+		
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row_lesson, titles)
+		{
+			public View getView(int position, View convertView, ViewGroup parent)
 			{
-				LayoutInflater inflater = LayoutInflater.from(context);
+				if (convertView == null)
+				{
+					LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+					convertView = inflater.inflate(R.layout.row_lesson, parent, false);
+				}
 				
-				View view = inflater.inflate(R.layout.row_lesson, parent, false);
+				TextView title = (TextView) convertView.findViewById(R.id.lesson_title);
+				TextView description = (TextView) convertView.findViewById(R.id.lesson_description);
 				
-				this.bindView(view, context, cursor);
+				title.setText(titles.get(position));
+				description.setText(descriptions.get(position));
 				
-				return view;
+				ImageView lockIcon = (ImageView) convertView.findViewById(R.id.lock_icon);
+				
+				if (position > lessonLevel)
+					lockIcon.setImageResource(R.drawable.ic_action_lock_closed);
+				else
+					lockIcon.setImageResource(R.drawable.ic_action_lock_open);
+				
+				return convertView;
 			}
 		};
-		
+
+		ListView list = (ListView) this.findViewById(R.id.list_view);
 		list.setAdapter(adapter);
 		
 		final LessonsActivity me = this;
@@ -60,20 +87,35 @@ public class LessonsActivity extends ConsentedActivity
 		{
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
 			{
-				Intent lessonIntent = new Intent(me, LessonActivity.class);
-				lessonIntent.putExtra(LessonActivity.LESSON_ID, id);
-				
-				String selection = "_id = ?";
-				String[] selectionArgs = { "" + id };
+				if (position > lessonLevel)
+					Toast.makeText(me, R.string.toast_lesson_incomplete, Toast.LENGTH_LONG).show();
+				else
+				{
+					Intent lessonIntent = new Intent(me, LessonPagesActivity.class);
+					lessonIntent.putExtra(LessonPagesActivity.UNLOCK_LEVEL, position + 1);
+					
+					switch(position)
+					{
+						case 0:
+							lessonIntent.putExtra(LessonPagesActivity.TITLE_LIST, R.array.one_titles);
+							lessonIntent.putExtra(LessonPagesActivity.URL_LIST, R.array.one_urls);
+							break;
+						case 1:
+							lessonIntent.putExtra(LessonPagesActivity.TITLE_LIST, R.array.two_titles);
+							lessonIntent.putExtra(LessonPagesActivity.URL_LIST, R.array.two_urls);
+							break;
+						case 2:
+							lessonIntent.putExtra(LessonPagesActivity.TITLE_LIST, R.array.three_titles);
+							lessonIntent.putExtra(LessonPagesActivity.URL_LIST, R.array.three_urls);
+							break;
+						case 3:
+							lessonIntent.putExtra(LessonPagesActivity.TITLE_LIST, R.array.four_titles);
+							lessonIntent.putExtra(LessonPagesActivity.URL_LIST, R.array.four_urls);
+							break;
+					}
 
-				Cursor c = me.getContentResolver().query(ContentProvider.LESSONS_URI, null, selection, selectionArgs, null);
-				
-				if (c.moveToNext())
-					lessonIntent.putExtra(LessonActivity.LESSON_TITLE, c.getString(c.getColumnIndex("title")));
-				
-				c.close();
-				
-				me.startActivity(lessonIntent);
+					me.startActivity(lessonIntent);
+				}
 			}
 		});
 	}
@@ -93,7 +135,8 @@ public class LessonsActivity extends ConsentedActivity
 		}
 		else if (item.getItemId() == R.id.action_help)
 		{
-			Toast.makeText(this, "TODO: Show Help", Toast.LENGTH_LONG).show();
+			Intent helpIntent = new Intent(this, HelpActivity.class);
+			this.startActivity(helpIntent);
 		}
 		else if (item.getItemId() == R.id.action_schedule)
 		{
