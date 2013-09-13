@@ -1,9 +1,11 @@
 package edu.northwestern.cbits.intellicare;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.os.Build;
 
 public class StatusNotificationManager 
 {
@@ -27,6 +29,7 @@ public class StatusNotificationManager
 		return StatusNotificationManager._sharedInstance;
 	}
 	
+	@SuppressLint("NewApi")
 	public void notifyBigText(int appId, int icon, String title, String message, PendingIntent intent)
 	{
 		Notification.Builder builder = new Notification.Builder(this._context);
@@ -34,10 +37,18 @@ public class StatusNotificationManager
 		builder.setContentTitle(title);
 		builder.setContentText(message);
 		builder.setSmallIcon(icon);
-		builder.setStyle(new Notification.BigTextStyle().bigText(message));
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+			builder.setStyle(new Notification.BigTextStyle().bigText(message));
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+			builder.setTicker(message);
 		
 		NotificationManager manager = (NotificationManager) this._context.getSystemService(Context.NOTIFICATION_SERVICE);
 		
-		manager.notify(appId, builder.build());
+		Notification note = builder.build();
+		note.flags = Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE | Notification.FLAG_AUTO_CANCEL;
+		
+		manager.notify(appId, note);
 	}
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/settings_group_schedule">
+		<ListPreference android:key="config_day_start"
+		    android:title="@string/title_day_start"
+		    android:icon="@drawable/ic_action_alarm"
+		    android:summary="@string/desc_day_start"
+		    android:entries="@array/list_hour_labels"
+		    android:entryValues="@array/list_hour_values"
+		    android:defaultValue="09" />        
+		<ListPreference android:key="config_day_end"
+		    android:title="@string/title_day_end"
+		    android:icon="@drawable/ic_action_alarm"
+		    android:summary="@string/desc_day_end"
+		    android:entries="@array/list_hour_labels"
+		    android:entryValues="@array/list_hour_values"
+		    android:defaultValue="21" />        
+		</PreferenceCategory>
+</PreferenceScreen>

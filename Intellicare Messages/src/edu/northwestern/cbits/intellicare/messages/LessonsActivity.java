@@ -28,7 +28,7 @@ public class LessonsActivity extends ConsentedActivity
 	{
 		super.onCreate(savedInstanceState);
 
-		this.setContentView(R.layout.activity_lessons);
+		this.setContentView(R.layout.activity_test);
 		this.getSupportActionBar().setTitle(R.string.title_lessons);
 	}
 	
@@ -91,26 +91,26 @@ public class LessonsActivity extends ConsentedActivity
 					Toast.makeText(me, R.string.toast_lesson_incomplete, Toast.LENGTH_LONG).show();
 				else
 				{
-					Intent lessonIntent = new Intent(me, LessonPagesActivity.class);
-					lessonIntent.putExtra(LessonPagesActivity.UNLOCK_LEVEL, position + 1);
+					Intent lessonIntent = new Intent(me, LessonActivity.class);
+					lessonIntent.putExtra(LessonActivity.UNLOCK_LEVEL, position + 1);
 					
 					switch(position)
 					{
 						case 0:
-							lessonIntent.putExtra(LessonPagesActivity.TITLE_LIST, R.array.one_titles);
-							lessonIntent.putExtra(LessonPagesActivity.URL_LIST, R.array.one_urls);
+							lessonIntent.putExtra(LessonActivity.TITLE_LIST, R.array.one_titles);
+							lessonIntent.putExtra(LessonActivity.URL_LIST, R.array.one_urls);
 							break;
 						case 1:
-							lessonIntent.putExtra(LessonPagesActivity.TITLE_LIST, R.array.two_titles);
-							lessonIntent.putExtra(LessonPagesActivity.URL_LIST, R.array.two_urls);
+							lessonIntent.putExtra(LessonActivity.TITLE_LIST, R.array.two_titles);
+							lessonIntent.putExtra(LessonActivity.URL_LIST, R.array.two_urls);
 							break;
 						case 2:
-							lessonIntent.putExtra(LessonPagesActivity.TITLE_LIST, R.array.three_titles);
-							lessonIntent.putExtra(LessonPagesActivity.URL_LIST, R.array.three_urls);
+							lessonIntent.putExtra(LessonActivity.TITLE_LIST, R.array.three_titles);
+							lessonIntent.putExtra(LessonActivity.URL_LIST, R.array.three_urls);
 							break;
 						case 3:
-							lessonIntent.putExtra(LessonPagesActivity.TITLE_LIST, R.array.four_titles);
-							lessonIntent.putExtra(LessonPagesActivity.URL_LIST, R.array.four_urls);
+							lessonIntent.putExtra(LessonActivity.TITLE_LIST, R.array.four_titles);
+							lessonIntent.putExtra(LessonActivity.URL_LIST, R.array.four_urls);
 							break;
 					}
 
@@ -131,12 +131,18 @@ public class LessonsActivity extends ConsentedActivity
 	{
 		if (item.getItemId() == R.id.action_settings)
 		{
-			Toast.makeText(this, "TODO: Show Settings", Toast.LENGTH_LONG).show();
+			Intent settingsIntent = new Intent(this, SettingsActivity.class);
+			this.startActivity(settingsIntent);
 		}
 		else if (item.getItemId() == R.id.action_help)
 		{
 			Intent helpIntent = new Intent(this, HelpActivity.class);
 			this.startActivity(helpIntent);
+		}
+		else if (item.getItemId() == R.id.action_test)
+		{
+			Intent testIntent = new Intent(this, TestActivity.class);
+			this.startActivity(testIntent);
 		}
 		else if (item.getItemId() == R.id.action_schedule)
 		{
