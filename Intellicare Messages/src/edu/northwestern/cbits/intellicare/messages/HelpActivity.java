@@ -7,7 +7,7 @@ import edu.northwestern.cbits.intellicare.SequentialPageActivity;
 
 public class HelpActivity extends SequentialPageActivity 
 {
-	private static final String HELP_COMPLETED = "HELP_COMPLETED";
+	public static final String HELP_COMPLETED = "HELP_COMPLETED";
 
 	public int pagesSequence() 
 	{

@@ -30,6 +30,11 @@ public class LessonsActivity extends ConsentedActivity
 
 		this.setContentView(R.layout.activity_test);
 		this.getSupportActionBar().setTitle(R.string.title_lessons);
+
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		if (prefs.getBoolean(HelpActivity.HELP_COMPLETED, false) == false)
+			this.startActivity(new Intent(this, HelpActivity.class));
 	}
 	
 	public void onResume()
@@ -146,7 +151,8 @@ public class LessonsActivity extends ConsentedActivity
 		}
 		else if (item.getItemId() == R.id.action_schedule)
 		{
-			Toast.makeText(this, "TODO: Show Schedule", Toast.LENGTH_LONG).show();
+			Intent scheduleIntent = new Intent(this, ScheduleActivity.class);
+			this.startActivity(scheduleIntent);
 		}
 		
 		return true;

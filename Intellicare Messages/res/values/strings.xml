@@ -167,4 +167,25 @@
         <item>23</item>
         <item>24</item>
 	</string-array>
+
+	<string-array name="schedule_test_items">
+        <item>{\"header\": \"Yesterday\"}</item>
+        <item>{\"completed\": true, \"title\": \"Thoughts Prompt One\", \"time\": \"9:57am\"}</item>
+        <item>{\"completed\": true, \"title\": \"Thoughts Message One-One\", \"time\": \"12:13pm\"}</item>
+        <item>{\"completed\": true, \"title\": \"Thoughts Message One-Two\", \"time\": \"3:43pm\"}</item>
+        <item>{\"completed\": true, \"title\": \"Thoughts Message One-Three\", \"time\": \"6:07pm\"}</item>
+        <item>{\"completed\": true, \"title\": \"Thoughts Message One-Four\", \"time\": \"8:59pm\"}</item>
+        <item>{\"header\": \"Today\"}</item>
+        <item>{\"completed\": false, \"title\": \"Thoughts Prompt Two\", \"scheduled_time\": \"9:00am\"}</item>
+        <item>{\"completed\": false, \"title\": \"Thoughts Message Two-One\", \"scheduled_time\": \"12:00pm\"}</item>
+        <item>{\"completed\": false, \"title\": \"Thoughts Message Two-Two\", \"scheduled_time\": \"3:00pm\"}</item>
+        <item>{\"completed\": false, \"title\": \"Thoughts Message Two-Three\", \"scheduled_time\": \"6:00pm\"}</item>
+        <item>{\"completed\": false, \"title\": \"Thoughts Message Two-Four\", \"scheduled_time\": \"9:00pm\"}</item>
+        <item>{\"header\": \"Tomorrow\"}</item>
+        <item>{\"completed\": false, \"title\": \"Thoughts Prompt Three\", \"scheduled_time\": \"9:00am\"}</item>
+        <item>{\"completed\": false, \"title\": \"Thoughts Message Three-One\", \"scheduled_time\": \"12:00pm\"}</item>
+        <item>{\"completed\": false, \"title\": \"Thoughts Message Three-Two\", \"scheduled_time\": \"3:00pm\"}</item>
+        <item>{\"completed\": false, \"title\": \"Thoughts Message Three-Three\", \"scheduled_time\": \"6:00pm\"}</item>
+        <item>{\"completed\": false, \"title\": \"Thoughts Message Three-Four\", \"scheduled_time\": \"9:00pm\"}</item>
+   </string-array>
 </resources>

@@ -54,7 +54,6 @@ public class RatingActivity extends ConsentedActivity
 
 		return true;
 	}
-
 	
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
