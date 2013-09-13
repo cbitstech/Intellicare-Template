@@ -29,4 +29,9 @@
     
     <color name="bottom_bar_gray">#fff3f3f3</color>
     <color name="test_color">#ff800000</color>
+    
+    <!-- Sequential web content activity -->
+    <string name="button_previous">&#171; Back</string>
+    <string name="button_next">Next &#187;</string>
+    <string name="button_close">Close</string>
 </resources>
