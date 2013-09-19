@@ -115,8 +115,7 @@ public class TestActivity extends ConsentedActivity
 					Intent dialogIntent = new Intent(me, DialogActivity.class);
 					dialogIntent.putExtra(DialogActivity.DIALOG_TITLE, row.type + " " + row.lessonId);
 					dialogIntent.putExtra(DialogActivity.DIALOG_MESSAGE, row.message);
-					dialogIntent.putExtra(DialogActivity.DIALOG_CONFIRM_BUTTON, "cOnFiRM");
-					dialogIntent.putExtra(DialogActivity.DIALOG_CANCEL_BUTTON, "cAnCeL");
+					dialogIntent.putExtra(DialogActivity.DIALOG_CONFIRM_BUTTON, me.getString(R.string.button_continue));
 					
 					me.startActivity(dialogIntent);
 				}

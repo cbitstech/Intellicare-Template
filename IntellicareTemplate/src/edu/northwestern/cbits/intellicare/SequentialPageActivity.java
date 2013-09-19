@@ -1,11 +1,14 @@
 package edu.northwestern.cbits.intellicare;
 
+import java.util.HashMap;
+
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.WebView;
 import android.widget.Button;
 import edu.northwestern.cbits.ic_template.R;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public abstract class SequentialPageActivity extends ConsentedActivity 
 {
@@ -48,6 +51,12 @@ public abstract class SequentialPageActivity extends ConsentedActivity
 
 		WebView webView = (WebView) this.findViewById(R.id.web_view);
 		webView.loadUrl(url);
+		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		payload.put("page_url", url);
+		payload.put("timestamp", Long.valueOf(System.currentTimeMillis()));
+		
+		LogManager.getInstance(this).log("page_displayed", payload);
 		
 		Button back = (Button) this.findViewById(R.id.back_button);
 		

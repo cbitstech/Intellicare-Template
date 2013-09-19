@@ -27,16 +27,12 @@ public class LessonActivity extends SequentialPageActivity
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
-		int newLevel = this.getIntent().getIntExtra(LessonActivity.UNLOCK_LEVEL, 0);
 		int currentLevel = prefs.getInt(LessonsActivity.LESSON_LEVEL, 0);
-
-		if (newLevel > currentLevel)
-		{
-			Editor e = prefs.edit();
-			e.putInt(LessonsActivity.LESSON_LEVEL, newLevel);
-			e.commit();
-		}
 		
+		Editor e = prefs.edit();
+		e.putBoolean(LessonsActivity.LESSON_READ_PREFIX + currentLevel, true);
+		e.commit();
+
 		Intent intent = new Intent(this, RatingActivity.class);
 		this.startActivity(intent);
 	}

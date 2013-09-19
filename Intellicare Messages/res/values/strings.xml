@@ -19,75 +19,94 @@
     <!-- Lessons Resources -->
     <string name="title_lessons">Day-to-Day: Lessons</string>
     <string name="title_lesson_one">Lesson 1: Thoughts</string>
-    <string name="desc_lesson_one">(Lesson 1 short description goes here&#8230;)</string>
+    <string name="desc_lesson_one">This week we\'ll cover how our thoughts affect how we feel and what we do and introduce strategies to notice and change negative thoughts and patterns of negative thinking.</string>
     <string name="title_lesson_two">Lesson 2: Gratitude</string>
-    <string name="desc_lesson_two">(Lesson 2 short description goes here&#8230;)</string>
-    <string name="title_lesson_three">Lesson 3: ???</string>
-    <string name="desc_lesson_three">(Lesson 3 short description goes here&#8230;)</string>
-    <string name="title_lesson_four">Lesson 4: ???</string>
-    <string name="desc_lesson_four">(Lesson 4 short description goes here&#8230;)</string>
+    <string name="desc_lesson_two">This week we\'ll cover how increasing gratitude can improve your life and introduce strategies to notice things you are grateful for and express more gratitude in your life.</string>
+    <string name="title_lesson_three">Lesson 3: Get Activated!</string>
+    <string name="desc_lesson_three">This week we\'ll cover how positive activities promotes a healthy mood and introduce strategies to increase the number and types of positive activities you are engaging in.</string>
+    <string name="title_lesson_four">Lesson 4: Improving Interpersonal Interactions</string>
+    <string name="desc_lesson_four">This week we\'ll cover the importance of interpersonal interactions and introduce strategies to increase the number and quality of interactions you have with other people.</string>
+    <string name="title_lesson_five">Lesson 5: Problem Solving</string>
+    <string name="desc_lesson_five">This week we\'ll cover a simple strategy to help you solve problems and ways to use this strategy to help you achieve your goals.</string>
     <string name="toast_lesson_incomplete">Please complete the earlier lessons before proceeding.</string>
     
     <!-- Lesson One Resources -->
     <string-array name="one_urls">
-        <item>file:///android_asset/help_0.html</item>
-        <item>file:///android_asset/help_1.html</item>
-        <item>file:///android_asset/help_2.html</item>
-        <item>file:///android_asset/help_3.html</item>
-	</string-array>
+        <item>file:///android_asset/weeks/1-thoughts/1.html</item>
+        <item>file:///android_asset/weeks/1-thoughts/2.html</item>
+        <item>file:///android_asset/weeks/1-thoughts/3.html</item>
+        <item>file:///android_asset/weeks/1-thoughts/4.html</item>
+        <item>file:///android_asset/weeks/1-thoughts/5.html</item>
+        <item>file:///android_asset/weeks/1-thoughts/6.html</item>
+   	</string-array>
 
    	<string-array name="one_titles">
-        <item>Day-to-Day Introduction (1/4)</item>
-        <item>Day-to-Day Introduction (2/4)</item>
-        <item>Day-to-Day Introduction (3/4)</item>
-        <item>Day-to-Day Introduction (4/4)</item>
+        <item>Lesson 1: Thoughts (1/6)</item>
+		<item>Lesson 1: Thoughts (2/6)</item>
+        <item>Lesson 1: Thoughts (3/6)</item>
+        <item>Lesson 1: Thoughts (4/6)</item>
+        <item>Lesson 1: Thoughts (5/6)</item>
+        <item>Lesson 1: Thoughts (6/6)</item>
     </string-array>
 
     <!-- Lesson Two Resources -->
     <string-array name="two_urls">
-        <item>file:///android_asset/help_0.html</item>
-        <item>file:///android_asset/help_1.html</item>
-        <item>file:///android_asset/help_2.html</item>
-        <item>file:///android_asset/help_3.html</item>
-	</string-array>
+        <item>file:///android_asset/weeks/2-gratitude/1.html</item>
+        <item>file:///android_asset/weeks/2-gratitude/2.html</item>
+        <item>file:///android_asset/weeks/2-gratitude/3.html</item>
+        <item>file:///android_asset/weeks/2-gratitude/4.html</item>
+   	</string-array>
 
    	<string-array name="two_titles">
-        <item>Day-to-Day Introduction (1/4)</item>
-        <item>Day-to-Day Introduction (2/4)</item>
-        <item>Day-to-Day Introduction (3/4)</item>
-        <item>Day-to-Day Introduction (4/4)</item>
-    </string-array>
+        <item>Lesson 2: Gratitude (1/4)</item>
+		<item>Lesson 2: Gratitude (2/4)</item>
+        <item>Lesson 2: Gratitude (3/4)</item>
+        <item>Lesson 2: Gratitude (4/4)</item>
+   	</string-array>
    	
     <!-- Lesson Three Resources -->
     <string-array name="three_urls">
-        <item>file:///android_asset/help_0.html</item>
-        <item>file:///android_asset/help_1.html</item>
-        <item>file:///android_asset/help_2.html</item>
-        <item>file:///android_asset/help_3.html</item>
+        <item>file:///android_asset/weeks/3-activation/1.html</item>
+        <item>file:///android_asset/weeks/3-activation/2.html</item>
+        <item>file:///android_asset/weeks/3-activation/3.html</item>
+        <item>file:///android_asset/weeks/3-activation/4.html</item>
 	</string-array>
 
    	<string-array name="three_titles">
-        <item>Day-to-Day Introduction (1/4)</item>
-        <item>Day-to-Day Introduction (2/4)</item>
-        <item>Day-to-Day Introduction (3/4)</item>
-        <item>Day-to-Day Introduction (4/4)</item>
+        <item>Lesson 3: Getting Activated! (1/4)</item>
+        <item>Lesson 3: Getting Activated! (2/4)</item>
+        <item>Lesson 3: Getting Activated! (3/4)</item>
+        <item>Lesson 3: Getting Activated! (4/4)</item>
     </string-array>
    			
     <!-- Lesson Four Resources -->
     <string-array name="four_urls">
-        <item>file:///android_asset/help_0.html</item>
-        <item>file:///android_asset/help_1.html</item>
-        <item>file:///android_asset/help_2.html</item>
-        <item>file:///android_asset/help_3.html</item>
+        <item>file:///android_asset/weeks/4-interpersonal/1.html</item>
+		<item>file:///android_asset/weeks/4-interpersonal/2.html</item>
+        <item>file:///android_asset/weeks/4-interpersonal/3.html</item>
+		<item>file:///android_asset/weeks/4-interpersonal/4.html</item>
+        <item>file:///android_asset/weeks/4-interpersonal/5.html</item>
 	</string-array>
 
    	<string-array name="four_titles">
-        <item>Day-to-Day Introduction (1/4)</item>
-        <item>Day-to-Day Introduction (2/4)</item>
-        <item>Day-to-Day Introduction (3/4)</item>
-        <item>Day-to-Day Introduction (4/4)</item>
+        <item>Lesson 4: Improving Interpersonal Interactions (1/5)</item>
+        <item>Lesson 4: Improving Interpersonal Interactions (2/5)</item>
+        <item>Lesson 4: Improving Interpersonal Interactions (3/5)</item>
+        <item>Lesson 4: Improving Interpersonal Interactions (4/5)</item>
+        <item>Lesson 4: Improving Interpersonal Interactions (5/5)</item>
     </string-array>
-   	
+
+    <!-- Lesson Five Resources -->
+    <string-array name="five_urls">
+        <item>file:///android_asset/weeks/5-problem-solving/1.html</item>
+		<item>file:///android_asset/weeks/5-problem-solving/2.html</item>
+	</string-array>
+
+   	<string-array name="five_titles">
+        <item>Lesson 5: Problem Solving (1/2)</item>
+        <item>Lesson 5: Problem Solving (2/2)</item>
+    </string-array>
+   		
     <!-- Help Resources -->
     <string-array name="help_urls">
         <item>file:///android_asset/help_0.html</item>
@@ -106,6 +125,8 @@
     <string name="title_settings">Day-to-Day Settings</string>
 	
     <string name="settings_group_schedule">Schedule Options</string>
+    <string name="title_week_start">Start of Week</string>
+    <string name="desc_week_start">First day of the week when a new lesson should begin.</string>
     <string name="title_day_start">Start of Day</string>
     <string name="desc_day_start">Hour of day when notifications can begin.</string>
     <string name="title_day_end">End of Day</string>
@@ -188,4 +209,26 @@
         <item>{\"completed\": false, \"title\": \"Thoughts Message Three-Three\", \"scheduled_time\": \"6:00pm\"}</item>
         <item>{\"completed\": false, \"title\": \"Thoughts Message Three-Four\", \"scheduled_time\": \"9:00pm\"}</item>
    </string-array>
+   
+   <string-array name="list_weekday_labels">
+		<item>Sunday</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+	</string-array>
+   	<string-array name="list_weekday_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+   	</string-array>
+   	
+   	<string name="note_title">Day-to-Day Message</string>
+   	
 </resources>

@@ -89,6 +89,8 @@ public class LogManager
 		if (payload == null)
 			payload = new HashMap<String, Object>();
 		
+		payload.put("app_package", this._context.getApplicationContext().getPackageName());
+		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
 
 		if (prefs.getBoolean("config_log_location", false))

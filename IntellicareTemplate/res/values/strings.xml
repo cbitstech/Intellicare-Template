@@ -25,7 +25,7 @@
     <string name="doing_better_placeholder">Enter suggestions. (Optional)</string>
     <string name="action_submit">Submit</string>
 
-    <string name="log_url">http://intellicare.aetherial.net/events/log</string>
+    <string name="log_url">http://intellicare.cbits.northwestern.edu//events/log</string>
     
     <color name="bottom_bar_gray">#fff3f3f3</color>
     <color name="test_color">#ff800000</color>
@@ -34,4 +34,6 @@
     <string name="button_previous">&#171; Back</string>
     <string name="button_next">Next &#187;</string>
     <string name="button_close">Close</string>
+
+    <string name="button_continue">Continue</string>
 </resources>

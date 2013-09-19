@@ -1,18 +1,14 @@
 package edu.northwestern.cbits.intellicare;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.util.Log;
 import android.widget.LinearLayout.LayoutParams;
-import android.widget.TextView;
-
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import edu.northwestern.cbits.ic_template.R;
 
 public class DialogActivity extends Activity
@@ -51,82 +47,59 @@ public class DialogActivity extends Activity
 		
 		DialogActivity._dialogStack.remove(this);
 	}
-	
-	protected void onPause()
-	{
-		super.onPause();
-
-        Intent intent = this.getIntent();
-
-        final String title = intent.getStringExtra(DialogActivity.DIALOG_TITLE);
-        final String message = intent.getStringExtra(DialogActivity.DIALOG_MESSAGE);
-
-        HashMap <String, Object> payload = new HashMap<String, Object>();
-		payload.put("title", title);
-		payload.put("message", message);
-	}
 
 	protected void onResume()
 	{
 		super.onResume();
 
-		final DialogActivity me = this;
-
-        final TextView messageText = (TextView) this.findViewById(R.id.text_dialog_message);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         Intent intent = this.getIntent();
 
         final String title = intent.getStringExtra(DialogActivity.DIALOG_TITLE);
         final String message = intent.getStringExtra(DialogActivity.DIALOG_MESSAGE);
+        final String confirm = intent.getStringExtra(DialogActivity.DIALOG_CONFIRM_BUTTON);
 
-        final String confirmScript = intent.getStringExtra(DialogActivity.DIALOG_CONFIRM_SCRIPT);
-
-        this.setTitle(title);
-
-        messageText.setText(message);
-
-        Button confirmButton = (Button) this.findViewById(R.id.button_dialog_confirm);
-        confirmButton.setText(intent.getStringExtra(DialogActivity.DIALOG_CONFIRM_BUTTON));
-
-		HashMap <String, Object> payload = new HashMap<String, Object>();
-		payload.put("title", title);
-		payload.put("message", message);
-		
-        confirmButton.setOnClickListener(new OnClickListener()
+        final DialogActivity me = this;
+        
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setPositiveButton(confirm, new DialogInterface.OnClickListener() 
         {
-			public void onClick(View v)
-			{
-				// TODO: Confirm activity...
-
-				me.finish();
-			}
+        	public void onClick(DialogInterface dialog, int id) 
+        	{
+        		Log.e("IT", "CONFIRM");
+        		
+        		me.finish();
+        	}
         });
-
-        Button cancelButton = (Button) this.findViewById(R.id.button_dialog_cancel);
-
+        
         if (intent.hasExtra(DialogActivity.DIALOG_CANCEL_BUTTON))
         {
-			cancelButton.setText(intent.getStringExtra(DialogActivity.DIALOG_CANCEL_BUTTON));
+            final String cancel = intent.getStringExtra(DialogActivity.DIALOG_CANCEL_BUTTON);
 
-            if (intent.hasExtra(DialogActivity.DIALOG_CANCEL_SCRIPT))
-            {
-	            final String cancelScript = intent.getStringExtra(DialogActivity.DIALOG_CANCEL_SCRIPT);
-	
-	            cancelButton.setOnClickListener(new OnClickListener()
-	            {
-	    			public void onClick(View v)
-	    			{
-	    				// TODO: Cancel activity...
-	    				
-	    				me.finish();
-	    			}
-	            });
-            }
-
-            cancelButton.setVisibility(View.VISIBLE);
+        	builder.setNegativeButton(cancel, new DialogInterface.OnClickListener() 
+	        {
+	        	public void onClick(DialogInterface dialog, int id) 
+	        	{
+	        		Log.e("IT", "CANCEL");
+	        		
+	        		me.finish();
+	        	}
+	    	});
         }
-        else
-            cancelButton.setVisibility(View.GONE);
-        	
+
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() 
+        {
+			public void onCancel(DialogInterface dialog) 
+			{
+        		Log.e("IT", "CANCEL");
+        		
+        		me.finish();
+			}
+		});
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

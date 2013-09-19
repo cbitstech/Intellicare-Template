@@ -1,11 +1,14 @@
 package edu.northwestern.cbits.intellicare.messages;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +26,7 @@ import edu.northwestern.cbits.intellicare.ConsentedActivity;
 public class LessonsActivity extends ConsentedActivity 
 {
 	public static final String LESSON_LEVEL = "LESSON_LEVEL";
+	public static final String LESSON_READ_PREFIX = "lesson_read_";
 
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -35,6 +39,25 @@ public class LessonsActivity extends ConsentedActivity
 		
 		if (prefs.getBoolean(HelpActivity.HELP_COMPLETED, false) == false)
 			this.startActivity(new Intent(this, HelpActivity.class));
+		
+		String startDay = prefs.getString("config_week_start", null);
+		
+		Log.e("IM", "START DAY: " + startDay);
+		
+		if (startDay == null)
+		{
+			Calendar calendar = Calendar.getInstance();
+			
+			startDay = "" + calendar.get(Calendar.DAY_OF_WEEK);
+			
+			Editor e = prefs.edit();
+			e.putString("config_week_start", startDay);
+			e.commit();
+			
+			Log.e("IM", "2 START DAY: " + startDay);
+		}
+		
+		ScheduleManager.getInstance(this);
 	}
 	
 	public void onResume()
@@ -46,12 +69,14 @@ public class LessonsActivity extends ConsentedActivity
 		titles.add(this.getString(R.string.title_lesson_two));
 		titles.add(this.getString(R.string.title_lesson_three));
 		titles.add(this.getString(R.string.title_lesson_four));
+		titles.add(this.getString(R.string.title_lesson_five));
 
 		final ArrayList<String> descriptions = new ArrayList<String>();
 		descriptions.add(this.getString(R.string.desc_lesson_one));
 		descriptions.add(this.getString(R.string.desc_lesson_two));
 		descriptions.add(this.getString(R.string.desc_lesson_three));
 		descriptions.add(this.getString(R.string.desc_lesson_four));
+		descriptions.add(this.getString(R.string.desc_lesson_five));
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		final int lessonLevel = prefs.getInt(LessonsActivity.LESSON_LEVEL, 0);
@@ -116,6 +141,10 @@ public class LessonsActivity extends ConsentedActivity
 						case 3:
 							lessonIntent.putExtra(LessonActivity.TITLE_LIST, R.array.four_titles);
 							lessonIntent.putExtra(LessonActivity.URL_LIST, R.array.four_urls);
+							break;
+						case 4:
+							lessonIntent.putExtra(LessonActivity.TITLE_LIST, R.array.five_titles);
+							lessonIntent.putExtra(LessonActivity.URL_LIST, R.array.five_urls);
 							break;
 					}
 

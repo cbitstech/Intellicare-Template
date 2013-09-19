@@ -15,5 +15,12 @@
 		    android:entries="@array/list_hour_labels"
 		    android:entryValues="@array/list_hour_values"
 		    android:defaultValue="21" />        
-		</PreferenceCategory>
+		<ListPreference android:key="config_week_start"
+		    android:title="@string/title_week_start"
+		    android:icon="@drawable/ic_action_calendar_day"
+		    android:summary="@string/desc_week_start"
+		    android:entries="@array/list_weekday_labels"
+		    android:entryValues="@array/list_weekday_values"
+		    android:defaultValue="21" />        
+	</PreferenceCategory>
 </PreferenceScreen>
