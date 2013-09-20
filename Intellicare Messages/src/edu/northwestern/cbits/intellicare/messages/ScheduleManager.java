@@ -76,8 +76,6 @@ public class ScheduleManager
 			if (lessonCursor.moveToNext())
 			{
 				currentLesson = lessonCursor.getInt(lessonCursor.getColumnIndex("id"));
-
-				Log.e("D2D", "INITING LESSON " + currentLesson);
 				
 				ContentValues values = new ContentValues();
 				values.put("complete", 1);
