@@ -126,6 +126,8 @@ public class ScheduleManager
 						int id = 0;
 
 						Editor e = prefs.edit();
+						
+						int icon = R.drawable.ic_notification;
 
 						if (index % 5 == 0)
 						{
@@ -136,13 +138,13 @@ public class ScheduleManager
 							
 							e.remove(ScheduleManager.INSTRUCTION_COMPLETED);
 
-							// Set colored icon
+							icon = R.drawable.ic_notification_color;
 						}
 						
 						intent.putExtra(ScheduleManager.MESSAGE_MESSAGE, msg.message);
 						intent.putExtra(ScheduleManager.MESSAGE_TITLE, msg.title);
 
-						StatusNotificationManager.getInstance(this._context).notifyBigText(id, R.drawable.ic_notification, msg.title, msg.message, PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+						StatusNotificationManager.getInstance(this._context).notifyBigText(id, icon, msg.title, msg.message, PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT));
 						
 						index += 1;
 	
@@ -218,7 +220,7 @@ public class ScheduleManager
 					break;
 			}
 			
-			PendingIntent pi = PendingIntent.getActivity(this._context, 0, lessonIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+			PendingIntent pi = PendingIntent.getActivity(this._context, 1, lessonIntent, PendingIntent.FLAG_ONE_SHOT);
 			
 			Log.e("D2D", "NOTE : " + title + " (" + message + ")");
 			
@@ -232,7 +234,7 @@ public class ScheduleManager
 			
 			Log.e("D2D", "UPDATED: " + updated + " FOR " + currentLesson);
 
-			StatusNotificationManager.getInstance(this._context).notifyBigText(0, R.drawable.ic_notification, title, message, pi);
+			StatusNotificationManager.getInstance(this._context).notifyBigText(0, R.drawable.ic_notification_color, title, message, pi);
 		}
 	}
 	
