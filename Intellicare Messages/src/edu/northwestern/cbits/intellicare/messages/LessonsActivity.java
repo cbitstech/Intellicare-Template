@@ -1,14 +1,12 @@
 package edu.northwestern.cbits.intellicare.messages;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,47 +38,59 @@ public class LessonsActivity extends ConsentedActivity
 		if (prefs.getBoolean(HelpActivity.HELP_COMPLETED, false) == false)
 			this.startActivity(new Intent(this, HelpActivity.class));
 		
-		String startDay = prefs.getString("config_week_start", null);
-		
-		Log.e("IM", "START DAY: " + startDay);
-		
-		if (startDay == null)
-		{
-			Calendar calendar = Calendar.getInstance();
-			
-			startDay = "" + calendar.get(Calendar.DAY_OF_WEEK);
-			
-			Editor e = prefs.edit();
-			e.putString("config_week_start", startDay);
-			e.commit();
-			
-			Log.e("IM", "2 START DAY: " + startDay);
-		}
-		
 		ScheduleManager.getInstance(this);
 	}
 	
 	public void onResume()
 	{
 		super.onResume();
-		
-		final ArrayList<String> titles = new ArrayList<String>();
-		titles.add(this.getString(R.string.title_lesson_one));
-		titles.add(this.getString(R.string.title_lesson_two));
-		titles.add(this.getString(R.string.title_lesson_three));
-		titles.add(this.getString(R.string.title_lesson_four));
-		titles.add(this.getString(R.string.title_lesson_five));
 
+		final ArrayList<String> titles = new ArrayList<String>();
 		final ArrayList<String> descriptions = new ArrayList<String>();
-		descriptions.add(this.getString(R.string.desc_lesson_one));
-		descriptions.add(this.getString(R.string.desc_lesson_two));
-		descriptions.add(this.getString(R.string.desc_lesson_three));
-		descriptions.add(this.getString(R.string.desc_lesson_four));
-		descriptions.add(this.getString(R.string.desc_lesson_five));
+		final ArrayList<Integer> ids = new ArrayList<Integer>();
+
+		Cursor c = this.getContentResolver().query(ContentProvider.LESSONS_URI, null, null, null, "lesson_order");
+
+		while (c.moveToNext())
+		{
+			int id = c.getInt(c.getColumnIndex("id"));
+			
+			ids.add(Integer.valueOf(id));
+			
+			switch(id)
+			{
+				case 1:
+					titles.add(this.getString(R.string.title_lesson_one));
+					descriptions.add(this.getString(R.string.desc_lesson_one));
+					
+					break;
+				case 2:
+					titles.add(this.getString(R.string.title_lesson_two));
+					descriptions.add(this.getString(R.string.desc_lesson_two));
+					
+					break;
+				case 3:
+					titles.add(this.getString(R.string.title_lesson_three));
+					descriptions.add(this.getString(R.string.desc_lesson_three));
+					
+					break;
+				case 4:
+					titles.add(this.getString(R.string.title_lesson_four));
+					descriptions.add(this.getString(R.string.desc_lesson_four));
+					
+					break;
+				case 5:
+					titles.add(this.getString(R.string.title_lesson_five));
+					descriptions.add(this.getString(R.string.desc_lesson_five));
+					
+					break;
+			}
+		}
 		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		final int lessonLevel = prefs.getInt(LessonsActivity.LESSON_LEVEL, 0);
-		
+		c.close();
+
+		final LessonsActivity me = this;
+
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row_lesson, titles)
 		{
 			public View getView(int position, View convertView, ViewGroup parent)
@@ -96,13 +106,23 @@ public class LessonsActivity extends ConsentedActivity
 				
 				title.setText(titles.get(position));
 				description.setText(descriptions.get(position));
-				
+
 				ImageView lockIcon = (ImageView) convertView.findViewById(R.id.lock_icon);
+
+				String selection = "id = ?";
+				String[] args = { "" + ids.get(position) };
 				
-				if (position > lessonLevel)
-					lockIcon.setImageResource(R.drawable.ic_action_lock_closed);
-				else
-					lockIcon.setImageResource(R.drawable.ic_action_lock_open);
+				Cursor c = me.getContentResolver().query(ContentProvider.LESSONS_URI, null, selection, args, null);
+				
+				if (c.moveToNext())
+				{
+					if (c.getInt(c.getColumnIndex("complete")) == 0)
+						lockIcon.setImageResource(R.drawable.ic_action_lock_closed);
+					else
+						lockIcon.setImageResource(R.drawable.ic_action_lock_open);
+				}
+				
+				c.close();
 				
 				return convertView;
 			}
@@ -111,45 +131,58 @@ public class LessonsActivity extends ConsentedActivity
 		ListView list = (ListView) this.findViewById(R.id.list_view);
 		list.setAdapter(adapter);
 		
-		final LessonsActivity me = this;
 		
 		list.setOnItemClickListener(new OnItemClickListener()
 		{
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
 			{
-				if (position > lessonLevel)
-					Toast.makeText(me, R.string.toast_lesson_incomplete, Toast.LENGTH_LONG).show();
-				else
+				String selection = "id = ?";
+				String[] args = { "" + ids.get(position) };
+				
+				Cursor c = me.getContentResolver().query(ContentProvider.LESSONS_URI, null, selection, args, null);
+				
+				if (c.moveToNext())
 				{
-					Intent lessonIntent = new Intent(me, LessonActivity.class);
-					lessonIntent.putExtra(LessonActivity.UNLOCK_LEVEL, position + 1);
-					
-					switch(position)
+					if (c.getInt(c.getColumnIndex("complete")) == 0)
+						Toast.makeText(me, R.string.toast_lesson_incomplete, Toast.LENGTH_LONG).show();
+					else
 					{
-						case 0:
-							lessonIntent.putExtra(LessonActivity.TITLE_LIST, R.array.one_titles);
-							lessonIntent.putExtra(LessonActivity.URL_LIST, R.array.one_urls);
-							break;
-						case 1:
-							lessonIntent.putExtra(LessonActivity.TITLE_LIST, R.array.two_titles);
-							lessonIntent.putExtra(LessonActivity.URL_LIST, R.array.two_urls);
-							break;
-						case 2:
-							lessonIntent.putExtra(LessonActivity.TITLE_LIST, R.array.three_titles);
-							lessonIntent.putExtra(LessonActivity.URL_LIST, R.array.three_urls);
-							break;
-						case 3:
-							lessonIntent.putExtra(LessonActivity.TITLE_LIST, R.array.four_titles);
-							lessonIntent.putExtra(LessonActivity.URL_LIST, R.array.four_urls);
-							break;
-						case 4:
-							lessonIntent.putExtra(LessonActivity.TITLE_LIST, R.array.five_titles);
-							lessonIntent.putExtra(LessonActivity.URL_LIST, R.array.five_urls);
-							break;
-					}
+						Intent lessonIntent = new Intent(me, LessonActivity.class);
+						
+						int lessonId = ids.get(position).intValue();
 
-					me.startActivity(lessonIntent);
+						if (position < ids.size() - 1)
+							lessonIntent.putExtra(LessonsActivity.LESSON_LEVEL, ids.get(position).intValue());
+						
+						switch(lessonId)
+						{
+							case 1:
+								lessonIntent.putExtra(LessonActivity.TITLE_LIST, R.array.one_titles);
+								lessonIntent.putExtra(LessonActivity.URL_LIST, R.array.one_urls);
+								break;
+							case 2:
+								lessonIntent.putExtra(LessonActivity.TITLE_LIST, R.array.two_titles);
+								lessonIntent.putExtra(LessonActivity.URL_LIST, R.array.two_urls);
+								break;
+							case 3:
+								lessonIntent.putExtra(LessonActivity.TITLE_LIST, R.array.three_titles);
+								lessonIntent.putExtra(LessonActivity.URL_LIST, R.array.three_urls);
+								break;
+							case 4:
+								lessonIntent.putExtra(LessonActivity.TITLE_LIST, R.array.four_titles);
+								lessonIntent.putExtra(LessonActivity.URL_LIST, R.array.four_urls);
+								break;
+							case 5:
+								lessonIntent.putExtra(LessonActivity.TITLE_LIST, R.array.five_titles);
+								lessonIntent.putExtra(LessonActivity.URL_LIST, R.array.five_urls);
+								break;
+						}
+
+						me.startActivity(lessonIntent);
+					}
 				}
+				
+				c.close();
 			}
 		});
 	}
@@ -177,11 +210,6 @@ public class LessonsActivity extends ConsentedActivity
 		{
 			Intent testIntent = new Intent(this, TestActivity.class);
 			this.startActivity(testIntent);
-		}
-		else if (item.getItemId() == R.id.action_schedule)
-		{
-			Intent scheduleIntent = new Intent(this, ScheduleActivity.class);
-			this.startActivity(scheduleIntent);
 		}
 		
 		return true;

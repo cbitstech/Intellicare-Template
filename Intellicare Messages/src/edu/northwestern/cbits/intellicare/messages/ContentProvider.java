@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import android.content.ContentValues;
 import android.content.UriMatcher;
@@ -80,9 +82,36 @@ public class ContentProvider extends android.content.ContentProvider
 			{
 				e.printStackTrace();
 			}
-		}
 
-		this._db = SQLiteDatabase.openDatabase(database.getAbsolutePath(), null, SQLiteDatabase.OPEN_READONLY | SQLiteDatabase.NO_LOCALIZED_COLLATORS);
+			this._db = SQLiteDatabase.openDatabase(database.getAbsolutePath(), null, SQLiteDatabase.OPEN_READWRITE | SQLiteDatabase.NO_LOCALIZED_COLLATORS);
+			
+			ArrayList<Float> indices = new ArrayList<Float>();
+			indices.add(Float.valueOf(1.0f));
+			indices.add(Float.valueOf(2.0f));
+			indices.add(Float.valueOf(3.0f));
+			indices.add(Float.valueOf(4.0f));
+			indices.add(Float.valueOf(5.0f));
+			
+			Collections.shuffle(indices);
+			
+			for (int i = 0; i < indices.size(); i++)
+			{
+				ContentValues values = new ContentValues();
+				values.put("lesson_order", indices.get(i));
+
+				if (indices.get(i).floatValue() == 1.0f)
+					values.put("complete", true);
+
+				String where = "id = ?";
+				String[] whereArgs = { "" + (i + 1) };
+				
+				this._db.update("lessons", values, where, whereArgs);
+			}
+			
+			this._db.close();
+		}
+		
+		this._db = SQLiteDatabase.openDatabase(database.getAbsolutePath(), null, SQLiteDatabase.OPEN_READWRITE | SQLiteDatabase.NO_LOCALIZED_COLLATORS);
 		
 		return true;
 	}
@@ -170,6 +199,12 @@ public class ContentProvider extends android.content.ContentProvider
 
 	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) 
 	{
+		switch(this._uriMatcher.match(uri))
+		{
+			case ContentProvider.LESSONS_LIST:
+				return this._db.update(ContentProvider.LESSONS_TABLE, values, selection, selectionArgs);
+		}
+		
 		return 0;
 	}
 }

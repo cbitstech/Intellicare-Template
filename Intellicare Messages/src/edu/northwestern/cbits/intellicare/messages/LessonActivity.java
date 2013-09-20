@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
-import edu.northwestern.cbits.intellicare.RatingActivity;
 import edu.northwestern.cbits.intellicare.SequentialPageActivity;
 
 public class LessonActivity extends SequentialPageActivity 
@@ -27,13 +26,13 @@ public class LessonActivity extends SequentialPageActivity
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
-		int currentLevel = prefs.getInt(LessonsActivity.LESSON_LEVEL, 0);
+		int currentLevel = this.getIntent().getIntExtra(LessonsActivity.LESSON_LEVEL, 0);
 		
 		Editor e = prefs.edit();
 		e.putBoolean(LessonsActivity.LESSON_READ_PREFIX + currentLevel, true);
 		e.commit();
 
-		Intent intent = new Intent(this, RatingActivity.class);
+		Intent intent = new Intent(this, MessageRatingActivity.class);
 		this.startActivity(intent);
 	}
 }

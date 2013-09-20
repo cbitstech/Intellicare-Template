@@ -5,6 +5,7 @@ import java.util.Date;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,13 +13,16 @@ import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import edu.northwestern.cbits.intellicare.RatingActivity;
 import edu.northwestern.cbits.intellicare.StatusNotificationManager;
 
 public class ScheduleManager
 {
 	private static final String MESSAGE_INDEX = "message_index";
 	private static final String FIRST_RUN = "first_run";
+	public static final String INSTRUCTION_COMPLETED = "instruction_completed";
+	public static final String IS_INSTRUCTION = "is_instruction";
+	public static final String MESSAGE_TITLE = "message_title";
+	public static final String MESSAGE_MESSAGE = "message_message";
 	
 	private static ScheduleManager _instance = null;
 
@@ -35,7 +39,7 @@ public class ScheduleManager
 		PendingIntent pi = PendingIntent.getBroadcast(this._context, 0, broadcast, PendingIntent.FLAG_UPDATE_CURRENT);
 		
 //		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);
-		alarm.setRepeating(AlarmManager.ELAPSED_REALTIME, 0, 120000, pi);
+		alarm.setRepeating(AlarmManager.ELAPSED_REALTIME, 0, 60000, pi);
 	}
 
 	public static ScheduleManager getInstance(Context context)
@@ -64,6 +68,33 @@ public class ScheduleManager
 		}
 		
 		int currentLesson = prefs.getInt(LessonsActivity.LESSON_LEVEL, 0);
+		
+		if (currentLesson == 0)
+		{
+			Cursor lessonCursor = this._context.getContentResolver().query(ContentProvider.LESSONS_URI, null, null, null, "lesson_order");
+			
+			if (lessonCursor.moveToNext())
+			{
+				currentLesson = lessonCursor.getInt(lessonCursor.getColumnIndex("id"));
+
+				Log.e("D2D", "INITING LESSON " + currentLesson);
+				
+				ContentValues values = new ContentValues();
+				values.put("complete", 1);
+
+				String where = "id = ?";
+				String[] whereArgs = { "" + currentLesson };
+				
+				this._context.getContentResolver().update(ContentProvider.LESSONS_URI, values, where, whereArgs);
+
+				Editor e = prefs.edit();
+				e.putInt(LessonsActivity.LESSON_LEVEL, currentLesson);
+				e.remove(ScheduleManager.MESSAGE_INDEX);
+				e.commit();
+			}
+			
+			lessonCursor.close();
+		}
 
 		Log.e("IM", "CURRENT_LESSON: " + currentLesson);
 		
@@ -79,44 +110,66 @@ public class ScheduleManager
 			
 			if (notificationTime > 0)
 			{
-				Message msg = this.getMessage(index);
+				if (index > 0 && index % 5 == 0 && prefs.contains(ScheduleManager.INSTRUCTION_COMPLETED) == false)
+					index -= 5;
+				
+				Message msg = this.getMessage(currentLesson, index);
 				
 				Log.e("D2D", "MSG " + index + " => " + msg);
 				
-				if (index < ((currentLesson + 1) * 35) && msg != null)
+				if (msg != null)
 				{
 					if (System.currentTimeMillis() > notificationTime)
 					{
 						Log.e("D2D", "NOTIFYING " + msg.message);
 						
-						Intent intent = new Intent(this._context, RatingActivity.class);
+						Intent intent = new Intent(this._context, MessageRatingActivity.class);
 						
 						int id = 0;
-						
+
+						Editor e = prefs.edit();
+
 						if (index % 5 == 0)
+						{
+							intent.putExtra(ScheduleManager.IS_INSTRUCTION, true);
+
 							id = 1;
+							msg.title = this._context.getString(R.string.note_instruction);
+							
+							e.remove(ScheduleManager.INSTRUCTION_COMPLETED);
+
+							// Set colored icon
+						}
+						
+						intent.putExtra(ScheduleManager.MESSAGE_MESSAGE, msg.message);
+						intent.putExtra(ScheduleManager.MESSAGE_TITLE, msg.title);
 
 						StatusNotificationManager.getInstance(this._context).notifyBigText(id, R.drawable.ic_notification, msg.title, msg.message, PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
 						
 						index += 1;
 	
-						Editor e = prefs.edit();
 						e.putInt(ScheduleManager.MESSAGE_INDEX, index);
 						e.commit();
 					}
 				}
 				else
 				{
-					currentLesson += 1;
-							
-					if (currentLesson < 5)
+					Cursor c = this._context.getContentResolver().query(ContentProvider.LESSONS_URI, null, null, null, "lesson_order");
+					
+					while (c.moveToNext())
 					{
-						// Time for next lesson...
-
-						Editor e = prefs.edit();
-						e.putInt(LessonsActivity.LESSON_LEVEL, currentLesson);
-						e.commit();
+						int thisId = c.getInt(c.getColumnIndex("id"));
+						
+						if (thisId == currentLesson)
+							currentLesson = 0;
+						else if (currentLesson == 0)
+							currentLesson = thisId;
 					}
+							
+					Editor e = prefs.edit();
+					e.putInt(LessonsActivity.LESSON_LEVEL, currentLesson);
+					e.remove(ScheduleManager.MESSAGE_INDEX);
+					e.commit();
 				}
 			}
 			else
@@ -126,28 +179,42 @@ public class ScheduleManager
 		}
 		else
 		{
-			String title = this._context.getString(R.string.title_lesson_one);
-			String message = this._context.getString(R.string.desc_lesson_one);
+			String title = null;
+			String message = null;
 			
 			Intent lessonIntent = new Intent(this._context, LessonActivity.class);
-			lessonIntent.putExtra(LessonActivity.TITLE_LIST, R.array.one_titles);
-			lessonIntent.putExtra(LessonActivity.URL_LIST, R.array.one_urls);
+
+			lessonIntent.putExtra(LessonsActivity.LESSON_LEVEL, currentLesson);
 
 			switch (currentLesson)
 			{
 				case 1:
+					title = this._context.getString(R.string.title_lesson_one);
+					message = this._context.getString(R.string.desc_lesson_one);
+					lessonIntent.putExtra(LessonActivity.TITLE_LIST, R.array.one_titles);
+					lessonIntent.putExtra(LessonActivity.URL_LIST, R.array.one_urls);
+					break;
+				case 2:
+					title = this._context.getString(R.string.title_lesson_two);
+					message = this._context.getString(R.string.desc_lesson_two);
 					lessonIntent.putExtra(LessonActivity.TITLE_LIST, R.array.two_titles);
 					lessonIntent.putExtra(LessonActivity.URL_LIST, R.array.two_urls);
 					break;
-				case 2:
+				case 3:
+					title = this._context.getString(R.string.title_lesson_three);
+					message = this._context.getString(R.string.desc_lesson_three);
 					lessonIntent.putExtra(LessonActivity.TITLE_LIST, R.array.three_titles);
 					lessonIntent.putExtra(LessonActivity.URL_LIST, R.array.three_urls);
 					break;
-				case 3:
+				case 4:
+					title = this._context.getString(R.string.title_lesson_four);
+					message = this._context.getString(R.string.desc_lesson_four);
 					lessonIntent.putExtra(LessonActivity.TITLE_LIST, R.array.four_titles);
 					lessonIntent.putExtra(LessonActivity.URL_LIST, R.array.four_urls);
 					break;
-				case 4:
+				case 5:
+					title = this._context.getString(R.string.title_lesson_five);
+					message = this._context.getString(R.string.desc_lesson_five);
 					lessonIntent.putExtra(LessonActivity.TITLE_LIST, R.array.five_titles);
 					lessonIntent.putExtra(LessonActivity.URL_LIST, R.array.five_urls);
 					break;
@@ -155,13 +222,33 @@ public class ScheduleManager
 			
 			PendingIntent pi = PendingIntent.getActivity(this._context, 0, lessonIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 			
+			Log.e("D2D", "NOTE : " + title + " (" + message + ")");
+			
+			ContentValues values = new ContentValues();
+			values.put("complete", 1);
+
+			String where = "id = ?";
+			String[] whereArgs = { "" + currentLesson };
+			
+			int updated = this._context.getContentResolver().update(ContentProvider.LESSONS_URI, values, where, whereArgs);
+			
+			Log.e("D2D", "UPDATED: " + updated + " FOR " + currentLesson);
+
 			StatusNotificationManager.getInstance(this._context).notifyBigText(0, R.drawable.ic_notification, title, message, pi);
 		}
 	}
 	
-	private Message getMessage(int index) 
+	private Message getMessage(int lessonId, int index) 
 	{
-		Cursor cursor = this._context.getContentResolver().query(ContentProvider.MESSAGE_GROUPS_URI, null, null, null, "group_order");
+		if (index >= 5) // 35)
+			return null;
+		
+		Log.e("D2D", "MSG INDEX: " + index + " / " + lessonId);
+		
+		String selection = "lesson_id = ?";
+		String[] msgArgs = { "" + lessonId };
+
+		Cursor cursor = this._context.getContentResolver().query(ContentProvider.MESSAGE_GROUPS_URI, null, selection, msgArgs, "group_order");
 		
 		Message message = null;
 		
@@ -204,6 +291,9 @@ public class ScheduleManager
 
 	private long getNotificationTime(int index) 
 	{
+		if (1 < 2 * 3)
+			return System.currentTimeMillis() - 5000;
+		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
 		
 		long firstRun = prefs.getLong(ScheduleManager.FIRST_RUN, 0);
