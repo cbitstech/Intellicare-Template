@@ -2,6 +2,10 @@ package edu.northwestern.cbits.intellicare.messages;
 
 import java.util.ArrayList;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.CrashManagerListener;
+import net.hockeyapp.android.UpdateManager;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -26,6 +30,8 @@ public class LessonsActivity extends ConsentedActivity
 	public static final String LESSON_LEVEL = "LESSON_LEVEL";
 	public static final String LESSON_READ_PREFIX = "lesson_read_";
 
+	private static final String APP_ID = "455953ac6a6eb7c89be9af9848731279";
+
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
@@ -39,6 +45,8 @@ public class LessonsActivity extends ConsentedActivity
 			this.startActivity(new Intent(this, HelpActivity.class));
 		
 		ScheduleManager.getInstance(this);
+		
+		UpdateManager.register(this, APP_ID);
 	}
 	
 	public void onResume()
@@ -183,6 +191,14 @@ public class LessonsActivity extends ConsentedActivity
 				}
 				
 				c.close();
+			}
+		});
+		
+		CrashManager.register(this, APP_ID, new CrashManagerListener() 
+		{
+			public boolean shouldAutoUploadCrashes() 
+			{
+				    return true;
 			}
 		});
 	}

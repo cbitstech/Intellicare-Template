@@ -7,7 +7,6 @@ import org.json.JSONException;
 
 import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 
 @SuppressWarnings("deprecation")
 public class IntellicarePlugin extends Plugin 

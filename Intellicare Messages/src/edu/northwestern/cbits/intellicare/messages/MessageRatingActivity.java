@@ -1,5 +1,8 @@
 package edu.northwestern.cbits.intellicare.messages;
 
+import java.util.HashMap;
+
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
@@ -7,6 +10,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import edu.northwestern.cbits.ic_template.R;
 import edu.northwestern.cbits.intellicare.RatingActivity;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class MessageRatingActivity extends RatingActivity 
 {
@@ -39,9 +43,16 @@ public class MessageRatingActivity extends RatingActivity
 			this.getSupportActionBar().setTitle(title);
 		}
 		
-		if (this.getIntent().hasExtra(ScheduleManager.MESSAGE_MESSAGE))
+		Intent intent = this.getIntent();
+		
+		if (intent.hasExtra(ScheduleManager.MESSAGE_MESSAGE))
 		{
-			String message = this.getIntent().getStringExtra(ScheduleManager.MESSAGE_MESSAGE);
+			String message = intent.getStringExtra(ScheduleManager.MESSAGE_MESSAGE);
+			String descIndex = intent.getStringExtra(ScheduleManager.MESSAGE_INDEX);
+
+			HashMap<String, Object> payload = new HashMap<String, Object>();
+			payload.put("message_index", descIndex);
+			LogManager.getInstance(this).log("notification_tapped", payload);
 			
 			message += System.getProperty("line.separator") + System.getProperty("line.separator");
 			message += this.getString(edu.northwestern.cbits.intellicare.messages.R.string.message_confirm_text);

@@ -1,12 +1,12 @@
 package edu.northwestern.cbits.intellicare;
 
 import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.CrashManagerListener;
 import net.hockeyapp.android.UpdateManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 import edu.northwestern.cbits.ic_template.R;
 
 public class MainActivity extends ConsentedActivity 
@@ -25,7 +25,13 @@ public class MainActivity extends ConsentedActivity
 	{
 		super.onResume();
 		
-		CrashManager.register(this, APP_ID);
+		CrashManager.register(this, APP_ID, new CrashManagerListener() 
+		{
+			public boolean shouldAutoUploadCrashes() 
+			{
+				    return true;
+			}
+		});
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) 

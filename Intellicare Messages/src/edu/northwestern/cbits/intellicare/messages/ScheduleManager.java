@@ -1,7 +1,7 @@
 package edu.northwestern.cbits.intellicare.messages;
 
 import java.util.Calendar;
-import java.util.Date;
+import java.util.HashMap;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -12,12 +12,12 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import edu.northwestern.cbits.intellicare.StatusNotificationManager;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class ScheduleManager
 {
-	private static final String MESSAGE_INDEX = "message_index";
+	public static final String MESSAGE_INDEX = "message_index";
 	private static final String FIRST_RUN = "first_run";
 	public static final String INSTRUCTION_COMPLETED = "instruction_completed";
 	public static final String IS_INSTRUCTION = "is_instruction";
@@ -38,8 +38,8 @@ public class ScheduleManager
 		
 		PendingIntent pi = PendingIntent.getBroadcast(this._context, 0, broadcast, PendingIntent.FLAG_UPDATE_CURRENT);
 		
-//		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);
-		alarm.setRepeating(AlarmManager.ELAPSED_REALTIME, 0, 60000, pi);
+		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);
+		// alarm.setRepeating(AlarmManager.ELAPSED_REALTIME, 0, 60000, pi);
 	}
 
 	public static ScheduleManager getInstance(Context context)
@@ -94,8 +94,6 @@ public class ScheduleManager
 			lessonCursor.close();
 		}
 
-		Log.e("IM", "CURRENT_LESSON: " + currentLesson);
-		
 		boolean lessonComplete = prefs.getBoolean(LessonsActivity.LESSON_READ_PREFIX + currentLesson, false);
 		
 		if (lessonComplete)
@@ -104,8 +102,6 @@ public class ScheduleManager
 			
 			long notificationTime = this.getNotificationTime(index % 5);
 			
-			Log.e("D2D", "NEXT NOTE TIME: " + (new Date(notificationTime)).toString());
-			
 			if (notificationTime > 0)
 			{
 				if (index > 0 && index % 5 == 0 && prefs.contains(ScheduleManager.INSTRUCTION_COMPLETED) == false)
@@ -113,15 +109,12 @@ public class ScheduleManager
 				
 				Message msg = this.getMessage(currentLesson, index);
 				
-				Log.e("D2D", "MSG " + index + " => " + msg);
-				
 				if (msg != null)
 				{
 					if (System.currentTimeMillis() > notificationTime)
 					{
-						Log.e("D2D", "NOTIFYING " + msg.message);
-						
 						Intent intent = new Intent(this._context, MessageRatingActivity.class);
+						intent.setAction("ACTION_" + System.currentTimeMillis());
 						
 						int id = 0;
 
@@ -141,8 +134,15 @@ public class ScheduleManager
 							icon = R.drawable.ic_notification_color;
 						}
 						
+						String descIndex = currentLesson + "." + (index % 35);
+						
 						intent.putExtra(ScheduleManager.MESSAGE_MESSAGE, msg.message);
 						intent.putExtra(ScheduleManager.MESSAGE_TITLE, msg.title);
+						intent.putExtra(ScheduleManager.MESSAGE_INDEX, descIndex);
+						
+						HashMap<String, Object> payload = new HashMap<String, Object>();
+						payload.put("message_index", descIndex);
+						LogManager.getInstance(this._context).log("notification_shown", payload);
 
 						StatusNotificationManager.getInstance(this._context).notifyBigText(id, icon, msg.title, msg.message, PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT));
 						
@@ -183,6 +183,7 @@ public class ScheduleManager
 			String message = null;
 			
 			Intent lessonIntent = new Intent(this._context, LessonActivity.class);
+			lessonIntent.setAction("ACTION_" + System.currentTimeMillis());
 
 			lessonIntent.putExtra(LessonsActivity.LESSON_LEVEL, currentLesson);
 
@@ -219,10 +220,14 @@ public class ScheduleManager
 					lessonIntent.putExtra(LessonActivity.URL_LIST, R.array.five_urls);
 					break;
 			}
-			
+
+			String descIndex = currentLesson + "";
+
+			HashMap<String, Object> payload = new HashMap<String, Object>();
+			payload.put("message_index", descIndex);
+			LogManager.getInstance(this._context).log("lesson_notification_shown", payload);
+
 			PendingIntent pi = PendingIntent.getActivity(this._context, 1, lessonIntent, PendingIntent.FLAG_ONE_SHOT);
-			
-			Log.e("D2D", "NOTE : " + title + " (" + message + ")");
 			
 			ContentValues values = new ContentValues();
 			values.put("complete", 1);
@@ -230,9 +235,7 @@ public class ScheduleManager
 			String where = "id = ?";
 			String[] whereArgs = { "" + currentLesson };
 			
-			int updated = this._context.getContentResolver().update(ContentProvider.LESSONS_URI, values, where, whereArgs);
-			
-			Log.e("D2D", "UPDATED: " + updated + " FOR " + currentLesson);
+			this._context.getContentResolver().update(ContentProvider.LESSONS_URI, values, where, whereArgs);
 
 			StatusNotificationManager.getInstance(this._context).notifyBigText(0, R.drawable.ic_notification_color, title, message, pi);
 		}
@@ -243,8 +246,6 @@ public class ScheduleManager
 		if (index >= 5) // 35)
 			return null;
 		
-		Log.e("D2D", "MSG INDEX: " + index + " / " + lessonId);
-		
 		String selection = "lesson_id = ?";
 		String[] msgArgs = { "" + lessonId };
 
@@ -254,8 +255,6 @@ public class ScheduleManager
 		
 		int day = index / 5;
 		int offset = index % 5;
-		
-		Log.e("D2D", "COUNT: " + cursor.getCount() + " vs. " + day + " . " + offset);
 		
 		if (cursor.getCount() > day)
 		{
@@ -291,8 +290,8 @@ public class ScheduleManager
 
 	private long getNotificationTime(int index) 
 	{
-		if (1 < 2 * 3)
-			return System.currentTimeMillis() - 5000;
+//		if (1 < 2 * 3)
+//			return System.currentTimeMillis() - 5000;
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
 		
@@ -308,13 +307,9 @@ public class ScheduleManager
 
 		calendar.set(Calendar.HOUR_OF_DAY, startHour);
 		long start = calendar.getTimeInMillis();
-		
-		Log.e("D2D", "START: " + (new Date(start)).toString());
 
 		calendar.set(Calendar.HOUR_OF_DAY, endHour);
 		long end = calendar.getTimeInMillis();
-
-		Log.e("D2D", "END: " + (new Date(end)).toString());
 
 		if (end < firstRun)
 			return -1; // Running after 9pm...
@@ -324,8 +319,6 @@ public class ScheduleManager
 
 		if (start > end)
 			end += (24 * 60 * 60 * 1000);
-		
-		Log.e("D2D", "USING INDEX " + index + "...");
 		
 		long delta = (end - start) / 5;
 
