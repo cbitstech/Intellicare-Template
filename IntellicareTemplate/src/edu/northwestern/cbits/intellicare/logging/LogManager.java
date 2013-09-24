@@ -37,6 +37,8 @@ import org.json.JSONObject;
 
 import edu.northwestern.cbits.ic_template.R;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -80,6 +82,33 @@ public class LogManager
 			LogManager._sharedInstance = new LogManager(context.getApplicationContext());
 		
 		return LogManager._sharedInstance;
+	}
+	
+	public String getUserId()
+	{
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
+
+		String userId = prefs.getString("config_user_id", null);
+
+		if (userId == null)
+		{
+			userId = "unknown-user";
+
+			AccountManager manager = (AccountManager) this._context.getSystemService(Context.ACCOUNT_SERVICE);
+			Account[] list = manager.getAccountsByType("com.google");
+
+			if (list.length == 0)
+				list = manager.getAccounts();
+
+			if (list.length > 0)
+				userId = list[0].name;
+
+			Editor e = prefs.edit();
+			e.putString("config_user_id", userId);
+			e.commit();
+		}
+		
+		return userId;
 	}
 	
 	public boolean log(String event, Map<String, Object> payload)
@@ -127,7 +156,7 @@ public class LogManager
 		payload.put(LogManager.TIMESTAMP, now / 1000);
 		
 		if (payload.containsKey(LogManager.USER_ID) == false)
-			payload.put(LogManager.USER_ID, "todo_fetch_google_id");
+			payload.put(LogManager.USER_ID, this.getUserId());
 
 		try 
 		{

@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import edu.northwestern.cbits.ic_template.R;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 import edu.northwestern.cbits.intellicare.views.ConsentWebView;
 
 public class ConsentActivity extends ActionBarActivity implements ConsentWebView.OnBottomReachedListener 
@@ -55,10 +57,14 @@ public class ConsentActivity extends ActionBarActivity implements ConsentWebView
 				Intent result = new Intent();
 				result.putExtra(ConsentActivity.CONSENTED, false);
 				me.setResult(Activity.RESULT_CANCELED);
-				
+
+				LogManager.getInstance(me).log("consent_rejected", null);
+
 				me.finish();
 			}
 		});
+		
+		LogManager.getInstance(this).log("consent_shown", null);
 	}
 	
 	public static boolean isConsented()
@@ -82,6 +88,7 @@ public class ConsentActivity extends ActionBarActivity implements ConsentWebView
 		
 		confirmButton.setOnClickListener(new OnClickListener()
 		{
+			@SuppressLint("SimpleDateFormat")
 			public void onClick(View view) 
 			{
 				File root = Environment.getExternalStorageDirectory();
@@ -109,6 +116,8 @@ public class ConsentActivity extends ActionBarActivity implements ConsentWebView
 					Intent result = new Intent();
 					result.putExtra(ConsentActivity.CONSENTED, true);
 					me.setResult(Activity.RESULT_OK);
+					
+					LogManager.getInstance(me).log("consent_given", null);
 
 					me.finish();
 				} 

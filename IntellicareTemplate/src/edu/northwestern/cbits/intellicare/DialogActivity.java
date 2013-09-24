@@ -7,7 +7,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.LinearLayout.LayoutParams;
 import edu.northwestern.cbits.ic_template.R;
 
@@ -68,8 +67,6 @@ public class DialogActivity extends Activity
         {
         	public void onClick(DialogInterface dialog, int id) 
         	{
-        		Log.e("IT", "CONFIRM");
-        		
         		me.finish();
         	}
         });
@@ -82,8 +79,6 @@ public class DialogActivity extends Activity
 	        {
 	        	public void onClick(DialogInterface dialog, int id) 
 	        	{
-	        		Log.e("IT", "CANCEL");
-	        		
 	        		me.finish();
 	        	}
 	    	});
@@ -93,8 +88,6 @@ public class DialogActivity extends Activity
         {
 			public void onCancel(DialogInterface dialog) 
 			{
-        		Log.e("IT", "CANCEL");
-        		
         		me.finish();
 			}
 		});
