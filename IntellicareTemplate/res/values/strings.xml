@@ -12,7 +12,7 @@
     
     <string name="title_drawables_activity">Available Icons</string>
 
-    <string name="title_consent">Consent to participate</string>
+    <string name="title_consent">Patient Consent Form</string>
     <string name="action_consent">Consent Activity</string>
     <string name="button_consent">I consent. Continue&#8230;</string>
     <string name="button_quit">Exit</string>
@@ -27,7 +27,8 @@
 
     <string name="log_url">http://intellicare.cbits.northwestern.edu//events/log</string>
     
-    <color name="bottom_bar_gray">#fff3f3f3</color>
+    <color name="bottom_bar_gray">#ffdddddd</color>
+    <color name="bottom_bar_border">#ffd2d2d2</color>
     <color name="test_color">#ff800000</color>
     
     <!-- Sequential web content activity -->

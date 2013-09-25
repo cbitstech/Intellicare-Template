@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import edu.northwestern.cbits.intellicare.ConsentActivity;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 public class LessonsActivity extends ConsentedActivity 
@@ -38,11 +39,6 @@ public class LessonsActivity extends ConsentedActivity
 
 		this.setContentView(R.layout.activity_test);
 		this.getSupportActionBar().setTitle(R.string.title_lessons);
-
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		
-		if (prefs.getBoolean(HelpActivity.HELP_COMPLETED, false) == false)
-			this.startActivity(new Intent(this, HelpActivity.class));
 		
 		ScheduleManager.getInstance(this);
 		
@@ -139,7 +135,6 @@ public class LessonsActivity extends ConsentedActivity
 		ListView list = (ListView) this.findViewById(R.id.list_view);
 		list.setAdapter(adapter);
 		
-		
 		list.setOnItemClickListener(new OnItemClickListener()
 		{
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
@@ -201,6 +196,11 @@ public class LessonsActivity extends ConsentedActivity
 				    return true;
 			}
 		});
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+		if (ConsentActivity.isConsented() == true && prefs.getBoolean(HelpActivity.HELP_COMPLETED, false) == false)
+			this.startActivity(new Intent(this, HelpActivity.class));
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) 
@@ -222,11 +222,11 @@ public class LessonsActivity extends ConsentedActivity
 			Intent helpIntent = new Intent(this, HelpActivity.class);
 			this.startActivity(helpIntent);
 		}
-		else if (item.getItemId() == R.id.action_test)
+		/* else if (item.getItemId() == R.id.action_test)
 		{
 			Intent testIntent = new Intent(this, TestActivity.class);
 			this.startActivity(testIntent);
-		}
+		} */
 		
 		return true;
 	}
