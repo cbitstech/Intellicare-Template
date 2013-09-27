@@ -4,10 +4,14 @@
         android:icon="@drawable/ic_action_clock"
         robot:showAsAction="always"
         android:title="@string/action_schedule"/> -->
-    <item
+    <!-- <item
         android:id="@+id/action_test"
         robot:showAsAction="never"
-        android:title="@string/action_test"/>
+        android:title="@string/action_test"/> -->
+    <item
+        android:id="@+id/action_phq_four"
+        robot:showAsAction="never"
+        android:title="pHq FoUr"/>
     <item
         android:id="@+id/action_settings"
         robot:showAsAction="never"

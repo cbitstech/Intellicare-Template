@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.TimeZone;
 
 import android.annotation.SuppressLint;
@@ -13,10 +14,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import edu.northwestern.cbits.ic_template.R;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 import edu.northwestern.cbits.intellicare.views.ConsentWebView;
@@ -44,27 +49,17 @@ public class ConsentActivity extends ActionBarActivity implements ConsentWebView
 		consentView.loadUrl(formUrl);
 
 		consentView.setVerticalScrollBarEnabled(true);
-		consentView.setOnBottomReachedListener(this, 10);
-
-		Button quitButton = (Button) this.findViewById(R.id.quit_button);
-		
-		final Activity me = this;
-		
-		quitButton.setOnClickListener(new OnClickListener()
-		{
-			public void onClick(View view) 
-			{
-				Intent result = new Intent();
-				result.putExtra(ConsentActivity.CONSENTED, false);
-				me.setResult(Activity.RESULT_CANCELED);
-
-				LogManager.getInstance(me).log("consent_rejected", null);
-
-				me.finish();
-			}
-		});
+		consentView.setOnBottomReachedListener(this, 40);
 		
 		LogManager.getInstance(this).log("consent_shown", null);
+		
+		ImageButton confirmButton = (ImageButton) this.findViewById(R.id.confirm_button);
+		confirmButton.setEnabled(false);
+		confirmButton.setVisibility(View.GONE);
+		
+		EditText nameField = (EditText) this.findViewById(R.id.name_field);
+		nameField.setEnabled(false);
+		nameField.setVisibility(View.GONE);
 	}
 	
 	public static boolean isConsented()
@@ -82,9 +77,35 @@ public class ConsentActivity extends ActionBarActivity implements ConsentWebView
 
 	public void onBottomReached(View v) 
 	{
-		Button confirmButton = (Button) this.findViewById(R.id.confirm_button);
+		final ImageButton confirmButton = (ImageButton) this.findViewById(R.id.confirm_button);
+		confirmButton.setVisibility(View.VISIBLE);
 		
 		final Activity me = this;
+
+		final EditText nameField = (EditText) this.findViewById(R.id.name_field);
+		nameField.setEnabled(true);
+		nameField.setVisibility(View.VISIBLE);
+
+		nameField.addTextChangedListener(new TextWatcher()
+		{
+			public void afterTextChanged(Editable text) 
+			{
+				if (text.length() > 2)
+					confirmButton.setEnabled(true);
+				else
+					confirmButton.setEnabled(false);
+			}
+			
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) 
+			{
+
+			}
+			
+			public void onTextChanged(CharSequence s, int start, int before, int count) 
+			{
+
+			}
+		});
 		
 		confirmButton.setOnClickListener(new OnClickListener()
 		{
@@ -110,14 +131,15 @@ public class ConsentActivity extends ActionBarActivity implements ConsentWebView
 					PrintWriter out = new PrintWriter(consent);
 					out.print(df.format(new Date()));
 					out.close();
-					
-					Log.e("IT", "WROTE FILE");
 
 					Intent result = new Intent();
 					result.putExtra(ConsentActivity.CONSENTED, true);
 					me.setResult(Activity.RESULT_OK);
 					
-					LogManager.getInstance(me).log("consent_given", null);
+					HashMap<String, Object> payload = new HashMap<String, Object>();
+					payload.put("consent_name", nameField.getText().toString());
+					
+					LogManager.getInstance(me).log("consent_given", payload);
 
 					me.finish();
 				} 
@@ -128,6 +150,30 @@ public class ConsentActivity extends ActionBarActivity implements ConsentWebView
 			}
 		});
 		
-		confirmButton.setEnabled(true);
+		confirmButton.setEnabled(false);
 	}
+	
+	public boolean onCreateOptionsMenu(Menu menu) 
+	{
+		this.getMenuInflater().inflate(R.menu.menu_consent, menu);
+
+		return true;
+	}
+	
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		if (item.getItemId() == R.id.action_cancel)
+		{
+			Intent result = new Intent();
+			result.putExtra(ConsentActivity.CONSENTED, false);
+			this.setResult(Activity.RESULT_CANCELED);
+
+			LogManager.getInstance(this).log("consent_rejected", null);
+
+			this.finish();
+		}
+		
+		return true;
+	}
+
 }

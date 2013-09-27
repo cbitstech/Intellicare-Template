@@ -54,7 +54,7 @@ public class MessageRatingActivity extends RatingActivity
 			payload.put("message_index", descIndex);
 			LogManager.getInstance(this).log("notification_tapped", payload);
 			
-			message += System.getProperty("line.separator") + System.getProperty("line.separator");
+			message += System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator");
 			message += this.getString(edu.northwestern.cbits.intellicare.messages.R.string.message_confirm_text);
 			
 			TextView ratingText = (TextView) this.findViewById(R.id.desc_rating);
