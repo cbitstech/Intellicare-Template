@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.ConsentActivity;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.PhqFourActivity;
 
 public class LessonsActivity extends ConsentedActivity 
 {
@@ -222,6 +223,12 @@ public class LessonsActivity extends ConsentedActivity
 			Intent helpIntent = new Intent(this, HelpActivity.class);
 			this.startActivity(helpIntent);
 		}
+		else if (item.getItemId() == R.id.action_phq_four)
+		{
+			Intent phqIntent = new Intent(this, PhqFourActivity.class);
+			this.startActivity(phqIntent);
+		}
+
 		/* else if (item.getItemId() == R.id.action_test)
 		{
 			Intent testIntent = new Intent(this, TestActivity.class);

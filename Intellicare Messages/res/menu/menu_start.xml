@@ -9,6 +9,10 @@
         robot:showAsAction="never"
         android:title="@string/action_test"/> -->
     <item
+        android:id="@+id/action_phq_four"
+        robot:showAsAction="never"
+        android:title="pHq FoUr"/>
+    <item
         android:id="@+id/action_settings"
         robot:showAsAction="never"
         android:title="@string/action_settings"/>

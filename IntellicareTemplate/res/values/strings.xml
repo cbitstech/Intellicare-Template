@@ -16,7 +16,8 @@
     <string name="action_consent">Consent Activity</string>
     <string name="button_consent">I consent. Continue&#8230;</string>
     <string name="button_quit">Exit</string>
-
+    <string name="hint_enter_name">Enter your name&#8230;</string>
+    
     <string name="title_rating">Rate your experience</string>
     <string name="desc_rating">How well did this app work for you?</string>
     <string name="terrible_rating">Terrible</string>
@@ -24,7 +25,8 @@
     <string name="doing_better">How can this app be better (for you)?</string>
     <string name="doing_better_placeholder">Enter suggestions. (Optional)</string>
     <string name="action_submit">Submit</string>
-
+    <string name="action_close">Close</string>
+    
     <string name="log_url">http://intellicare.cbits.northwestern.edu//events/log</string>
     
     <color name="bottom_bar_gray">#ffdddddd</color>
@@ -37,4 +39,12 @@
     <string name="button_close">Close</string>
 
     <string name="button_continue">Continue</string>
+    
+    <!-- PHQ-4 -->
+    <string name="phq_intro">Over the past 2 weeks have you been bothered by these problems?</string>
+    <string name="phq_one">Feeling nervous, anxious, or on edge</string>
+    <string name="phq_zero_radio">Not at all</string>
+    <string name="phq_one_radio">Several days</string>
+    <string name="phq_two_radio">More days than not</string>
+    <string name="phq_three_radio">Nearly every day</string>
 </resources>

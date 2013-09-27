@@ -13,17 +13,17 @@
         android:layout_height="wrap_content"
         android:background="@color/bottom_bar_gray"
         android:padding="5dp">
-        <Button android:id="@+id/quit_button"
+        <EditText android:id="@+id/name_field" 
             android:layout_height="48dp"
-            android:layout_width="wrap_content"
-            android:enabled="false"
-            android:text="@string/button_quit" />
-        <View android:layout_height="48dp"
+            android:inputType="textPersonName"
             android:layout_width="0dp"
+            android:hint="@string/hint_enter_name"
+            android:layout_marginRight="16dp"
             android:layout_weight="1"/>
-        <Button android:id="@+id/confirm_button"
+        <ImageButton android:id="@+id/confirm_button"
+            android:src="@drawable/ic_action_tick"
             android:layout_height="48dp"
-            android:layout_width="wrap_content"
+            android:layout_width="48dp"
             android:enabled="false"
             android:text="@string/button_consent" />
     </LinearLayout>

@@ -1,7 +1,9 @@
 package edu.northwestern.cbits.intellicare.views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.webkit.WebView;
 
@@ -53,7 +55,13 @@ public class ConsentWebView extends WebView
     {
         if (mOnBottomReachedListener != null) 
         {
-            if ((getContentHeight() - (top + getHeight())) <= mMinDistance)
+        	DisplayMetrics metrics = new DisplayMetrics();
+        	
+        	Activity parent = (Activity) this.getContext();
+        	
+        	parent.getWindowManager().getDefaultDisplay().getMetrics(metrics);       	
+        	
+            if (((this.getContentHeight() * metrics.density) - (top + this.getHeight())) <= mMinDistance)
                 mOnBottomReachedListener.onBottomReached(this);
         }
 
