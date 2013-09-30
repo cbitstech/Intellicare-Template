@@ -3,6 +3,7 @@ package edu.northwestern.cbits.intellicare;
 import java.util.HashMap;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +15,8 @@ import edu.northwestern.cbits.intellicare.views.StarRatingView.OnRatingChangeLis
 public class RatingActivity extends ConsentedActivity 
 {
 	private Menu _menu = null;
+	private MenuItem _doneItem = null;
+	
 	private int _rating = 0;
 	
 	protected void onCreate(Bundle savedInstanceState) 
@@ -31,10 +34,11 @@ public class RatingActivity extends ConsentedActivity
 		{
 			public void onRatingChanged(View view, int rating) 
 			{
-				if (me._menu != null)
-					me._menu.findItem(R.id.action_done).setVisible(true);
+				Log.e("IT", "RATING CHANGED: " + rating + " " + me._menu + " -- " + me._menu.findItem(R.id.action_done));
 				
 				me._rating = rating;
+				
+				me.supportInvalidateOptionsMenu();
 			}
 		});
 	}
@@ -60,8 +64,10 @@ public class RatingActivity extends ConsentedActivity
 		this.getMenuInflater().inflate(R.menu.menu_rating, menu);
 
 		this._menu = menu;
-
-		this._menu.findItem(R.id.action_done).setVisible(false);
+		this._doneItem = this._menu.findItem(R.id.action_done);
+		
+		if (this._rating == 0)
+			this._doneItem.setVisible(false);
 
 		return true;
 	}

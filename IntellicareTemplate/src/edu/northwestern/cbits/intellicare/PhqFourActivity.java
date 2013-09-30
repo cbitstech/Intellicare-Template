@@ -3,10 +3,8 @@ package edu.northwestern.cbits.intellicare;
 import java.util.HashMap;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import edu.northwestern.cbits.ic_template.R;
@@ -15,6 +13,8 @@ import edu.northwestern.cbits.intellicare.logging.LogManager;
 public class PhqFourActivity extends FormQuestionActivity 
 {
 	private HashMap<String, Object> _payload = new HashMap<String, Object>();
+	
+	private boolean _continue = false;
 	
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -25,6 +25,34 @@ public class PhqFourActivity extends FormQuestionActivity
 		this.getSupportActionBar().setTitle(R.string.phq_title);
 		this.getSupportActionBar().setSubtitle(R.string.phq_subtitle);
 	}
+	
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		if (item.getItemId() ==  R.id.action_done)
+		{
+			HashMap<String, Object> payload = new HashMap<String, Object>();
+			payload.put("payload", this._payload);
+			
+			LogManager.getInstance(this).log("phq4_submitted", payload);
+			
+			this.finish();
+		}
+
+		return true;
+	}
+	
+	public boolean onCreateOptionsMenu(Menu menu) 
+	{
+		this.getMenuInflater().inflate(R.menu.menu_rating, menu);
+
+		MenuItem doneItem = menu.findItem(R.id.action_done);
+
+		if (this._continue == false)
+			doneItem.setVisible(false);
+
+		return true;
+	}
+
 
 	protected void setupListeners() 
 	{
@@ -41,8 +69,6 @@ public class PhqFourActivity extends FormQuestionActivity
 		{
 			public void onCheckedChanged(RadioGroup group, int id) 
 			{
-				boolean transmit = true;
-				
 				for (RadioGroup radioGroup : groups)
 				{
 					int selected = radioGroup.getCheckedRadioButtonId();
@@ -60,9 +86,7 @@ public class PhqFourActivity extends FormQuestionActivity
 					
 					int value = -1;
 
-					if (selected == -1)
-						transmit = false;
-					else if (selected == R.id.radio_zero)
+					if (selected == R.id.radio_zero)
 						value = 0;
 					else if (selected == R.id.radio_one)
 						value = 1;
@@ -74,23 +98,10 @@ public class PhqFourActivity extends FormQuestionActivity
 					if (value != -1)
 						me._payload.put(key, Integer.valueOf(value));
 					
-					if (transmit == true)
+					if (me._payload.size() >= 4)
 					{
-						Button continueButton = (Button) me.findViewById(R.id.continue_button);
-						
-						continueButton.setEnabled(true);
-						
-						continueButton.setOnClickListener(new OnClickListener()
-						{
-							public void onClick(View view) 
-							{
-								LogManager.getInstance(me).log("phq4_complete", me._payload);
-								
-								Log.e("IT", "GO TO NEXT VIEW...");
-								
-								me.finish();
-							}							
-						});
+						me._continue = true;
+						me.supportInvalidateOptionsMenu();
 					}
 				}
 			}

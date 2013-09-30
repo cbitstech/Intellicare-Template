@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.os.Build;
+import android.support.v4.app.NotificationCompat;
 
 public class StatusNotificationManager 
 {
@@ -32,21 +33,39 @@ public class StatusNotificationManager
 	@SuppressLint("NewApi")
 	public void notifyBigText(int appId, int icon, String title, String message, PendingIntent intent)
 	{
-		Notification.Builder builder = new Notification.Builder(this._context);
-		builder.setContentIntent(intent);
-		builder.setContentTitle(title);
-		builder.setContentText(message);
-		builder.setSmallIcon(icon);
-		
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-			builder.setStyle(new Notification.BigTextStyle().bigText(message));
-		
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+		Notification note = null;
+				
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+		{
+			Notification.Builder builder = new Notification.Builder(this._context);
+			
+			builder.setContentIntent(intent);
+			builder.setContentTitle(title);
+			builder.setContentText(message);
+			builder.setSmallIcon(icon);
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+				builder.setStyle(new Notification.BigTextStyle().bigText(message));
+
 			builder.setTicker(message);
+
+			note = builder.build();
+
+		}
+		else
+		{
+			NotificationCompat.Builder builder = new NotificationCompat.Builder(this._context);
+
+			builder.setContentIntent(intent);
+			builder.setContentTitle(title);
+			builder.setContentText(message);
+			builder.setSmallIcon(icon);
+
+			note = builder.build();
+		}
 		
 		NotificationManager manager = (NotificationManager) this._context.getSystemService(Context.NOTIFICATION_SERVICE);
 		
-		Notification note = builder.build();
 		note.flags = Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE | Notification.FLAG_AUTO_CANCEL;
 		
 		manager.notify(appId, note);

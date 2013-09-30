@@ -41,8 +41,8 @@
     <string name="button_continue">Continue</string>
     
     <!-- PHQ-4 -->
-    <string name="phq_title">Personal Health Questionnaire</string>
-    <string name="phq_subtitle">Please complete the questions to continue&#8230;</string>
+    <string name="phq_title">PHQ-4</string>
+    <string name="phq_subtitle">Personal Health Questionnaire</string>
     <string name="phq_intro">Over the past 2 weeks have you been bothered by these problems?</string>
     <string name="phq_one">Feeling nervous, anxious, or on edge</string>
     <string name="phq_two">Not being able to stop or control worrying</string>

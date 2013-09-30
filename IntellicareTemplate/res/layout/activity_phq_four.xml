@@ -124,11 +124,5 @@
 	   	    android:layout_width="wrap_content"
 	       	android:layout_height="wrap_content" />
    	</RadioGroup>
-   	
-    <Button android:id="@+id/continue_button"
-        android:layout_height="48dp"
-        android:layout_width="match_parent"
-        android:text="@string/button_continue"
-        android:enabled="false" />
 </LinearLayout>
 </ScrollView>
