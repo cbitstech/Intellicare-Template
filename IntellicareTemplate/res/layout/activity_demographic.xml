@@ -1,0 +1,86 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+	<LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:padding="10dp">
+	    <TextView android:text="@string/demographic_intro"
+	        android:singleLine="false"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:textSize="18sp"
+	        android:layout_marginBottom="16dp" />
+	    
+	    <TextView android:id="@+id/birth_year_label" 
+	        android:text="@string/birth_year_label"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:textSize="18sp" />
+	    <TextView android:id="@+id/birth_year_value" 
+	        android:text="@string/respond_value"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:textStyle="bold"
+	        android:textColor="#008000"
+	        android:textSize="14sp"
+	        android:layout_marginBottom="16dp" />
+
+  	    <TextView android:id="@+id/gender_label"  
+  	        android:text="@string/gender_label"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:textSize="18sp" />
+	    <TextView android:id="@+id/gender_value" 
+	        android:text="@string/respond_value"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:textStyle="bold"
+	        android:textColor="#008000"
+	        android:textSize="14sp"
+	        android:layout_marginBottom="16dp" />
+
+   	    <TextView android:id="@+id/ethnicity_label"  
+	        android:text="@string/ethnicity_label"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:textSize="18sp" />
+	    <TextView android:id="@+id/ethnicity_value" 
+	        android:text="@string/respond_value"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textStyle="bold"
+	        android:textColor="#008000"
+	        android:textSize="14sp"
+	        android:layout_marginBottom="16dp" />
+	    
+   	    <TextView android:id="@+id/race_label" 
+   	        android:text="@string/race_label"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:textSize="18sp" />
+	    <TextView android:id="@+id/race_value" 
+	        android:text="@string/respond_value"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:textStyle="bold"
+	        android:textColor="#008000"
+	        android:textSize="14sp"
+	        android:layout_marginBottom="16dp" />
+
+  	    <TextView android:id="@+id/education_label"  
+  	        android:text="@string/education_label"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:textSize="18sp" />
+	    <TextView android:id="@+id/education_value" 
+	        android:text="@string/respond_value"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:textStyle="bold"
+	        android:textColor="#008000"
+	        android:textSize="14sp"
+	        android:layout_marginBottom="16dp" />
+   	</LinearLayout>
+</ScrollView>

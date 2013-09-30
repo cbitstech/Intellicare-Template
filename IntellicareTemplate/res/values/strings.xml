@@ -53,4 +53,61 @@
     <string name="phq_one_radio">Several days</string>
     <string name="phq_two_radio">More days than not</string>
     <string name="phq_three_radio">Nearly every day</string>
+
+    <!-- Demographic Activity -->
+    <string name="demographic_title">Demographics</string>
+    <string name="demographic_subtitle">Tell us about you&#8230;</string>
+    
+    <string name="demographic_intro">Please complete the following questions to continue.</string>
+
+    <string name="birth_year_label">What year were you were born?</string>
+    <string name="birth_year_title">Birth Year</string>
+    
+    <string name="gender_label">What is your gender?</string>
+    <string name="gender_title">Gender</string>
+    <string-array name="labels_gender">
+        <item>Female</item>
+        <item>Male</item>
+    </string-array>
+    
+    <string name="ethnicity_label">Are you of Hispanic, Latino, or Spanish origin?</string>
+    <string name="ethnicity_title">Ethnicity</string>
+    <string-array name="labels_ethnicity">
+        <item>Not of Hispanic, Latino, or Spanish origin</item>
+		<item>Mexican, Mexican American, Chicano</item>
+		<item>Puerto Rican</item>
+		<item>Cuban</item>
+		<item>Another Hispanic, Latino, or Spanish origin</item>
+		<item>Unknown</item>
+    </string-array>
+    
+    <string name="race_label">Which category best describes your race?</string>
+    <string name="race_title">Race</string>
+    <string-array name="labels_race">
+        <item>American Indian/Alaska Native</item>
+        <item>Asian</item>
+        <item>Black or African American</item>
+        <item>Native Hawaiian/Other Pacific Islander</item>
+        <item>White</item>
+        <item>Other</item>
+    </string-array>
+    
+    <string name="education_label">What was the highest level of education that you completed?</string>
+    <string name="education_title">Education</string>
+    <string-array name="labels_education">
+        <item>No schooling completed, or less than 1 year</item>
+        <item>Nursery, kindergarten, and elementary (grades 1-8)</item>
+        <item>High school (grades 9-12, no degree)</item>
+        <item>High school graduate (or equivalent)</item>
+        <item>Some college (1-4 years, no degree)</item>
+        <item>Associate\'s degree (including occupational or academic degrees)</item>
+        <item>Bachelor\'s degree (BA, BS, AB, etc.)</item>
+        <item>Master\'s degree (MA, MS, MENG, MSW, etc.)</item>
+        <item>Professional school degree (MD, DDC, JD, etc.)</item>
+        <item>Doctorate degree (PhD, EdD, etc.)</item>
+	</string-array>
+    
+    <string name="motivation_label">What is the main reason you are using this app?</string>
+    
+    <string name="respond_value">Tap to answer&#8230;</string>
 </resources>

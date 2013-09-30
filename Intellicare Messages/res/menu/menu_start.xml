@@ -13,6 +13,10 @@
         robot:showAsAction="never"
         android:title="@string/phq_title"/>
     <item
+        android:id="@+id/action_demographic"
+        robot:showAsAction="never"
+        android:title="@string/demographic_title"/>
+    <item
         android:id="@+id/action_settings"
         robot:showAsAction="never"
         android:title="@string/action_settings"/>

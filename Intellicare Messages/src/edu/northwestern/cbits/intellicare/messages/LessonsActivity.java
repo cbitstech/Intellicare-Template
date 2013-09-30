@@ -26,6 +26,7 @@ import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.ConsentActivity;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.PhqFourActivity;
+import edu.northwestern.cbits.intellicare.DemographicActivity;
 
 public class LessonsActivity extends ConsentedActivity 
 {
@@ -226,6 +227,11 @@ public class LessonsActivity extends ConsentedActivity
 		else if (item.getItemId() == R.id.action_phq_four)
 		{
 			Intent phqIntent = new Intent(this, PhqFourActivity.class);
+			this.startActivity(phqIntent);
+		}
+		else if (item.getItemId() == R.id.action_demographic)
+		{
+			Intent phqIntent = new Intent(this, DemographicActivity.class);
 			this.startActivity(phqIntent);
 		}
 
