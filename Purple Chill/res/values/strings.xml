@@ -1,0 +1,70 @@
+<resources>
+    <string name="app_name">Purple Chill</string>
+
+    <string name="action_help">Help</string>
+    
+    <string-array name="group_titles">
+        <item>Breathing Exercises</item>
+        <item>Progressive Muscle Relaxation</item>
+        <item>Autogenic Exercises</item>
+        <item>Visualization</item>
+        <item>Mindfulness</item>
+   	</string-array>
+
+    <string-array name="group_descriptions">
+        <item>Reduce stress. Minimize headaches. Control anxiety.</item>
+        <item>Good exercises to try after Deep Breathing.</item>
+        <item>Mental repetition of words and phrases to promote relaxation.</item>
+        <item>Use your imagination to visualize a relaxing scene.</item>
+        <item>Focus your attention more fully on the present moment.</item>
+   	</string-array>
+
+    <!-- Help Resources -->
+    <string-array name="help_urls">
+        <item>file:///android_asset/www/help_0.html</item>
+	</string-array>
+	<string-array name="help_titles">
+        <item>Purple Chill Introduction (1/?)</item>
+    </string-array>
+
+    <string name="breathing_title">Breathing Exercises</string>
+    <string name="muscle_title">Progressive Muscle Relaxation</string>
+    <string name="autogenic_title">Autogenic Exercises</string>
+    <string name="visualization_title">Visualization</string>
+    <string name="mindful_title">Mindfulness</string>
+
+    <string-array name="breathing_urls">
+        <item>file:///android_asset/www/breathing.html</item>
+	</string-array>
+	<string-array name="breathing_titles">
+        <item>Breathing Exercises</item>
+    </string-array>
+
+	<string-array name="muscle_urls">
+        <item>file:///android_asset/www/muscle.html</item>
+	</string-array>
+	<string-array name="muscle_titles">
+        <item>Progressive Muscle Relaxation</item>
+    </string-array>
+
+	<string-array name="autogenic_urls">
+        <item>file:///android_asset/www/autogenic.html</item>
+	</string-array>
+	<string-array name="autogenic_titles">
+        <item>Autogenic Exercises</item>
+    </string-array>
+
+	<string-array name="visualization_urls">
+        <item>file:///android_asset/www/visualization.html</item>
+	</string-array>
+	<string-array name="visualization_titles">
+        <item>Visualization</item>
+    </string-array>
+		
+	<string-array name="mindful_urls">
+        <item>file:///android_asset/www/mindful.html</item>
+	</string-array>
+	<string-array name="mindful_titles">
+        <item>Mindfulness</item>
+    </string-array>
+</resources>
