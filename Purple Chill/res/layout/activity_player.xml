@@ -2,7 +2,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#808080">
-   
+    android:background="@color/bottom_bar_gray"
+    android:orientation="vertical">
+    <ListView android:id="@+id/recording_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+    <View android:background="@color/bottom_bar_border"
+        android:layout_width="match_parent"
+        android:layout_height="1.5dp" />
+    <TextView android:text="[]Audio Title]"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView android:text="[Progress Bar]"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView android:text="[Progress Timestamp]"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView android:text="Player Controls]"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>

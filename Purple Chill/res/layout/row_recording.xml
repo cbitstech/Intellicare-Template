@@ -1,0 +1,8 @@
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/recording_title"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:textSize="18sp" 
+    android:gravity="center_vertical"
+    android:background="#ffffffff"
+    android:drawableLeft="@drawable/ic_action_lock_open" />
