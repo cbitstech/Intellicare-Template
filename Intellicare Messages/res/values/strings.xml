@@ -130,7 +130,7 @@
     <string name="title_day_start">Start of Day</string>
     <string name="desc_day_start">Hour of day when notifications can begin.</string>
     <string name="title_day_end">End of Day</string>
-    <string name="desc_day_end">Hour of day when notifications should end. (TODO: Find moon/night icon.)</string>
+    <string name="desc_day_end">Hour of day when notifications should end.</string>
 
     <string-array name="list_hour_labels">
         <item>Midnight (12:00am)</item>
