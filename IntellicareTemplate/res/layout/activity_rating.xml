@@ -36,7 +36,8 @@
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:layout_marginTop="20dp" />
-    <EditText android:hint="@string/doing_better_placeholder"
+    <EditText android:id="@+id/feedback_field"
+        android:hint="@string/doing_better_placeholder"
         android:singleLine="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

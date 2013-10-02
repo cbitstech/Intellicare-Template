@@ -34,7 +34,11 @@ public abstract class FormQuestionActivity extends ActionBarActivity
 		if (item.getItemId() ==  R.id.action_done)
 		{
 			HashMap<String, Object> payload = new HashMap<String, Object>();
-			payload.put("payload", this._payload);
+			
+			for (String key : this._payload.keySet())
+			{
+				payload.put(key, this._payload.get(key));
+			}
 			
 			LogManager.getInstance(this).log(this.responsesKey(), payload);
 			

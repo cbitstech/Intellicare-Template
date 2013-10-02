@@ -3,10 +3,10 @@ package edu.northwestern.cbits.intellicare;
 import java.util.HashMap;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import edu.northwestern.cbits.ic_template.R;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 import edu.northwestern.cbits.intellicare.views.StarRatingView;
@@ -34,8 +34,6 @@ public class RatingActivity extends ConsentedActivity
 		{
 			public void onRatingChanged(View view, int rating) 
 			{
-				Log.e("IT", "RATING CHANGED: " + rating + " " + me._menu + " -- " + me._menu.findItem(R.id.action_done));
-				
 				me._rating = rating;
 				
 				me.supportInvalidateOptionsMenu();
@@ -50,6 +48,13 @@ public class RatingActivity extends ConsentedActivity
 			HashMap<String, Object> payload = new HashMap<String, Object>();
 			payload.put("rating", Integer.valueOf(this._rating));
 			payload.put("app_package", this.getApplicationContext().getPackageName());
+			
+			EditText feedback = (EditText) this.findViewById(R.id.feedback_field);
+			
+			String feedbackText = feedback.getText().toString().trim();
+			
+			if (feedbackText.length() > 0)
+				payload.put("feedback", feedbackText);
 			
 			LogManager.getInstance(this).log("app_rated", payload);
 			
@@ -71,5 +76,4 @@ public class RatingActivity extends ConsentedActivity
 
 		return true;
 	}
-
 }
