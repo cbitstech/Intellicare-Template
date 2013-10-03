@@ -12,18 +12,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/bottom_bar_gray"
-        android:padding="5dp">
-        <EditText android:id="@+id/name_field" 
-            android:layout_height="48dp"
-            android:inputType="textPersonName"
+        android:padding="4dp">
+        <LinearLayout android:orientation="vertical"
+            android:layout_marginRight="4dp" 
             android:layout_width="0dp"
-            android:hint="@string/hint_enter_name"
-            android:layout_marginRight="16dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
+	        <EditText android:id="@+id/name_field" 
+	            android:layout_height="wrap_content"
+	            android:inputType="textPersonName"
+	            android:layout_width="match_parent"
+	            android:hint="@string/hint_enter_name" />
+	        <TextView android:id="@+id/date_text_field"
+	            android:layout_height="wrap_content"
+	            android:layout_width="match_parent"
+	            android:layout_marginLeft="4dp"
+	            android:textSize="14sp"
+	            android:textStyle="bold" />
+        </LinearLayout>
         <ImageButton android:id="@+id/confirm_button"
             android:src="@drawable/ic_action_tick"
-            android:layout_height="48dp"
-            android:layout_width="48dp"
+            android:layout_height="64dp"
+            android:layout_width="64dp"
             android:enabled="false"
             android:text="@string/button_consent" />
     </LinearLayout>

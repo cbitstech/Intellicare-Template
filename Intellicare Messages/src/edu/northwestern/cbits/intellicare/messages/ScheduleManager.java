@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
+import edu.northwestern.cbits.intellicare.PhqFourActivity;
 import edu.northwestern.cbits.intellicare.StatusNotificationManager;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 
@@ -38,8 +39,8 @@ public class ScheduleManager
 		
 		PendingIntent pi = PendingIntent.getBroadcast(this._context, 0, broadcast, PendingIntent.FLAG_UPDATE_CURRENT);
 		
-		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);
-		// alarm.setRepeating(AlarmManager.ELAPSED_REALTIME, 0, 60000, pi);
+//		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);
+		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, 20000, pi);
 	}
 
 	public static ScheduleManager getInstance(Context context)
@@ -170,6 +171,8 @@ public class ScheduleManager
 					e.putInt(LessonsActivity.LESSON_LEVEL, currentLesson);
 					e.remove(ScheduleManager.MESSAGE_INDEX);
 					e.commit();
+
+					PhqFourActivity.administer(this._context, false);
 				}
 			}
 			else
@@ -290,9 +293,6 @@ public class ScheduleManager
 
 	private long getNotificationTime(int index) 
 	{
-//		if (1 < 2 * 3)
-//			return System.currentTimeMillis() - 5000;
-		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
 		
 		long firstRun = prefs.getLong(ScheduleManager.FIRST_RUN, 0);

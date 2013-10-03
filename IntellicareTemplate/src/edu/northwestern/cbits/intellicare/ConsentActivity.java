@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import edu.northwestern.cbits.ic_template.R;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 import edu.northwestern.cbits.intellicare.views.ConsentWebView;
@@ -60,6 +61,12 @@ public class ConsentActivity extends ActionBarActivity implements ConsentWebView
 		EditText nameField = (EditText) this.findViewById(R.id.name_field);
 		nameField.setEnabled(false);
 		nameField.setVisibility(View.GONE);
+		
+		SimpleDateFormat format = new SimpleDateFormat("EEEE, LLLL d, yyyy");
+		
+		TextView dateField = (TextView) this.findViewById(R.id.date_text_field); 
+		dateField.setText(format.format(new Date()));
+		dateField.setVisibility(View.GONE);
 	}
 	
 	public static boolean isConsented()
@@ -86,6 +93,9 @@ public class ConsentActivity extends ActionBarActivity implements ConsentWebView
 		nameField.setEnabled(true);
 		nameField.setVisibility(View.VISIBLE);
 
+		TextView dateField = (TextView) this.findViewById(R.id.date_text_field); 
+		dateField.setVisibility(View.VISIBLE);
+		
 		nameField.addTextChangedListener(new TextWatcher()
 		{
 			public void afterTextChanged(Editable text) 

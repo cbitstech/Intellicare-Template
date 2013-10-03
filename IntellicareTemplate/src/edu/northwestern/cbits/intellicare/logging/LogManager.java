@@ -42,9 +42,12 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.http.AndroidHttpClient;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -118,7 +121,20 @@ public class LogManager
 		if (payload == null)
 			payload = new HashMap<String, Object>();
 		
-		payload.put("app_package", this._context.getApplicationContext().getPackageName());
+		try 
+		{
+			PackageInfo pkg = this._context.getPackageManager().getPackageInfo(this._context.getPackageName(), 0);
+
+			payload.put("app_package", pkg.packageName);
+			payload.put("app_version", pkg.versionName);
+		} 
+		catch (NameNotFoundException ex) 
+		{
+			ex.printStackTrace();
+		}
+		
+		payload.put("os_version", Build.VERSION.RELEASE);
+		payload.put("os", "android");
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
 

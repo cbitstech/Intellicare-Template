@@ -110,4 +110,9 @@
     <string name="motivation_label">What is the main reason you are using this app?</string>
     
     <string name="respond_value">Tap to answer&#8230;</string>
+    
+    <string name="phq4_title">Personal Questionnaire</string>
+    <string name="phq4_message">Please fill out this personal questionnaire.</string>
+    
+    
 </resources>

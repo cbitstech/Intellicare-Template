@@ -30,13 +30,16 @@ import edu.northwestern.cbits.intellicare.DemographicActivity;
 
 public class LessonsActivity extends ConsentedActivity 
 {
+	public static final String LESSON_LEVEL = "LESSON_LEVEL";
+	public static final String LESSON_READ_PREFIX = "lesson_read_";
+
 	private static final String APP_ID = "455953ac6a6eb7c89be9af9848731279";
 
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
 
-		this.setContentView(R.layout.activity_index);
+		this.setContentView(R.layout.activity_lessons);
 		this.getSupportActionBar().setTitle(R.string.title_lessons);
 		
 		ScheduleManager.getInstance(this);

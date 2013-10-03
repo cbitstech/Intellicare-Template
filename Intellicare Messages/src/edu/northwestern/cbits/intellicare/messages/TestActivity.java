@@ -32,7 +32,7 @@ public class TestActivity extends ConsentedActivity
 	{
 		super.onCreate(savedInstanceState);
 
-		this.setContentView(R.layout.activity_test);
+		this.setContentView(R.layout.activity_lessons);
 		
 		ListView list = (ListView) this.findViewById(R.id.list_view);
 		
