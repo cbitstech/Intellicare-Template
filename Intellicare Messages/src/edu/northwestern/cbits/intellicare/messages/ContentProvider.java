@@ -99,8 +99,7 @@ public class ContentProvider extends android.content.ContentProvider
 				ContentValues values = new ContentValues();
 				values.put("lesson_order", indices.get(i));
 
-				// TODO: restore check...
-				// if (indices.get(i).floatValue() == 1.0f)
+				if (indices.get(i).floatValue() == 1.0f)
 					values.put("complete", true);
 
 				String where = "id = ?";
