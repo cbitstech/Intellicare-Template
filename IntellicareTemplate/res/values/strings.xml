@@ -39,6 +39,7 @@
     <string name="button_close">Close</string>
 
     <string name="button_continue">Continue</string>
+    <string name="button_skip">Skip</string>
     
     <!-- PHQ-4 -->
     <string name="phq_title">PHQ-4</string>
@@ -113,6 +114,24 @@
     
     <string name="phq4_title">Personal Questionnaire</string>
     <string name="phq4_message">Please fill out this personal questionnaire.</string>
+
+    <string name="recruitment_title">Recruitment</string>
+    <string name="recruitment_intro">CBITs, a research group at Northwestern University, created this app to help people suffering from mood disorders. To learn more about our other projects, please complete the form below.</string>
+    <string name="recruitment_name_label">Your name:</string>
+    <string name="recruitment_email_label">Your preferred e-mail:</string>
+    <string name="recruitment_phone_label">Phone number (optional):</string>
+    <string name="recruitment_time_label">Best time to contact you (optional):</string>
+    <string name="recruitment_time_choose">Tap to choose a time&#8230;</string>
+
+    <string name="recruitment_time_title">Best time to contact</string>
+    <string-array name="recruitment_time_labels">
+        <item>Morning</item>
+        <item>Afternoon</item>
+        <item>Evening</item>
+        <item>Night</item>
+    </string-array>
     
-    
+    <string name="recruitment_name_message">Please provide your full name to continue.</string>
+    <string name="recruitment_email_message">Please provide a valid e-mail address to continue.</string>
+    <string name="recruitment_phone_message">Please provide a valid phone number to continue.</string>
 </resources>

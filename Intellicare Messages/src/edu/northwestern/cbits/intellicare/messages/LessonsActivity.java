@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.CrashManagerListener;
 import net.hockeyapp.android.UpdateManager;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -25,8 +24,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.ConsentActivity;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
-import edu.northwestern.cbits.intellicare.PhqFourActivity;
 import edu.northwestern.cbits.intellicare.DemographicActivity;
+import edu.northwestern.cbits.intellicare.RecruitmentActivity;
 
 public class LessonsActivity extends ConsentedActivity 
 {
@@ -226,7 +225,7 @@ public class LessonsActivity extends ConsentedActivity
 		}
 		else if (item.getItemId() == R.id.action_phq_four)
 		{
-			Intent phqIntent = new Intent(this, PhqFourActivity.class);
+			Intent phqIntent = new Intent(this, RecruitmentActivity.class);
 			this.startActivity(phqIntent);
 		}
 		else if (item.getItemId() == R.id.action_demographic)

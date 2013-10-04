@@ -15,6 +15,12 @@ public class ConsentedActivity extends ActionBarActivity
 			
 			this.startActivityForResult(consentActivity, 999);
 		}
+		else if (RecruitmentActivity.showedRecruitment() == false)
+		{
+			Intent activity = new Intent(this, RecruitmentActivity.class);
+			
+			this.startActivity(activity);
+		}
 	}
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) 
@@ -27,5 +33,4 @@ public class ConsentedActivity extends ActionBarActivity
 		    	 this.finish();
 		}
 	}
-
 }
