@@ -26,7 +26,7 @@ import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 public class IndexActivity extends ConsentedActivity 
 {
-	private static final String APP_ID = "c704c1c38bc29d37aca8ac17f94f6b94";
+	private static final String APP_ID = "46b0f12d234c03aadfc1fd4688b22aaf";
 
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -121,6 +121,8 @@ public class IndexActivity extends ConsentedActivity
 		
 		if (PlayerActivity.isPlaying())
 		{
+			currentTrack.setVisibility(View.VISIBLE);
+
 			ImageButton trackButton = (ImageButton) this.findViewById(R.id.goto_current_track);
 			
 			trackButton.setOnClickListener(new OnClickListener()

@@ -8,7 +8,6 @@ import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.widget.TextView;
-import edu.northwestern.cbits.ic_template.R;
 import edu.northwestern.cbits.intellicare.RatingActivity;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 
@@ -16,8 +15,9 @@ public class MessageRatingActivity extends RatingActivity
 {
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-		if (item.getItemId() ==  R.id.action_done)
+		if (super.onOptionsItemSelected(item))
 		{
+
 			if (this.getIntent().hasExtra(ScheduleManager.IS_INSTRUCTION))
 			{
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -25,9 +25,11 @@ public class MessageRatingActivity extends RatingActivity
 				e.putBoolean(ScheduleManager.INSTRUCTION_COMPLETED, true);
 				e.commit();
 			}
+			
+			return true;
 		}
 
-		return super.onOptionsItemSelected(item);
+		return false;
 	}
 	
 	public void onResume()
