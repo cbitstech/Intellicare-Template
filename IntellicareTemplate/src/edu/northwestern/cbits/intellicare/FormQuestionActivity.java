@@ -8,6 +8,7 @@ import edu.northwestern.cbits.intellicare.logging.LogManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public abstract class FormQuestionActivity extends ActionBarActivity 
 {
@@ -33,16 +34,21 @@ public abstract class FormQuestionActivity extends ActionBarActivity
 	{
 		if (item.getItemId() ==  R.id.action_done)
 		{
-			HashMap<String, Object> payload = new HashMap<String, Object>();
-			
-			for (String key : this._payload.keySet())
+			if (this.canSubmit() == false)
+				Toast.makeText(this, R.string.message_complete_form, Toast.LENGTH_LONG).show();
+			else
 			{
-				payload.put(key, this._payload.get(key));
+				HashMap<String, Object> payload = new HashMap<String, Object>();
+				
+				for (String key : this._payload.keySet())
+				{
+					payload.put(key, this._payload.get(key));
+				}
+				
+				LogManager.getInstance(this).log(this.responsesKey(), payload);
+				
+				this.finish();
 			}
-			
-			LogManager.getInstance(this).log(this.responsesKey(), payload);
-			
-			this.finish();
 		}
 
 		return true;
@@ -51,11 +57,6 @@ public abstract class FormQuestionActivity extends ActionBarActivity
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
 		this.getMenuInflater().inflate(R.menu.menu_rating, menu);
-
-		MenuItem doneItem = menu.findItem(R.id.action_done);
-
-		if (this.canSubmit() == false)
-			doneItem.setVisible(false);
 
 		return true;
 	}

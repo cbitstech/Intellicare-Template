@@ -1,5 +1,50 @@
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent" 
-    android:id="@+id/list_view" />
+    android:orientation="vertical">
+	<ListView android:id="@+id/list_view"
+	    android:layout_weight="1" 
+	    android:layout_width="match_parent"
+	    android:layout_height="0dp" /> 
+	<LinearLayout android:id="@+id/current_track"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+    	android:orientation="vertical">
+	    <View android:background="@color/bottom_bar_border"
+	        android:layout_width="match_parent"
+	        android:layout_height="1.5dp" />
+	    <LinearLayout android:orientation="horizontal"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:background="@color/bottom_bar_gray"
+	        android:padding="5dp">
+		    <LinearLayout android:orientation="vertical"
+		        android:layout_width="0dp"
+		        android:layout_height="48dp"
+		        android:layout_weight="1">
+		        <View android:layout_height="0dp" 
+		            android:layout_width="match_parent"
+		            android:layout_weight="1" />
+   		        <TextView android:textSize="12sp"
+		            android:layout_height="wrap_content"
+		            android:layout_width="match_parent"
+		            android:textStyle="bold"
+		            android:text="@string/current_track_label" />
+		        <TextView android:id="@+id/current_track_name"
+		            android:textSize="18sp"
+		            android:layout_height="wrap_content"
+		            android:layout_width="match_parent"
+		            android:text="@string/current_track_label" />
+		        <View android:layout_height="0dp" 
+		            android:layout_width="match_parent"
+		            android:layout_weight="1" />
+   	        </LinearLayout>
+	        <ImageButton android:id="@+id/goto_current_track"
+	            android:layout_width="48dp"
+	            android:layout_height="48dp"
+	            android:src="@drawable/ic_action_arrow_right" />
+        </LinearLayout>
+	</LinearLayout>
+</LinearLayout>
+    

@@ -8,10 +8,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;

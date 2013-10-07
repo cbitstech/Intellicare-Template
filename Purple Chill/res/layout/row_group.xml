@@ -5,7 +5,8 @@
     android:orientation="horizontal"
     android:padding="10dp">
     <ImageView android:id="@+id/group_icon"
-        android:src="@drawable/ic_action_lock_open"
+        android:src="@drawable/ic_action_headphones"
+        android:contentDescription="@string/empty"
         android:layout_width="32dp"
         android:layout_height="32dp" />
     <LinearLayout android:orientation="vertical"

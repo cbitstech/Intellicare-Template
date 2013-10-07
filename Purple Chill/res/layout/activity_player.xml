@@ -7,7 +7,8 @@
     <ListView android:id="@+id/recording_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1" 
+        android:background="#888888" />
     <View android:background="@color/bottom_bar_border"
         android:layout_width="match_parent"
         android:layout_height="1.5dp" />
@@ -39,14 +40,17 @@
             android:layout_weight="1" />
         <ImageButton android:id="@+id/previous_track"
             android:src="@drawable/ic_action_playback_prev"
+            android:contentDescription="@string/goto_previous"
             android:layout_width="64dp"
             android:layout_height="64dp" />
         <ImageButton android:id="@+id/play_pause"
             android:src="@drawable/ic_action_playback_play"
+            android:contentDescription="@string/goto_play_pause"
             android:layout_width="64dp"
             android:layout_height="64dp" />
         <ImageButton android:id="@+id/next_track"
             android:src="@drawable/ic_action_playback_next"
+            android:contentDescription="@string/goto_next"
             android:layout_width="64dp"
             android:layout_height="64dp" />
         <View android:layout_width="0dp"

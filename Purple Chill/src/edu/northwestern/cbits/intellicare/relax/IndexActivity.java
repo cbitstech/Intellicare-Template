@@ -7,14 +7,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.ConsentActivity;
@@ -112,6 +116,31 @@ public class IndexActivity extends ConsentedActivity
 				    return true;
 			}
 		});
+		
+		LinearLayout currentTrack = (LinearLayout) this.findViewById(R.id.current_track);
+		
+		if (PlayerActivity.isPlaying())
+		{
+			ImageButton trackButton = (ImageButton) this.findViewById(R.id.goto_current_track);
+			
+			trackButton.setOnClickListener(new OnClickListener()
+			{
+				public void onClick(View v) 
+				{
+					Intent playerIntent = PlayerActivity.launchIntentForCurrentTrack(me);
+					
+					if (playerIntent != null)
+						me.startActivity(playerIntent);
+					else
+						Log.e("PC", "NULL INTENT FOR CURRENTLY PLAYING!!!");
+				}
+			});
+			
+			TextView trackName = (TextView) this.findViewById(R.id.current_track_name);
+			trackName.setText(PlayerActivity.playerTitle(this));
+		}
+		else
+			currentTrack.setVisibility(View.GONE);
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 

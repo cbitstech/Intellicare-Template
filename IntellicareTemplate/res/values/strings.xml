@@ -41,6 +41,8 @@
     <string name="button_continue">Continue</string>
     <string name="button_skip">Skip</string>
     
+    <string name="message_complete_form">Please answer all the questions to continue&#8230;</string>
+    
     <!-- PHQ-4 -->
     <string name="phq_title">PHQ-4</string>
     <string name="phq_subtitle">Personal Health Questionnaire</string>

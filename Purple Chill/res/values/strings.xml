@@ -33,6 +33,11 @@
     <string name="visualization_title">Visualization</string>
     <string name="mindful_title">Mindfulness</string>
 
+    <string name="empty"></string>
+    <string name="goto_next">Next Track</string>
+    <string name="goto_previous">Previous Track</string>
+    <string name="goto_play_pause"> Play / Pause</string>
+    
     <string-array name="breathing_urls">
         <item>file:///android_asset/www/breathing.html</item>
 	</string-array>
@@ -145,4 +150,6 @@
         <item>192</item>
         <item>517</item>
    	</string-array>
+   	
+    <string name="current_track_label">Current Track</string>
 </resources>

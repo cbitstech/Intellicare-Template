@@ -3,12 +3,14 @@ package edu.northwestern.cbits.intellicare.relax;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
@@ -33,6 +35,7 @@ public class PlayerActivity extends ActionBarActivity
 	protected static final String GROUP_MEDIA = "group_media";
 	protected static final String GROUP_TITLES = "group_titles";
 	protected static final String GROUP_TIMES = "group_times";
+	protected static final String GROUP_TRACK = "group_track";
 	
 	private String _groupName = null;
 	
@@ -40,6 +43,12 @@ public class PlayerActivity extends ActionBarActivity
 	
 	private static MediaPlayer _player = null;
 	private static Thread _playerThread = null;
+
+	private static String _currentGroupName = null;
+	private static int _currentGroupTimes = -1;
+	private static int _currentGroupTitles = -1;
+	private static int _currentGroupMedia = -1;
+	private static int _currentGroupTrack = -1;
 
 	static String formatTime(String secondsString)
 	{
@@ -70,13 +79,16 @@ public class PlayerActivity extends ActionBarActivity
 		final ArrayList<String> recordings = new ArrayList<String>();
 		final ArrayList<String> titles = new ArrayList<String>();
 		final ArrayList<String> times = new ArrayList<String>();
+		
+		final int titlesId = this.getIntent().getIntExtra(PlayerActivity.GROUP_TITLES, -1);
+		final int mediaId = this.getIntent().getIntExtra(PlayerActivity.GROUP_MEDIA, -1);
+		final int timesId = this.getIntent().getIntExtra(PlayerActivity.GROUP_TIMES, -1);
 
-		if (this.getIntent().hasExtra(PlayerActivity.GROUP_MEDIA) && this.getIntent().hasExtra(PlayerActivity.GROUP_TITLES)
-				&& this.getIntent().hasExtra(PlayerActivity.GROUP_TIMES))
+		if (titlesId != -1 && mediaId != -1 && timesId != -1)
 		{
-			String[] mediaUrls = this.getResources().getStringArray(this.getIntent().getIntExtra(PlayerActivity.GROUP_MEDIA, 0));
-			String[] mediaTitles = this.getResources().getStringArray(this.getIntent().getIntExtra(PlayerActivity.GROUP_TITLES, 0));
-			String[] mediaTimes = this.getResources().getStringArray(this.getIntent().getIntExtra(PlayerActivity.GROUP_TIMES, 0));
+			String[] mediaUrls = this.getResources().getStringArray(mediaId);
+			String[] mediaTitles = this.getResources().getStringArray(titlesId);
+			String[] mediaTimes = this.getResources().getStringArray(timesId);
 			
 			for (int i = 0; i < mediaUrls.length; i++)
 			{
@@ -87,7 +99,9 @@ public class PlayerActivity extends ActionBarActivity
 		}
 		
 		final PlayerActivity me = this;
-		
+
+		final TextView audioTitle = (TextView) this.findViewById(R.id.audio_title);
+
 		final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row_recording, recordings)
 		{
 			public View getView(int position, View convertView, ViewGroup parent)
@@ -123,6 +137,9 @@ public class PlayerActivity extends ActionBarActivity
 		{
 			public void onClick(View view) 
 			{
+				if (PlayerActivity._player == null)
+					return;
+					
 				if (PlayerActivity._player.isPlaying())
 				{
 					playButton.setImageResource(R.drawable.ic_action_playback_play);
@@ -167,19 +184,26 @@ public class PlayerActivity extends ActionBarActivity
 			}
 		});
 		nextButton.setEnabled(false);
-
-		final TextView audioTitle = (TextView) this.findViewById(R.id.audio_title);
 		
 		recordingsList.setOnItemClickListener(new OnItemClickListener()
 		{
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
 			{
-				if (me._selectedIndex != position)
+				if (me._groupName.equals(PlayerActivity._currentGroupName) && position == PlayerActivity._currentGroupTrack) 
+				{
+					playButton.setImageResource(R.drawable.ic_action_playback_pause);
+
+					return;
+				}
+				else
 				{
 					playButton.setEnabled(true);
 
-					String[] mediaUrls = me.getResources().getStringArray(me.getIntent().getIntExtra(PlayerActivity.GROUP_MEDIA, 0));
+					final String[] mediaUrls = me.getResources().getStringArray(me.getIntent().getIntExtra(PlayerActivity.GROUP_MEDIA, 0));
 					String[] mediaTitles = me.getResources().getStringArray(me.getIntent().getIntExtra(PlayerActivity.GROUP_TITLES, 0));
+					
+					if (position >= mediaTitles.length)
+						return;
 
 					me._selectedIndex = position;
 					
@@ -209,15 +233,31 @@ public class PlayerActivity extends ActionBarActivity
 
 						playButton.setImageResource(R.drawable.ic_action_playback_pause);
 						
-						PlayerActivity._player.setOnInfoListener(new MediaPlayer.OnInfoListener()
+						PlayerActivity._player.setOnCompletionListener(new OnCompletionListener()
 						{
-							public boolean onInfo(MediaPlayer mp, int what, int extra) 
+							public void onCompletion(MediaPlayer player) 
 							{
-								Log.e("PC", "INFO: " + what + " EXTRA " + extra);
-								
-								return true;
+								if (me._selectedIndex < mediaUrls.length - 1)
+									recordingsList.performItemClick(null, me._selectedIndex + 1, recordingsList.getItemIdAtPosition(me._selectedIndex + 1));
+								else
+								{
+									PlayerActivity._player.release();
+									PlayerActivity._player = null;
+
+									PlayerActivity._currentGroupName = null;
+									PlayerActivity._currentGroupMedia = -1;
+									PlayerActivity._currentGroupTitles = -1;
+									PlayerActivity._currentGroupTimes = -1;
+									PlayerActivity._currentGroupTrack = -1;
+								}
 							}
 						});
+						
+						PlayerActivity._currentGroupName = me._groupName;
+						PlayerActivity._currentGroupMedia = mediaId;
+						PlayerActivity._currentGroupTitles = titlesId;
+						PlayerActivity._currentGroupTimes = timesId;
+						PlayerActivity._currentGroupTrack = me._selectedIndex;
 					} 
 					catch (IllegalArgumentException e) 
 					{
@@ -250,6 +290,86 @@ public class PlayerActivity extends ActionBarActivity
 				adapter.notifyDataSetChanged();
 			}
 		});
+		
+		int existingTrack = this.getIntent().getIntExtra(PlayerActivity.GROUP_TRACK, -1);
+		
+		if (existingTrack == -1)
+			existingTrack = PlayerActivity._currentGroupTrack;
+		
+		if (existingTrack != -1)
+		{
+			if (PlayerActivity.isPlaying())
+			{
+				this._selectedIndex = existingTrack;
+				
+				audioTitle.setText(titles.get(this._selectedIndex));
+
+				playButton.setEnabled(true);
+				
+				if (existingTrack > 0)
+					previousButton.setEnabled(true);
+				else
+					previousButton.setEnabled(false);
+
+				if (existingTrack == recordings.size() - 1)
+					nextButton.setEnabled(false);
+				else
+					nextButton.setEnabled(true);
+			}
+			else
+				recordingsList.performItemClick(null, existingTrack, recordingsList.getItemIdAtPosition(existingTrack));
+		}
+	}
+	
+	public static boolean isPlaying()
+	{
+		if (PlayerActivity._player != null)
+			return PlayerActivity._player.isPlaying();
+		
+		return false;
+	}
+	
+	public static String playerTitle(Context context)
+	{
+		if (PlayerActivity.isPlaying())
+		{
+			String[] titles = context.getResources().getStringArray(PlayerActivity._currentGroupTitles);
+			
+			return titles[PlayerActivity._currentGroupTrack];
+		}
+		
+		return null;
+	}
+
+	public static String playerSubtitle(Context context)
+	{
+		if (PlayerActivity.isPlaying())
+			return PlayerActivity._currentGroupName;		
+		
+		return null;
+	}
+
+	public static Intent launchIntentForCurrentTrack(Context context)
+	{
+		if (PlayerActivity.isPlaying())
+		{
+			Intent intent = new Intent(context, PlayerActivity.class);
+			
+			Log.e("PC", "1 " + PlayerActivity._currentGroupName);
+			intent.putExtra(PlayerActivity.GROUP_NAME, PlayerActivity._currentGroupName);
+			Log.e("PC", "2 " + PlayerActivity._currentGroupMedia);
+			intent.putExtra(PlayerActivity.GROUP_MEDIA, PlayerActivity._currentGroupMedia);
+			Log.e("PC", "3 " + PlayerActivity._currentGroupTitles);
+			intent.putExtra(PlayerActivity.GROUP_TITLES, PlayerActivity._currentGroupTitles);
+			Log.e("PC", "4 " + PlayerActivity._currentGroupTimes);
+			intent.putExtra(PlayerActivity.GROUP_TIMES, PlayerActivity._currentGroupTimes);
+			Log.e("PC", "5 " + PlayerActivity._currentGroupTrack);
+			intent.putExtra(PlayerActivity.GROUP_TRACK, PlayerActivity._currentGroupTrack);
+			
+			return intent;
+		}
+		
+		return null;
 	}
 	
 	protected void onResume()
@@ -314,8 +434,6 @@ public class PlayerActivity extends ActionBarActivity
 					{
 						e.printStackTrace();
 					}
-					
-					Log.e("PC", "EXITING THREAD");
 				}
 			};
 			
@@ -336,6 +454,8 @@ public class PlayerActivity extends ActionBarActivity
 
 	private int getIntroUrls() 
 	{
+		Log.e("PC", "GROUP NAME: " + this._groupName);
+		
 		if (this._groupName.equals(this.getString(R.string.breathing_title)))
 			return R.array.breathing_urls;
 		else if (this._groupName.equals(this.getString(R.string.muscle_title)))
@@ -386,5 +506,4 @@ public class PlayerActivity extends ActionBarActivity
 		
 		return true;
 	}
-
 }
