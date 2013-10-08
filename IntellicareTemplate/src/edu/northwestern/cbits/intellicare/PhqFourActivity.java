@@ -22,6 +22,66 @@ public class PhqFourActivity extends FormQuestionActivity
 		this.getSupportActionBar().setTitle(R.string.phq_title);
 		this.getSupportActionBar().setSubtitle(R.string.phq_subtitle);
 	}
+	
+	public void onSaveInstanceState(Bundle bundle) 
+	{
+		super.onSaveInstanceState(bundle);  
+
+		RadioGroup one = (RadioGroup) this.findViewById(R.id.phq_one);
+		RadioGroup two = (RadioGroup) this.findViewById(R.id.phq_two);
+		RadioGroup three = (RadioGroup) this.findViewById(R.id.phq_three);
+		RadioGroup four = (RadioGroup) this.findViewById(R.id.phq_four);
+		
+		final RadioGroup[] groups =  { one, two, three, four };
+
+		for (RadioGroup radioGroup : groups)
+		{
+			int selected = radioGroup.getCheckedRadioButtonId();
+			
+			String key = null;
+			
+			if (radioGroup.getId() == R.id.phq_one)
+				key = "anxious";
+			else if (radioGroup.getId() == R.id.phq_two)
+				key = "worry";
+			else if (radioGroup.getId() == R.id.phq_three)
+				key = "hopeless";
+			else if (radioGroup.getId() == R.id.phq_four)
+				key = "interest";
+			
+			if (selected != -1)
+				bundle.putInt(key, selected);
+		}
+	}  
+	
+	public void onRestoreInstanceState(Bundle bundle) 
+	{  
+		super.onRestoreInstanceState(bundle);  
+
+		RadioGroup one = (RadioGroup) this.findViewById(R.id.phq_one);
+		RadioGroup two = (RadioGroup) this.findViewById(R.id.phq_two);
+		RadioGroup three = (RadioGroup) this.findViewById(R.id.phq_three);
+		RadioGroup four = (RadioGroup) this.findViewById(R.id.phq_four);
+		
+		final RadioGroup[] groups =  { one, two, three, four };
+
+		for (RadioGroup radioGroup : groups)
+		{
+			String key = null;
+			
+			if (radioGroup.getId() == R.id.phq_one)
+				key = "anxious";
+			else if (radioGroup.getId() == R.id.phq_two)
+				key = "worry";
+			else if (radioGroup.getId() == R.id.phq_three)
+				key = "hopeless";
+			else if (radioGroup.getId() == R.id.phq_four)
+				key = "interest";
+			
+			if (bundle.containsKey(key))
+				radioGroup.check(bundle.getInt(key));
+		}
+	}
 
 	public static void administer(final Context context, boolean immediate)
 	{

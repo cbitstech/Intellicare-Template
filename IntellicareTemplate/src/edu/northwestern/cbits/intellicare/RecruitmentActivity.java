@@ -157,6 +157,30 @@ public class RecruitmentActivity extends ActionBarActivity
 		}
 	}
 	
+	public void onSaveInstanceState(Bundle bundle) 
+	{
+		super.onSaveInstanceState(bundle);  
+
+		for (String key : this._payload.keySet())
+			bundle.putString(key, this._payload.get(key).toString());
+	}  
+	
+	public void onRestoreInstanceState(Bundle bundle) 
+	{  
+		super.onRestoreInstanceState(bundle);  
+		
+		if (bundle.containsKey("contact_time"))
+		{
+			this._payload.put("contact_time", bundle.getString("contact_time"));
+
+			final TextView contactLabel = (TextView) this.findViewById(R.id.recruitment_time_label);
+			final TextView contactValue = (TextView) this.findViewById(R.id.recruitment_time_value);
+	
+			contactValue.setText(bundle.getString("contact_time"));
+			contactValue.setTextColor(contactLabel.getCurrentTextColor());
+		}
+	}
+	
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 		if (item.getItemId() ==  R.id.action_done)

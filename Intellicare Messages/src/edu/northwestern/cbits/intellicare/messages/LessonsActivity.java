@@ -226,6 +226,7 @@ public class LessonsActivity extends ConsentedActivity
 		else if (item.getItemId() == R.id.action_phq_four)
 		{
 			Intent phqIntent = new Intent(this, RecruitmentActivity.class);
+//			Intent phqIntent = new Intent(this, PhqFourActivity.class);
 			this.startActivity(phqIntent);
 		}
 		else if (item.getItemId() == R.id.action_demographic)

@@ -22,6 +22,34 @@ public class DemographicActivity extends FormQuestionActivity
 		this.getSupportActionBar().setSubtitle(R.string.demographic_subtitle);
 	}
 	
+	public void onSaveInstanceState(Bundle bundle) 
+	{
+		super.onSaveInstanceState(bundle);  
+
+		for (String key : this._payload.keySet())
+			bundle.putString(key, this._payload.get(key).toString());
+	}  
+	
+	public void onRestoreInstanceState(Bundle bundle) 
+	{  
+		super.onRestoreInstanceState(bundle);  
+		
+		if (bundle.containsKey("birth_year"))
+			this._payload.put("birth_year", bundle.get("birth_year"));
+
+		if (bundle.containsKey("gender"))
+			this._payload.put("gender", bundle.get("gender"));
+		
+		if (bundle.containsKey("ethnicity"))
+			this._payload.put("ethnicity", bundle.get("ethnicity"));
+		
+		if (bundle.containsKey("race"))
+			this._payload.put("race", bundle.get("race"));
+		
+		if (bundle.containsKey("education"))
+			this._payload.put("education", bundle.get("education"));
+	}
+	
 	protected void setupListeners() 
 	{
 		final DemographicActivity me = this;
@@ -64,6 +92,12 @@ public class DemographicActivity extends FormQuestionActivity
 			}
 		};
 		
+		if (this._payload.containsKey("birth_year"))
+		{
+			birthValue.setText(this._payload.get("birth_year").toString());
+			birthValue.setTextColor(birthLabel.getCurrentTextColor());
+		}
+		
 		birthLabel.setOnClickListener(birthListener);
 		birthValue.setOnClickListener(birthListener);
 
@@ -98,6 +132,12 @@ public class DemographicActivity extends FormQuestionActivity
 				builder.create().show();
 			}
 		};
+		
+		if (this._payload.containsKey("gender"))
+		{
+			genderValue.setText(this._payload.get("gender").toString());
+			genderValue.setTextColor(genderLabel.getCurrentTextColor());
+		}
 		
 		genderLabel.setOnClickListener(genderListener);
 		genderValue.setOnClickListener(genderListener);
@@ -134,6 +174,12 @@ public class DemographicActivity extends FormQuestionActivity
 			}
 		};
 		
+		if (this._payload.containsKey("ethnicity"))
+		{
+			ethnicityValue.setText(this._payload.get("ethnicity").toString());
+			ethnicityValue.setTextColor(ethnicityLabel.getCurrentTextColor());
+		}
+
 		ethnicityLabel.setOnClickListener(ethnicityListener);
 		ethnicityValue.setOnClickListener(ethnicityListener);
 
@@ -168,6 +214,12 @@ public class DemographicActivity extends FormQuestionActivity
 				builder.create().show();
 			}
 		};
+		
+		if (this._payload.containsKey("race"))
+		{
+			raceValue.setText(this._payload.get("race").toString());
+			raceValue.setTextColor(raceLabel.getCurrentTextColor());
+		}
 		
 		raceLabel.setOnClickListener(raceListener);
 		raceValue.setOnClickListener(raceListener);
@@ -204,6 +256,12 @@ public class DemographicActivity extends FormQuestionActivity
 			}
 		};
 		
+		if (this._payload.containsKey("education"))
+		{
+			educationValue.setText(this._payload.get("education").toString());
+			educationValue.setTextColor(educationLabel.getCurrentTextColor());
+		}
+
 		educationLabel.setOnClickListener(educationListener);
 		educationValue.setOnClickListener(educationListener);
 	}

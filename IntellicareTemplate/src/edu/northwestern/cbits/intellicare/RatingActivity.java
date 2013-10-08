@@ -44,6 +44,27 @@ public class RatingActivity extends ConsentedActivity
 		});
 	}
 	
+	public void onSaveInstanceState(Bundle bundle) 
+	{
+		super.onSaveInstanceState(bundle);  
+
+		bundle.putInt("rating", this._rating);
+	}  
+	
+	public void onRestoreInstanceState(Bundle bundle) 
+	{  
+		super.onRestoreInstanceState(bundle);  
+		
+		if (bundle.containsKey("rating"))
+		{
+			this._rating = bundle.getInt("rating");
+		
+			StarRatingView ratingView = (StarRatingView) this.findViewById(R.id.star_rating_view);
+		
+			ratingView.setRating(this._rating);
+		}
+	}
+	
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 		if (item.getItemId() ==  R.id.action_done)

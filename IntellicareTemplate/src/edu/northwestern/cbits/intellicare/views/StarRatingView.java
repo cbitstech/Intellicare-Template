@@ -107,4 +107,53 @@ public class StarRatingView extends RelativeLayout
 	{
 		return this._rating;
 	}
+
+	public void setRating(int rating) 
+	{
+		this._rating = rating;
+		
+		final ImageView one = (ImageView) this.findViewById(R.id.one_star);
+		final ImageView two = (ImageView) this.findViewById(R.id.two_star);
+		final ImageView three = (ImageView) this.findViewById(R.id.three_star);
+		final ImageView four = (ImageView) this.findViewById(R.id.four_star);
+		final ImageView five = (ImageView) this.findViewById(R.id.five_star);
+
+		five.setImageResource(R.drawable.ic_action_star_0);
+		four.setImageResource(R.drawable.ic_action_star_0);
+		three.setImageResource(R.drawable.ic_action_star_0);
+		two.setImageResource(R.drawable.ic_action_star_0);
+		one.setImageResource(R.drawable.ic_action_star_0);
+
+		
+		if (this._rating == 5)
+		{
+			five.setImageResource(R.drawable.ic_action_star_10);
+			four.setImageResource(R.drawable.ic_action_star_10);
+			three.setImageResource(R.drawable.ic_action_star_10);
+			two.setImageResource(R.drawable.ic_action_star_10);
+			one.setImageResource(R.drawable.ic_action_star_10);
+		}
+		else if (this._rating == 4)
+		{
+			four.setImageResource(R.drawable.ic_action_star_10);
+			three.setImageResource(R.drawable.ic_action_star_10);
+			two.setImageResource(R.drawable.ic_action_star_10);
+			one.setImageResource(R.drawable.ic_action_star_10);
+		}
+		else if (this._rating == 3)
+		{
+			three.setImageResource(R.drawable.ic_action_star_10);
+			two.setImageResource(R.drawable.ic_action_star_10);
+			one.setImageResource(R.drawable.ic_action_star_10);
+		}
+		else if (this._rating == 2)
+		{
+			two.setImageResource(R.drawable.ic_action_star_10);
+			one.setImageResource(R.drawable.ic_action_star_10);
+		}
+		else if (this._rating == 1)
+		{
+			one.setImageResource(R.drawable.ic_action_star_10);
+		}
+	}
 }
