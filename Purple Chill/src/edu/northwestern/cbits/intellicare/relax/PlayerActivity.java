@@ -2,6 +2,9 @@ package edu.northwestern.cbits.intellicare.relax;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +17,6 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -200,7 +202,7 @@ public class PlayerActivity extends ActionBarActivity
 					playButton.setEnabled(true);
 
 					final String[] mediaUrls = me.getResources().getStringArray(me.getIntent().getIntExtra(PlayerActivity.GROUP_MEDIA, 0));
-					String[] mediaTitles = me.getResources().getStringArray(me.getIntent().getIntExtra(PlayerActivity.GROUP_TITLES, 0));
+					final String[] mediaTitles = me.getResources().getStringArray(me.getIntent().getIntExtra(PlayerActivity.GROUP_TITLES, 0));
 					
 					if (position >= mediaTitles.length)
 						return;
@@ -208,6 +210,11 @@ public class PlayerActivity extends ActionBarActivity
 					me._selectedIndex = position;
 					
 					audioTitle.setText(mediaTitles[me._selectedIndex]);
+					
+					HashMap<String,Object> payload = new HashMap<String, Object>();
+					payload.put(PlayerActivity.GROUP_NAME, me._groupName);
+					payload.put("track_name", mediaTitles[me._selectedIndex]);
+					LogManager.getInstance(me).log("track_completed", payload);
 					
 					if (PlayerActivity._player != null)
 					{
@@ -237,6 +244,12 @@ public class PlayerActivity extends ActionBarActivity
 						{
 							public void onCompletion(MediaPlayer player) 
 							{
+								HashMap<String,Object> payload = new HashMap<String, Object>();
+								payload.put(PlayerActivity.GROUP_NAME, me._groupName);
+								payload.put("track_finshed", mediaTitles[me._selectedIndex]);
+								LogManager.getInstance(me).log("selected_track", payload);
+
+								
 								if (me._selectedIndex < mediaUrls.length - 1)
 									recordingsList.performItemClick(null, me._selectedIndex + 1, recordingsList.getItemIdAtPosition(me._selectedIndex + 1));
 								else
@@ -355,15 +368,10 @@ public class PlayerActivity extends ActionBarActivity
 		{
 			Intent intent = new Intent(context, PlayerActivity.class);
 			
-			Log.e("PC", "1 " + PlayerActivity._currentGroupName);
 			intent.putExtra(PlayerActivity.GROUP_NAME, PlayerActivity._currentGroupName);
-			Log.e("PC", "2 " + PlayerActivity._currentGroupMedia);
 			intent.putExtra(PlayerActivity.GROUP_MEDIA, PlayerActivity._currentGroupMedia);
-			Log.e("PC", "3 " + PlayerActivity._currentGroupTitles);
 			intent.putExtra(PlayerActivity.GROUP_TITLES, PlayerActivity._currentGroupTitles);
-			Log.e("PC", "4 " + PlayerActivity._currentGroupTimes);
 			intent.putExtra(PlayerActivity.GROUP_TIMES, PlayerActivity._currentGroupTimes);
-			Log.e("PC", "5 " + PlayerActivity._currentGroupTrack);
 			intent.putExtra(PlayerActivity.GROUP_TRACK, PlayerActivity._currentGroupTrack);
 			
 			return intent;
@@ -375,6 +383,10 @@ public class PlayerActivity extends ActionBarActivity
 	protected void onResume()
 	{
 		super.onResume();
+	
+		HashMap<String,Object> payload = new HashMap<String, Object>();
+		payload.put(PlayerActivity.GROUP_NAME, this._groupName);
+		LogManager.getInstance(this).log("viewed_group", payload);
 		
 		String completedKey = this._groupName + "_completed";
 		
@@ -450,12 +462,14 @@ public class PlayerActivity extends ActionBarActivity
 		{
 			PlayerActivity._playerThread = null;
 		}
+		
+		HashMap<String,Object> payload = new HashMap<String, Object>();
+		payload.put(PlayerActivity.GROUP_NAME, this._groupName);
+		LogManager.getInstance(this).log("exited_group", payload);	
 	}
 
 	private int getIntroUrls() 
 	{
-		Log.e("PC", "GROUP NAME: " + this._groupName);
-		
 		if (this._groupName.equals(this.getString(R.string.breathing_title)))
 			return R.array.breathing_urls;
 		else if (this._groupName.equals(this.getString(R.string.muscle_title)))

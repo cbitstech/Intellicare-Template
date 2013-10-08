@@ -39,8 +39,8 @@ public class ScheduleManager
 		
 		PendingIntent pi = PendingIntent.getBroadcast(this._context, 0, broadcast, PendingIntent.FLAG_UPDATE_CURRENT);
 		
-//		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);
-		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, 20000, pi);
+		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);
+//		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, 20000, pi);
 	}
 
 	public static ScheduleManager getInstance(Context context)

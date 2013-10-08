@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.ConsentActivity;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class IndexActivity extends ConsentedActivity 
 {
@@ -38,10 +39,19 @@ public class IndexActivity extends ConsentedActivity
 		UpdateManager.register(this, APP_ID);
 	}
 	
+	public void onPause()
+	{
+		super.onPause();
+		
+		LogManager.getInstance(this).log("exited_index", null);
+	}
+	
 	public void onResume()
 	{
 		super.onResume();
 		
+		LogManager.getInstance(this).log("viewed_index", null);
+
 		final String[] titles = this.getResources().getStringArray(R.array.group_titles);
 		final String[] descriptions = this.getResources().getStringArray(R.array.group_descriptions);
 
