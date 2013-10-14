@@ -136,4 +136,14 @@
     <string name="recruitment_name_message">Please provide your full name to continue.</string>
     <string name="recruitment_email_message">Please provide a valid e-mail address to continue.</string>
     <string name="recruitment_phone_message">Please provide a valid phone number to continue.</string>
+
+    <string name="motivation_question">What are the main reasons you are using this app?</string>
+    <string name="reason_improve_me">I want to improve the quality of my life.</string>
+	<string name="reason_improve_others">I want to help someone else improve their quality of life.</string>
+    <string name="reason_curious">I\'m just curious to look at the app.</string>
+	<string name="reason_other">Please include any other reasons here. (Optional)</string>
+	<string name="label_reason_other">Other reasons</string>
+	<string name="motivation_title">Motivation</string>
+	<string name="title_primary_reason">What is your main reason?</string>
+	<string name="message_motivation_select_one">Please select at least one reason or provde your own.</string>
 </resources>

@@ -15,6 +15,7 @@ import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -157,6 +158,14 @@ public class RecruitmentActivity extends ActionBarActivity
 		}
 	}
 	
+	protected void onResume()
+	{
+		super.onResume();
+		
+		if (RecruitmentActivity.showedRecruitment())
+			this.finish();
+	}
+	
 	public void onSaveInstanceState(Bundle bundle) 
 	{
 		super.onSaveInstanceState(bundle);  
@@ -235,6 +244,8 @@ public class RecruitmentActivity extends ActionBarActivity
 			intellicare.mkdirs();
 		
 		File recruitment = new File(intellicare, "Recruitment Record.txt");
+		
+		Log.e("D2D", "RECRUITMENT SHOWN: " + recruitment.exists());
 		
 		return recruitment.exists();
 	}

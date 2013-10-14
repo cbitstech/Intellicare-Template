@@ -28,11 +28,16 @@ public class LessonActivity extends SequentialPageActivity
 		
 		int currentLevel = this.getIntent().getIntExtra(LessonsActivity.LESSON_LEVEL, 0);
 		
-		Editor e = prefs.edit();
-		e.putBoolean(LessonsActivity.LESSON_READ_PREFIX + currentLevel, true);
-		e.commit();
-
-		Intent intent = new Intent(this, MessageRatingActivity.class);
-		this.startActivity(intent);
+		String readKey = LessonsActivity.LESSON_READ_PREFIX + currentLevel;
+		
+		if (prefs.getBoolean(readKey, false) == false)
+		{
+			Editor e = prefs.edit();
+			e.putBoolean(LessonsActivity.LESSON_READ_PREFIX + currentLevel, true);
+			e.commit();
+	
+			Intent intent = new Intent(this, MessageRatingActivity.class);
+			this.startActivity(intent);
+		}
 	}
 }

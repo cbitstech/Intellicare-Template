@@ -7,6 +7,7 @@ import net.hockeyapp.android.CrashManagerListener;
 import net.hockeyapp.android.UpdateManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -25,6 +26,8 @@ import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.ConsentActivity;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.DemographicActivity;
+import edu.northwestern.cbits.intellicare.MotivationActivity;
+import edu.northwestern.cbits.intellicare.PhqFourActivity;
 import edu.northwestern.cbits.intellicare.RecruitmentActivity;
 
 public class LessonsActivity extends ConsentedActivity 
@@ -33,6 +36,8 @@ public class LessonsActivity extends ConsentedActivity
 	public static final String LESSON_READ_PREFIX = "lesson_read_";
 
 	private static final String APP_ID = "455953ac6a6eb7c89be9af9848731279";
+	private static final String INITIAL_PHQ4_SHOWN = "initial_phq4_shown";
+	private static final String INITIAL_MOTIVATION_SHOWN = "initial_motivation_shown";
 
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -200,8 +205,22 @@ public class LessonsActivity extends ConsentedActivity
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
+		Editor e = prefs.edit();
+		
 		if (ConsentActivity.isConsented() == true && prefs.getBoolean(HelpActivity.HELP_COMPLETED, false) == false)
 			this.startActivity(new Intent(this, HelpActivity.class));
+		else if (prefs.getBoolean(LessonsActivity.INITIAL_PHQ4_SHOWN, false) == false)
+		{
+			this.startActivity(new Intent(this, PhqFourActivity.class));
+			e.putBoolean(LessonsActivity.INITIAL_PHQ4_SHOWN, true);
+		}
+		else if (prefs.getBoolean(LessonsActivity.INITIAL_MOTIVATION_SHOWN, false) == false)
+		{
+			this.startActivity(new Intent(this, MotivationActivity.class));
+			e.putBoolean(LessonsActivity.INITIAL_MOTIVATION_SHOWN, true);
+		}
+		
+		e.commit();
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) 
@@ -234,12 +253,16 @@ public class LessonsActivity extends ConsentedActivity
 			Intent phqIntent = new Intent(this, DemographicActivity.class);
 			this.startActivity(phqIntent);
 		}
-
-		/* else if (item.getItemId() == R.id.action_test)
+		else if (item.getItemId() == R.id.action_test)
 		{
 			Intent testIntent = new Intent(this, TestActivity.class);
 			this.startActivity(testIntent);
-		} */
+		}
+		else if (item.getItemId() == R.id.action_motivation)
+		{
+			Intent motivationIntent = new Intent(this, MotivationActivity.class);
+			this.startActivity(motivationIntent);
+		}
 		
 		return true;
 	}

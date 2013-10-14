@@ -77,7 +77,6 @@ public class RatingActivity extends ConsentedActivity
 			{
 				HashMap<String, Object> payload = new HashMap<String, Object>();
 				payload.put("rating", Integer.valueOf(this._rating));
-				payload.put("app_package", this.getApplicationContext().getPackageName());
 				
 				EditText feedback = (EditText) this.findViewById(R.id.feedback_field);
 				
@@ -87,9 +86,9 @@ public class RatingActivity extends ConsentedActivity
 					payload.put("feedback", feedbackText);
 				
 				LogManager.getInstance(this).log("app_rated", payload);
+
+				this.finish();
 			}
-			
-			this.finish();
 		}
 
 		return true;

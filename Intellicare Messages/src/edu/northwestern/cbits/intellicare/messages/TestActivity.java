@@ -1,6 +1,8 @@
 package edu.northwestern.cbits.intellicare.messages;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -16,8 +18,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.DialogActivity;
-import edu.northwestern.cbits.intellicare.RatingActivity;
 import edu.northwestern.cbits.intellicare.StatusNotificationManager;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class TestActivity extends ConsentedActivity 
 {
@@ -121,12 +123,48 @@ public class TestActivity extends ConsentedActivity
 				}
 				else
 				{
-					Intent intent = new Intent(me, RatingActivity.class);
-					PendingIntent pi = PendingIntent.getActivity(me, 0, intent, 0);
+					String descIndex = position / 35 + "." + (position % 35);
+
+					SecureRandom random = new SecureRandom();
 					
-					StatusNotificationManager note = StatusNotificationManager.getInstance(me);
-					
-					note.notifyBigText(12345, R.drawable.ic_notification, row.type + " " + row.lessonId, row.message, pi);
+					String title = row.type + " " + row.lessonId;
+
+					HashMap<String, Object> payload = new HashMap<String, Object>();
+					payload.put("message_index", descIndex);
+					LogManager.getInstance(me).log("notification_shown", payload);
+
+					if (random.nextDouble() < 0.33)
+					{
+						Intent intent = new Intent(me, MessageRatingActivity.class);
+						intent.putExtra(ScheduleManager.MESSAGE_MESSAGE, row.message);
+						intent.putExtra(ScheduleManager.MESSAGE_TITLE, title);
+						intent.putExtra(ScheduleManager.MESSAGE_INDEX, descIndex);
+						
+						PendingIntent pi = PendingIntent.getActivity(me, 0, intent, 0);
+						
+						StatusNotificationManager note = StatusNotificationManager.getInstance(me);
+						
+						note.notifyBigText(12345, R.drawable.ic_notification, row.type + " " + row.lessonId, row.message, pi);
+					}
+					else if (random.nextDouble() < 0.66)
+					{
+						Intent messageIntent = new Intent(me, MessageActivity.class);
+						messageIntent.putExtra(DialogActivity.DIALOG_TITLE, row.type + " " + row.lessonId);
+						messageIntent.putExtra(DialogActivity.DIALOG_MESSAGE, row.message);
+						messageIntent.putExtra(ScheduleManager.MESSAGE_INDEX, descIndex);
+
+						me.startActivity(messageIntent);
+					}
+					else
+					{
+						Intent dialogIntent = new Intent(me, DialogActivity.class);
+						dialogIntent.putExtra(DialogActivity.DIALOG_TITLE, row.type + " " + row.lessonId);
+						dialogIntent.putExtra(DialogActivity.DIALOG_MESSAGE, row.message);
+						dialogIntent.putExtra(DialogActivity.DIALOG_CONFIRM_BUTTON, me.getString(R.string.button_continue));
+						dialogIntent.putExtra(ScheduleManager.MESSAGE_INDEX, descIndex);
+
+						me.startActivity(dialogIntent);
+					}
 				}
 			}
 		});

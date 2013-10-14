@@ -233,5 +233,8 @@
    	<string name="note_instruction">Day-to-Day Instruction</string>
 
    	<string name="message_confirm_text">How useful was this message?</string>
-   			
+
+  	<string name="test_title">Tests (TBR)</string>
+  	<string name="label_interrupted">Check here if this message interrupted something you were doing.</string>
+  					
 </resources>

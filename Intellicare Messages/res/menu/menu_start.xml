@@ -13,6 +13,14 @@
         robot:showAsAction="never"
         android:title="@string/phq_title"/>
     <item
+        android:id="@+id/action_motivation"
+        robot:showAsAction="never"
+        android:title="Motivation (TBR)"/>
+    <item
+        android:id="@+id/action_test"
+        robot:showAsAction="never"
+        android:title="@string/test_title"/>
+    <item
         android:id="@+id/action_demographic"
         robot:showAsAction="never"
         android:title="@string/demographic_title"/>

@@ -1,5 +1,6 @@
 package edu.northwestern.cbits.intellicare.messages;
 
+import java.security.SecureRandom;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -12,6 +13,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
+import edu.northwestern.cbits.intellicare.DialogActivity;
 import edu.northwestern.cbits.intellicare.PhqFourActivity;
 import edu.northwestern.cbits.intellicare.StatusNotificationManager;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
@@ -134,18 +136,33 @@ public class ScheduleManager
 
 							icon = R.drawable.ic_notification_color;
 						}
-						
-						String descIndex = currentLesson + "." + (index % 35);
-						
-						intent.putExtra(ScheduleManager.MESSAGE_MESSAGE, msg.message);
-						intent.putExtra(ScheduleManager.MESSAGE_TITLE, msg.title);
-						intent.putExtra(ScheduleManager.MESSAGE_INDEX, descIndex);
-						
-						HashMap<String, Object> payload = new HashMap<String, Object>();
-						payload.put("message_index", descIndex);
-						LogManager.getInstance(this._context).log("notification_shown", payload);
 
-						StatusNotificationManager.getInstance(this._context).notifyBigText(id, icon, msg.title, msg.message, PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT));
+						String descIndex = currentLesson + "." + (index % 35);
+
+						SecureRandom random = new SecureRandom();
+
+						if (random.nextFloat() < 0.5)
+						{
+							intent.putExtra(ScheduleManager.MESSAGE_MESSAGE, msg.message);
+							intent.putExtra(ScheduleManager.MESSAGE_TITLE, msg.title);
+							intent.putExtra(ScheduleManager.MESSAGE_INDEX, descIndex);
+							
+							HashMap<String, Object> payload = new HashMap<String, Object>();
+							payload.put("message_index", descIndex);
+							LogManager.getInstance(this._context).log("notification_shown", payload);
+	
+							StatusNotificationManager.getInstance(this._context).notifyBigText(id, icon, msg.title, msg.message, PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT));
+						}							
+						else
+						{
+							Intent messageIntent = new Intent(this._context, MessageActivity.class);
+							messageIntent.putExtra(DialogActivity.DIALOG_TITLE, this._context.getString(R.string.app_name));
+							messageIntent.putExtra(DialogActivity.DIALOG_MESSAGE, msg.message);
+							messageIntent.putExtra(ScheduleManager.MESSAGE_INDEX, descIndex);
+							messageIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+							this._context.startActivity(messageIntent);
+						}
 						
 						index += 1;
 	

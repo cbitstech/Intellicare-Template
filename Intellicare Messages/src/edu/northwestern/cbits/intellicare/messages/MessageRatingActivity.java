@@ -17,7 +17,6 @@ public class MessageRatingActivity extends RatingActivity
 	{
 		if (super.onOptionsItemSelected(item))
 		{
-
 			if (this.getIntent().hasExtra(ScheduleManager.IS_INSTRUCTION))
 			{
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
