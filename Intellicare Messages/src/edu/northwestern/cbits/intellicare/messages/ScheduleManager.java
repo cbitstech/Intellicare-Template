@@ -103,18 +103,18 @@ public class ScheduleManager
 		{
 			int index = prefs.getInt(ScheduleManager.MESSAGE_INDEX, 0);
 			
-			long notificationTime = this.getNotificationTime(index % 5);
+			long notificationTime = this.getNotificationTime(index);
 			
 			if (notificationTime > 0)
 			{
-				if (index > 0 && index % 5 == 0 && prefs.contains(ScheduleManager.INSTRUCTION_COMPLETED) == false)
+				if (index > 0 && index % 5 == 0 && prefs.getBoolean(ScheduleManager.INSTRUCTION_COMPLETED, false) == false)
 					index -= 5;
 				
 				Message msg = this.getMessage(currentLesson, index);
 				
 				if (msg != null)
 				{
-					if (System.currentTimeMillis() > notificationTime)
+					if (System.currentTimeMillis() >= notificationTime)
 					{
 						Intent intent = new Intent(this._context, MessageRatingActivity.class);
 						intent.setAction("ACTION_" + System.currentTimeMillis());
@@ -140,12 +140,15 @@ public class ScheduleManager
 						String descIndex = currentLesson + "." + (index % 35);
 
 						SecureRandom random = new SecureRandom();
+						
+						boolean isInstruction = ((index % 5) == 0);
 
 						if (random.nextFloat() < 0.5)
 						{
 							intent.putExtra(ScheduleManager.MESSAGE_MESSAGE, msg.message);
 							intent.putExtra(ScheduleManager.MESSAGE_TITLE, msg.title);
 							intent.putExtra(ScheduleManager.MESSAGE_INDEX, descIndex);
+							intent.putExtra(ScheduleManager.IS_INSTRUCTION, isInstruction);
 							
 							HashMap<String, Object> payload = new HashMap<String, Object>();
 							payload.put("message_index", descIndex);
@@ -159,6 +162,7 @@ public class ScheduleManager
 							messageIntent.putExtra(DialogActivity.DIALOG_TITLE, this._context.getString(R.string.app_name));
 							messageIntent.putExtra(DialogActivity.DIALOG_MESSAGE, msg.message);
 							messageIntent.putExtra(ScheduleManager.MESSAGE_INDEX, descIndex);
+							messageIntent.putExtra(ScheduleManager.IS_INSTRUCTION, isInstruction);
 							messageIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 							this._context.startActivity(messageIntent);
@@ -263,7 +267,7 @@ public class ScheduleManager
 	
 	private Message getMessage(int lessonId, int index) 
 	{
-		if (index >= 5) // 35)
+		if (index >= 35)
 			return null;
 		
 		String selection = "lesson_id = ?";
@@ -275,7 +279,7 @@ public class ScheduleManager
 		
 		int day = index / 5;
 		int offset = index % 5;
-		
+
 		if (cursor.getCount() > day)
 		{
 			cursor.moveToPosition(day);

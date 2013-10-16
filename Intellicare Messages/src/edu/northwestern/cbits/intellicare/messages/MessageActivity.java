@@ -3,7 +3,11 @@ package edu.northwestern.cbits.intellicare.messages;
 import java.util.HashMap;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CheckBox;
@@ -19,6 +23,19 @@ public class MessageActivity extends ConsentedActivity
 		super.onCreate(savedInstanceState);
 
 		this.setContentView(R.layout.activity_message);
+	}
+	
+	protected void onNewIntent (Intent intent)
+	{
+		super.onNewIntent(intent);
+		
+		this.setIntent(intent);
+	}
+
+	public void onResume()
+	{
+		super.onResume();
+		
 		
 		String title = this.getIntent().getStringExtra(DialogActivity.DIALOG_TITLE);
 		String message = this.getIntent().getStringExtra(DialogActivity.DIALOG_MESSAGE);
@@ -50,6 +67,14 @@ public class MessageActivity extends ConsentedActivity
 				payload.put("message_index", descIndex);
 			}
 			
+			if (this.getIntent().getBooleanExtra(ScheduleManager.IS_INSTRUCTION, false))
+			{
+				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+				Editor e = prefs.edit();
+				e.putBoolean(ScheduleManager.INSTRUCTION_COMPLETED, true);
+				e.commit();
+			}
+
 			CheckBox interrupted = (CheckBox) this.findViewById(R.id.interrupt_check);
 			
 			if (interrupted.isChecked())

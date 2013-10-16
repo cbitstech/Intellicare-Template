@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.RatingActivity;
@@ -17,7 +18,7 @@ public class MessageRatingActivity extends RatingActivity
 	{
 		if (super.onOptionsItemSelected(item))
 		{
-			if (this.getIntent().hasExtra(ScheduleManager.IS_INSTRUCTION))
+			if (this.getIntent().getBooleanExtra(ScheduleManager.IS_INSTRUCTION, false))
 			{
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 				Editor e = prefs.edit();
