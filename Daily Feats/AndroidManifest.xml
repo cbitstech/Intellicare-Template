@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="edu.northwestern.cbits.intellicare.dailyfeats"
+    android:versionCode="10000"
+    android:versionName="1.0.0" >
+    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="18" />
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="edu.northwestern.cbits.intellicare.dailyfeats.StartupActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="edu.northwestern.cbits.intellicare.dailyfeats.HomeActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="edu.northwestern.cbits.intellicare.dailyfeats.SetupActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="edu.northwestern.cbits.intellicare.dailyfeats.CompleteFeatsChecklistActivity"
+            android:label="@string/title_activity_complete_feats_checklist" >
+        </activity>
+        <activity
+            android:name="edu.northwestern.cbits.intellicare.dailyfeats.ChangeReminderActivity"
+            android:label="@string/title_activity_change_reminder" >
+        </activity>
+        <activity
+            android:name="edu.northwestern.cbits.intellicare.dailyfeats.ViewFeatCollectionActivity"
+            android:label="@string/title_activity_view_feat_collection" >
+        </activity>
+        <provider
+            android:name="edu.northwestern.cbits.intellicare.dailyfeats.DailyFeatsStore"
+            android:authorities="edu.northwestern.cbits.intellicare.dailyfeats"
+            android:exported="false" />
+    </application>
+</manifest>

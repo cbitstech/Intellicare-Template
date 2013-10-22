@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- App Constants -->
+    <string name="app_name">Daily Feats</string>
+    <string name="internalDateFormat">yyyy/MM/dd-HH:mm:ss</string>
+
+    <!-- Preference Keys -->
+    <string name="currentFeatsLevelKey">current_feats_level</string>
+    <string name="preferredHourKey">preferred_hour</string>
+    <string name="preferredMinutesKey">preferred_minutes</string>
+    <string name="setupCompleteKey">setup_is_complete</string>
+
+    <!-- Layouts -->
+    <!-- Universal -->
+    <string name="save_only">Save</string>
+    <string name="save_and_share">Save And Share</string>
+    <string name="back_button">Back</string>
+    <string name="continue_button">Continue</string>
+    <string name="loading_message">Loading..</string>
+    <string name="days_text">Days</string>
+
+    <!-- Setup -->
+    <string name="setup_name">Daily Feats Setup</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="setup_1_welcome">
+        Welcome to Daily Feats.\n\n
+    
+        A small, simple application to help you keep track of your achievements
+        on your road back from depression.\n\n
+    
+        First time setup takes about 2 minutes.
+    </string>
+
+    <string name="setup_2_question">
+        Which of these statements most closely describes how you\'ve been feeling
+        in the past two weeks?
+    </string>
+
+    <string name="setup_2_level_1">
+        I frequently or sometimes don\'t get out of bed.
+    </string>
+
+    <string name="setup_2_level_2">
+        I can get out of bed, but don\'t have the energy to do much else.
+    </string>
+
+    <string name="setup_2_level_3">
+        I can get through the day, but I don\'t feel content.
+        I feel like my life is missing something.
+    </string>
+
+    <string name="setup_2_level_4">
+        I don\'t feel depressed right now, and I want to keep it that way.
+    </string>
+
+    <string name="setup_3">
+        Freeing yourself from depression is in part about making an effort to
+        keep track of certain important behaviors.\n\n
+
+        We call each of those positive behaviors a "feat".\n\n
+
+        Daily Feats will help you record and keep track of the feats you accomplish on a daily basis
+        through the use of a simple daily checklist of goals.
+    </string>
+
+    <string name="setup_4_p1">
+        Based on your answer to how you are feeling, Daily Feats will start you
+        with the following list of goals:
+    </string>
+
+    <string name="setup_4_p2">
+        Once a day, ideally at the end of the day, you will be asked to evaluate
+        how many of these goals you completed that day.\n\n
+
+        The purpose of completing this checklist is to give you an achievable set of goals to work
+        towards, and to help you keep them in mind on a daily basis.
+    </string>
+
+    <string name="setup_5">
+        You will also be given the opportunity to record a "Feat of Strength":
+        something positive about the day that will help you remember it from any
+        other day.\n\n
+
+        Daily Feats will keep track of all of your feats. Both from your current list,
+        and any Feat of Strength you enter, so that you can always look back and remind
+        yourself of what you have achieved.
+    </string>
+
+    <string name="setup_6">
+        Daily Feats will give you a reminder once a day to fill in your feats checklist.\n\n
+
+        We think a good time for this reminder might be closer to the end of the day,
+        perhaps an hour or two before bed time.\n\n
+
+        The time for your daily reminder is currently set to:
+    </string>
+
+    <string name="setup_7">
+        Daily feats will remind you at the selected time to complete your feats checklist.\n\n
+
+        You can always change this time from the Application Settings Menu
+    </string>
+
+    <string name="setup_8">
+        An important part of overcoming depression is staying connected to others.\n\n
+
+        Daily Feats can, whenever you choose to do so, email a group of people with your
+        day\'s successes.\n\n
+
+        We recommend you choose a few (at least 1, at most 5) people from your contacts
+        to form your group of supporters. They can be family, significant others, close friends, or anyone else you know.
+    </string>
+
+    <string name="setup_8_choose_supporters">Choose Supporters</string>
+
+    <string name="setup_9">
+        You can always update your list of supporters from the homepage.
+    </string>
+
+    <string name="setup_10_conclusion">
+        Thank you for completing your first time setup of Daily Feats.\n\n
+
+        We look forward to helping you on your journey to wellness, and beyond!
+    </string>
+
+    <!-- Complete Feats Checklist -->
+    <string name="title_activity_complete_feats_checklist">Today\'s Feats Checklist</string>
+    <string name="complete_feats_checklist_prompt">Today\'s Feats checklist</string>
+    <string name="daily_FOS_label">Your Daily Feat of Strength</string>
+
+    <!-- Home -->
+    <string name="all_strength_feats_text">View all my Feats of Strength</string>
+    <string name="no_feats_of_strength">No feats of strength, yet!</string>
+
+    <!-- Temp -->
+    <string name="completion_streak_placeholder">23</string>
+    <string name="home_content_1">This is the home page</string>
+    <string name="setup_content_1">Initial Setup Content</string>
+    <string name="most_recent_feat_placeholder">I learned how to cut a pineapple!</string>
+    <string name="feat_placeholder">Some Feat Label Placeholder ADD LOTS OF WORDS</string>
+    <string name="title_activity_change_reminder">Change Reminder Time</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_view_feat_collection">Your List of Feats</string>
+
+</resources>

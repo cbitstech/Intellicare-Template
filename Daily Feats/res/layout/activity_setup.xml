@@ -1,0 +1,172 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#00AAcc"
+
+    tools:context=".SetupActivity">
+
+    <!-- The primary full-screen view. This can be replaced with whatever view
+         is needed to present your content, e.g. VideoView, SurfaceView,
+         TextureView, etc. -->
+
+    <TextView
+        android:id="@+id/middle_top_screen"
+        android:keepScreenOn="true"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="100sp"
+        android:gravity="top|left"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:textSize="20sp"
+
+        android:text="Middle Top"
+        />
+
+    <Button
+        android:id="@+id/reminder_time_button"
+
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="100dp"
+        android:layout_gravity="bottom"
+
+        android:background="#FFFFFF"
+        android:textColor="#000000"
+        android:textSize="20sp"
+
+        android:onClick="showTimePickerDialog"
+        >
+    </Button>
+
+    <Button
+        android:id="@+id/choose_supporters"
+
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="100dp"
+        android:layout_gravity="bottom"
+
+        android:background="#FFFFFF"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:text="@string/setup_8_choose_supporters"
+
+        android:onClick="onSupportersButtonClicked"
+        />
+
+
+
+    <RadioGroup
+        android:id="@+id/depression_level_question"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+
+        android:background="#FFFFFF"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+
+        android:visibility="gone"
+
+        tools:context=".SetupActivity"
+        >
+
+        <TextView
+            android:id="@+id/question_text"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:background="#FFFFFF"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+
+            android:text="@string/setup_2_question"
+            />
+
+        <RadioButton
+            android:id="@+id/radio_level_1"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+
+            android:text="@string/setup_2_level_1"
+            android:onClick="onDepressionLevelClicked"/>
+        <RadioButton
+            android:id="@+id/radio_level_2"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+
+            android:text="@string/setup_2_level_2"
+            android:onClick="onDepressionLevelClicked"/>
+        <RadioButton
+            android:id="@+id/radio_level_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+
+            android:text="@string/setup_2_level_3"
+            android:onClick="onDepressionLevelClicked"/>
+        <RadioButton
+            android:id="@+id/radio_level_4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+
+            android:text="@string/setup_2_level_4"
+            android:onClick="onDepressionLevelClicked"/>
+    </RadioGroup>
+
+    <!-- This FrameLayout insets its children based on system windows using
+         android:fitsSystemWindows. -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <LinearLayout
+            android:id="@+id/fullscreen_content_controls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:background="@color/black_overlay"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <Button android:id="@+id/back_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/back_button" />
+
+            <Button android:id="@+id/continue_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/continue_button" />
+
+        </LinearLayout>
+    </FrameLayout>
+
+</FrameLayout>
