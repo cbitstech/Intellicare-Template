@@ -2,6 +2,7 @@ package edu.northwestern.cbits.intellicare.messages;
 
 import java.security.SecureRandom;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import android.app.AlarmManager;
@@ -13,6 +14,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
+
 import edu.northwestern.cbits.intellicare.DialogActivity;
 import edu.northwestern.cbits.intellicare.PhqFourActivity;
 import edu.northwestern.cbits.intellicare.StatusNotificationManager;
@@ -41,8 +43,8 @@ public class ScheduleManager
 		
 		PendingIntent pi = PendingIntent.getBroadcast(this._context, 0, broadcast, PendingIntent.FLAG_UPDATE_CURRENT);
 		
-		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);
-//		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, 20000, pi);
+//		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);
+		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, 20000, pi);
 	}
 
 	public static ScheduleManager getInstance(Context context)
@@ -63,10 +65,12 @@ public class ScheduleManager
 		if (prefs.contains(HelpActivity.HELP_COMPLETED) == false)
 			return;
 		
+		long now = System.currentTimeMillis();
+		
 		if (prefs.contains(ScheduleManager.FIRST_RUN) == false)
 		{
 			Editor e = prefs.edit();
-			e.putLong(ScheduleManager.FIRST_RUN, System.currentTimeMillis());
+			e.putLong(ScheduleManager.FIRST_RUN, now);
 			e.commit();
 		}
 		
@@ -103,7 +107,7 @@ public class ScheduleManager
 		{
 			int index = prefs.getInt(ScheduleManager.MESSAGE_INDEX, 0);
 			
-			long notificationTime = this.getNotificationTime(index);
+			long notificationTime = this.getNotificationTime(index % 5, now);
 			
 			if (notificationTime > 0)
 			{
@@ -114,10 +118,10 @@ public class ScheduleManager
 				
 				if (msg != null)
 				{
-					if (System.currentTimeMillis() >= notificationTime)
+					if (now >= notificationTime)
 					{
 						Intent intent = new Intent(this._context, MessageRatingActivity.class);
-						intent.setAction("ACTION_" + System.currentTimeMillis());
+						intent.setAction("ACTION_" + now);
 						
 						int id = 0;
 
@@ -207,7 +211,7 @@ public class ScheduleManager
 			String message = null;
 			
 			Intent lessonIntent = new Intent(this._context, LessonActivity.class);
-			lessonIntent.setAction("ACTION_" + System.currentTimeMillis());
+			lessonIntent.setAction("ACTION_" + now);
 
 			lessonIntent.putExtra(LessonsActivity.LESSON_LEVEL, currentLesson);
 
@@ -312,7 +316,7 @@ public class ScheduleManager
 		return message;
 	}
 
-	private long getNotificationTime(int index) 
+	private long getNotificationTime(int index, long now) 
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
 		
@@ -322,7 +326,7 @@ public class ScheduleManager
 		int endHour = Integer.parseInt(prefs.getString("config_day_end", "21"));
 		
 		Calendar calendar = Calendar.getInstance();
-		calendar.setTimeInMillis(System.currentTimeMillis());
+		calendar.setTimeInMillis(now);
 		
 		calendar.set(Calendar.MINUTE, 0);
 
