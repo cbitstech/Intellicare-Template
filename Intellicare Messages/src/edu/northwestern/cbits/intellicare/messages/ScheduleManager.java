@@ -2,19 +2,17 @@ package edu.northwestern.cbits.intellicare.messages;
 
 import java.security.SecureRandom;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.ContentValues;
+import android.content.ContentValues; 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
-
 import edu.northwestern.cbits.intellicare.DialogActivity;
 import edu.northwestern.cbits.intellicare.PhqFourActivity;
 import edu.northwestern.cbits.intellicare.StatusNotificationManager;
@@ -43,8 +41,8 @@ public class ScheduleManager
 		
 		PendingIntent pi = PendingIntent.getBroadcast(this._context, 0, broadcast, PendingIntent.FLAG_UPDATE_CURRENT);
 		
-//		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);
-		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, 20000, pi);
+		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);
+//		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, 20000, pi);
 	}
 
 	public static ScheduleManager getInstance(Context context)
