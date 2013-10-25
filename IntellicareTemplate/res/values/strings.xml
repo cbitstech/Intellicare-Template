@@ -146,4 +146,11 @@
 	<string name="motivation_title">Motivation</string>
 	<string name="title_primary_reason">What is your main reason?</string>
 	<string name="message_motivation_select_one">Please select at least one reason or provde your own.</string>
+	
+	<string name="title_why_not_consent">Why are you leaving?</string>
+	<string name="why_not_too_long">The form is too long?</string>
+	<string name="why_not_unclear">The form is hard to understand?</string>
+	<string name="why_not_dont_want">Don\'t wish to participate?</string>
+	<string name="why_not_something_else">Thought this was something else?</string>
+	<string name="why_not_unknown">Don\'t want to say?</string>
 </resources>

@@ -10,12 +10,16 @@ import java.util.TimeZone;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +36,7 @@ public class ConsentActivity extends ActionBarActivity implements ConsentWebView
 	public static final String FORM_URL = "FORM_URL";
 	public static final String DEFAULT_FORM_URL = "file:///android_asset/www/default_consent_form.html";
 	protected static final String CONSENTED = "CONSENTED";
+	protected static final String REASON = "REASON";
 	
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -173,17 +178,64 @@ public class ConsentActivity extends ActionBarActivity implements ConsentWebView
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 		if (item.getItemId() == R.id.action_cancel)
-		{
-			Intent result = new Intent();
-			result.putExtra(ConsentActivity.CONSENTED, false);
-			this.setResult(Activity.RESULT_CANCELED);
-
-			LogManager.getInstance(this).log("consent_rejected", null);
-
-			this.finish();
-		}
+			this.onBackPressed();
 		
 		return true;
 	}
+	
+	public void onBackPressed()
+	{
+		Log.e("PC", "EXITING!");
 
+		final String[] items = 
+		{ 
+			this.getString(R.string.why_not_too_long), 
+			this.getString(R.string.why_not_unclear), 
+			this.getString(R.string.why_not_dont_want), 
+			this.getString(R.string.why_not_something_else), 
+			this.getString(R.string.why_not_unknown), 
+		};
+
+		final ConsentActivity me = this;
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder = builder.setTitle(R.string.title_why_not_consent);
+		builder = builder.setItems(items, new DialogInterface.OnClickListener()
+		{
+			public void onClick(DialogInterface dialog, int which)
+			{
+				Intent result = new Intent();
+				result.putExtra(ConsentActivity.CONSENTED, false);
+				
+				me.setResult(Activity.RESULT_CANCELED);
+
+				HashMap<String, Object> payload = new HashMap<String, Object>();
+				payload.put("reason", items[which]);
+
+				LogManager.getInstance(me).log("consent_rejected", payload);
+
+				me.finish();
+			}
+		});
+		
+		builder = builder.setOnCancelListener(new OnCancelListener()
+		{
+			public void onCancel(DialogInterface dialog) 
+			{
+				Intent result = new Intent();
+				result.putExtra(ConsentActivity.CONSENTED, false);
+				
+				me.setResult(Activity.RESULT_CANCELED);
+				
+				HashMap<String, Object> payload = new HashMap<String, Object>();
+				payload.put("reason", "None provided.");
+
+				LogManager.getInstance(me).log("consent_rejected", payload);
+
+				me.finish();
+			}
+		});
+		
+		builder.create().show();
+	}
 }
