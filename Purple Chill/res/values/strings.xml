@@ -151,5 +151,15 @@
         <item>517</item>
    	</string-array>
    	
+    <string name="track_timestamp">0:00 / 0:00</string>
+    <string name="select_track_label">Select a track</string>
     <string name="current_track_label">Current Track</string>
+    <string name="step_explain">To begin your relaxation exercise, please complete the following steps below.</string>
+    <string name="step_choose_explain">Step 1: Select an exercise.</string>
+    <string name="step_choose_track">Please select a track.</string>
+    <string name="step_rate_stress">Step 2: Rate your current stress level.</string>
+    <string name="step_rate_stress_default">\?</string>
+    <string name="step_rate_stress_more">More</string>
+    <string name="step_rate_stress_less">Less</string>
+    <string name="step_play_track">Step 3: Begin the relaxation exercise.</string>
 </resources>

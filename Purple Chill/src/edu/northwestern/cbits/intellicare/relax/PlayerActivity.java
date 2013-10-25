@@ -4,32 +4,30 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import edu.northwestern.cbits.intellicare.logging.LogManager;
-
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
-import android.graphics.drawable.Drawable;
+import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class PlayerActivity extends ActionBarActivity 
 {
@@ -41,8 +39,6 @@ public class PlayerActivity extends ActionBarActivity
 	
 	private String _groupName = null;
 	
-	private int _selectedIndex = -1;
-	
 	private static MediaPlayer _player = null;
 	private static Thread _playerThread = null;
 
@@ -51,6 +47,9 @@ public class PlayerActivity extends ActionBarActivity
 	private static int _currentGroupTitles = -1;
 	private static int _currentGroupMedia = -1;
 	private static int _currentGroupTrack = -1;
+	private static int _currentStressLevel = -1;
+	
+	private int _selectedIndex = -1;
 
 	static String formatTime(String secondsString)
 	{
@@ -72,266 +71,8 @@ public class PlayerActivity extends ActionBarActivity
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-		
-		this._groupName = this.getIntent().getStringExtra(PlayerActivity.GROUP_NAME);
 
 		this.setContentView(R.layout.activity_player);
-		this.getSupportActionBar().setTitle(this._groupName);
-
-		final ArrayList<String> recordings = new ArrayList<String>();
-		final ArrayList<String> titles = new ArrayList<String>();
-		final ArrayList<String> times = new ArrayList<String>();
-		
-		final int titlesId = this.getIntent().getIntExtra(PlayerActivity.GROUP_TITLES, -1);
-		final int mediaId = this.getIntent().getIntExtra(PlayerActivity.GROUP_MEDIA, -1);
-		final int timesId = this.getIntent().getIntExtra(PlayerActivity.GROUP_TIMES, -1);
-
-		if (titlesId != -1 && mediaId != -1 && timesId != -1)
-		{
-			String[] mediaUrls = this.getResources().getStringArray(mediaId);
-			String[] mediaTitles = this.getResources().getStringArray(titlesId);
-			String[] mediaTimes = this.getResources().getStringArray(timesId);
-			
-			for (int i = 0; i < mediaUrls.length; i++)
-			{
-				titles.add(mediaTitles[i]);
-				recordings.add(mediaUrls[i]);
-				times.add(PlayerActivity.formatTime(mediaTimes[i]));
-			}
-		}
-		
-		final PlayerActivity me = this;
-
-		final TextView audioTitle = (TextView) this.findViewById(R.id.audio_title);
-
-		final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row_recording, recordings)
-		{
-			public View getView(int position, View convertView, ViewGroup parent)
-			{
-				if (convertView == null)
-				{
-					LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-					convertView = inflater.inflate(R.layout.row_recording, parent, false);
-				}
-				
-				TextView title = (TextView) convertView.findViewById(R.id.recording_title);
-				title.setText(titles.get(position));
-
-				TextView time = (TextView) convertView.findViewById(R.id.recording_time);
-				time.setText(times.get(position));
-
-				Drawable d = me.getResources().getDrawable(R.drawable.ic_action_music_2);
-				
-				if (position == me._selectedIndex)
-					d = me.getResources().getDrawable(R.drawable.ic_action_playback_play);
-				
-				title.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
-
-				return convertView;
-			}
-		};
-		
-		final ListView recordingsList = (ListView) this.findViewById(R.id.recording_list);
-		recordingsList.setAdapter(adapter);
-
-		final ImageButton playButton = (ImageButton) this.findViewById(R.id.play_pause);
-		playButton.setOnClickListener(new OnClickListener()
-		{
-			public void onClick(View view) 
-			{
-				if (PlayerActivity._player == null)
-					return;
-					
-				if (PlayerActivity._player.isPlaying())
-				{
-					playButton.setImageResource(R.drawable.ic_action_playback_play);
-					PlayerActivity._player.pause();
-				}
-				else
-				{
-					playButton.setImageResource(R.drawable.ic_action_playback_pause);
-					PlayerActivity._player.start();
-				}
-			}
-		});
-		
-		playButton.setEnabled(false);
-
-		final ImageButton previousButton = (ImageButton) this.findViewById(R.id.previous_track);
-		previousButton.setOnClickListener(new OnClickListener()
-		{
-			public void onClick(View view) 
-			{
-				int position = me._selectedIndex - 1;
-				
-				if (position < 0)
-					position = 0;
-				
-				recordingsList.performItemClick(null, position, recordingsList.getItemIdAtPosition(position));
-			}
-		});
-		previousButton.setEnabled(false);
-
-		final ImageButton nextButton = (ImageButton) this.findViewById(R.id.next_track);
-		nextButton.setOnClickListener(new OnClickListener()
-		{
-			public void onClick(View view) 
-			{
-				int position = me._selectedIndex + 1;
-				
-				if (position > recordings.size() - 1)
-					position = recordings.size() - 1;
-				
-				recordingsList.performItemClick(null, position, recordingsList.getItemIdAtPosition(position));
-			}
-		});
-		nextButton.setEnabled(false);
-		
-		recordingsList.setOnItemClickListener(new OnItemClickListener()
-		{
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
-			{
-				if (me._groupName.equals(PlayerActivity._currentGroupName) && position == PlayerActivity._currentGroupTrack) 
-				{
-					playButton.setImageResource(R.drawable.ic_action_playback_pause);
-
-					return;
-				}
-				else
-				{
-					playButton.setEnabled(true);
-
-					final String[] mediaUrls = me.getResources().getStringArray(me.getIntent().getIntExtra(PlayerActivity.GROUP_MEDIA, 0));
-					final String[] mediaTitles = me.getResources().getStringArray(me.getIntent().getIntExtra(PlayerActivity.GROUP_TITLES, 0));
-					
-					if (position >= mediaTitles.length)
-						return;
-
-					me._selectedIndex = position;
-					
-					audioTitle.setText(mediaTitles[me._selectedIndex]);
-					
-					HashMap<String,Object> payload = new HashMap<String, Object>();
-					payload.put(PlayerActivity.GROUP_NAME, me._groupName);
-					payload.put("track_name", mediaTitles[me._selectedIndex]);
-					LogManager.getInstance(me).log("track_completed", payload);
-					
-					if (PlayerActivity._player != null)
-					{
-						 if (PlayerActivity._player.isPlaying())
-							 PlayerActivity._player.stop();
-						 
-						 PlayerActivity._player.release();
-						 
-						 PlayerActivity._player = null;
-					}
-					
-					try 
-					{
-						AssetFileDescriptor afd = me.getAssets().openFd(mediaUrls[position].replace("file:///android_asset/", ""));
-						
-						PlayerActivity._player = new MediaPlayer();
-						PlayerActivity._player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-						PlayerActivity._player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-						
-						PlayerActivity._player.prepare();
-						
-						PlayerActivity._player.start();
-
-						playButton.setImageResource(R.drawable.ic_action_playback_pause);
-						
-						PlayerActivity._player.setOnCompletionListener(new OnCompletionListener()
-						{
-							public void onCompletion(MediaPlayer player) 
-							{
-								HashMap<String,Object> payload = new HashMap<String, Object>();
-								payload.put(PlayerActivity.GROUP_NAME, me._groupName);
-								payload.put("track_finshed", mediaTitles[me._selectedIndex]);
-								LogManager.getInstance(me).log("selected_track", payload);
-
-								
-								if (me._selectedIndex < mediaUrls.length - 1)
-									recordingsList.performItemClick(null, me._selectedIndex + 1, recordingsList.getItemIdAtPosition(me._selectedIndex + 1));
-								else
-								{
-									PlayerActivity._player.release();
-									PlayerActivity._player = null;
-
-									PlayerActivity._currentGroupName = null;
-									PlayerActivity._currentGroupMedia = -1;
-									PlayerActivity._currentGroupTitles = -1;
-									PlayerActivity._currentGroupTimes = -1;
-									PlayerActivity._currentGroupTrack = -1;
-								}
-							}
-						});
-						
-						PlayerActivity._currentGroupName = me._groupName;
-						PlayerActivity._currentGroupMedia = mediaId;
-						PlayerActivity._currentGroupTitles = titlesId;
-						PlayerActivity._currentGroupTimes = timesId;
-						PlayerActivity._currentGroupTrack = me._selectedIndex;
-					} 
-					catch (IllegalArgumentException e) 
-					{
-						e.printStackTrace();
-					} 
-					catch (SecurityException e) 
-					{
-						e.printStackTrace();
-					} 
-					catch (IllegalStateException e) 
-					{
-						e.printStackTrace();
-					} 
-					catch (IOException e) 
-					{
-						e.printStackTrace();
-					}
-				}
-				
-				if (position > 0)
-					previousButton.setEnabled(true);
-				else
-					previousButton.setEnabled(false);
-
-				if (position == recordings.size() - 1)
-					nextButton.setEnabled(false);
-				else
-					nextButton.setEnabled(true);
-
-				adapter.notifyDataSetChanged();
-			}
-		});
-		
-		int existingTrack = this.getIntent().getIntExtra(PlayerActivity.GROUP_TRACK, -1);
-		
-		if (existingTrack == -1)
-			existingTrack = PlayerActivity._currentGroupTrack;
-		
-		if (existingTrack != -1)
-		{
-			if (PlayerActivity.isPlaying())
-			{
-				this._selectedIndex = existingTrack;
-				
-				audioTitle.setText(titles.get(this._selectedIndex));
-
-				playButton.setEnabled(true);
-				
-				if (existingTrack > 0)
-					previousButton.setEnabled(true);
-				else
-					previousButton.setEnabled(false);
-
-				if (existingTrack == recordings.size() - 1)
-					nextButton.setEnabled(false);
-				else
-					nextButton.setEnabled(true);
-			}
-			else
-				recordingsList.performItemClick(null, existingTrack, recordingsList.getItemIdAtPosition(existingTrack));
-		}
 	}
 	
 	public static boolean isPlaying()
@@ -384,6 +125,258 @@ public class PlayerActivity extends ActionBarActivity
 	{
 		super.onResume();
 	
+		this._groupName = this.getIntent().getStringExtra(PlayerActivity.GROUP_NAME);
+		
+		this.getSupportActionBar().setTitle(this._groupName);
+
+		final ArrayList<String> recordings = new ArrayList<String>();
+		final ArrayList<String> titles = new ArrayList<String>();
+		final ArrayList<String> times = new ArrayList<String>();
+		
+		final int titlesId = this.getIntent().getIntExtra(PlayerActivity.GROUP_TITLES, -1);
+		final int mediaId = this.getIntent().getIntExtra(PlayerActivity.GROUP_MEDIA, -1);
+		final int timesId = this.getIntent().getIntExtra(PlayerActivity.GROUP_TIMES, -1);
+
+		if (titlesId != -1 && mediaId != -1 && timesId != -1)
+		{
+			String[] mediaUrls = this.getResources().getStringArray(mediaId);
+			String[] mediaTitles = this.getResources().getStringArray(titlesId);
+			String[] mediaTimes = this.getResources().getStringArray(timesId);
+			
+			for (int i = 0; i < mediaUrls.length; i++)
+			{
+				titles.add(mediaTitles[i]);
+				recordings.add(mediaUrls[i]);
+				times.add(PlayerActivity.formatTime(mediaTimes[i]));
+			}
+		}
+		
+		final PlayerActivity me = this;
+		
+		final TextView ratingNumber = (TextView) this.findViewById(R.id.rating_number);
+		final SeekBar ratingBar = (SeekBar) this.findViewById(R.id.stress_rating);
+		
+		ratingBar.setMax(9);
+		
+		final ImageButton playButton = (ImageButton) this.findViewById(R.id.play_pause);
+
+		ratingBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
+		{
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) 
+			{
+				progress += 1;
+				
+				PlayerActivity._currentStressLevel = progress;
+				
+				ratingNumber.setText("" + progress);
+				playButton.setEnabled(true);
+			}
+
+			public void onStartTrackingTouch(SeekBar seekBar) 
+			{
+
+			}
+
+			public void onStopTrackingTouch(SeekBar seekBar) 
+			{
+
+			}
+		});
+		
+		Log.e("PC", "STRESS: " + PlayerActivity._currentStressLevel);
+		
+		if (PlayerActivity._currentStressLevel != -1)
+			ratingBar.setProgress(PlayerActivity._currentStressLevel - 1);
+
+		final TextView audioTitle = (TextView) this.findViewById(R.id.label_selected_track_title);
+		final ImageButton trackButton = (ImageButton) this.findViewById(R.id.choose_track);
+		
+		trackButton.setOnClickListener(new OnClickListener()
+		{
+			public void onClick(View view) 
+			{
+			    AlertDialog.Builder builder = new AlertDialog.Builder(me);
+			    
+			    builder = builder.setTitle(R.string.select_track_label);
+			    builder = builder.setItems(titles.toArray(new String[0]), new DialogInterface.OnClickListener() 
+			    {
+			    	public void onClick(DialogInterface dialog, int which) 
+			    	{
+			    		me._selectedIndex = which;
+
+						audioTitle.setText(titles.get(which));
+			    		
+			    		Typeface font = audioTitle.getTypeface();
+			    		
+			    		audioTitle.setTypeface(Typeface.create(font, Typeface.NORMAL));
+			    		
+						ratingBar.setProgress(0);
+						
+						if (PlayerActivity._player != null)
+						{
+							if (PlayerActivity._player.isPlaying())
+								PlayerActivity._player.stop();
+							
+							PlayerActivity._player = null;
+						}
+			    	}
+			    });
+			    
+			    builder.create().show();
+			}
+		});
+
+		playButton.setEnabled(false);
+		
+		Log.e("PC", PlayerActivity._currentGroupName  + " -- " +  PlayerActivity._currentGroupTrack);
+
+		if (PlayerActivity._currentGroupName != null && PlayerActivity._currentGroupTrack >= 0)
+		{
+			if (PlayerActivity._currentGroupTrack < titles.size())
+			{
+	    		me._selectedIndex = PlayerActivity._currentGroupTrack;
+	
+	    		audioTitle.setText(titles.get(me._selectedIndex));
+	    		
+	    		Typeface font = audioTitle.getTypeface();
+	    		audioTitle.setTypeface(Typeface.create(font, Typeface.NORMAL));
+	    		
+	    		playButton.setEnabled(true);
+				playButton.setImageResource(R.drawable.ic_action_playback_pause);
+				
+				ratingBar.setEnabled(false);
+				trackButton.setEnabled(false);
+			}
+		}
+
+		playButton.setOnClickListener(new OnClickListener()
+		{
+			public void onClick(View view) 
+			{
+				Log.e("PC", "CLICK");
+				
+				if (PlayerActivity._player == null)
+				{
+					final String[] mediaUrls = me.getResources().getStringArray(me.getIntent().getIntExtra(PlayerActivity.GROUP_MEDIA, 0));
+					final String[] mediaTitles = me.getResources().getStringArray(me.getIntent().getIntExtra(PlayerActivity.GROUP_TITLES, 0));
+					
+					try 
+					{
+						AssetFileDescriptor afd = me.getAssets().openFd(mediaUrls[me._selectedIndex].replace("file:///android_asset/", ""));
+						
+						PlayerActivity._player = new MediaPlayer();
+						PlayerActivity._player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+						PlayerActivity._player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+
+						PlayerActivity._player.prepare();
+
+						playButton.setImageResource(R.drawable.ic_action_playback_pause);
+						
+						PlayerActivity._player.setOnCompletionListener(new OnCompletionListener()
+						{
+							public void onCompletion(MediaPlayer player) 
+							{
+								Log.e("PC", "COMPLETE");
+								
+								HashMap<String,Object> payload = new HashMap<String, Object>();
+								payload.put(PlayerActivity.GROUP_NAME, me._groupName);
+								payload.put("track_finshed", mediaTitles[PlayerActivity._currentGroupTrack]);
+								LogManager.getInstance(me).log("selected_track", payload);
+								
+								PlayerActivity._player.release();
+								PlayerActivity._player = null;
+
+								PlayerActivity._currentGroupName = null;
+								PlayerActivity._currentGroupMedia = -1;
+								PlayerActivity._currentGroupTitles = -1;
+								PlayerActivity._currentGroupTimes = -1;
+								PlayerActivity._currentGroupTrack = -1;
+								PlayerActivity._currentStressLevel = -1;
+							}
+						});
+						
+						PlayerActivity._currentGroupName = me._groupName;
+						PlayerActivity._currentGroupMedia = mediaId;
+						PlayerActivity._currentGroupTitles = titlesId;
+						PlayerActivity._currentGroupTimes = timesId;
+						PlayerActivity._currentGroupTrack = me._selectedIndex;
+						
+						ratingBar.setEnabled(false);
+						trackButton.setEnabled(false);
+						
+						Runnable r = new Runnable()
+						{
+							public void run() 
+							{
+								Log.e("PC", "CLICK AUTO");
+
+								try 
+								{
+									Thread.sleep(250);
+
+									me.runOnUiThread(new Runnable()
+	                                {
+	                                    public void run() 
+	                                    {
+	                                    	PlayerActivity._player.seekTo(0);
+
+	                    					playButton.setImageResource(R.drawable.ic_action_playback_pause);
+	                    					PlayerActivity._player.start();
+	                    					
+	                    					ratingBar.setEnabled(false);
+	                    					trackButton.setEnabled(false);
+	                                    }
+	                                });
+								}
+								catch (InterruptedException e) 
+								{
+									e.printStackTrace();
+								}
+							}
+						};
+						
+						Thread t = new Thread(r);
+						t.start();
+					} 
+					catch (IllegalArgumentException e) 
+					{
+						e.printStackTrace();
+					} 
+					catch (SecurityException e) 
+					{
+						e.printStackTrace();
+					} 
+					catch (IllegalStateException e) 
+					{
+						e.printStackTrace();
+					} 
+					catch (IOException e) 
+					{
+						e.printStackTrace();
+					} 
+				}
+				else if (PlayerActivity._player.isPlaying())
+				{
+					Log.e("PC", "PAUSE");
+					playButton.setImageResource(R.drawable.ic_action_playback_play);
+					PlayerActivity._player.pause();
+
+					ratingBar.setEnabled(true);
+					trackButton.setEnabled(true);
+				}
+				else
+				{
+					Log.e("PC", "PLAY");
+					
+					playButton.setImageResource(R.drawable.ic_action_playback_pause);
+					PlayerActivity._player.start();
+					
+					ratingBar.setEnabled(false);
+					trackButton.setEnabled(false);
+				}
+			}
+		});
+		
 		HashMap<String,Object> payload = new HashMap<String, Object>();
 		payload.put(PlayerActivity.GROUP_NAME, this._groupName);
 		LogManager.getInstance(this).log("viewed_group", payload);
@@ -406,10 +399,8 @@ public class PlayerActivity extends ActionBarActivity
 		if (PlayerActivity._playerThread == null)
 		{
 			final ProgressBar progress = (ProgressBar) this.findViewById(R.id.playback_progress);
-			final TextView progressText = (TextView) this.findViewById(R.id.playback_text);
+			final TextView progressText = (TextView) this.findViewById(R.id.track_progress);
 			
-			final PlayerActivity me = this;
-
 			final Runnable r = new Runnable()
 			{
 				public void run() 
@@ -459,9 +450,7 @@ public class PlayerActivity extends ActionBarActivity
 		super.onPause();
 
 		if (PlayerActivity._playerThread != null)
-		{
 			PlayerActivity._playerThread = null;
-		}
 		
 		HashMap<String,Object> payload = new HashMap<String, Object>();
 		payload.put(PlayerActivity.GROUP_NAME, this._groupName);
