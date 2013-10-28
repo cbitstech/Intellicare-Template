@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/settings_group_notification">
+        <CheckBoxPreference android:key="config_enable_notifications"
+		    android:title="@string/title_notifications"
+		    android:icon="@drawable/ic_action_alarm"
+		    android:summary="@string/desc_notifications"
+		    android:defaultValue="true" />        
+		<ListPreference android:key="config_notification_type"
+		    android:title="@string/title_notification_type"
+		    android:icon="@drawable/ic_action_gear"
+		    android:summary="@string/desc_notification_type"
+		    android:entries="@array/list_notification_types"
+		    android:entryValues="@array/list_notification_type_values"
+		    android:defaultValue="random" />    
+		<ListPreference android:key="config_notification_day"
+		    android:title="@string/title_notification_day"
+		    android:icon="@drawable/ic_action_calendar_day"
+		    android:entries="@array/list_notification_days"
+		    android:entryValues="@array/list_notification_day_values"
+		    android:defaultValue="4" />    
+		<ListPreference android:key="config_notification_hour"
+		    android:title="@string/title_notification_hour"
+		    android:icon="@drawable/ic_action_clock"
+		    android:entries="@array/list_notification_hour"
+		    android:entryValues="@array/list_notification_hour_values"
+		    android:defaultValue="12" />    
+	</PreferenceCategory>
+</PreferenceScreen>

@@ -37,6 +37,7 @@ public class IndexActivity extends ConsentedActivity
 		this.getSupportActionBar().setTitle(R.string.app_name);
 		
 		UpdateManager.register(this, APP_ID);
+		ScheduleManager.getInstance(this);
 	}
 	
 	public void onPause()
@@ -173,6 +174,11 @@ public class IndexActivity extends ConsentedActivity
 		{
 			Intent helpIntent = new Intent(this, HelpActivity.class);
 			this.startActivity(helpIntent);
+		}
+		else if (item.getItemId() == R.id.action_settings)
+		{
+			Intent settingsIntent = new Intent(this, SettingsActivity.class);
+			this.startActivity(settingsIntent);
 		}
 		
 		return true;

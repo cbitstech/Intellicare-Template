@@ -19,7 +19,6 @@ import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -185,8 +184,6 @@ public class ConsentActivity extends ActionBarActivity implements ConsentWebView
 	
 	public void onBackPressed()
 	{
-		Log.e("PC", "EXITING!");
-
 		final String[] items = 
 		{ 
 			this.getString(R.string.why_not_too_long), 

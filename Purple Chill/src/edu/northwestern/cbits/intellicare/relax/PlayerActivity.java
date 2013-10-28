@@ -487,7 +487,7 @@ public class PlayerActivity extends ActionBarActivity
 	
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
-		this.getMenuInflater().inflate(R.menu.menu_index, menu);
+		this.getMenuInflater().inflate(R.menu.menu_player, menu);
 
 		return true;
 	}

@@ -162,4 +162,101 @@
     <string name="step_rate_stress_more">More</string>
     <string name="step_rate_stress_less">Less</string>
     <string name="step_play_track">Step 3: Begin the relaxation exercise.</string>
+    
+    <string name="title_settings">Settings</string>
+    <string name="action_settings">Settings</string>
+    <string name="settings_group_notification">Reminder Settings</string>
+    <string name="title_notifications">Enable reminders?</string>
+    <string name="desc_notifications">Enable notifications to remind you to take a break and relax a bit.</string>
+    <string name="title_notification_type">Reminder frequency</string>
+    <string name="desc_notification_type">Choose to be reminder weekly, daily, or randomly.</string>
+    <string name="title_notification_day">Day of week</string>
+    <string name="title_notification_hour">Hour of day</string>
+
+	<string-array name="list_notification_types">
+        <item>Once a week</item>
+        <item>Once a day</item>
+        <item>Random</item>
+   	</string-array>
+	<string-array name="list_notification_type_values">
+        <item>week</item>
+        <item>day</item>
+        <item>random</item>
+   	</string-array>
+	
+	<string-array name="list_notification_days">
+        <item>Sunday</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+   	</string-array>
+
+	<string-array name="list_notification_day_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+   	</string-array>
+
+	<string-array name="list_notification_hour">
+        <item>Midnight</item>
+        <item>1 am</item>
+        <item>2 am</item>
+        <item>3 am</item>
+        <item>4 am</item>
+		<item>5 am</item>
+		<item>6 am</item>
+		<item>7 am</item>
+		<item>8 am</item>
+        <item>9 am</item>
+        <item>10 am</item>
+        <item>11 am</item>
+        <item>Noon</item>
+        <item>1 pm</item>
+        <item>2 pm</item>
+        <item>3 pm</item>
+        <item>4 pm</item>
+		<item>5 pm</item>
+		<item>6 pm</item>
+		<item>7 pm</item>
+		<item>8 pm</item>
+        <item>9 pm</item>
+        <item>10 pm</item>
+        <item>11 pm</item>
+  	</string-array>
+	<string-array name="list_notification_hour_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+   	</string-array>
+
+	<string name="reminder_title">Purple Chill</string>
+	<string name="reminder_message">When you\'re ready to relax a bit, Purple Chill\'s waiting for you.</string>
 </resources>
