@@ -87,6 +87,9 @@ public class TipActivity extends TaskActivity
 		
 		String index = this.getIntent().getStringExtra(TipActivity.INDEX);
 		
-		this.getSupportActionBar().setTitle(this.getString(R.string.tip_title, index));
+		if (index != null)
+			this.getSupportActionBar().setTitle(this.getString(R.string.tip_title, index));
+		else
+			this.getSupportActionBar().setTitle(this.getString(R.string.app_name, index));
 	}
 }

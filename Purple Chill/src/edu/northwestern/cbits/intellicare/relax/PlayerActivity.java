@@ -17,7 +17,6 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -85,7 +84,7 @@ public class PlayerActivity extends ActionBarActivity
 	
 	public static String playerTitle(Context context)
 	{
-		if (PlayerActivity.isPlaying())
+		if (PlayerActivity.isPlaying() && PlayerActivity._currentGroupTitles != -1)
 		{
 			String[] titles = context.getResources().getStringArray(PlayerActivity._currentGroupTitles);
 			
@@ -169,7 +168,9 @@ public class PlayerActivity extends ActionBarActivity
 				PlayerActivity._currentStressLevel = progress;
 				
 				ratingNumber.setText("" + progress);
-				playButton.setEnabled(true);
+				
+				if (me._selectedIndex != -1)
+					playButton.setEnabled(true);
 			}
 
 			public void onStartTrackingTouch(SeekBar seekBar) 
@@ -182,11 +183,14 @@ public class PlayerActivity extends ActionBarActivity
 
 			}
 		});
-		
-		Log.e("PC", "STRESS: " + PlayerActivity._currentStressLevel);
+
+		ratingBar.setEnabled(false);
 		
 		if (PlayerActivity._currentStressLevel != -1)
+		{
 			ratingBar.setProgress(PlayerActivity._currentStressLevel - 1);
+			ratingBar.setEnabled(true);
+		}
 
 		final TextView audioTitle = (TextView) this.findViewById(R.id.label_selected_track_title);
 		final ImageButton trackButton = (ImageButton) this.findViewById(R.id.choose_track);
@@ -219,6 +223,8 @@ public class PlayerActivity extends ActionBarActivity
 							
 							PlayerActivity._player = null;
 						}
+						
+						ratingBar.setEnabled(true);
 			    	}
 			    });
 			    
@@ -228,8 +234,6 @@ public class PlayerActivity extends ActionBarActivity
 
 		playButton.setEnabled(false);
 		
-		Log.e("PC", PlayerActivity._currentGroupName  + " -- " +  PlayerActivity._currentGroupTrack);
-
 		if (PlayerActivity._currentGroupName != null && PlayerActivity._currentGroupTrack >= 0)
 		{
 			if (PlayerActivity._currentGroupTrack < titles.size())
@@ -253,9 +257,7 @@ public class PlayerActivity extends ActionBarActivity
 		{
 			public void onClick(View view) 
 			{
-				Log.e("PC", "CLICK");
-				
-				if (PlayerActivity._player == null)
+				if (PlayerActivity._player == null && me._selectedIndex != -1)
 				{
 					final String[] mediaUrls = me.getResources().getStringArray(me.getIntent().getIntExtra(PlayerActivity.GROUP_MEDIA, 0));
 					final String[] mediaTitles = me.getResources().getStringArray(me.getIntent().getIntExtra(PlayerActivity.GROUP_TITLES, 0));
@@ -276,8 +278,6 @@ public class PlayerActivity extends ActionBarActivity
 						{
 							public void onCompletion(MediaPlayer player) 
 							{
-								Log.e("PC", "COMPLETE");
-								
 								HashMap<String,Object> payload = new HashMap<String, Object>();
 								payload.put(PlayerActivity.GROUP_NAME, me._groupName);
 								payload.put("track_finshed", mediaTitles[PlayerActivity._currentGroupTrack]);
@@ -308,8 +308,6 @@ public class PlayerActivity extends ActionBarActivity
 						{
 							public void run() 
 							{
-								Log.e("PC", "CLICK AUTO");
-
 								try 
 								{
 									Thread.sleep(250);
@@ -318,13 +316,16 @@ public class PlayerActivity extends ActionBarActivity
 	                                {
 	                                    public void run() 
 	                                    {
-	                                    	PlayerActivity._player.seekTo(0);
-
-	                    					playButton.setImageResource(R.drawable.ic_action_playback_pause);
-	                    					PlayerActivity._player.start();
-	                    					
-	                    					ratingBar.setEnabled(false);
-	                    					trackButton.setEnabled(false);
+	                                    	if (PlayerActivity._player != null)
+	                                    	{
+		                                    	PlayerActivity._player.seekTo(0);
+	
+		                    					playButton.setImageResource(R.drawable.ic_action_playback_pause);
+		                    					PlayerActivity._player.start();
+		                    					
+		                    					ratingBar.setEnabled(false);
+		                    					trackButton.setEnabled(false);
+	                                    	}
 	                                    }
 	                                });
 								}
@@ -357,7 +358,6 @@ public class PlayerActivity extends ActionBarActivity
 				}
 				else if (PlayerActivity._player.isPlaying())
 				{
-					Log.e("PC", "PAUSE");
 					playButton.setImageResource(R.drawable.ic_action_playback_play);
 					PlayerActivity._player.pause();
 
@@ -366,8 +366,6 @@ public class PlayerActivity extends ActionBarActivity
 				}
 				else
 				{
-					Log.e("PC", "PLAY");
-					
 					playButton.setImageResource(R.drawable.ic_action_playback_pause);
 					PlayerActivity._player.start();
 					
