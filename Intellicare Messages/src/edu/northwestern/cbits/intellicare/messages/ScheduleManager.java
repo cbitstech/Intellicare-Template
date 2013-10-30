@@ -1,19 +1,17 @@
 package edu.northwestern.cbits.intellicare.messages;
 
-import java.security.SecureRandom;
 import java.util.Calendar;
 import java.util.HashMap;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.ContentValues; 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
-import edu.northwestern.cbits.intellicare.DialogActivity;
 import edu.northwestern.cbits.intellicare.PhqFourActivity;
 import edu.northwestern.cbits.intellicare.StatusNotificationManager;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
@@ -26,6 +24,7 @@ public class ScheduleManager
 	public static final String IS_INSTRUCTION = "is_instruction";
 	public static final String MESSAGE_TITLE = "message_title";
 	public static final String MESSAGE_MESSAGE = "message_message";
+	private static final String SHOW_NOTIFICATION = "show_notification";
 	
 	private static ScheduleManager _instance = null;
 
@@ -104,6 +103,7 @@ public class ScheduleManager
 		if (lessonComplete)
 		{
 			int index = prefs.getInt(ScheduleManager.MESSAGE_INDEX, 0);
+			boolean showNotification = prefs.getBoolean(ScheduleManager.SHOW_NOTIFICATION, false);
 			
 			long notificationTime = this.getNotificationTime(index % 5, now);
 			
@@ -118,9 +118,6 @@ public class ScheduleManager
 				{
 					if (now >= notificationTime)
 					{
-						Intent intent = new Intent(this._context, MessageRatingActivity.class);
-						intent.setAction("ACTION_" + now);
-						
 						int id = 0;
 
 						Editor e = prefs.edit();
@@ -129,45 +126,61 @@ public class ScheduleManager
 
 						if (index % 5 == 0)
 						{
-							intent.putExtra(ScheduleManager.IS_INSTRUCTION, true);
-
 							id = 1;
 							msg.title = this._context.getString(R.string.note_instruction);
-							
 							e.remove(ScheduleManager.INSTRUCTION_COMPLETED);
-
 							icon = R.drawable.ic_notification_color;
 						}
 
 						String descIndex = currentLesson + "." + (index % 35);
 
-						SecureRandom random = new SecureRandom();
-						
 						boolean isInstruction = ((index % 5) == 0);
-
-						if (random.nextFloat() < 0.5)
+						
+						if (isInstruction)
 						{
+							Intent intent = new Intent(this._context, TaskActivity.class);
+							intent.setAction("ACTION_" + now);
+							intent.putExtra(TaskActivity.MESSAGE, msg.message);
+
 							intent.putExtra(ScheduleManager.MESSAGE_MESSAGE, msg.message);
-							intent.putExtra(ScheduleManager.MESSAGE_TITLE, msg.title);
 							intent.putExtra(ScheduleManager.MESSAGE_INDEX, descIndex);
-							intent.putExtra(ScheduleManager.IS_INSTRUCTION, isInstruction);
+							intent.putExtra(ScheduleManager.IS_INSTRUCTION, true);
+
+							if (showNotification)
+							{
+								HashMap<String, Object> payload = new HashMap<String, Object>();
+								payload.put("message_index", descIndex);
+								LogManager.getInstance(this._context).log("notification_shown", payload);
+		
+								StatusNotificationManager.getInstance(this._context).notifyBigText(id, icon, msg.title, msg.message, PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT));
+							}
+							else
+								this._context.startActivity(intent);
 							
-							HashMap<String, Object> payload = new HashMap<String, Object>();
-							payload.put("message_index", descIndex);
-							LogManager.getInstance(this._context).log("notification_shown", payload);
-	
-							StatusNotificationManager.getInstance(this._context).notifyBigText(id, icon, msg.title, msg.message, PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT));
-						}							
+						}
 						else
 						{
-							Intent messageIntent = new Intent(this._context, MessageActivity.class);
-							messageIntent.putExtra(DialogActivity.DIALOG_TITLE, this._context.getString(R.string.app_name));
-							messageIntent.putExtra(DialogActivity.DIALOG_MESSAGE, msg.message);
-							messageIntent.putExtra(ScheduleManager.MESSAGE_INDEX, descIndex);
-							messageIntent.putExtra(ScheduleManager.IS_INSTRUCTION, isInstruction);
-							messageIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							Message prompt = this.getMessage(currentLesson, index - (index % 5));
 
-							this._context.startActivity(messageIntent);
+							Intent intent = new Intent(this._context, TipActivity.class);
+							intent.setAction("ACTION_" + now);
+							intent.putExtra(TipActivity.MESSAGE, msg.message);
+							intent.putExtra(TipActivity.TASK, prompt.message);
+							
+							intent.putExtra(ScheduleManager.MESSAGE_MESSAGE, msg.message);
+							intent.putExtra(ScheduleManager.MESSAGE_INDEX, descIndex);
+							intent.putExtra(ScheduleManager.IS_INSTRUCTION, isInstruction);
+
+							if (showNotification)
+							{
+								HashMap<String, Object> payload = new HashMap<String, Object>();
+								payload.put("message_index", descIndex);
+								LogManager.getInstance(this._context).log("notification_shown", payload);
+		
+								StatusNotificationManager.getInstance(this._context).notifyBigText(id, icon, msg.title, msg.message, PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT));
+							}
+							else
+								this._context.startActivity(intent);
 						}
 						
 						index += 1;

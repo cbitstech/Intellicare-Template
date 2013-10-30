@@ -236,5 +236,14 @@
 
   	<string name="test_title">Tests (TBR)</string>
   	<string name="label_interrupted">Check here if this message interrupted something you were doing.</string>
-  					
+
+  	<string name="task_title">Today\'s Task</string>
+  	<string name="task_rating">Please rate today\'s task:</string>
+
+	<string name="tip_title" formatted="false">Tip #%s</string>
+  	<string name="tip_rating">Please rate this tip:</string>
+  	
+  	<string name="settings_group_notification">Notification Settings</string>
+  	<string name="title_use_notifications">Use status notifications</string>
+  	<string name="desc_use_notifications">Show messages in the status bar instead of interrupting the current activity.</string>
 </resources>

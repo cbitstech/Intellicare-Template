@@ -88,5 +88,4 @@ public class MessageActivity extends ConsentedActivity
 		
 		return true;
 	}
-
 }

@@ -15,7 +15,7 @@ import edu.northwestern.cbits.intellicare.views.StarRatingView.OnRatingChangeLis
 
 public class RatingActivity extends ConsentedActivity 
 {
-	private int _rating = 0;
+	protected int _rating = 0;
 	
 	public int getRating()
 	{
@@ -50,6 +50,11 @@ public class RatingActivity extends ConsentedActivity
 
 		bundle.putInt("rating", this._rating);
 	}  
+	
+	public void setRating(int rating)
+	{
+		this._rating = rating;
+	}
 	
 	public void onRestoreInstanceState(Bundle bundle) 
 	{  
