@@ -34,19 +34,27 @@
     <string-array name="one_urls">
         <item>file:///android_asset/weeks/1-thoughts/1.html</item>
         <item>file:///android_asset/weeks/1-thoughts/2.html</item>
-        <item>file:///android_asset/weeks/1-thoughts/3.html</item>
+        <item>file:///android_asset/weeks/1-thoughts/3.1-shoulds.html</item>
+        <item>file:///android_asset/weeks/1-thoughts/3.2-dwelling.html</item>
+        <item>file:///android_asset/weeks/1-thoughts/3.4-catastrophizing.html</item>
+        <item>file:///android_asset/weeks/1-thoughts/3.5-overgeneralizing.html</item>
+        <item>file:///android_asset/weeks/1-thoughts/3.6-magical thinking.html</item>
         <item>file:///android_asset/weeks/1-thoughts/4.html</item>
         <item>file:///android_asset/weeks/1-thoughts/5.html</item>
         <item>file:///android_asset/weeks/1-thoughts/6.html</item>
    	</string-array>
 
    	<string-array name="one_titles">
-        <item>Lesson: Thoughts (1/6)</item>
-		<item>Lesson: Thoughts (2/6)</item>
-        <item>Lesson: Thoughts (3/6)</item>
-        <item>Lesson: Thoughts (4/6)</item>
-        <item>Lesson: Thoughts (5/6)</item>
-        <item>Lesson: Thoughts (6/6)</item>
+        <item>Lesson: Thoughts (1/10)</item>
+		<item>Lesson: Thoughts (2/10)</item>
+        <item>Lesson: Thoughts (3/10)</item>
+        <item>Lesson: Thoughts (4/10)</item>
+        <item>Lesson: Thoughts (5/10)</item>
+        <item>Lesson: Thoughts (6/10)</item>
+        <item>Lesson: Thoughts (7/10)</item>
+        <item>Lesson: Thoughts (8/10)</item>
+        <item>Lesson: Thoughts (9/10)</item>
+        <item>Lesson: Thoughts (10/10)</item>
     </string-array>
 
     <!-- Lesson Two Resources -->

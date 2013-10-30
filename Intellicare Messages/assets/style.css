@@ -9,7 +9,7 @@ img
 	max-width: 100%;
 	height: auto;
 	width: auto; /* for ie9 */
-margin: 0 0 1em;
+	margin: 0 0 1em;
 	box-shadow: 0 -2px 5px 5px #888888;
 }
 
@@ -22,7 +22,13 @@ p
 
 h1
 {
+	margin-top: 8px;
 	margin-left: 8px;
 	margin-right: 8px;
 	font-size: x-large;
+}
+
+ul, ol
+{
+	margin-right: 8px;
 }
