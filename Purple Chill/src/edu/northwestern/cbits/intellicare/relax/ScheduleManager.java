@@ -1,6 +1,5 @@
 package edu.northwestern.cbits.intellicare.relax;
 
-import java.security.SecureRandom;
 import java.util.Calendar;
 
 import android.app.AlarmManager;
@@ -18,7 +17,6 @@ public class ScheduleManager
 	private static ScheduleManager _instance = null;
 
 	private Context _context = null;
-	private SecureRandom _random = new SecureRandom();
 
 	public ScheduleManager(Context context) 
 	{
@@ -30,7 +28,6 @@ public class ScheduleManager
 		
 		PendingIntent pi = PendingIntent.getBroadcast(this._context, 0, broadcast, PendingIntent.FLAG_UPDATE_CURRENT);
 		
-		// alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, 30000, pi);
 		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);
 	}
 
@@ -70,8 +67,14 @@ public class ScheduleManager
 		
 		long lastReminder = prefs.getLong("config_last_reminder", 0);
 		
-		String noteType = prefs.getString("config_notification_type", "random");
-		int day = Integer.parseInt(prefs.getString("config_notification_day", "4"));
+		boolean sunday = prefs.getBoolean("config_remind_sunday", false);
+		boolean monday = prefs.getBoolean("config_remind_monday", false);
+		boolean tuesday = prefs.getBoolean("config_remind_tuesday", false);
+		boolean wednesday = prefs.getBoolean("config_remind_wednesday", false);
+		boolean thursday = prefs.getBoolean("config_remind_thursday", false);
+		boolean friday = prefs.getBoolean("config_remind_friday", false);
+		boolean saturday = prefs.getBoolean("config_remind_saturday", false);
+		
 		int hour = Integer.parseInt(prefs.getString("config_notification_hour", "12"));
 		
 		Calendar calendar = Calendar.getInstance();
@@ -82,12 +85,14 @@ public class ScheduleManager
 		
 		if (now - lastReminder > (1000 * 60 * 60 * 2))
 		{
-			if ("week".equals(noteType) && thisDay == day && thisHour == hour)
-				this.remind();
-			else if ("day".equals(noteType) && thisHour == hour)
-				this.remind();
-			else if (this._random.nextDouble() < 0.01)
-				this.remind();
+			if (sunday && thisDay == 1 || monday && thisDay == 2 ||
+				tuesday && thisDay == 3 || wednesday && thisDay == 4 ||
+				thursday && thisDay == 5 || friday && thisDay == 6 ||
+				saturday && thisDay == 7)
+			{
+				if (thisHour == hour)
+					this.remind();
+			}
 		}
 	}
 }

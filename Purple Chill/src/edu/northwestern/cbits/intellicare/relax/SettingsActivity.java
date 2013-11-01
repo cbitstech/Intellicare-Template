@@ -25,7 +25,6 @@ public class SettingsActivity extends PreferenceActivity
 		super.onResume();
 		
 		Preference enabled = this.findPreference("config_enable_notifications");
-		final Preference type = this.findPreference("config_notification_type");
 		final Preference day = this.findPreference("config_notification_day");
 		final Preference hour = this.findPreference("config_notification_hour");
 		
@@ -56,33 +55,13 @@ public class SettingsActivity extends PreferenceActivity
 
 								if (prefs.getBoolean("config_enable_notifications", true) == false)
 								{
-									type.setEnabled(false);
 									day.setEnabled(false);
 									hour.setEnabled(false);
 								}
 								else
 								{
-									type.setEnabled(true);
 									day.setEnabled(true);
 									hour.setEnabled(true);
-
-									String noteType = prefs.getString("config_notification_type", "random");
-									
-									if ("random".equals(noteType))
-									{
-										day.setEnabled(false);
-										hour.setEnabled(false);
-									}
-									else if ("week".equals(noteType))
-									{
-										day.setEnabled(true);
-										hour.setEnabled(true);
-									}
-									else if ("day".equals(noteType))
-									{
-										day.setEnabled(false);
-										hour.setEnabled(true);
-									}
 								}
 							}
 						});
@@ -97,9 +76,6 @@ public class SettingsActivity extends PreferenceActivity
 		};
 		
 		enabled.setOnPreferenceChangeListener(listener);
-		type.setOnPreferenceChangeListener(listener);
-		day.setOnPreferenceChangeListener(listener);
-		hour.setOnPreferenceChangeListener(listener);
 		
 		listener.onPreferenceChange(null, null);
 	}

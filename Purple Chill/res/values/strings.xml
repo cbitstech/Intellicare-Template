@@ -259,4 +259,13 @@
 
 	<string name="reminder_title">Purple Chill</string>
 	<string name="reminder_message">When you\'re ready to relax a bit, Purple Chill\'s waiting for you.</string>
+
+	<string name="title_sunday">Sunday</string>
+	<string name="title_monday">Monday</string>
+	<string name="title_tuesday">Tuesday</string>
+	<string name="title_wednesday">Wednesday</string>
+	<string name="title_thursday">Thursday</string>
+	<string name="title_friday">Friday</string>
+	<string name="title_saturday">Saturday</string>
+
 </resources>
