@@ -63,14 +63,16 @@
         <item>file:///android_asset/weeks/2-gratitude/2.html</item>
         <item>file:///android_asset/weeks/2-gratitude/3.html</item>
         <item>file:///android_asset/weeks/2-gratitude/4.html</item>
+        <item>file:///android_asset/weeks/2-gratitude/5.html</item>
    	</string-array>
 
    	<string-array name="two_titles">
-        <item>Lesson: Gratitude (1/4)</item>
-		<item>Lesson: Gratitude (2/4)</item>
-        <item>Lesson: Gratitude (3/4)</item>
-        <item>Lesson: Gratitude (4/4)</item>
-   	</string-array>
+        <item>Lesson: Gratitude (1/5)</item>
+		<item>Lesson: Gratitude (2/5)</item>
+        <item>Lesson: Gratitude (3/5)</item>
+        <item>Lesson: Gratitude (4/5)</item>
+        <item>Lesson: Gratitude (5/5)</item>
+  	</string-array>
    	
     <!-- Lesson Three Resources -->
     <string-array name="three_urls">
@@ -78,13 +80,17 @@
         <item>file:///android_asset/weeks/3-activation/2.html</item>
         <item>file:///android_asset/weeks/3-activation/3.html</item>
         <item>file:///android_asset/weeks/3-activation/4.html</item>
-	</string-array>
+        <item>file:///android_asset/weeks/3-activation/5.html</item>
+        <item>file:///android_asset/weeks/3-activation/6.html</item>
+  	</string-array>
 
    	<string-array name="three_titles">
-        <item>Lesson: Getting Activated! (1/4)</item>
-        <item>Lesson: Getting Activated! (2/4)</item>
-        <item>Lesson: Getting Activated! (3/4)</item>
-        <item>Lesson: Getting Activated! (4/4)</item>
+        <item>Lesson: Getting Activated! (1/6)</item>
+        <item>Lesson: Getting Activated! (2/6)</item>
+        <item>Lesson: Getting Activated! (3/6)</item>
+        <item>Lesson: Getting Activated! (4/6)</item>
+        <item>Lesson: Getting Activated! (5/6)</item>
+        <item>Lesson: Getting Activated! (6/6)</item>
     </string-array>
    			
     <!-- Lesson Four Resources -->
@@ -108,11 +114,17 @@
     <string-array name="five_urls">
         <item>file:///android_asset/weeks/5-problem-solving/1.html</item>
 		<item>file:///android_asset/weeks/5-problem-solving/2.html</item>
+        <item>file:///android_asset/weeks/5-problem-solving/3.html</item>
+		<item>file:///android_asset/weeks/5-problem-solving/4.html</item>
+		<item>file:///android_asset/weeks/5-problem-solving/5.html</item>
 	</string-array>
 
    	<string-array name="five_titles">
-        <item>Lesson: Problem Solving (1/2)</item>
-        <item>Lesson: Problem Solving (2/2)</item>
+        <item>Lesson: Problem Solving (1/5)</item>
+        <item>Lesson: Problem Solving (2/5)</item>
+        <item>Lesson: Problem Solving (3/5)</item>
+        <item>Lesson: Problem Solving (4/5)</item>
+        <item>Lesson: Problem Solving (5/5)</item>
     </string-array>
    		
     <!-- Help Resources -->

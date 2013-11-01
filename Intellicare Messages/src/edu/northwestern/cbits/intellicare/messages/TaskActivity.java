@@ -23,6 +23,7 @@ import edu.northwestern.cbits.intellicare.views.StarRatingView.OnRatingChangeLis
 public class TaskActivity extends RatingActivity 
 {
 	public static final String MESSAGE = "MESSAGE";
+	public static final String IMAGE = "IMAGE";
 
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -134,9 +135,10 @@ public class TaskActivity extends RatingActivity
 		super.onResume();
 		
 		String message = this.getIntent().getStringExtra(TaskActivity.MESSAGE);
+		String image = this.getIntent().getStringExtra(TaskActivity.IMAGE);
 		
 		this.getSupportActionBar().setTitle(R.string.task_title);
 		
-		this.setContent("file:///android_asset/images/cat.jpg", message);
+		this.setContent("file:///android_asset/lesson_images/" + image, message);
 	}
 }

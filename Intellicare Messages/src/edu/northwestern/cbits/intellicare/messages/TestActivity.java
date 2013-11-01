@@ -23,6 +23,8 @@ public class TestActivity extends ConsentedActivity
 	{
 		public String type = "";
 		public String message = "";
+		public String image = null;
+		@SuppressWarnings("unused")
 		public int lessonId = 0;
 	}
 
@@ -45,30 +47,35 @@ public class TestActivity extends ConsentedActivity
 			NotificationRow prompt = new NotificationRow();
 			prompt.type = this.getString(R.string.prompt_type);
 			prompt.message = cursor.getString(cursor.getColumnIndex("prompt"));
+			prompt.image = cursor.getString(cursor.getColumnIndex("prompt_img"));
 			prompt.lessonId  = cursor.getInt(cursor.getColumnIndex("lesson_id"));
 			messages.add(prompt);
 
 			NotificationRow first = new NotificationRow();
 			first.type = this.getString(R.string.message_type);
 			first.message = cursor.getString(cursor.getColumnIndex("first"));
+			first.image = cursor.getString(cursor.getColumnIndex("first_img"));
 			first.lessonId  = cursor.getInt(cursor.getColumnIndex("lesson_id"));
 			messages.add(first);
 
 			NotificationRow second = new NotificationRow();
 			second.type = this.getString(R.string.message_type);
 			second.message = cursor.getString(cursor.getColumnIndex("second"));
+			second.image = cursor.getString(cursor.getColumnIndex("second_img"));
 			second.lessonId  = cursor.getInt(cursor.getColumnIndex("lesson_id"));
 			messages.add(second);
 
 			NotificationRow third = new NotificationRow();
 			third.type = this.getString(R.string.message_type);
 			third.message = cursor.getString(cursor.getColumnIndex("third"));
+			third.image = cursor.getString(cursor.getColumnIndex("third_img"));
 			third.lessonId  = cursor.getInt(cursor.getColumnIndex("lesson_id"));
 			messages.add(third);
 
 			NotificationRow fourth = new NotificationRow();
 			fourth.type = this.getString(R.string.message_type);
 			fourth.message = cursor.getString(cursor.getColumnIndex("fourth"));
+			fourth.image = cursor.getString(cursor.getColumnIndex("fourth_img"));
 			fourth.lessonId  = cursor.getInt(cursor.getColumnIndex("lesson_id"));
 			messages.add(fourth);
 		}
@@ -112,6 +119,7 @@ public class TestActivity extends ConsentedActivity
 				{
 					Intent intent = new Intent(me, TaskActivity.class);
 					intent.putExtra(TaskActivity.MESSAGE, row.message);
+					intent.putExtra(TipActivity.IMAGE, row.image);
 					
 					me.startActivity(intent);
 				}
@@ -129,6 +137,7 @@ public class TestActivity extends ConsentedActivity
 					
 					Intent intent = new Intent(me, TipActivity.class);
 					intent.putExtra(TipActivity.MESSAGE, row.message);
+					intent.putExtra(TipActivity.IMAGE, row.image);
 					intent.putExtra(TipActivity.TASK, prompt.message);
 					intent.putExtra(TipActivity.INDEX, descIndex);
 					

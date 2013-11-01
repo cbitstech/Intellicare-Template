@@ -25,6 +25,7 @@ public class ScheduleManager
 	public static final String MESSAGE_TITLE = "message_title";
 	public static final String MESSAGE_MESSAGE = "message_message";
 	private static final String SHOW_NOTIFICATION = "show_notification";
+	private static final String MESSAGE_IMAGE = "message_image";
 	
 	private static ScheduleManager _instance = null;
 
@@ -41,7 +42,7 @@ public class ScheduleManager
 		PendingIntent pi = PendingIntent.getBroadcast(this._context, 0, broadcast, PendingIntent.FLAG_UPDATE_CURRENT);
 		
 		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);
-//		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, 20000, pi);
+//		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, 60000, pi);
 	}
 
 	public static ScheduleManager getInstance(Context context)
@@ -141,8 +142,10 @@ public class ScheduleManager
 							Intent intent = new Intent(this._context, TaskActivity.class);
 							intent.setAction("ACTION_" + now);
 							intent.putExtra(TaskActivity.MESSAGE, msg.message);
+							intent.putExtra(TaskActivity.IMAGE, msg.image);
 
 							intent.putExtra(ScheduleManager.MESSAGE_MESSAGE, msg.message);
+							intent.putExtra(ScheduleManager.MESSAGE_IMAGE, msg.image);
 							intent.putExtra(ScheduleManager.MESSAGE_INDEX, descIndex);
 							intent.putExtra(ScheduleManager.IS_INSTRUCTION, true);
 
@@ -168,8 +171,10 @@ public class ScheduleManager
 							intent.setAction("ACTION_" + now);
 							intent.putExtra(TipActivity.MESSAGE, msg.message);
 							intent.putExtra(TipActivity.TASK, prompt.message);
+							intent.putExtra(TipActivity.IMAGE, msg.image);
 							
 							intent.putExtra(ScheduleManager.MESSAGE_MESSAGE, msg.message);
+							intent.putExtra(ScheduleManager.MESSAGE_IMAGE, msg.image);
 							intent.putExtra(ScheduleManager.MESSAGE_INDEX, descIndex);
 							intent.putExtra(ScheduleManager.IS_INSTRUCTION, isInstruction);
 							
@@ -310,17 +315,22 @@ public class ScheduleManager
 			{
 				case 0:
 					message.message = cursor.getString(cursor.getColumnIndex("prompt"));
+					message.image = cursor.getString(cursor.getColumnIndex("prompt_img"));
 					break;
 				case 1:
 					message.message = cursor.getString(cursor.getColumnIndex("first"));
+					message.image = cursor.getString(cursor.getColumnIndex("first_img"));
 					break;
 				case 2:
 					message.message = cursor.getString(cursor.getColumnIndex("second"));
+					message.image = cursor.getString(cursor.getColumnIndex("second_img"));
 					break;
 				case 3:
 					message.message = cursor.getString(cursor.getColumnIndex("third"));
+					message.image = cursor.getString(cursor.getColumnIndex("third_img"));
 					break;
 				case 4:
+					message.image = cursor.getString(cursor.getColumnIndex("fourth_img"));
 					message.message = cursor.getString(cursor.getColumnIndex("fourth"));
 					break;
 			}
@@ -367,6 +377,7 @@ public class ScheduleManager
 
 	private class Message
 	{
+		public String image = null;
 		public String title = null;
 		public String message = null;
 	}
