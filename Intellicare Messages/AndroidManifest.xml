@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="edu.northwestern.cbits.intellicare.messages" android:versionCode="10008" android:versionName="1.0.8" >
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="edu.northwestern.cbits.intellicare.messages" android:versionCode="10009" android:versionName="1.0.9" >
    	<uses-permission android:name="android.permission.INTERNET" />
    	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
    	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -20,12 +20,12 @@
             </intent-filter>
         </activity>
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".HelpActivity" android:label="@string/app_name" />
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".LessonActivity" android:label="@string/app_name" />
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".LessonActivity" android:label="@string/app_name"  android:launchMode="singleTask" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".SettingsActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".TestActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".MessageRatingActivity" android:label="@string/app_name" />
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".MessageActivity" android:label="@string/app_name" android:launchMode="singleTop" />
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".TaskActivity" android:label="@string/app_name" android:launchMode="singleTop" />
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".MessageActivity" android:label="@string/app_name" />
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".TaskActivity" android:label="@string/app_name" android:launchMode="singleTask" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".TipActivity" android:label="@string/app_name" />
 
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.ConsentActivity" android:label="@string/app_name" />

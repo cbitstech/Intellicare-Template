@@ -38,11 +38,10 @@ public class ScheduleManager
 		AlarmManager alarm = (AlarmManager) this._context.getSystemService(Context.ALARM_SERVICE);
 		
 		Intent broadcast = new Intent(this._context, ScheduleHelper.class);
-		
 		PendingIntent pi = PendingIntent.getBroadcast(this._context, 0, broadcast, PendingIntent.FLAG_UPDATE_CURRENT);
 		
-		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);
-//		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, 60000, pi);
+//		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);
+		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, 15000, pi);
 	}
 
 	public static ScheduleManager getInstance(Context context)
@@ -63,6 +62,8 @@ public class ScheduleManager
 		if (prefs.contains(HelpActivity.HELP_COMPLETED) == false)
 			return;
 		
+		boolean showNotification = prefs.getBoolean(ScheduleManager.SHOW_NOTIFICATION, false);
+
 		long now = System.currentTimeMillis();
 		
 		if (prefs.contains(ScheduleManager.FIRST_RUN) == false)
@@ -104,13 +105,14 @@ public class ScheduleManager
 		if (lessonComplete)
 		{
 			int index = prefs.getInt(ScheduleManager.MESSAGE_INDEX, 0);
-			boolean showNotification = prefs.getBoolean(ScheduleManager.SHOW_NOTIFICATION, false);
 			
 			long notificationTime = this.getNotificationTime(index % 5, now);
 			
 			if (notificationTime > 0)
 			{
-				if (index > 0 && index % 5 == 0 && prefs.getBoolean(ScheduleManager.INSTRUCTION_COMPLETED, false) == false)
+				boolean completed = prefs.getBoolean(ScheduleManager.INSTRUCTION_COMPLETED, false);
+				
+				if (index > 0 && index % 5 == 0 && completed == false)
 					index -= 5;
 				
 				Message msg = this.getMessage(currentLesson, index);
@@ -149,7 +151,7 @@ public class ScheduleManager
 							intent.putExtra(ScheduleManager.MESSAGE_INDEX, descIndex);
 							intent.putExtra(ScheduleManager.IS_INSTRUCTION, true);
 
-							intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+							intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 							if (showNotification)
 							{
@@ -161,6 +163,8 @@ public class ScheduleManager
 							}
 							else
 								this._context.startActivity(intent);
+							
+							e.putLong("last_instruction_notification", System.currentTimeMillis());
 							
 						}
 						else
@@ -178,7 +182,7 @@ public class ScheduleManager
 							intent.putExtra(ScheduleManager.MESSAGE_INDEX, descIndex);
 							intent.putExtra(ScheduleManager.IS_INSTRUCTION, isInstruction);
 							
-							intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+							intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 							if (showNotification)
 							{
@@ -271,12 +275,6 @@ public class ScheduleManager
 
 			String descIndex = currentLesson + "";
 
-			HashMap<String, Object> payload = new HashMap<String, Object>();
-			payload.put("message_index", descIndex);
-			LogManager.getInstance(this._context).log("lesson_notification_shown", payload);
-
-			PendingIntent pi = PendingIntent.getActivity(this._context, 1, lessonIntent, PendingIntent.FLAG_ONE_SHOT);
-			
 			ContentValues values = new ContentValues();
 			values.put("complete", 1);
 
@@ -285,7 +283,20 @@ public class ScheduleManager
 			
 			this._context.getContentResolver().update(ContentProvider.LESSONS_URI, values, where, whereArgs);
 
-			StatusNotificationManager.getInstance(this._context).notifyBigText(0, R.drawable.ic_notification_color, title, message, pi);
+			lessonIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+			if (showNotification)
+			{
+				PendingIntent pi = PendingIntent.getActivity(this._context, 1, lessonIntent, PendingIntent.FLAG_ONE_SHOT);
+				
+				HashMap<String, Object> payload = new HashMap<String, Object>();
+				payload.put("message_index", descIndex);
+				LogManager.getInstance(this._context).log("lesson_notification_shown", payload);
+
+				StatusNotificationManager.getInstance(this._context).notifyBigText(0, R.drawable.ic_notification_color, title, message, pi);
+			}
+			else
+				this._context.startActivity(lessonIntent);
 		}
 	}
 	
@@ -344,6 +355,11 @@ public class ScheduleManager
 	private long getNotificationTime(int index, long now) 
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
+
+		long lastInst = prefs.getLong("last_instruction_notification", 0);
+		
+		if (index % 5 == 0 && now - lastInst < (23 * 60 * 60 * 1000))
+			return -1;
 		
 		long firstRun = prefs.getLong(ScheduleManager.FIRST_RUN, 0);
 		
@@ -354,6 +370,7 @@ public class ScheduleManager
 		calendar.setTimeInMillis(now);
 		
 		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
 
 		calendar.set(Calendar.HOUR_OF_DAY, startHour);
 		long start = calendar.getTimeInMillis();
@@ -370,9 +387,14 @@ public class ScheduleManager
 		if (start > end)
 			end += (24 * 60 * 60 * 1000);
 		
-		long delta = (end - start) / 5;
-
-		return start + (index * delta);
+		if (now > start && now < end)
+		{
+			long delta = (end - start) / 5;
+	
+			return start + (index * delta);
+		}
+		
+		return -1;
 	}
 
 	private class Message
@@ -380,5 +402,10 @@ public class ScheduleManager
 		public String image = null;
 		public String title = null;
 		public String message = null;
+		
+		public String toString()
+		{
+			return this.message;
+		}
 	}
 }
