@@ -130,31 +130,6 @@ public class RecruitmentActivity extends ActionBarActivity
 
 			}
 		});
-
-		File root = Environment.getExternalStorageDirectory();
-		
-		File intellicare = new File(root, "Intellicare Shared");
-		
-		if (intellicare.exists() == false)
-			intellicare.mkdirs();
-		
-		File consent = new File(intellicare, "Recruitment Record.txt");
-		
-		try 
-		{
-			TimeZone tz = TimeZone.getTimeZone("UTC");
-
-			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
-			df.setTimeZone(tz);
-			
-			PrintWriter out = new PrintWriter(consent);
-			out.print(df.format(new Date()));
-			out.close();
-		} 
-		catch (FileNotFoundException e) 
-		{
-			e.printStackTrace();
-		}
 	}
 	
 	protected void onResume()
@@ -163,6 +138,33 @@ public class RecruitmentActivity extends ActionBarActivity
 		
 		if (RecruitmentActivity.showedRecruitment())
 			this.finish();
+		else
+		{
+			File root = Environment.getExternalStorageDirectory();
+			
+			File intellicare = new File(root, "Intellicare Shared");
+			
+			if (intellicare.exists() == false)
+				intellicare.mkdirs();
+	
+			File consent = new File(intellicare, "Recruitment Record.txt");
+			
+			try 
+			{
+				TimeZone tz = TimeZone.getTimeZone("UTC");
+	
+				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+				df.setTimeZone(tz);
+				
+				PrintWriter out = new PrintWriter(consent);
+				out.print(df.format(new Date()));
+				out.close();
+			} 
+			catch (FileNotFoundException e) 
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void onSaveInstanceState(Bundle bundle) 
