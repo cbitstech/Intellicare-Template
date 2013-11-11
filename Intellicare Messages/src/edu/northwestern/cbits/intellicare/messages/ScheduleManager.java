@@ -149,7 +149,7 @@ public class ScheduleManager
 							intent.putExtra(ScheduleManager.MESSAGE_INDEX, descIndex);
 							intent.putExtra(ScheduleManager.IS_INSTRUCTION, true);
 
-							intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
 							if (showNotification)
 							{
@@ -178,7 +178,7 @@ public class ScheduleManager
 							intent.putExtra(ScheduleManager.MESSAGE_INDEX, descIndex);
 							intent.putExtra(ScheduleManager.IS_INSTRUCTION, isInstruction);
 							
-							intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
 							if (showNotification)
 							{
