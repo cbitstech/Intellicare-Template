@@ -268,4 +268,7 @@
 	<string name="title_friday">Friday</string>
 	<string name="title_saturday">Saturday</string>
 
+	<string name="reminder_title">Almost There&#8230;</string>
+	<string name="reminder_message">Before you can begin relaxing, please check that you\'ve selected a track to play and have rated your current stress level.</string>
+		
 </resources>

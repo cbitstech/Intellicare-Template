@@ -17,11 +17,13 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -38,8 +40,9 @@ public class PlayerActivity extends ActionBarActivity
 	
 	private String _groupName = null;
 	
-	private static MediaPlayer _player = null;
+	static MediaPlayer _player = null;
 	private static Thread _playerThread = null;
+
 
 	private static String _currentGroupName = null;
 	private static int _currentGroupTimes = -1;
@@ -72,6 +75,8 @@ public class PlayerActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 
 		this.setContentView(R.layout.activity_player);
+		
+		View anchor = (View) this.findViewById(R.id.player_anchor);
 	}
 	
 	public static boolean isPlaying()
@@ -157,7 +162,7 @@ public class PlayerActivity extends ActionBarActivity
 		
 		ratingBar.setMax(9);
 		
-		final ImageButton playButton = (ImageButton) this.findViewById(R.id.play_pause);
+//		final ImageButton playButton = (ImageButton) this.findViewById(R.id.play_pause);
 
 		ratingBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
 		{
@@ -169,8 +174,10 @@ public class PlayerActivity extends ActionBarActivity
 				
 				ratingNumber.setText("" + progress);
 				
-				if (me._selectedIndex != -1)
-					playButton.setEnabled(true);
+//				if (me._selectedIndex != -1)
+//					playButton.setEnabled(true);
+
+				me.setupPlayer();
 			}
 
 			public void onStartTrackingTouch(SeekBar seekBar) 
@@ -184,8 +191,6 @@ public class PlayerActivity extends ActionBarActivity
 			}
 		});
 
-		ratingBar.setEnabled(false);
-		
 		if (PlayerActivity._currentStressLevel != -1)
 		{
 			ratingBar.setProgress(PlayerActivity._currentStressLevel - 1);
@@ -216,23 +221,22 @@ public class PlayerActivity extends ActionBarActivity
 			    		
 						ratingBar.setProgress(0);
 						
-						if (PlayerActivity._player != null)
+/*						if (PlayerActivity._player != null)
 						{
 							if (PlayerActivity._player.isPlaying())
 								PlayerActivity._player.stop();
 							
 							PlayerActivity._player = null;
 						}
+						*/
 						
-						ratingBar.setEnabled(true);
+						me.setupPlayer();
 			    	}
 			    });
 			    
 			    builder.create().show();
 			}
 		});
-
-		playButton.setEnabled(false);
 		
 		if (PlayerActivity._currentGroupName != null && PlayerActivity._currentGroupTrack >= 0)
 		{
@@ -245,19 +249,30 @@ public class PlayerActivity extends ActionBarActivity
 	    		Typeface font = audioTitle.getTypeface();
 	    		audioTitle.setTypeface(Typeface.create(font, Typeface.NORMAL));
 	    		
-	    		playButton.setEnabled(true);
-				playButton.setImageResource(R.drawable.ic_action_playback_pause);
+//	    		playButton.setEnabled(true);
+//				playButton.setImageResource(R.drawable.ic_action_playback_pause);
 				
 				ratingBar.setEnabled(false);
 				trackButton.setEnabled(false);
 			}
 		}
-
+/*
 		playButton.setOnClickListener(new OnClickListener()
 		{
 			public void onClick(View view) 
 			{
-				if (PlayerActivity._player == null && me._selectedIndex != -1)
+				if (PlayerActivity._currentStressLevel == -1 || me._selectedIndex == -1)
+				{
+					AlertDialog.Builder builder = new AlertDialog.Builder(me);
+					
+					builder = builder.setTitle(R.string.reminder_title);
+					builder = builder.setMessage(R.string.reminder_message);
+					
+					builder.create().show();
+					
+					return;
+				}
+				else if (PlayerActivity._player == null && me._selectedIndex != -1)
 				{
 					final String[] mediaUrls = me.getResources().getStringArray(me.getIntent().getIntExtra(PlayerActivity.GROUP_MEDIA, 0));
 					final String[] mediaTitles = me.getResources().getStringArray(me.getIntent().getIntExtra(PlayerActivity.GROUP_TITLES, 0));
@@ -373,7 +388,7 @@ public class PlayerActivity extends ActionBarActivity
 					trackButton.setEnabled(false);
 				}
 			}
-		});
+		}); */
 		
 		HashMap<String,Object> payload = new HashMap<String, Object>();
 		payload.put(PlayerActivity.GROUP_NAME, this._groupName);
@@ -394,10 +409,12 @@ public class PlayerActivity extends ActionBarActivity
 			this.startActivity(introIntent);
 		}
 		
+		
+		
 		if (PlayerActivity._playerThread == null)
 		{
-			final ProgressBar progress = (ProgressBar) this.findViewById(R.id.playback_progress);
-			final TextView progressText = (TextView) this.findViewById(R.id.track_progress);
+// 			final ProgressBar progress = (ProgressBar) this.findViewById(R.id.playback_progress);
+// 			final TextView progressText = (TextView) this.findViewById(R.id.track_progress);
 			
 			final Runnable r = new Runnable()
 			{
@@ -416,16 +433,20 @@ public class PlayerActivity extends ActionBarActivity
 								{
 									public void run() 
 									{
+										/*
 										progress.setMax(duration);
 										progress.setProgress(position);
 										progressText.setText(PlayerActivity.formatTime("" + (position / 1000)) + " / " + PlayerActivity.formatTime("" + (duration / 1000)));
+										*/
 									}
 								});
 							}
 							else
 							{
+								/*
 								progress.setMax(1);
 								progress.setProgress(0);
+								*/
 							}
 						
 							Thread.sleep(250);
@@ -506,5 +527,81 @@ public class PlayerActivity extends ActionBarActivity
 		}
 		
 		return true;
+	}
+	
+	public void setupPlayer()
+	{
+		final int titlesId = this.getIntent().getIntExtra(PlayerActivity.GROUP_TITLES, -1);
+		final int mediaId = this.getIntent().getIntExtra(PlayerActivity.GROUP_MEDIA, -1);
+		final int timesId = this.getIntent().getIntExtra(PlayerActivity.GROUP_TIMES, -1);
+		
+		Log.e("PR", "SETUP");
+		
+		if (PlayerActivity._player == null && this._selectedIndex != -1)
+		{
+			final String[] mediaUrls = this.getResources().getStringArray(this.getIntent().getIntExtra(PlayerActivity.GROUP_MEDIA, 0));
+			final String[] mediaTitles = this.getResources().getStringArray(this.getIntent().getIntExtra(PlayerActivity.GROUP_TITLES, 0));
+			
+			try 
+			{
+				AssetFileDescriptor afd = this.getAssets().openFd(mediaUrls[this._selectedIndex].replace("file:///android_asset/", ""));
+				
+				PlayerActivity._player = new MediaPlayer();
+				PlayerActivity._player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+				PlayerActivity._player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+
+				
+				Intent audioIntent = new Intent(this, AudioActivity.class);
+				
+				this.startActivity(audioIntent);
+
+//				playButton.setImageResource(R.drawable.ic_action_playback_pause);
+				
+				final PlayerActivity me = this;
+				
+				PlayerActivity._player.setOnCompletionListener(new OnCompletionListener()
+				{
+					public void onCompletion(MediaPlayer player) 
+					{
+						HashMap<String,Object> payload = new HashMap<String, Object>();
+						payload.put(PlayerActivity.GROUP_NAME, me._groupName);
+						payload.put("track_finshed", mediaTitles[PlayerActivity._currentGroupTrack]);
+						LogManager.getInstance(me).log("selected_track", payload);
+						
+						PlayerActivity._player.release();
+						PlayerActivity._player = null;
+
+						PlayerActivity._currentGroupName = null;
+						PlayerActivity._currentGroupMedia = -1;
+						PlayerActivity._currentGroupTitles = -1;
+						PlayerActivity._currentGroupTimes = -1;
+						PlayerActivity._currentGroupTrack = -1;
+						PlayerActivity._currentStressLevel = -1;
+					}
+				});
+				
+				PlayerActivity._currentGroupName = this._groupName;
+				PlayerActivity._currentGroupMedia = mediaId;
+				PlayerActivity._currentGroupTitles = titlesId;
+				PlayerActivity._currentGroupTimes = timesId;
+				PlayerActivity._currentGroupTrack = me._selectedIndex;
+			} 
+			catch (IllegalArgumentException e) 
+			{
+				e.printStackTrace();
+			} 
+			catch (SecurityException e) 
+			{
+				e.printStackTrace();
+			} 
+			catch (IllegalStateException e) 
+			{
+				e.printStackTrace();
+			} 
+			catch (IOException e) 
+			{
+				e.printStackTrace();
+			} 
+		}
 	}
 }

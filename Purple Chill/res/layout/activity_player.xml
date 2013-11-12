@@ -21,13 +21,13 @@
             android:layout_height="48dp"
             android:layout_weight="1">
 		    <TextView android:textStyle="bold"
-		        android:textSize="14sp"
+		        android:textSize="18sp"
 		        android:text="@string/step_choose_explain"
 		        android:layout_height="wrap_content" 
 		        android:layout_width="match_parent" />
 		    <TextView android:id="@+id/label_selected_track_title"
 		        android:textStyle="italic"
-		        android:textSize="14sp"
+		        android:textSize="18sp"
 		        android:text="@string/step_choose_track"
 		        android:layout_height="wrap_content" 
 		        android:layout_width="match_parent" />
@@ -51,7 +51,7 @@
             android:layout_weight="1"
             android:layout_marginRight="8dp">
 			<TextView android:textStyle="bold"
-			    android:textSize="14sp"
+			    android:textSize="18sp"
 		        android:text="@string/step_rate_stress"
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content" />
@@ -86,7 +86,7 @@
 	<View android:layout_weight="1"
 	    android:layout_width="match_parent"
 	    android:layout_height="0dp" />
-  	<LinearLayout android:orientation="horizontal"
+<!-- 	<LinearLayout android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp">
@@ -94,12 +94,19 @@
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1">
+ -->        
 		    <TextView android:textStyle="bold"
-		        android:textSize="14sp"
+		        android:textSize="18sp"
 		        android:text="@string/step_play_track"
 		        android:layout_height="wrap_content" 
 		        android:layout_width="match_parent" />
-  		    <LinearLayout android:orientation="horizontal"
+			<View android:id="@+id/player_anchor"
+			    android:layout_weight="1"
+			    android:background="#808080"
+			    android:layout_width="match_parent"
+			    android:layout_height="80dp" />
+		<!-- 
+			    <LinearLayout android:orientation="horizontal"
 		        android:layout_width="match_parent"
 				android:layout_marginTop="8dp" 
 		        android:layout_height="wrap_content">
@@ -118,16 +125,13 @@
 			        android:layout_marginRight="8dp" />
 	    	</LinearLayout>
   	    </LinearLayout>
-	    <ImageButton android:id="@+id/play_pause"
+         -->
+		<!-- 
+       	    <ImageButton android:id="@+id/play_pause"
             android:src="@drawable/ic_action_playback_play"
             android:contentDescription="@string/goto_play_pause"
             android:layout_width="48dp"
             android:layout_height="48dp" />
 	</LinearLayout>
-	<View android:layout_weight="1"
-	    android:layout_width="match_parent"
-	    android:layout_height="0dp" />
-	<View android:layout_weight="1"
-	    android:layout_width="match_parent"
-	    android:layout_height="0dp" />
+         -->
 </LinearLayout>
