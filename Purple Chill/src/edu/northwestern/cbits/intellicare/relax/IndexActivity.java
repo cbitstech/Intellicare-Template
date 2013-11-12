@@ -130,7 +130,7 @@ public class IndexActivity extends ConsentedActivity
 		
 		LinearLayout currentTrack = (LinearLayout) this.findViewById(R.id.current_track);
 		
-		if (PlayerActivity.isPlaying())
+		if (AudioFileManager.getInstance(this).isPlaying())
 		{
 			currentTrack.setVisibility(View.VISIBLE);
 

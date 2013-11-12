@@ -80,76 +80,75 @@
 	<string-array name="deep_breathing_media_urls">
         <item>file:///android_asset/audio/deep_breathing/01_deepBreathing.mp3</item>
         <item>file:///android_asset/audio/deep_breathing/02_deepBreathing.mp3</item>
-        <item>file:///android_asset/audio/deep_breathing/03_deepBreathing.mp3</item>
-        <item>file:///android_asset/audio/deep_breathing/04_deepBreathing.mp3</item>
-        <item>file:///android_asset/audio/deep_breathing/05_deepBreathing.mp3</item>
+        <item>file:///android_asset/audio/muscle/01_pmr.mp3</item>
    	</string-array>
 
 	<string-array name="mindfulness_media_urls">
-        <item>file:///android_asset/audio/mindfulness/01_mindfulness.mp3</item>
         <item>file:///android_asset/audio/mindfulness/02_mindfulness.mp3</item>
+	    <item>file:///android_asset/audio/mindfulness/01_mindfulness.mp3</item>
         <item>file:///android_asset/audio/mindfulness/04_mindfulness.mp3</item>
         <item>file:///android_asset/audio/mindfulness/05_mindfulness.mp3</item>
    	</string-array>
 
 	<string-array name="muscle_media_urls">
-        <item>file:///android_asset/audio/muscle/01_pmr.mp3</item>
-        <item>file:///android_asset/audio/muscle/02_pmr.mp3</item>
-        <item>file:///android_asset/audio/muscle/03_pmr.mp3</item>
+        <item>file:///android_asset/audio/deep_breathing/05_deepBreathing.mp3</item>
+        <item>file:///android_asset/audio/deep_breathing/04_deepBreathing.mp3</item>
+        <item>file:///android_asset/audio/deep_breathing/03_deepBreathing.mp3</item>
+   	    <item>file:///android_asset/audio/muscle/02_pmr.mp3</item>
         <item>file:///android_asset/audio/muscle/04_pmr.mp3</item>
+        <item>file:///android_asset/audio/muscle/03_pmr.mp3</item>
    	</string-array>
 
 	<string-array name="autogenic_media_url_titles">
-        <item>Autogenic 1</item>
+        <item>Autogenic Practice</item>
 	</string-array>
 
 	<string-array name="deep_breathing_media_url_titles">
-        <item>Deep Breathing 1</item>
-        <item>Deep Breathing 2</item>
-        <item>Deep Breathing 3</item>
-        <item>Deep Breathing 4</item>
-        <item>Deep Breathing 5</item>
+        <item>Abdominal Breathing</item>
+        <item>Nostril Breathing (Male Narrator)</item>
+        <item>Nostril Breathing (Female Narrator)</item>
    	</string-array>
 
 	<string-array name="mindfulness_media_url_titles">
-        <item>Mindfulness 1</item>
-        <item>Mindfulness 2</item>
-        <item>Mindfulness 3</item>
-        <item>Mindfulness 4</item>
+        <item>Introduction to Mindfulness</item>
+        <item>Practicing Mindfulness through Eating</item>
+        <item>Mindfulness of Thoughts</item>
+        <item>Mindfulness of your Body</item>
    	</string-array>
 
 	<string-array name="muscle_media_url_titles">
-        <item>Progressive Muscle Relaxation 1</item>
-        <item>Progressive Muscle Relaxation 2</item>
-        <item>Progressive Muscle Relaxation 3</item>
-        <item>Progressive Muscle Relaxation 4</item>
+        <item>Introduction to PMR</item>
+	    <item>PMR for 4 Muscle Groups</item>
+        <item>PMR for Relaxation</item>
+        <item>Practicing PMR with Tension</item>
+        <item>Letting go of tension (long)</item>
+        <item>Letting go of tension (short)</item>
    	</string-array>
 					
 	<string-array name="autogenic_media_url_times">
-        <item>285</item>
+        <item>284</item>
 	</string-array>
 
 	<string-array name="deep_breathing_media_url_times">
         <item>390</item>
         <item>102</item>
-        <item>1265</item>
-        <item>1248</item>
-        <item>1943</item>
+        <item>155</item>
    	</string-array>
 
 	<string-array name="mindfulness_media_url_times">
-        <item>198</item>
         <item>896</item>
+	    <item>198</item>
         <item>227</item>
-        <item>721</item>
    	</string-array>
 
 	<string-array name="muscle_media_url_times">
-        <item>156</item>
-        <item>1198</item>
+        <item>1942</item>
+	    <item>1247</item>
+        <item>1265</item>
+        <item>1197</item>
+        <item>516</item>
         <item>192</item>
-        <item>517</item>
-   	</string-array>
+	</string-array>
    	
     <string name="track_timestamp">0:00 / 0:00</string>
     <string name="select_track_label">Select a track</string>
@@ -157,7 +156,7 @@
     <string name="step_explain">To begin your relaxation exercise, please complete the following steps below.</string>
     <string name="step_choose_explain">Step 1: Select an exercise.</string>
     <string name="step_choose_track">Please select a track.</string>
-    <string name="step_rate_stress">Step 2: Rate your current stress level.</string>
+    <string name="step_rate_stress">Rate your current stress level.</string>
     <string name="step_rate_stress_default">\?</string>
     <string name="step_rate_stress_more">More</string>
     <string name="step_rate_stress_less">Less</string>
