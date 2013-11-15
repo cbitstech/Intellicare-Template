@@ -4,8 +4,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.cordova.CordovaWebView;
-import org.apache.cordova.api.CordovaInterface;
-import org.apache.cordova.api.CordovaPlugin;
+// import org.apache.cordova.api.CordovaInterface;
+// import org.apache.cordova.api.CordovaPlugin;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,7 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import edu.northwestern.cbits.ic_template.R;
 
-public class JavascriptActivity extends ConsentedActivity implements CordovaInterface
+public class JavascriptActivity extends ConsentedActivity// implements CordovaInterface
 {
 	private final ExecutorService _threadPool = Executors.newCachedThreadPool();
 	
@@ -58,6 +58,7 @@ public class JavascriptActivity extends ConsentedActivity implements CordovaInte
 		return true;
 	}
 
+	/*
 	@Override
 	public void startActivityForResult(CordovaPlugin command, Intent intent, int requestCode) 
 	{
@@ -89,4 +90,5 @@ public class JavascriptActivity extends ConsentedActivity implements CordovaInte
 		// TODO Auto-generated method stub
 		return this._threadPool;
 	}
+	*/
 }
