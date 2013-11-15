@@ -12,6 +12,6 @@ public class SettingsActivity extends PreferenceActivity
 		
 		this.setTitle(R.string.title_settings);
 		
-		this.addPreferencesFromResource(R.layout.settings_activity);
+		this.addPreferencesFromResource(R.layout.activity_settings);
 	}
 }
