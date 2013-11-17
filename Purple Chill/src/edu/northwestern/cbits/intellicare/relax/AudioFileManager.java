@@ -3,30 +3,60 @@ package edu.northwestern.cbits.intellicare.relax;
 import java.io.IOException;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
+import android.net.Uri;
 import android.widget.MediaController.MediaPlayerControl;
 
 public class AudioFileManager implements MediaPlayerControl
 {
+	public static final String TRACK_URI = "track_uri";
+	public static final String TRACK_TITLE = "track_title";
+	public static final String TRACK_DESCRIPTION = "track_description";
+	
 	private static AudioFileManager _instance = null;
 	
 	private static String PLACEHOLDER = "file:///android_asset/audio/silent.mp3";
 
 	private Context _context = null;
 	private MediaPlayer _player = null;
+
+	private Uri _currentTrack = null;
+	private String _currentTitle = null;
+	private String _currentDescription = null;
 	
-	private String _url = null;
-	private String _title = null;
-	private String _group = null;
+	public Intent launchIntentForCurrentTrack()
+	{
+		if (this._currentTrack != null)
+			return this.launchIntentForUri(this._currentTrack, this._currentTitle, this._currentDescription);
+
+		return null;
+	}
 	
+	public Intent launchIntentForUri(Uri trackUri, String title, String description)
+	{
+		Intent intent = new Intent(this._context, PlayerActivity.class);
+
+		intent.putExtra(AudioFileManager.TRACK_URI, trackUri.toString());
+		intent.putExtra(AudioFileManager.TRACK_TITLE, title);
+		intent.putExtra(AudioFileManager.TRACK_DESCRIPTION, description);
+		
+		return intent;
+	}
+
 	public AudioFileManager(Context context) 
 	{
 		this._context = context;
 		
-		this.setUrl(AudioFileManager.PLACEHOLDER, null, null, null);
+		this.setTrackUri(Uri.parse(AudioFileManager.PLACEHOLDER), null, null, null);
+	}
+	
+	boolean isPlaceholder(Uri uri)
+	{
+		return Uri.parse(AudioFileManager.PLACEHOLDER).equals(uri);
 	}
 
 	public static AudioFileManager getInstance(Context context)
@@ -39,40 +69,6 @@ public class AudioFileManager implements MediaPlayerControl
 		return AudioFileManager._instance;
 	}
 	
-	public void setUrl(String url, String title, String group, OnPreparedListener listener)
-	{
-		this._url = url;
-		this._title = title;
-		this._group = group;
-		
-		try 
-		{
-			AssetFileDescriptor afd = this._context.getAssets().openFd(this._url.replace("file:///android_asset/", ""));
-
-			if (this._player != null)
-			{
-				this._player.stop();
-				this._player.release();
-				
-				this._player = null;
-			}
-			
-			this._player = new MediaPlayer();
-			this._player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-			this._player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-
-			this._player.setOnPreparedListener(listener);
-			
-			this._player.prepareAsync();
-		} 
-		catch (IOException e) 
-		{
-			e.printStackTrace();
-			
-			this.setUrl(AudioFileManager.PLACEHOLDER, null, null, null);
-		}
-	}
-	
 	public boolean hasPlayer()
 	{
 		return (this._player != null);
@@ -80,7 +76,7 @@ public class AudioFileManager implements MediaPlayerControl
 	
 	public boolean canPause() 
 	{
-		if (AudioFileManager.PLACEHOLDER.equals(this._url))
+		if (this.isPlaceholder(this._currentTrack))
 			return false;
 		
 		return true;
@@ -88,7 +84,7 @@ public class AudioFileManager implements MediaPlayerControl
 
 	public boolean canSeekBackward() 
 	{
-		if (AudioFileManager.PLACEHOLDER.equals(this._url))
+		if (AudioFileManager.PLACEHOLDER.equals(this))
 			return false;
 
 		return true;
@@ -96,7 +92,7 @@ public class AudioFileManager implements MediaPlayerControl
 
 	public boolean canSeekForward() 
 	{
-		if (AudioFileManager.PLACEHOLDER.equals(this._url))
+		if (this.isPlaceholder(this._currentTrack))
 			return false;
 
 		return true;
@@ -114,7 +110,7 @@ public class AudioFileManager implements MediaPlayerControl
 
 	public int getCurrentPosition() 
 	{
-		if (AudioFileManager.PLACEHOLDER.equals(this._url))
+		if (this.isPlaceholder(this._currentTrack))
 			return 0;
 		
 		return this._player.getCurrentPosition();
@@ -122,7 +118,7 @@ public class AudioFileManager implements MediaPlayerControl
 
 	public int getDuration() 
 	{
-		if (AudioFileManager.PLACEHOLDER.equals(this._url))
+		if (this.isPlaceholder(this._currentTrack))
 			return 0;
 
 		return this._player.getDuration();
@@ -130,7 +126,7 @@ public class AudioFileManager implements MediaPlayerControl
 
 	public boolean isPlaying() 
 	{
-		if (AudioFileManager.PLACEHOLDER.equals(this._url))
+		if (this.isPlaceholder(this._currentTrack))
 			return false;
 		
 		return this._player.isPlaying();
@@ -148,19 +144,75 @@ public class AudioFileManager implements MediaPlayerControl
 
 	public void start() 
 	{
-		if (AudioFileManager.PLACEHOLDER.equals(this._url))
+		if (this.isPlaceholder(this._currentTrack))
 			return;
 
 		this._player.start();
 	}
 
-	public String currentTitle() 
+	public void setTrackUri(Uri uri, String title, String description, OnPreparedListener listener) 
 	{
-		return this._title;
+		if (uri.equals(this._currentTrack))
+		{
+			if (this._player != null)	
+				this._player.setOnPreparedListener(listener);
+			
+			if (listener != null)
+				listener.onPrepared(this._player);
+		}
+		else
+		{
+			this._currentTrack = uri;
+			this._currentTitle = title;
+			this._currentDescription = description;
+			
+			try 
+			{
+				String uriString = this._currentTrack.toString();
+				
+				AssetFileDescriptor afd = this._context.getAssets().openFd(uriString.replace("file:///android_asset/", ""));
+
+				if (this._player != null)
+				{
+					this._player.stop();
+					this._player.release();
+					
+					this._player = null;
+				}
+				
+				this._player = new MediaPlayer();
+				this._player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+				this._player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+
+				this._player.setOnPreparedListener(listener);
+				
+				this._player.prepare();
+			} 
+			catch (IOException e) 
+			{
+				e.printStackTrace();
+				
+				this.setTrackUri(Uri.parse(AudioFileManager.PLACEHOLDER), null, null, null);
+			}
+		}
 	}
 
-	public String currentGroup() 
+	public String currentTrackTitle() 
 	{
-		return this._group;
+		return this._currentTitle;
+	}
+
+	public void clearPreparedListener() 
+	{
+		if (this._player != null)
+			this._player.setOnPreparedListener(null);
+	}
+
+	public void resetController() 
+	{
+		if (this._player != null)
+		{
+			this._player.setOnPreparedListener(null);
+		}
 	}
 }

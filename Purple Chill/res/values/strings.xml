@@ -133,12 +133,14 @@
         <item>390</item>
         <item>102</item>
         <item>155</item>
-   	</string-array>
+        <item>0</item>
+  	</string-array>
 
 	<string-array name="mindfulness_media_url_times">
         <item>896</item>
 	    <item>198</item>
         <item>227</item>
+        <item>0</item>
    	</string-array>
 
 	<string-array name="muscle_media_url_times">
@@ -156,7 +158,7 @@
     <string name="step_explain">To begin your relaxation exercise, please complete the following steps below.</string>
     <string name="step_choose_explain">Step 1: Select an exercise.</string>
     <string name="step_choose_track">Please select a track.</string>
-    <string name="step_rate_stress">Rate your current stress level.</string>
+    <string name="title_rate_stress">Rate your current stress level.</string>
     <string name="step_rate_stress_default">\?</string>
     <string name="step_rate_stress_more">More</string>
     <string name="step_rate_stress_less">Less</string>
@@ -269,5 +271,7 @@
 
 	<string name="reminder_title">Almost There&#8230;</string>
 	<string name="reminder_message">Before you can begin relaxing, please check that you\'ve selected a track to play and have rated your current stress level.</string>
-		
+
+	<string name="toast_rate_stress">Please rate your current stress level to proceed&#8230;</string>
+			
 </resources>

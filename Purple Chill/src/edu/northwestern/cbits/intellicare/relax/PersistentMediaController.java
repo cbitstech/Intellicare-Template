@@ -3,7 +3,6 @@ package edu.northwestern.cbits.intellicare.relax;
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.MediaController;
 
@@ -26,7 +25,12 @@ public class PersistentMediaController extends MediaController
 
     public void hide()
     {
-		Log.e("PC", "NO HIDE");
+
+    }
+
+    public void superHide()
+    {
+    	super.hide();
     }
 
 	public boolean dispatchKeyEvent(KeyEvent event)

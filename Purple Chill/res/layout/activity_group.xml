@@ -5,10 +5,17 @@
     android:background="@color/bottom_bar_gray"
     android:id="@+id/layout_player"
     android:orientation="vertical">
-	<ImageView android:id="@+id/track_background"
+	<ListView android:id="@+id/recording_list"
 	    android:layout_weight="1" 
-	    android:src="@drawable/chill_placeholder"
+		android:background="#ffffff"
 	    android:layout_width="match_parent"
-	    android:scaleType="centerCrop"
 	    android:layout_height="0dp" /> 
+    <View android:background="@color/bottom_bar_border"
+        android:layout_width="match_parent"
+        android:layout_height="1.5dp" />
+	<TextView android:id="@+id/group_desc"
+		android:textSize="18sp"
+		android:layout_margin="8dp"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" />
 </LinearLayout>

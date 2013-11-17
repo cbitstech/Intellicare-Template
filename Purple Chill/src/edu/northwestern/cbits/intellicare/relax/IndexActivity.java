@@ -85,34 +85,31 @@ public class IndexActivity extends ConsentedActivity
 		{
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
 			{
-				Intent playerIntent = new Intent(me, PlayerActivity.class);
+				Intent playerIntent = new Intent(me, GroupActivity.class);
 				
-				playerIntent.putExtra(PlayerActivity.GROUP_NAME, titles[position]);
+				playerIntent.putExtra(GroupActivity.GROUP_NAME, titles[position]);
 				
 				switch (position)
 				{
 					case 0:
-						playerIntent.putExtra(PlayerActivity.GROUP_MEDIA, R.array.deep_breathing_media_urls);
-						playerIntent.putExtra(PlayerActivity.GROUP_TITLES, R.array.deep_breathing_media_url_titles);
-						playerIntent.putExtra(PlayerActivity.GROUP_TIMES, R.array.deep_breathing_media_url_times);
+						playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.deep_breathing_media_urls);
+						playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.deep_breathing_media_url_titles);
+						playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.deep_breathing_media_url_times);
 						break;
 					case 1:
-						playerIntent.putExtra(PlayerActivity.GROUP_MEDIA, R.array.muscle_media_urls);
-						playerIntent.putExtra(PlayerActivity.GROUP_TITLES, R.array.muscle_media_url_titles);
-						playerIntent.putExtra(PlayerActivity.GROUP_TIMES, R.array.muscle_media_url_times);
+						playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.muscle_media_urls);
+						playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.muscle_media_url_titles);
+						playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.muscle_media_url_times);
 						break;
 					case 2:
-						playerIntent.putExtra(PlayerActivity.GROUP_MEDIA, R.array.autogenic_media_urls);
-						playerIntent.putExtra(PlayerActivity.GROUP_TITLES, R.array.autogenic_media_url_titles);
-						playerIntent.putExtra(PlayerActivity.GROUP_TIMES, R.array.autogenic_media_url_times);
+						playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.autogenic_media_urls);
+						playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.autogenic_media_url_titles);
+						playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.autogenic_media_url_times);
 						break;
-//					case 3:
-//						playerIntent.putExtra(PlayerActivity.GROUP_MEDIA, R.array.);
-//						break;
 					case 4:
-						playerIntent.putExtra(PlayerActivity.GROUP_MEDIA, R.array.mindfulness_media_urls);
-						playerIntent.putExtra(PlayerActivity.GROUP_TITLES, R.array.mindfulness_media_url_titles);
-						playerIntent.putExtra(PlayerActivity.GROUP_TIMES, R.array.mindfulness_media_url_times);
+						playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.mindfulness_media_urls);
+						playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.mindfulness_media_url_titles);
+						playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.mindfulness_media_url_times);
 						break;
 				}
 				
@@ -130,7 +127,9 @@ public class IndexActivity extends ConsentedActivity
 		
 		LinearLayout currentTrack = (LinearLayout) this.findViewById(R.id.current_track);
 		
-		if (AudioFileManager.getInstance(this).isPlaying())
+		final AudioFileManager audio = AudioFileManager.getInstance(this);
+
+		if (audio.isPlaying())
 		{
 			currentTrack.setVisibility(View.VISIBLE);
 
@@ -140,7 +139,7 @@ public class IndexActivity extends ConsentedActivity
 			{
 				public void onClick(View v) 
 				{
-					Intent playerIntent = PlayerActivity.launchIntentForCurrentTrack(me);
+					Intent playerIntent = audio.launchIntentForCurrentTrack();
 					
 					if (playerIntent != null)
 						me.startActivity(playerIntent);
@@ -150,7 +149,7 @@ public class IndexActivity extends ConsentedActivity
 			});
 			
 			TextView trackName = (TextView) this.findViewById(R.id.current_track_name);
-			trackName.setText(PlayerActivity.playerTitle(this));
+			trackName.setText(audio.currentTrackTitle());
 		}
 		else
 			currentTrack.setVisibility(View.GONE);
