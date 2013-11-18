@@ -1,13 +1,7 @@
 package edu.northwestern.cbits.intellicare;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import org.apache.cordova.CordovaWebView;
-// import org.apache.cordova.api.CordovaInterface;
-// import org.apache.cordova.api.CordovaPlugin;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,8 +10,6 @@ import edu.northwestern.cbits.ic_template.R;
 
 public class JavascriptActivity extends ConsentedActivity// implements CordovaInterface
 {
-	private final ExecutorService _threadPool = Executors.newCachedThreadPool();
-	
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);

@@ -66,7 +66,7 @@ public class ConsentActivity extends ActionBarActivity implements ConsentWebView
 		nameField.setEnabled(false);
 		nameField.setVisibility(View.GONE);
 		
-		SimpleDateFormat format = new SimpleDateFormat("EEEE, LLLL d, yyyy");
+		SimpleDateFormat format = new SimpleDateFormat("EEEE, MMMM d, yyyy");
 		
 		TextView dateField = (TextView) this.findViewById(R.id.date_text_field); 
 		dateField.setText(format.format(new Date()));

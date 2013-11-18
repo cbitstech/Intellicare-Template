@@ -94,6 +94,8 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
 	
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
+		Log.e("PC", "INFLATED MENU");
+		
 		this.getMenuInflater().inflate(R.menu.menu_player, menu);
 
 		return true;
@@ -101,6 +103,8 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
 
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
+		Log.e("PC", "MENU ITEM SELECTED: " + item.getItemId());
+		
 		if (item.getItemId() == R.id.action_help)
 		{
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);

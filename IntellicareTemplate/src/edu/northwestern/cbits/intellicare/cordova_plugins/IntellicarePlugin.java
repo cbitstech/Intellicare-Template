@@ -1,14 +1,5 @@
 package edu.northwestern.cbits.intellicare.cordova_plugins;
 
-// import org.apache.cordova.api.Plugin;
-// import org.apache.cordova.api.PluginResult;
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import android.content.Context;
-import android.support.v7.app.ActionBarActivity;
-
-@SuppressWarnings("deprecation")
 public class IntellicarePlugin//  extends Plugin 
 {
 	public static final String SET_TITLE = "setTitle";
