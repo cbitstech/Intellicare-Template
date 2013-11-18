@@ -62,6 +62,7 @@
 	<string-array name="visualization_urls">
         <item>file:///android_asset/www/visualization.html</item>
 	</string-array>
+	
 	<string-array name="visualization_titles">
         <item>Visualization</item>
     </string-array>
@@ -95,10 +96,44 @@
         <item>file:///android_asset/audio/deep_breathing/04_deepBreathing.mp3</item>
         <item>file:///android_asset/audio/deep_breathing/03_deepBreathing.mp3</item>
    	    <item>file:///android_asset/audio/muscle/02_pmr.mp3</item>
+   	</string-array>
+
+	<string-array name="visualization_media_urls">
         <item>file:///android_asset/audio/muscle/04_pmr.mp3</item>
         <item>file:///android_asset/audio/muscle/03_pmr.mp3</item>
    	</string-array>
+	
+	<string-array name="autogenic_descs">
+        <item>A practice for relaxation that suggests heaviness, calmness, and warmth in your body.</item>
+	</string-array>
 
+	<string-array name="deep_breathing_descs">
+        <item>Practice a deep relaxing breath starting from your abdomen rather than your chest.</item>
+        <item>Practice breathing through your nose rather than your mouth.</item>
+        <item>Practice breathing through your nose rather than your mouth.</item>
+   	</string-array>
+
+	<string-array name="mindfulness_descs">
+        <item>Learn to be present in the moment and focus on the here and now.</item>
+        <item>Have a small edible object (e.g., candy, dried fruit, nut) available to practice mindfulness.</item>
+        <item>Use mindfulness to become more aware of your thoughts.</item>
+        <item>Use mindfulness to become more aware of your body.</item>
+   	</string-array>
+
+	<string-array name="muscle_descs">
+        <item>A 30-minute introduction to using muscle tension for PMR.</item>
+	    <item>A shorter practice of PMR targetting only 4 muscle groups.</item>
+        <item>Start with some deep breathing before moving on to PMR.</item>
+        <item>Practice creating and releasing tension in your muscles.</item>
+        <item>Letting go of tension (long)</item>
+        <item>Letting go of tension (short)</item>
+   	</string-array>
+
+	<string-array name="visualization_descs">
+        <item>Visualize tension flowing through and dripping out of your body.</item>
+        <item>Visualize tension flowing through and dripping out of your body.</item>
+   	</string-array>
+		
 	<string-array name="autogenic_media_url_titles">
         <item>Autogenic Practice</item>
 	</string-array>
@@ -124,7 +159,12 @@
         <item>Letting go of tension (long)</item>
         <item>Letting go of tension (short)</item>
    	</string-array>
-					
+
+	<string-array name="visualization_media_url_titles">
+        <item>Letting go of tension (long)</item>
+        <item>Letting go of tension (short)</item>
+   	</string-array>
+						
 	<string-array name="autogenic_media_url_times">
         <item>284</item>
 	</string-array>
@@ -140,7 +180,7 @@
         <item>896</item>
 	    <item>198</item>
         <item>227</item>
-        <item>0</item>
+        <item>720</item>
    	</string-array>
 
 	<string-array name="muscle_media_url_times">
@@ -151,7 +191,12 @@
         <item>516</item>
         <item>192</item>
 	</string-array>
-   	
+
+	<string-array name="visualization_media_url_times">
+        <item>516</item>
+        <item>192</item>
+	</string-array>
+		
     <string name="track_timestamp">0:00 / 0:00</string>
     <string name="select_track_label">Select a track</string>
     <string name="current_track_label">Current Track</string>

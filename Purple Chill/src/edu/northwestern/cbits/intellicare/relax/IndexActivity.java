@@ -95,21 +95,31 @@ public class IndexActivity extends ConsentedActivity
 						playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.deep_breathing_media_urls);
 						playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.deep_breathing_media_url_titles);
 						playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.deep_breathing_media_url_times);
+						playerIntent.putExtra(GroupActivity.GROUP_DESCRIPTIONS, R.array.deep_breathing_descs);
 						break;
 					case 1:
 						playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.muscle_media_urls);
 						playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.muscle_media_url_titles);
 						playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.muscle_media_url_times);
+						playerIntent.putExtra(GroupActivity.GROUP_DESCRIPTIONS, R.array.muscle_descs);
 						break;
 					case 2:
 						playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.autogenic_media_urls);
 						playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.autogenic_media_url_titles);
 						playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.autogenic_media_url_times);
+						playerIntent.putExtra(GroupActivity.GROUP_DESCRIPTIONS, R.array.autogenic_descs);
+						break;
+					case 3:
+						playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.visualization_media_urls);
+						playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.visualization_media_url_titles);
+						playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.visualization_media_url_times);
+						playerIntent.putExtra(GroupActivity.GROUP_DESCRIPTIONS, R.array.visualization_descs);
 						break;
 					case 4:
 						playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.mindfulness_media_urls);
 						playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.mindfulness_media_url_titles);
 						playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.mindfulness_media_url_times);
+						playerIntent.putExtra(GroupActivity.GROUP_DESCRIPTIONS, R.array.mindfulness_descs);
 						break;
 				}
 				

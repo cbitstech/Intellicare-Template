@@ -37,6 +37,7 @@ public class GroupActivity extends ConsentedActivity
 	protected static final String GROUP_TIMES = "group_times";
 	protected static final String GROUP_TRACK = "group_track";
 	protected static final String STRESS_RATING = "stress_rating";
+	protected static final String GROUP_DESCRIPTIONS = "group_descriptions";
 	
 	private String _groupName = null;
 	
@@ -71,22 +72,26 @@ public class GroupActivity extends ConsentedActivity
         final ArrayList<String> recordings = new ArrayList<String>();
         final ArrayList<String> titles = new ArrayList<String>();
         final ArrayList<String> times = new ArrayList<String>();
+        final ArrayList<String> descriptions = new ArrayList<String>();
         
         final int titlesId = this.getIntent().getIntExtra(GroupActivity.GROUP_TITLES, -1);
         final int mediaId = this.getIntent().getIntExtra(GroupActivity.GROUP_MEDIA, -1);
         final int timesId = this.getIntent().getIntExtra(GroupActivity.GROUP_TIMES, -1);
+        final int groupsId = this.getIntent().getIntExtra(GroupActivity.GROUP_DESCRIPTIONS, -1);
 
         if (titlesId != -1 && mediaId != -1 && timesId != -1)
         {
             String[] mediaUrls = this.getResources().getStringArray(mediaId);
             String[] mediaTitles = this.getResources().getStringArray(titlesId);
             String[] mediaTimes = this.getResources().getStringArray(timesId);
+            String[] mediaDescs = this.getResources().getStringArray(groupsId);
             
             for (int i = 0; i < mediaUrls.length; i++)
             {
                 titles.add(mediaTitles[i]);
                 recordings.add(mediaUrls[i]);
                 times.add(GroupActivity.formatTime(mediaTimes[i]));
+                descriptions.add(mediaDescs[i]);
             }
         }
 
@@ -108,6 +113,9 @@ public class GroupActivity extends ConsentedActivity
                 
                 TextView title = (TextView) convertView.findViewById(R.id.recording_title);
                 title.setText(titles.get(position));
+
+                TextView description = (TextView) convertView.findViewById(R.id.recording_description);
+                description.setText(descriptions.get(position));
 
                 TextView time = (TextView) convertView.findViewById(R.id.recording_time);
                 time.setText(times.get(position));
@@ -168,7 +176,7 @@ public class GroupActivity extends ConsentedActivity
 	
 							Uri u = Uri.parse(recordings.get(i));
 							String title = titles.get(i);
-							String description = "TODO: FETCH FROM STEPHEN!";
+							String description = descriptions.get(i);
 							
 							me.startActivity(AudioFileManager.getInstance(me).launchIntentForUri(u, title, description));
 						}

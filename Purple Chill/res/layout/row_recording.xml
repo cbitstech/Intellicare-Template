@@ -2,18 +2,26 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-	<TextView android:id="@+id/recording_title"
+    <LinearLayout android:orientation="vertical"
 	    android:layout_width="0dp"
-	    android:layout_height="48dp"
-	    android:layout_weight="1"
-	    android:textSize="18sp" 
-	    android:gravity="center_vertical"
-	    android:background="#ffffffff" />
+	    android:layout_height="wrap_content"
+	    android:layout_weight="1">
+		<TextView android:id="@+id/recording_title"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:gravity="center_vertical"
+		    android:textSize="18sp" />
+		<TextView android:id="@+id/recording_description"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:textSize="14sp" 
+		    android:layout_marginRight="4dp"
+		    android:layout_marginBottom="4dp"
+		    android:layout_marginLeft="32dp" />
+	</LinearLayout>
 	<TextView android:id="@+id/recording_time"
 	    android:layout_width="wrap_content"
-	    android:layout_height="48dp"
+	    android:layout_height="wrap_content"
 	    android:textSize="18sp"
-	    android:paddingRight="4dp" 
-	    android:gravity="center_vertical"
-	    android:background="#ffffffff" />
+	    android:paddingRight="4dp"  />
 </LinearLayout>
