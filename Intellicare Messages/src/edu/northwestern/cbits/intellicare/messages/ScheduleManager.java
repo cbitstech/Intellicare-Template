@@ -366,7 +366,7 @@ public class ScheduleManager
 		
 		long firstRun = prefs.getLong(ScheduleManager.FIRST_RUN, 0);
 		
-		int startHour = Integer.parseInt(prefs.getString("config_day_start", "9"));
+		int startHour = Integer.parseInt(prefs.getString("config_day_start", "09"));
 		int endHour = Integer.parseInt(prefs.getString("config_day_end", "21"));
 		
 		Calendar calendar = Calendar.getInstance();
@@ -377,6 +377,9 @@ public class ScheduleManager
 
 		calendar.set(Calendar.HOUR_OF_DAY, startHour);
 		long start = calendar.getTimeInMillis();
+
+		calendar.set(Calendar.MINUTE, 59);
+		calendar.set(Calendar.SECOND, 59);
 
 		calendar.set(Calendar.HOUR_OF_DAY, endHour);
 		long end = calendar.getTimeInMillis();
@@ -404,7 +407,7 @@ public class ScheduleManager
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
 		
-		int startHour = Integer.parseInt(prefs.getString("config_day_start", "9"));
+		int startHour = Integer.parseInt(prefs.getString("config_day_start", "09"));
 		int endHour = Integer.parseInt(prefs.getString("config_day_end", "21"));
 		
 		long now = System.currentTimeMillis();
