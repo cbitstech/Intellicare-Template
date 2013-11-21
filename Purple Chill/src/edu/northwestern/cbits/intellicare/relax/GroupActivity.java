@@ -38,6 +38,7 @@ public class GroupActivity extends ConsentedActivity
 	protected static final String GROUP_TRACK = "group_track";
 	protected static final String STRESS_RATING = "stress_rating";
 	protected static final String GROUP_DESCRIPTIONS = "group_descriptions";
+	protected static final String TRACK_END = "track_end";
 	
 	private String _groupName = null;
 	

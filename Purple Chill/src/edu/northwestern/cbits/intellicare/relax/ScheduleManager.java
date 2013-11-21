@@ -14,6 +14,8 @@ import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class ScheduleManager
 {
+	public static final int NOTIFICATION_ID = 900;
+
 	private static ScheduleManager _instance = null;
 
 	private Context _context = null;
@@ -44,6 +46,9 @@ public class ScheduleManager
 	
 	private void remind()
 	{
+		if (AudioFileManager.getInstance(this._context).isPlaying())
+			return;
+		
 		LogManager.getInstance(this._context).log("reminder_shown", null);
 
 		Intent intent = new Intent(this._context, IndexActivity.class);
@@ -52,7 +57,7 @@ public class ScheduleManager
 		String title = this._context.getString(R.string.reminder_title);
 		String message = this._context.getString(R.string.reminder_message);
 		
-		StatusNotificationManager.getInstance(this._context).notifyBigText(900, R.drawable.ic_reminder, title, message, pi);
+		StatusNotificationManager.getInstance(this._context).notifyBigText(ScheduleManager.NOTIFICATION_ID, R.drawable.ic_reminder, title, message, pi);
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
 

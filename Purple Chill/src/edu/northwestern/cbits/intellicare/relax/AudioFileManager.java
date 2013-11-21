@@ -2,20 +2,24 @@ package edu.northwestern.cbits.intellicare.relax;
 
 import java.io.IOException;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.widget.MediaController.MediaPlayerControl;
+import edu.northwestern.cbits.intellicare.StatusNotificationManager;
 
-public class AudioFileManager implements MediaPlayerControl
+public class AudioFileManager implements MediaPlayerControl, OnCompletionListener
 {
 	public static final String TRACK_URI = "track_uri";
 	public static final String TRACK_TITLE = "track_title";
 	public static final String TRACK_DESCRIPTION = "track_description";
+	private static final int NOTIFICATION_ID = 901;
 	
 	private static AudioFileManager _instance = null;
 	
@@ -135,6 +139,8 @@ public class AudioFileManager implements MediaPlayerControl
 	public void pause() 
 	{
 		this._player.pause();
+		
+		StatusNotificationManager.getInstance(this._context).cancel(AudioFileManager.NOTIFICATION_ID);
 	}
 
 	public void seekTo(int location) 
@@ -148,6 +154,13 @@ public class AudioFileManager implements MediaPlayerControl
 			return;
 
 		this._player.start();
+		
+		StatusNotificationManager noteManager = StatusNotificationManager.getInstance(this._context);
+
+		noteManager.cancel(ScheduleManager.NOTIFICATION_ID);
+		
+		PendingIntent pi = PendingIntent.getActivity(this._context, 0, this.launchIntentForCurrentTrack(), PendingIntent.FLAG_UPDATE_CURRENT);
+		noteManager.notifyPersistentBigText(AudioFileManager.NOTIFICATION_ID, R.drawable.ic_reminder, this._context.getString(R.string.app_name), this._currentTitle, pi);
 	}
 
 	public void setTrackUri(Uri uri, String title, String description, OnPreparedListener listener) 
@@ -185,6 +198,7 @@ public class AudioFileManager implements MediaPlayerControl
 				this._player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
 
 				this._player.setOnPreparedListener(listener);
+				this._player.setOnCompletionListener(this);
 				
 				this._player.prepare();
 			} 
@@ -214,5 +228,17 @@ public class AudioFileManager implements MediaPlayerControl
 		{
 			this._player.setOnPreparedListener(null);
 		}
+	}
+
+	public void onCompletion(MediaPlayer player) 
+	{
+		StatusNotificationManager.getInstance(this._context).cancel(AudioFileManager.NOTIFICATION_ID);
+		
+		Intent intent = this.launchIntentForCurrentTrack();
+		intent.putExtra(PlayerActivity.REQUEST_STRESS, true);
+		
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+		this._context.startActivity(intent);
 	}
 }

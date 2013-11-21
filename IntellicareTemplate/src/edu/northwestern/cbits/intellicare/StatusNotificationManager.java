@@ -29,9 +29,14 @@ public class StatusNotificationManager
 		
 		return StatusNotificationManager._sharedInstance;
 	}
-	
-	@SuppressLint("NewApi")
+
 	public void notifyBigText(int appId, int icon, String title, String message, PendingIntent intent)
+	{
+		this.notifyBigText(appId, icon, title, message, intent);
+	}
+
+	@SuppressLint("NewApi")
+	public void notifyBigText(int appId, int icon, String title, String message, PendingIntent intent, boolean persistent)
 	{
 		Notification note = null;
 				
@@ -66,8 +71,25 @@ public class StatusNotificationManager
 		
 		NotificationManager manager = (NotificationManager) this._context.getSystemService(Context.NOTIFICATION_SERVICE);
 		
-		note.flags = Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE | Notification.FLAG_AUTO_CANCEL;
+		note.flags = Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE;
+		
+		if (persistent)
+			note.flags = note.flags | Notification.FLAG_NO_CLEAR;
+		else
+			note.flags = note.flags | Notification.FLAG_AUTO_CANCEL;
 		
 		manager.notify(appId, note);
+	}
+	
+	public void notifyPersistentBigText(int appId, int icon, String title, String message, PendingIntent intent)
+	{
+		this.notifyBigText(appId, icon, title, message, intent, true);
+	}
+	
+	public void cancel(int noteId)
+	{
+		NotificationManager manager = (NotificationManager) this._context.getSystemService(Context.NOTIFICATION_SERVICE);
+		
+		manager.cancel(noteId);
 	}
 }

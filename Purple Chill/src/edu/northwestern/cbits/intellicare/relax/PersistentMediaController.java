@@ -3,7 +3,6 @@ package edu.northwestern.cbits.intellicare.relax;
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.MediaController;
 
@@ -36,8 +35,6 @@ public class PersistentMediaController extends MediaController
 
 	public boolean dispatchKeyEvent(KeyEvent event)
 	{
-		Log.e("PC", "KEYCODE: " + event.getKeyCode());
-		
 		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK)
 		{
 			Context context = this.getContext();
