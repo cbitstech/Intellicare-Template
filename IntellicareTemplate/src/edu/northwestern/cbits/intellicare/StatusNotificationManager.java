@@ -32,7 +32,7 @@ public class StatusNotificationManager
 
 	public void notifyBigText(int appId, int icon, String title, String message, PendingIntent intent)
 	{
-		this.notifyBigText(appId, icon, title, message, intent);
+		this.notifyBigText(appId, icon, title, message, intent, false);
 	}
 
 	@SuppressLint("NewApi")

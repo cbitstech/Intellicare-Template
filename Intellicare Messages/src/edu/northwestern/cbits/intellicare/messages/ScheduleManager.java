@@ -12,7 +12,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import edu.northwestern.cbits.intellicare.PhqFourActivity;
 import edu.northwestern.cbits.intellicare.StatusNotificationManager;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
@@ -42,7 +41,7 @@ public class ScheduleManager
 		PendingIntent pi = PendingIntent.getBroadcast(this._context, 0, broadcast, PendingIntent.FLAG_UPDATE_CURRENT);
 		
 		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);
-///		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, 15000, pi);
+//		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, 60000, pi);
 	}
 
 	public static ScheduleManager getInstance(Context context)
@@ -112,12 +111,12 @@ public class ScheduleManager
 			if (notificationTime > 0)
 			{
 				boolean completed = prefs.getBoolean(ScheduleManager.INSTRUCTION_COMPLETED, false);
-				
+
 				if (index > 0 && index % 5 == 0 && completed == false)
 					index -= 5;
 				
 				Message msg = this.getMessage(currentLesson, index);
-				
+
 				if (msg != null)
 				{
 					if (now >= notificationTime)
@@ -359,15 +358,13 @@ public class ScheduleManager
 
 		long lastInst = prefs.getLong("last_instruction_notification", 0);
 		
-		Log.e("D2D", "OFF: " + this.getOffTime());
-		
 		if (index % 5 == 0 && now - lastInst < this.getOffTime())
-			return -1;
+		 	return -1;
 		
 		long firstRun = prefs.getLong(ScheduleManager.FIRST_RUN, 0);
 		
 		int startHour = Integer.parseInt(prefs.getString("config_day_start", "09"));
-		int endHour = Integer.parseInt(prefs.getString("config_day_end", "21"));
+		int endHour = Integer.parseInt(prefs.getString("config_day_end", "20"));
 		
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(now);
@@ -378,22 +375,22 @@ public class ScheduleManager
 		calendar.set(Calendar.HOUR_OF_DAY, startHour);
 		long start = calendar.getTimeInMillis();
 
-		calendar.set(Calendar.MINUTE, 59);
-		calendar.set(Calendar.SECOND, 59);
-
-		calendar.set(Calendar.HOUR_OF_DAY, endHour);
+		calendar.set(Calendar.HOUR_OF_DAY, endHour + 1);
 		long end = calendar.getTimeInMillis();
 
 		if (end < firstRun)
-			return -1; // Running after 9pm...
+			return -1;
 
 		if (start < firstRun)
 			start = firstRun;
+		
+		if (start < lastInst)
+			start = lastInst;
 
 		if (start > end)
 			end += (24 * 60 * 60 * 1000);
 		
-		if (now > start && now < end)
+		if (now > (start - 1800000) && now < (end + 1800000))
 		{
 			long delta = (end - start) / 5;
 	
@@ -408,7 +405,7 @@ public class ScheduleManager
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
 		
 		int startHour = Integer.parseInt(prefs.getString("config_day_start", "09"));
-		int endHour = Integer.parseInt(prefs.getString("config_day_end", "21"));
+		int endHour = Integer.parseInt(prefs.getString("config_day_end", "20"));
 		
 		long now = System.currentTimeMillis();
 		
@@ -429,7 +426,7 @@ public class ScheduleManager
 		
 		long onTime = end - start;
 		
-		return (24 * 60 * 60 * 1000) - onTime;
+		return onTime;
 	}
 
 	private class Message
