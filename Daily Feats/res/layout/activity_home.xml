@@ -38,40 +38,6 @@
             />
 
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/reminder_time_container"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="16dp"
-        >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:textAlignment="center"
-            android:textAllCaps="false"
-            android:textStyle="italic"
-            android:textSize="25sp"
-            android:text="Next Reminder: "
-            />
-
-        <Button
-            android:id="@+id/reminder_time_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-
-            android:text="8:30pm"
-            android:onClick="showTimePickerDialog"
-            >
-        </Button>
-    </LinearLayout>
-
     <LinearLayout
         android:id="@+id/feats_of_strength_container"
         android:orientation="vertical"

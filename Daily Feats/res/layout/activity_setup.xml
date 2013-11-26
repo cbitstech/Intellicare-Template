@@ -99,7 +99,6 @@
             android:paddingLeft="40dp"
             android:paddingRight="40dp"
 
-            android:text="@string/setup_2_question"
             />
 
         <RadioButton
@@ -109,7 +108,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
 
-            android:text="@string/setup_2_level_1"
             android:onClick="onDepressionLevelClicked"/>
         <RadioButton
             android:id="@+id/radio_level_2"
@@ -118,7 +116,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
 
-            android:text="@string/setup_2_level_2"
             android:onClick="onDepressionLevelClicked"/>
         <RadioButton
             android:id="@+id/radio_level_3"
@@ -126,7 +123,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
 
-            android:text="@string/setup_2_level_3"
             android:onClick="onDepressionLevelClicked"/>
         <RadioButton
             android:id="@+id/radio_level_4"
@@ -134,7 +130,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
 
-            android:text="@string/setup_2_level_4"
             android:onClick="onDepressionLevelClicked"/>
     </RadioGroup>
 

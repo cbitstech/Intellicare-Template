@@ -7,16 +7,9 @@ import java.util.HashMap;
 /**
  * Created by Gabe on 9/19/13.
  */
-public class AppConstants {
-
-    // DEFAULTS
-    public static int defaultReminderHour = 18;
-    public static int defaultReminderMinutes = 0;
-
-
+public class AppConstants 
+{
     // PREFERENCE KEYS
-    public static final String reminderHourKey      = "preferred_hour";
-    public static final String reminderMinutesKey   = "preferred_minutes";
     public static final String currentStreakKey     = "current_streak";
     public static final String currentSetupKey      = "current_setup_step";
 
@@ -36,7 +29,6 @@ public class AppConstants {
     public static final String dbName = "daily_feats_database";
     public static final String checklistsTableName = "checklists";
     public static final String featResponsesTableName = "feat_responses";
-    public static final String checklistLevelKey = "checklist_level";
     public static final String dateTakenKey = "date_taken_on";
     public static final String dateTimeTakenKey = "datetime_taken_at";
     public static final String featOfStrengthKey = "feat_of_strength";
@@ -69,9 +61,16 @@ public class AppConstants {
     public static final String facedChallengeKey = "faced_challenge";
     public static final String avoidedChallengeKey = "avoided_challenge";
 
+    public static final String DEPRESSION_LEVEL = "depression_level";
+	public static final String REMINDER_HOUR = "preferred_hour";
+	public static final String REMINDER_MINUTE = "preferred_minutes";
+	public static final int DEFAULT_HOUR = 18;
+	public static final int DEFAULT_MINUTE = 0;
+	protected static final String SUPPORTERS = "supporters";
+
     // The AllFeats object that represents the collection of all possible
     // Items we can ask the user about.
-    public static ArrayList<Feat> AllFeats = new ArrayList();
+    public static ArrayList<Feat> AllFeats = new ArrayList<Feat>();
 
     // shareFeatText maps a feat name, which serves as a unique identifier for a
     // type of feat to the appropriate string to display when sharing responses

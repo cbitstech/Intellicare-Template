@@ -29,18 +29,18 @@ public class DbHelper extends SQLiteOpenHelper
 
         db.execSQL("CREATE TABLE IF NOT EXISTS "+CHECKLISTS_TABLE+"(" +
                 ID_COLUMN+" INTEGER PRIMARY KEY NOT NULL," +
-                AppConstants.checklistLevelKey + " INTEGER NOT NULL," +
+                AppConstants.DEPRESSION_LEVEL + " INTEGER NOT NULL," +
                 AppConstants.dateTakenKey + " VARCHAR(23) NOT NULL," +
                 AppConstants.dateTimeTakenKey + " INTEGER NOT NULL," +
                 AppConstants.featOfStrengthKey + " TEXT" +
                 ");");
 
-        db.execSQL("CREATE INDEX IF NOT EXISTS chklst_"+AppConstants.checklistLevelKey+
-                " ON "+CHECKLISTS_TABLE+"("+AppConstants.checklistLevelKey+");");
+        db.execSQL("CREATE INDEX IF NOT EXISTS chklst_"+AppConstants.DEPRESSION_LEVEL+
+                " ON "+CHECKLISTS_TABLE+"("+AppConstants.DEPRESSION_LEVEL+");");
         db.execSQL("CREATE INDEX IF NOT EXISTS chklst_"+AppConstants.dateTakenKey+
                 " ON "+CHECKLISTS_TABLE+"("+AppConstants.dateTakenKey+");");
-        db.execSQL("CREATE INDEX IF NOT EXISTS chklst_"+AppConstants.checklistLevelKey+
-                " ON "+CHECKLISTS_TABLE+"("+AppConstants.checklistLevelKey+");");
+        db.execSQL("CREATE INDEX IF NOT EXISTS chklst_"+AppConstants.DEPRESSION_LEVEL+
+                " ON "+CHECKLISTS_TABLE+"("+AppConstants.DEPRESSION_LEVEL+");");
 
 
         db.execSQL("CREATE TABLE IF NOT EXISTS "+FEAT_RESPONSES_TABLE+"("+

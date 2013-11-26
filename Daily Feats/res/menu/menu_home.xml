@@ -1,0 +1,7 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:ic="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_time"
+        android:title="@string/label_time"
+        ic:showAsAction="always"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_action_alarm" />
+</menu>

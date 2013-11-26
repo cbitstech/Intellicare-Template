@@ -1,5 +1,6 @@
 package edu.northwestern.cbits.intellicare.dailyfeats;
 
+import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,32 +11,34 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by Gabe on 9/16/13.
  */
-public class HomeActivity extends FragmentActivity {
-
-    private SharedPreferences prefs;
+public class HomeActivity extends ConsentedActivity 
+{
     private Cursor matchingResponses;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) 
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
     }
 
-    @Override
-    protected void onResume() {
+    protected void onResume() 
+    {
         super.onResume();
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         // This one displays Feat labels and their total counts.
         // Defining an instance of an Array Adapter, anonymously sub-classed with a different view method
@@ -68,8 +71,7 @@ public class HomeActivity extends FragmentActivity {
         final TextView streak = (TextView) this.findViewById(R.id.completion_streak);
         streak.setText( String.valueOf(getCompletionStreakCount()) );
 
-        final Button changeReminderBtn = (Button) this.findViewById(R.id.reminder_time_button);
-        changeReminderBtn.setText(getReminderTimeString());
+        this.getSupportActionBar().setSubtitle(this.getString(R.string.subtitle_next_reminder, this.getReminderTimeString()));
 
         final TextView recentFeat = (TextView) this.findViewById(R.id.most_recent_feat);
         String rfText = getRecentStrengthFeat();
@@ -98,7 +100,10 @@ public class HomeActivity extends FragmentActivity {
 
     }
 
-    private int getCompletionStreakCount() {
+    private int getCompletionStreakCount() 
+    {
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+    	
         Log.d("HomeActivity", "Look up completion streak");
         int currentStreak = prefs.getInt(AppConstants.currentStreakKey, 0);
         return currentStreak;
@@ -162,11 +167,12 @@ public class HomeActivity extends FragmentActivity {
      *  -Gabe
      **/
     private String getReminderTimeString() {
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         String amPM;
         String minutes;
-        int reminderHour = prefs.getInt(AppConstants.reminderHourKey,    AppConstants.defaultReminderHour);
-        int reminderMins = prefs.getInt(AppConstants.reminderMinutesKey, AppConstants.defaultReminderMinutes);
+        int reminderHour = prefs.getInt(AppConstants.REMINDER_HOUR,    AppConstants.DEFAULT_HOUR);
+        int reminderMins = prefs.getInt(AppConstants.REMINDER_MINUTE, AppConstants.DEFAULT_MINUTE);
 
         if (reminderHour > 12) {
             amPM = "PM";
@@ -187,7 +193,7 @@ public class HomeActivity extends FragmentActivity {
     }
 
     public void showTimePickerDialog(View v) {
-        DialogFragment newFragment = new TimePickerFragment();
+        DialogFragment newFragment = new TimePickerFragment(null);
         newFragment.show(getSupportFragmentManager(), "timePicker");
     }
 
@@ -212,4 +218,25 @@ public class HomeActivity extends FragmentActivity {
                 null,
                 order);
     }
+    
+	public boolean onCreateOptionsMenu(Menu menu) 
+	{
+		this.getMenuInflater().inflate(R.menu.menu_home, menu);
+
+		return true;
+	}
+	
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+			case R.id.action_time:
+				Toast.makeText(this, "sHoW tIme PicKer", Toast.LENGTH_LONG).show();
+				
+				break;
+		}
+
+		return true;
+	}
+
 }

@@ -1,0 +1,21 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <ListView
+        android:id="@+id/feats_checklist"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+		android:layout_weight="1"
+        android:layout_marginBottom="8dp" />
+    <View android:background="@color/bottom_bar_border"
+        android:layout_width="match_parent"
+        android:layout_height="1.5dp" />
+    <EditText android:id="@+id/feat_of_strength"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:hint="@string/daily_FOS_label"
+        android:inputType="textAutoCorrect" />
+</LinearLayout>
