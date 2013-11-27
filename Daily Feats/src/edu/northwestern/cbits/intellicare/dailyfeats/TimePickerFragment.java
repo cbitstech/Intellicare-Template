@@ -20,6 +20,11 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
 {
 	private OnDismissListener mDismiss = null;
 
+	public TimePickerFragment()
+	{
+		super();
+	}
+
 	public TimePickerFragment(OnDismissListener dismiss)
 	{
 		super();
