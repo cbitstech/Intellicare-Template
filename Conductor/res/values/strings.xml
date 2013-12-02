@@ -1,8 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">Intellicare</string>
 
     <string name="action_apps">More Apps</string>
     <string name="action_settings">Settings</string>
+
+    <string-array name="app_names">
+        <item>Day-to-Day</item>
+        <item>Purple Chill</item>
+        <item>Daily Feats</item>
+    </string-array>
+    
+    <string-array name="app_icons">
+        <item>https://dl0tgz6ee3upo.cloudfront.net/production/apps/icons/000/043/002/retina/9d2675eaa21e1730a72b0c698ee9e11e.png</item>
+        <item>https://dl0tgz6ee3upo.cloudfront.net/production/apps/icons/000/044/474/retina/b3c93f69f8e9bf5a11abadc1d1e02b1f.png</item>
+        <item>https://dl0tgz6ee3upo.cloudfront.net/production/apps/icons/000/049/686/retina/0888dec269a639f371764f762f6cf983.png</item>
+    </string-array>
+
+    <string-array name="app_messages">
+        <item>It\'s time to read your next message.</item>
+        <item></item>
+        <item>Your daily feats are due!</item>
+	</string-array>
+    
+    <string-array name="app_badges">
+        <item>1</item>
+        <item>0</item>
+        <item>3</item>
+   	</string-array>
+
+    <string name="message_subtitle" formatted="false">%s: %s</string>
+    <string name="message_date_format">EEEE, M/d</string>
+
+    <string name="title_settings">Intellicare Settings</string>
+    <string name="settings_group_notification">Notification Options</string>
+    <string name="title_forward_notifications">Forward notifications</string>
+    <string name="desc_forward_notifications">Send notifications to the system status bar.</string>
 </resources>
