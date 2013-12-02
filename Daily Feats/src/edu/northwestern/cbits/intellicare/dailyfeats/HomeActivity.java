@@ -7,17 +7,20 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
+
 import android.annotation.SuppressLint;
+import android.app.TimePickerDialog;
+import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.DialogFragment;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 /**
@@ -33,7 +37,9 @@ import edu.northwestern.cbits.intellicare.ConsentedActivity;
  */
 public class HomeActivity extends ConsentedActivity 
 {
-    public void onCreate(Bundle savedInstanceState) 
+	private static final String APP_ID = "b1fd44d7db88602fa8185ac896a153b1";
+
+	public void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
         
@@ -131,6 +137,9 @@ public class HomeActivity extends ConsentedActivity
         }
         else
         	featText.setText(R.string.no_feats_yet);
+
+		UpdateManager.register(this, APP_ID);
+		CrashManager.register(this, APP_ID);
     }
 
 	protected Feat mostRecentFeat() 
@@ -259,15 +268,27 @@ public class HomeActivity extends ConsentedActivity
 			case R.id.action_time:
 				final HomeActivity me = this;
 				
-		        DialogFragment timeFragment = new TimePickerFragment(new OnDismissListener()
-		        {
-					public void onDismiss(DialogInterface dialog) 
-					{
-				        me.getSupportActionBar().setSubtitle(me.getString(R.string.subtitle_next_reminder, me.getReminderTimeString()));
-					}
-		        });
+		    	final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		        
-		        timeFragment.show(this.getSupportFragmentManager(), "timePicker");
+		    	int hour = prefs.getInt(ScheduleManager.REMINDER_HOUR, ScheduleManager.DEFAULT_HOUR);
+		        int minutes = prefs.getInt(ScheduleManager.REMINDER_MINUTE, ScheduleManager.DEFAULT_MINUTE);
+
+				TimePickerDialog timeDialog = new TimePickerDialog(this, new OnTimeSetListener()
+				{
+					public void onTimeSet(TimePicker arg0, int hour, int minute) 
+					{
+				        SharedPreferences.Editor editor = prefs.edit();
+				        
+				        editor.putInt(ScheduleManager.REMINDER_HOUR, hour);
+				        editor.putInt(ScheduleManager.REMINDER_MINUTE, minute);
+				        editor.commit();
+
+						me.getSupportActionBar().setSubtitle(me.getString(R.string.subtitle_next_reminder, me.getReminderTimeString()));
+					}
+					
+				}, hour, minutes, DateFormat.is24HourFormat(this));
+				
+				timeDialog.show();
 
 				break;
 			case R.id.action_checkin:

@@ -6,9 +6,9 @@ import java.util.List;
 
 import org.json.JSONArray;
 
+import android.app.TimePickerDialog;
+import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -18,8 +18,8 @@ import android.preference.PreferenceManager;
 import android.provider.CallLog;
 import android.provider.CallLog.Calls;
 import android.provider.ContactsContract.Contacts;
-import android.support.v4.app.DialogFragment;
 import android.telephony.PhoneNumberUtils;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,6 +33,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.TimePicker;
 import android.widget.Toast;
 import edu.emory.mathcs.backport.java.util.Collections;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
@@ -45,14 +46,14 @@ public class IntroActivity extends ConsentedActivity
 	private List<ContactRecord> mContacts = new ArrayList<ContactRecord>();
 	private HashSet<String> mSelectedContacts = new HashSet<String>();
 	private Toast mToast = null;
+
+	protected int _dialogId = 0;
 	
     protected void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
 
         this.setContentView(R.layout.activity_intro);
-
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         final IntroActivity me = this;
         
@@ -73,6 +74,8 @@ public class IntroActivity extends ConsentedActivity
         {
 			public void onClick(View view) 
 			{
+		        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
+
 				if (me.mStep == 1 && prefs.contains(FeatsProvider.DEPRESSION_LEVEL) == false)
 				{
 					Toast.makeText(me, R.string.depression_toast, Toast.LENGTH_LONG).show();
@@ -80,16 +83,27 @@ public class IntroActivity extends ConsentedActivity
 				}
 				else if (me.mStep == 4)
 				{
-			        DialogFragment timeFragment = new TimePickerFragment(new OnDismissListener()
-			        {
-						public void onDismiss(DialogInterface dialog) 
+			    	int hour = prefs.getInt(ScheduleManager.REMINDER_HOUR, ScheduleManager.DEFAULT_HOUR);
+			        int minutes = prefs.getInt(ScheduleManager.REMINDER_MINUTE, ScheduleManager.DEFAULT_MINUTE);
+
+					TimePickerDialog timeDialog = new TimePickerDialog(me, new OnTimeSetListener()
+					{
+						public void onTimeSet(TimePicker arg0, int hour, int minute) 
 						{
+					        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
+					        SharedPreferences.Editor editor = prefs.edit();
+					        
+					        editor.putInt(ScheduleManager.REMINDER_HOUR, hour);
+					        editor.putInt(ScheduleManager.REMINDER_MINUTE, minute);
+					        editor.commit();
+
 							me.mStep += 1;
 							me.updateLayout();
 						}
-			        });
-			        
-			        timeFragment.show(me.getSupportFragmentManager(), "timePicker");
+						
+					}, hour, minutes, DateFormat.is24HourFormat(me));
+					
+					timeDialog.show();
 
 					return;
 				}
@@ -147,6 +161,7 @@ public class IntroActivity extends ConsentedActivity
         {
 			public void onCheckedChanged(RadioGroup group, int id) 
 			{
+		        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
 				Editor e = prefs.edit();
 				
 				switch(id)
