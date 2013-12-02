@@ -4,6 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +19,8 @@ import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 public class LaunchActivity extends ConsentedActivity 
 {
+	private static final String APP_ID = "455953ac6a6eb7c89be9af9848731279";
+
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
@@ -69,7 +74,6 @@ public class LaunchActivity extends ConsentedActivity
 			startToday += (15 * 60 * 1000);
 		}
 
-
 		TextView scheduledText = (TextView) this.findViewById(R.id.next_schedule_time);
 
 		if (scheduled != null)
@@ -79,6 +83,9 @@ public class LaunchActivity extends ConsentedActivity
 		}
 		else
 			scheduledText.setText(R.string.launch_date_none);
+		
+		UpdateManager.register(this, APP_ID);
+		CrashManager.register(this, APP_ID);
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) 

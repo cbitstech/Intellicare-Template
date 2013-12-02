@@ -47,6 +47,7 @@ public class LessonsActivity extends ConsentedActivity
 		ScheduleManager.getInstance(this);
 		
 		UpdateManager.register(this, APP_ID);
+		CrashManager.register(this, APP_ID);
 	}
 	
 	public void onResume()
