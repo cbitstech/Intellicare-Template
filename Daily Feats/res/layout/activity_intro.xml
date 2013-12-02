@@ -1,0 +1,102 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+	<LinearLayout android:id="@+id/web_layout"
+	    android:layout_height="0dp"
+	    android:layout_weight="1"
+	    android:layout_width="match_parent"
+	    android:orientation="vertical"
+	    android:visibility="visible">
+   	    <WebView android:id="@+id/web_view"
+	        android:layout_width="match_parent"
+	        android:layout_height="0dp"
+	        android:layout_weight="1" />
+	</LinearLayout>
+	<LinearLayout android:id="@+id/mood_layout"
+	    android:layout_height="0dp"
+	    android:layout_weight="1"
+	    android:layout_width="match_parent"
+	    android:orientation="vertical"
+	    android:visibility="gone">
+        <TextView android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/depression_question"
+            android:layout_margin="16dp"
+            android:textSize="18sp" />
+		<RadioGroup android:id="@+id/depression_level"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:orientation="vertical"
+	        android:layout_margin="16dp">
+	        <RadioButton
+	            android:id="@+id/depression_question_0"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:textSize="18sp"
+	            android:layout_marginBottom="8dp"
+	            android:text="@string/depression_question_0" />
+	        <RadioButton
+	            android:id="@+id/depression_question_1"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_marginBottom="8dp"
+	            android:textSize="18sp"
+	            android:text="@string/depression_question_1" />
+			<RadioButton
+	            android:id="@+id/depression_question_2"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_marginBottom="8dp"
+	            android:textSize="18sp"
+	            android:text="@string/depression_question_2" />
+	        <RadioButton
+	            android:id="@+id/depression_question_3"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:textSize="18sp"
+	            android:text="@string/depression_question_3" />
+	    </RadioGroup>
+	</LinearLayout>
+	<LinearLayout android:id="@+id/supporters_layout"
+	    android:layout_height="0dp"
+	    android:layout_weight="1"
+	    android:layout_width="match_parent"
+	    android:orientation="vertical"
+	    android:visibility="gone">
+        <TextView android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/supporters_prompt"
+            android:layout_margin="16dp"
+            android:textSize="14sp" />
+		<View android:background="@color/bottom_bar_border"
+	        android:layout_width="match_parent"
+	        android:layout_height="1.5dp" />
+		<ListView android:id="@+id/supporters_list"
+		    android:layout_width="match_parent"
+		    android:layout_height="0dp"
+		    android:layout_weight="1" />	    
+	</LinearLayout>
+    <View android:background="@color/bottom_bar_border"
+        android:layout_width="match_parent"
+        android:layout_height="1.5dp" />
+    <LinearLayout android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bottom_bar_gray"
+        android:padding="4dp">
+        <Button android:id="@+id/back_button"
+            android:layout_height="48dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/button_previous" />
+        <View android:layout_height="48dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"/>
+        <Button android:id="@+id/next_button"
+            android:layout_height="48dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/button_next" />
+    </LinearLayout>
+</LinearLayout>

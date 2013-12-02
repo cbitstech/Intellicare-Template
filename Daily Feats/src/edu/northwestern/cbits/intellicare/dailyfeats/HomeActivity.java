@@ -1,160 +1,105 @@
 package edu.northwestern.cbits.intellicare.dailyfeats;
 
+import java.util.ArrayList;
+
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 /**
  * Created by Gabe on 9/16/13.
  */
-public class HomeActivity extends FragmentActivity {
-
-    private SharedPreferences prefs;
-    private Cursor matchingResponses;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+public class HomeActivity extends ConsentedActivity 
+{
+    public void onCreate(Bundle savedInstanceState) 
+    {
         super.onCreate(savedInstanceState);
+        
         setContentView(R.layout.activity_home);
     }
 
-    @Override
-    protected void onResume() {
+    protected void onResume() 
+    {
         super.onResume();
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        TextView days = (TextView) this.findViewById(R.id.days_count);
+        days.setText("" + this.dayStreakCount());
+        
+        TextView today = (TextView) this.findViewById(R.id.today_count);
+        today.setText("" + this.todayCount());
+        
+        this.getSupportActionBar().setSubtitle(this.getString(R.string.subtitle_next_reminder, this.getReminderTimeString()));
 
-        // This one displays Feat labels and their total counts.
-        // Defining an instance of an Array Adapter, anonymously sub-classed with a different view method
-        ArrayAdapter<Feat> featsAdapter = new ArrayAdapter<Feat>(this, R.layout.p_feat_count, AppConstants.AllFeats) {
+        ArrayList<ContentValues> feats = new ArrayList<ContentValues>();
+        
+        Cursor c = this.getContentResolver().query(FeatsProvider.FEATS_URI, null, null, null, "feat_level, feat_name");
+        
+        while (c.moveToNext())
+        {
+        	ContentValues feat = new ContentValues();
+        	
+        	feat.put("feat_name", c.getString(c.getColumnIndex("feat_name")));
+        	feat.put("feat_level", c.getInt(c.getColumnIndex("feat_level")));
+        	
+        	feats.add(feat);
+        }
+        
+        c.close();
 
+        ArrayAdapter<ContentValues> featsAdapter = new ArrayAdapter<ContentValues>(this, R.layout.row_feat_count, feats) 
+		{
             public View getView (int position, View convertView, ViewGroup parent)
             {
-                // Does this view already exist (i.e., recycling an old one),
-                // or are we creating it for the first time?
                 if (convertView == null)
                 {
                     LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    convertView = inflater.inflate(R.layout.p_feat_count, null);
+                    convertView = inflater.inflate(R.layout.row_feat_count, null);
                 }
 
-                final Feat f = getItem(position);
-
+                ContentValues feat = this.getItem(position);
 
                 TextView countView = (TextView) convertView.findViewById(R.id.feat_count);
-                countView.setText(String.valueOf(getFeatCount(f)));
+                countView.setText(feat.getAsString("feat_level").trim());
 
                 TextView featLabel = (TextView) convertView.findViewById(R.id.feat_label);
-                featLabel.setText(f.getFeatLabel());
+                featLabel.setText(feat.getAsString("feat_name").trim());
 
                 return convertView;
             }
 
         };
 
-        final TextView streak = (TextView) this.findViewById(R.id.completion_streak);
-        streak.setText( String.valueOf(getCompletionStreakCount()) );
-
-        final Button changeReminderBtn = (Button) this.findViewById(R.id.reminder_time_button);
-        changeReminderBtn.setText(getReminderTimeString());
-
-        final TextView recentFeat = (TextView) this.findViewById(R.id.most_recent_feat);
-        String rfText = getRecentStrengthFeat();
-        if (!rfText.equals("")) {
-            recentFeat.setText( rfText );
-        }
-        else {
-            recentFeat.setText( getString(R.string.no_feats_of_strength) );
-            final Button moreStrengths = (Button) this.findViewById(R.id.all_strength_feats_button);
-            moreStrengths.setVisibility(View.GONE);
-        }
-
-        final Button viewFOSBtn = (Button) this.findViewById(R.id.all_strength_feats_button);
-        viewFOSBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent i = new Intent(HomeActivity.this, ViewFeatCollectionActivity.class);
-                startActivity(i);
-            }
-        });
-
-        final TextView featsTotal = (TextView) this.findViewById(R.id.feats_total);
-        featsTotal.setText( String.valueOf(getTotalFeatCount()) );
-
-        final ListView featsList = (ListView) this.findViewById(R.id.show_feats_list);
+        ListView featsList = (ListView) this.findViewById(R.id.feats_list);
         featsList.setAdapter(featsAdapter);
-
     }
 
-    private int getCompletionStreakCount() {
-        Log.d("HomeActivity", "Look up completion streak");
-        int currentStreak = prefs.getInt(AppConstants.currentStreakKey, 0);
-        return currentStreak;
-    }
+    private int todayCount() 
+    {
+		return -1;
+	}
 
-    private int getFeatCount(Feat feat) {
-        matchingResponses = getContentResolver().query(DailyFeatsStore.FEATRESPONSES_URI,
-                                        // columns
-                                        new String[] {
-                                                AppConstants.featNameKey,
-                                                AppConstants.featCompletedKey
-                                        },
-                                        // where clause
-                                        AppConstants.featCompletedKey+" = 1"+
-                                        " AND "+
-                                        AppConstants.featNameKey+" = ?",
-                                        // where clause values:
-                                        new String[]{ feat.getFeatName() },
-                                        // sort order
-                                        null);
-        int total = matchingResponses.getCount();
-        matchingResponses.close();
-        return total;
-    }
+	private int dayStreakCount() 
+	{
+		return -1;
+	}
 
-    private String getRecentStrengthFeat() {
-        matchingResponses = listsWithFeatsOfStrength(new String[]{
-                                AppConstants.featOfStrengthKey,
-                                AppConstants.dateTimeTakenKey
-                            }, AppConstants.dateTimeTakenKey+" DESC");
-
-        String text = "";
-        if (matchingResponses.getCount() > 0) {
-            matchingResponses.moveToFirst();
-            int i = matchingResponses.getColumnIndex(AppConstants.featOfStrengthKey);
-
-            while ( text.equals("") && !matchingResponses.isAfterLast() ) {
-                text = matchingResponses.getString(i);
-                matchingResponses.moveToNext();
-            }
-
-        }
-
-        matchingResponses.close();
-        return text;
-    }
-
-    private int getTotalFeatCount() {
-        int count;
-        matchingResponses = completedFeats(new String[] {AppConstants.featCompletedKey}, null);
-        count = matchingResponses.getCount();
-        matchingResponses.close();
-        return count;
-    }
-
-    /**
+	/**
      *  getReminderTimeString
      *  duplicated between Setup Activity and HomeActivity
      *  out of expediency, and not sure how to share functions that depend on Android Context
@@ -162,11 +107,12 @@ public class HomeActivity extends FragmentActivity {
      *  -Gabe
      **/
     private String getReminderTimeString() {
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         String amPM;
         String minutes;
-        int reminderHour = prefs.getInt(AppConstants.reminderHourKey,    AppConstants.defaultReminderHour);
-        int reminderMins = prefs.getInt(AppConstants.reminderMinutesKey, AppConstants.defaultReminderMinutes);
+        int reminderHour = prefs.getInt(AppConstants.REMINDER_HOUR,    AppConstants.DEFAULT_HOUR);
+        int reminderMins = prefs.getInt(AppConstants.REMINDER_MINUTE, AppConstants.DEFAULT_MINUTE);
 
         if (reminderHour > 12) {
             amPM = "PM";
@@ -186,30 +132,39 @@ public class HomeActivity extends FragmentActivity {
         return String.valueOf(reminderHour)+":"+minutes+" "+amPM;
     }
 
-    public void showTimePickerDialog(View v) {
-        DialogFragment newFragment = new TimePickerFragment();
-        newFragment.show(getSupportFragmentManager(), "timePicker");
-    }
+    
+	public boolean onCreateOptionsMenu(Menu menu) 
+	{
+		this.getMenuInflater().inflate(R.menu.menu_home, menu);
 
+		return true;
+	}
+	
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+			case R.id.action_time:
+				final HomeActivity me = this;
+				
+		        DialogFragment timeFragment = new TimePickerFragment(new OnDismissListener()
+		        {
+					public void onDismiss(DialogInterface dialog) 
+					{
+				        me.getSupportActionBar().setSubtitle(me.getString(R.string.subtitle_next_reminder, me.getReminderTimeString()));
+					}
+		        });
+		        
+		        timeFragment.show(this.getSupportFragmentManager(), "timePicker");
 
-    public Cursor listsWithFeatsOfStrength(String[] projection, String order) {
-        return getContentResolver().query(
-                DailyFeatsStore.CHECKLISTS_URI,
-                // columns
-                projection,
-                // where clause
-                AppConstants.featOfStrengthKey+" IS NOT NULL AND "+
-                        AppConstants.featOfStrengthKey+" != ''",
-                // where clause values
-                null,
-                order);
-    }
+				break;
+			case R.id.action_checkin:
+				this.startActivity(new Intent(this, FeatsChecklistActivity.class));
+				
+				break;
+		}
 
-    public Cursor completedFeats(String[] projection, String order) {
-        return getContentResolver().query(DailyFeatsStore.FEATRESPONSES_URI,
-                projection,
-                AppConstants.featCompletedKey+" = 1",
-                null,
-                order);
-    }
+		return true;
+	}
+
 }

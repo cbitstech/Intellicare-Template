@@ -5,7 +5,7 @@ import android.support.v7.app.ActionBarActivity;
 
 public class ConsentedActivity extends ActionBarActivity 
 {
-	public void onResume()
+	protected void onResume()
 	{
 		super.onResume();
 		

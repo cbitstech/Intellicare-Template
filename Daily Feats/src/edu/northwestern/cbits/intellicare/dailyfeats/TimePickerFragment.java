@@ -1,45 +1,63 @@
 package edu.northwestern.cbits.intellicare.dailyfeats;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.widget.TimePicker;
 
 /**
  * Created by Gabe on 9/19/13.
  */
-public class TimePickerFragment extends DialogFragment
-        implements TimePickerDialog.OnTimeSetListener {
 
-    private SharedPreferences prefs;
+public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener 
+{
+	private OnDismissListener mDismiss = null;
 
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+	public TimePickerFragment()
+	{
+		super();
+	}
 
-        /*  get current reminder times,
-        **  and instantiate new Time Picker.
-         */
+	public TimePickerFragment(OnDismissListener dismiss)
+	{
+		super();
+		
+		this.mDismiss = dismiss;
+	}
+	
+    public Dialog onCreateDialog(Bundle savedInstanceState) 
+    {
+    	Activity activity = this.getActivity();
+    	
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+        
+    	int hour = prefs.getInt(AppConstants.REMINDER_HOUR, AppConstants.DEFAULT_HOUR);
+        int minutes = prefs.getInt(AppConstants.REMINDER_MINUTE, AppConstants.DEFAULT_MINUTE);
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        int hour = prefs.getInt(AppConstants.reminderHourKey, AppConstants.defaultReminderHour);
-        int minutes = prefs.getInt(AppConstants.reminderMinutesKey, AppConstants.defaultReminderMinutes);
-
-        return new TimePickerDialog(getActivity(), this, hour, minutes,
-                DateFormat.is24HourFormat(getActivity()));
+        return new TimePickerDialog(activity, this, hour, minutes, DateFormat.is24HourFormat(activity));
+    }
+    
+    public void onDismiss(DialogInterface dialog)
+    {
+    	if (this.mDismiss != null)
+    		this.mDismiss.onDismiss(dialog);
     }
 
-    /*  Store selected times in preferences
-     */
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        Log.d("Prefs:Update", "Updating Reminder Time To (h,m): "+String.valueOf(hourOfDay)+":"+String.valueOf(minute));
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute)
+    {
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt(AppConstants.reminderHourKey, hourOfDay);
-        editor.putInt(AppConstants.reminderMinutesKey, minute);
+        
+        editor.putInt(AppConstants.REMINDER_HOUR, hourOfDay);
+        editor.putInt(AppConstants.REMINDER_MINUTE, minute);
         editor.commit();
     }
 }

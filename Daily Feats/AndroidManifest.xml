@@ -3,44 +3,49 @@
     package="edu.northwestern.cbits.intellicare.dailyfeats"
     android:versionCode="10000"
     android:versionName="1.0.0" >
-    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="18" />
-    <application
-        android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
-        <activity
-            android:name="edu.northwestern.cbits.intellicare.dailyfeats.StartupActivity"
-            android:label="@string/app_name" >
+   	<uses-permission android:name="android.permission.INTERNET" />
+   	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
+   	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.READ_CALL_LOG" />
+	<uses-permission android:name="android.permission.READ_CONTACTS" />
+	<uses-sdk android:minSdkVersion="9" android:targetSdkVersion="19" />
+    <application android:allowBackup="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:theme="@style/AppTheme" >
+        <activity android:name="edu.northwestern.cbits.intellicare.dailyfeats.StartupActivity" android:label="@string/app_name" android:theme="@style/Theme.AppCompat.Light">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="edu.northwestern.cbits.intellicare.dailyfeats.HomeActivity"
-            android:label="@string/app_name" >
+        <activity android:name="edu.northwestern.cbits.intellicare.dailyfeats.HomeActivity"
+            android:label="@string/app_name" 
+            android:theme="@style/Theme.AppCompat.Light">
         </activity>
-        <activity
-            android:name="edu.northwestern.cbits.intellicare.dailyfeats.SetupActivity"
-            android:label="@string/app_name" >
+        <activity android:name="edu.northwestern.cbits.intellicare.dailyfeats.IntroActivity"
+            android:label="@string/app_name" 
+            android:theme="@style/Theme.AppCompat.Light">
         </activity>
-        <activity
-            android:name="edu.northwestern.cbits.intellicare.dailyfeats.CompleteFeatsChecklistActivity"
-            android:label="@string/title_activity_complete_feats_checklist" >
+        <activity android:name="edu.northwestern.cbits.intellicare.dailyfeats.FeatsChecklistActivity"
+            android:label="@string/title_activity_complete_feats_checklist" 
+            android:theme="@style/Theme.AppCompat.Light">
         </activity>
-        <activity
-            android:name="edu.northwestern.cbits.intellicare.dailyfeats.ChangeReminderActivity"
-            android:label="@string/title_activity_change_reminder" >
+        <activity android:name="edu.northwestern.cbits.intellicare.dailyfeats.ChangeReminderActivity"
+            android:label="@string/title_activity_change_reminder" 
+            android:theme="@style/Theme.AppCompat.Light">
         </activity>
-        <activity
-            android:name="edu.northwestern.cbits.intellicare.dailyfeats.ViewFeatCollectionActivity"
-            android:label="@string/title_activity_view_feat_collection" >
+        <activity android:name="edu.northwestern.cbits.intellicare.dailyfeats.ViewFeatCollectionActivity"
+            android:label="@string/title_activity_view_feat_collection" 
+            android:theme="@style/Theme.AppCompat.Light">
         </activity>
-        <provider
-            android:name="edu.northwestern.cbits.intellicare.dailyfeats.DailyFeatsStore"
+        <provider android:name="edu.northwestern.cbits.intellicare.dailyfeats.FeatsProvider"
             android:authorities="edu.northwestern.cbits.intellicare.dailyfeats"
             android:exported="false" />
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.ConsentActivity" android:label="@string/app_name" />
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.PhqFourActivity" android:label="@string/app_name" />
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.MotivationActivity" android:label="@string/app_name" />
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.DemographicActivity" android:label="@string/app_name" />
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.RecruitmentActivity" android:label="@string/app_name" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="edu.northwestern.cbits.intellicare.DialogActivity" android:label="@string/app_name" />
+		<activity android:name="net.hockeyapp.android.UpdateActivity" />
     </application>
 </manifest>
