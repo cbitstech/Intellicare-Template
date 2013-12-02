@@ -1,5 +1,6 @@
 package edu.northwestern.cbits.intellicare.dailyfeats;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -16,6 +17,7 @@ import android.widget.TimePicker;
  * Created by Gabe on 9/19/13.
  */
 
+@SuppressLint("ValidFragment")
 public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener 
 {
 	private OnDismissListener mDismiss = null;
@@ -38,8 +40,8 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
     	
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
         
-    	int hour = prefs.getInt(AppConstants.REMINDER_HOUR, AppConstants.DEFAULT_HOUR);
-        int minutes = prefs.getInt(AppConstants.REMINDER_MINUTE, AppConstants.DEFAULT_MINUTE);
+    	int hour = prefs.getInt(ScheduleManager.REMINDER_HOUR, ScheduleManager.DEFAULT_HOUR);
+        int minutes = prefs.getInt(ScheduleManager.REMINDER_MINUTE, ScheduleManager.DEFAULT_MINUTE);
 
         return new TimePickerDialog(activity, this, hour, minutes, DateFormat.is24HourFormat(activity));
     }
@@ -56,8 +58,8 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
 
         SharedPreferences.Editor editor = prefs.edit();
         
-        editor.putInt(AppConstants.REMINDER_HOUR, hourOfDay);
-        editor.putInt(AppConstants.REMINDER_MINUTE, minute);
+        editor.putInt(ScheduleManager.REMINDER_HOUR, hourOfDay);
+        editor.putInt(ScheduleManager.REMINDER_MINUTE, minute);
         editor.commit();
     }
 }

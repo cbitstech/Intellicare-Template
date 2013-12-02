@@ -11,35 +11,23 @@
 	<uses-permission android:name="android.permission.READ_CONTACTS" />
 	<uses-sdk android:minSdkVersion="9" android:targetSdkVersion="19" />
     <application android:allowBackup="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:theme="@style/AppTheme" >
+		<receiver android:name="edu.northwestern.cbits.intellicare.dailyfeats.ScheduleHelper">
+		    <intent-filter>
+		        <action android:name="android.intent.action.BOOT_COMPLETED"/>
+		    </intent-filter>
+		</receiver>
         <activity android:name="edu.northwestern.cbits.intellicare.dailyfeats.StartupActivity" android:label="@string/app_name" android:theme="@style/Theme.AppCompat.Light">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="edu.northwestern.cbits.intellicare.dailyfeats.HomeActivity"
-            android:label="@string/app_name" 
-            android:theme="@style/Theme.AppCompat.Light">
-        </activity>
-        <activity android:name="edu.northwestern.cbits.intellicare.dailyfeats.IntroActivity"
-            android:label="@string/app_name" 
-            android:theme="@style/Theme.AppCompat.Light">
-        </activity>
-        <activity android:name="edu.northwestern.cbits.intellicare.dailyfeats.FeatsChecklistActivity"
-            android:label="@string/title_activity_complete_feats_checklist" 
-            android:theme="@style/Theme.AppCompat.Light">
-        </activity>
-        <activity android:name="edu.northwestern.cbits.intellicare.dailyfeats.ChangeReminderActivity"
-            android:label="@string/title_activity_change_reminder" 
-            android:theme="@style/Theme.AppCompat.Light">
-        </activity>
-        <activity android:name="edu.northwestern.cbits.intellicare.dailyfeats.ViewFeatCollectionActivity"
-            android:label="@string/title_activity_view_feat_collection" 
-            android:theme="@style/Theme.AppCompat.Light">
-        </activity>
-        <provider android:name="edu.northwestern.cbits.intellicare.dailyfeats.FeatsProvider"
-            android:authorities="edu.northwestern.cbits.intellicare.dailyfeats"
-            android:exported="false" />
+        <activity android:name="edu.northwestern.cbits.intellicare.dailyfeats.HomeActivity" android:label="@string/title_activity_view_feat_collection" android:theme="@style/Theme.AppCompat.Light" />
+        <activity android:name="edu.northwestern.cbits.intellicare.dailyfeats.IntroActivity" android:label="@string/title_activity_view_feat_collection" android:theme="@style/Theme.AppCompat.Light" />
+        <activity android:name="edu.northwestern.cbits.intellicare.dailyfeats.ChecklistActivity" android:label="@string/title_activity_view_feat_collection" android:theme="@style/Theme.AppCompat.Light" />
+        <activity android:name="edu.northwestern.cbits.intellicare.dailyfeats.ChangeReminderActivity" android:label="@string/title_activity_view_feat_collection" android:theme="@style/Theme.AppCompat.Light" />
+        <activity android:name="edu.northwestern.cbits.intellicare.dailyfeats.ViewFeatCollectionActivity" android:label="@string/title_activity_view_feat_collection" android:theme="@style/Theme.AppCompat.Light" />
+        <provider android:name="edu.northwestern.cbits.intellicare.dailyfeats.FeatsProvider" android:authorities="edu.northwestern.cbits.intellicare.dailyfeats" android:exported="false" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.ConsentActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.PhqFourActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.MotivationActivity" android:label="@string/app_name" />

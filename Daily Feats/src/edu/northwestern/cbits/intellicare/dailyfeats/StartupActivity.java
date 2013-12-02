@@ -18,6 +18,8 @@ public class StartupActivity extends Activity
 			this.startActivity(new Intent(this, HomeActivity.class));
 		else
 			this.startActivity(new Intent(this, IntroActivity.class));
+		
+		ScheduleManager.getInstance(this);
     }
 
     protected void onResume() 

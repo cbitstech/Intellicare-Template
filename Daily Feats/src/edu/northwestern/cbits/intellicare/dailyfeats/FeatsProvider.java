@@ -10,7 +10,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
-import android.util.Log;
 
 public class FeatsProvider extends android.content.ContentProvider
 {
@@ -25,6 +24,9 @@ public class FeatsProvider extends android.content.ContentProvider
 
     public static final Uri RESPONSES_URI = Uri.parse("content://" + AUTHORITY + "/" + RESPONSES_TABLE);
     public static final Uri FEATS_URI = Uri.parse("content://" + AUTHORITY + "/" + FEATS_TABLE);
+
+    public static final String DEPRESSION_LEVEL = "depression_level";
+	protected static final String SUPPORTERS = "supporters";
 
     private UriMatcher mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     private SQLiteDatabase mDb = null;
@@ -147,9 +149,7 @@ public class FeatsProvider extends android.content.ContentProvider
 			}
     	};
     	
-    	Log.e("DF", "A");
         this.mDb = helper.getWritableDatabase();
-    	Log.e("DF", "B");
 
         return true;
     }

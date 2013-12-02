@@ -118,5 +118,11 @@
 	<string name="feat_4_1">I strengthened a good habit.</string>
 	<string name="feat_4_2">I faced something I wanted to avoid.</string>
 	<string name="feat_4_3">I avoided something I wish I had faced.</string>
+
+	<string name="no_feats_yet">No feats completed yet.</string>
+	<string name="recent_feat" formatted="false">%s\n%s</string>
 	
+	<string name="note_title">Daily Feats</string>
+	<string name="note_message">It\'s time to enter your feats for the day!</string>
+		
 </resources>

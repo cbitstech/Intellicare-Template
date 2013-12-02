@@ -1,15 +1,17 @@
 package edu.northwestern.cbits.intellicare.dailyfeats;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,10 +20,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ListView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
-public class FeatsChecklistActivity extends ConsentedActivity
+public class ChecklistActivity extends ConsentedActivity
 {
     private ArrayList<ContentValues> mCurrentFeats = null;
     private int mCurrentFeatsLevel = -1;
@@ -39,7 +42,7 @@ public class FeatsChecklistActivity extends ConsentedActivity
     {
         super.onResume();
         
-        final FeatsChecklistActivity me = this;
+        final ChecklistActivity me = this;
 
         this.mCurrentFeats = this.feats();
 
@@ -57,8 +60,10 @@ public class FeatsChecklistActivity extends ConsentedActivity
 
                 CheckBox check = (CheckBox) convertView.findViewById(R.id.feat_checkbox);
                 
+                boolean completed = me.featCompletedToday(feat.getAsString("feat_name"));
+                
                 check.setText(feat.getAsString("feat_name"));
-//                check.setChecked(f.isCompleted());
+                check.setChecked(completed);
                 check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
                 {
                     public void onCheckedChanged(CompoundButton button, boolean checked)
@@ -69,6 +74,9 @@ public class FeatsChecklistActivity extends ConsentedActivity
                     		me.mCompletedFeats.remove(button.getText().toString());
                     }
                 });
+                
+                if (completed)
+                	check.setEnabled(false);
 
                 return convertView;
             }
@@ -78,7 +86,29 @@ public class FeatsChecklistActivity extends ConsentedActivity
         featsList.setAdapter(featsAdapter);
     }
     
-    private ArrayList<ContentValues> feats() 
+    @SuppressLint("SimpleDateFormat")
+	protected boolean featCompletedToday(String feat) 
+    {
+    	String selection = "feat = ?";
+    	String[] args = { feat };
+    	
+    	Cursor c = this.getContentResolver().query(FeatsProvider.RESPONSES_URI, null, selection, args, "recorded DESC");
+    	
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+    	
+    	long recorded = 0;
+    	
+    	if (c.moveToNext())
+    	{
+    		recorded = c.getLong(c.getColumnIndex("recorded"));
+    	}
+
+    	c.close();
+    	
+		return sdf.format(new Date(recorded)).equals(sdf.format(System.currentTimeMillis()));
+	}
+
+	private ArrayList<ContentValues> feats() 
     {
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
     	
@@ -153,8 +183,6 @@ public class FeatsChecklistActivity extends ConsentedActivity
 		switch (item.getItemId())
 		{
 			case R.id.action_save:
-				Log.e("DF", "SAVED ITEMS: " + this.mCompletedFeats);
-				
 				long now = System.currentTimeMillis();
 				
 				for (String feat : this.mCompletedFeats)
@@ -167,6 +195,20 @@ public class FeatsChecklistActivity extends ConsentedActivity
 					
 					this.getContentResolver().insert(FeatsProvider.RESPONSES_URI, response);
 				}
+				
+				EditText strengthFeat = (EditText) this.findViewById(R.id.feat_of_strength);
+				String strength = strengthFeat.getText().toString();
+				
+				if (strength.trim().length() > 0)
+				{
+					ContentValues response = new ContentValues();
+					
+					response.put("recorded", now + 5);
+					response.put("depression_level", this.mCurrentFeatsLevel);
+					response.put("feat", strength.trim());
+					
+					this.getContentResolver().insert(FeatsProvider.RESPONSES_URI, response);
+				}
 
                 this.finish();
 				
@@ -175,5 +217,4 @@ public class FeatsChecklistActivity extends ConsentedActivity
 
 		return true;
 	}
-
 }

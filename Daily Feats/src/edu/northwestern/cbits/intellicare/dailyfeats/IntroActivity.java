@@ -73,7 +73,7 @@ public class IntroActivity extends ConsentedActivity
         {
 			public void onClick(View view) 
 			{
-				if (me.mStep == 1 && prefs.contains(AppConstants.DEPRESSION_LEVEL) == false)
+				if (me.mStep == 1 && prefs.contains(FeatsProvider.DEPRESSION_LEVEL) == false)
 				{
 					Toast.makeText(me, R.string.depression_toast, Toast.LENGTH_LONG).show();
 					return;
@@ -121,7 +121,7 @@ public class IntroActivity extends ConsentedActivity
 						supporters.put(supporter);
 					
 					Editor e = prefs.edit();
-					e.putString(AppConstants.SUPPORTERS, supporters.toString());
+					e.putString(FeatsProvider.SUPPORTERS, supporters.toString());
 					e.commit();
 				}
 				
@@ -152,16 +152,16 @@ public class IntroActivity extends ConsentedActivity
 				switch(id)
 				{
 					case R.id.depression_question_0:
-						e.putInt(AppConstants.DEPRESSION_LEVEL, 1);
+						e.putInt(FeatsProvider.DEPRESSION_LEVEL, 1);
 						break;
 					case R.id.depression_question_1:
-						e.putInt(AppConstants.DEPRESSION_LEVEL, 2);
+						e.putInt(FeatsProvider.DEPRESSION_LEVEL, 2);
 						break;
 					case R.id.depression_question_2:
-						e.putInt(AppConstants.DEPRESSION_LEVEL, 3);
+						e.putInt(FeatsProvider.DEPRESSION_LEVEL, 3);
 						break;
 					case R.id.depression_question_3:
-						e.putInt(AppConstants.DEPRESSION_LEVEL, 4);
+						e.putInt(FeatsProvider.DEPRESSION_LEVEL, 4);
 						break;
 				}
 				
@@ -261,7 +261,7 @@ public class IntroActivity extends ConsentedActivity
 		{
 			case 1:
 				Editor e = prefs.edit();
-				e.remove(AppConstants.DEPRESSION_LEVEL);
+				e.remove(FeatsProvider.DEPRESSION_LEVEL);
 				e.commit();
 				
 				moodLayout.setVisibility(View.VISIBLE);
@@ -269,7 +269,7 @@ public class IntroActivity extends ConsentedActivity
 			case 3:
 				webLayout.setVisibility(View.VISIBLE);
 				
-				switch (prefs.getInt(AppConstants.DEPRESSION_LEVEL, 0))
+				switch (prefs.getInt(FeatsProvider.DEPRESSION_LEVEL, 0))
 				{
 					case 4:
 						webView.loadUrl("file:///android_asset/help_3_4.html");
