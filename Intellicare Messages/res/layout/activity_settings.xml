@@ -14,12 +14,17 @@
 		    android:summary="@string/desc_day_end"
 		    android:entries="@array/list_hour_labels"
 		    android:entryValues="@array/list_hour_values"
-		    android:defaultValue="20" />        
+		    android:defaultValue="20" />
+		<Preference android:title="@string/diagnostics_title"
+		    android:icon="@drawable/ic_action_gear">
+		    <intent android:targetPackage="edu.northwestern.cbits.intellicare.messages"
+        		android:targetClass="edu.northwestern.cbits.intellicare.messages.DiagnosticActivity" />
+		</Preference>
 	</PreferenceCategory>
     <PreferenceCategory android:title="@string/settings_group_notification">
 		<CheckBoxPreference android:key="show_notification"
 		    android:title="@string/title_use_notifications"
-		    android:icon="@drawable/ic_action_alarm"
+		    android:icon="@drawable/ic_action_bulb"
 		    android:summary="@string/desc_use_notifications"
 		    android:defaultValue="false" />        
 	</PreferenceCategory>

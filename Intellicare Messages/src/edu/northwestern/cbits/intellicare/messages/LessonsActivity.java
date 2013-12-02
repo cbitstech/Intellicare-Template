@@ -25,10 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.ConsentActivity;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
-import edu.northwestern.cbits.intellicare.DemographicActivity;
 import edu.northwestern.cbits.intellicare.MotivationActivity;
 import edu.northwestern.cbits.intellicare.PhqFourActivity;
-import edu.northwestern.cbits.intellicare.RecruitmentActivity;
 
 public class LessonsActivity extends ConsentedActivity 
 {
@@ -242,7 +240,7 @@ public class LessonsActivity extends ConsentedActivity
 			Intent helpIntent = new Intent(this, HelpActivity.class);
 			this.startActivity(helpIntent);
 		}
-		else if (item.getItemId() == R.id.action_phq_four)
+/*		else if (item.getItemId() == R.id.action_phq_four)
 		{
 			Intent phqIntent = new Intent(this, RecruitmentActivity.class);
 //			Intent phqIntent = new Intent(this, PhqFourActivity.class);
@@ -262,7 +260,7 @@ public class LessonsActivity extends ConsentedActivity
 		{
 			Intent motivationIntent = new Intent(this, MotivationActivity.class);
 			this.startActivity(motivationIntent);
-		}
+		} */
 		
 		return true;
 	}

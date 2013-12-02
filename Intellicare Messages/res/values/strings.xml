@@ -266,4 +266,13 @@
   	<string name="settings_group_notification">Notification Settings</string>
   	<string name="title_use_notifications">Use status notifications</string>
   	<string name="desc_use_notifications">Show messages in the status bar instead of interrupting the current activity.</string>
+  	
+  	<string name="diagnostics_title">App Diagnostics</string>
+  	<string name="fire_dates_title">Upcoming Message Prompts</string>
+
+  	<string name="launch_description">Day-to-Day will prompt you throughout the day with messages and exercises that help improve your mood.</string>
+  	<string name="launch_next_message">Your next message is scheduled for:</string>
+  	<string name="launch_date_format">\'Shortly after \'h:mm a\' on \'EEEE\'.\'</string>
+  	<string name="launch_date_none">No upcoming messages scheduled.</string>
+  					
 </resources>

@@ -41,7 +41,6 @@ public class ScheduleManager
 		PendingIntent pi = PendingIntent.getBroadcast(this._context, 0, broadcast, PendingIntent.FLAG_UPDATE_CURRENT);
 		
 		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);
-//		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, 60000, pi);
 	}
 
 	public static ScheduleManager getInstance(Context context)
@@ -165,7 +164,6 @@ public class ScheduleManager
 								this._context.startActivity(intent);
 							
 							e.putLong("last_instruction_notification", System.currentTimeMillis());
-							
 						}
 						else
 						{
@@ -352,7 +350,7 @@ public class ScheduleManager
 		return message;
 	}
 
-	private long getNotificationTime(int index, long now) 
+	public long getNotificationTime(int index, long now) 
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
 
@@ -373,6 +371,7 @@ public class ScheduleManager
 		calendar.set(Calendar.SECOND, 0);
 
 		calendar.set(Calendar.HOUR_OF_DAY, startHour);
+
 		long start = calendar.getTimeInMillis();
 
 		calendar.set(Calendar.HOUR_OF_DAY, endHour + 1);
@@ -387,10 +386,13 @@ public class ScheduleManager
 		if (start < lastInst)
 			start = lastInst;
 
-		if (start > end)
+		if (start >= end)
 			end += (24 * 60 * 60 * 1000);
 		
-		if (now > (start - 1800000) && now < (end + 1800000))
+		if (end - start < (3 * 60 * 60 * 1000))
+			end = start + (3 * 60 * 60 * 1000);
+		
+		if (now > start && now < end)
 		{
 			long delta = (end - start) / 5;
 	
@@ -424,9 +426,9 @@ public class ScheduleManager
 		if (start > end)
 			end += (24 * 60 * 60 * 1000);
 		
-		long onTime = end - start;
+		long offTime = end - start;
 		
-		return onTime;
+		return offTime;
 	}
 
 	private class Message
