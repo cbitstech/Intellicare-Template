@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 public class StartupActivity extends Activity 
 {
@@ -14,8 +13,6 @@ public class StartupActivity extends Activity
         super.onCreate(savedInstanceState);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-        
-        Log.e("DF", "SHOW INTRO: " +  prefs.contains(IntroActivity.INTRO_SHOWN) + " -- " + prefs.getBoolean(IntroActivity.INTRO_SHOWN, false));
         
 		if (prefs.getBoolean(IntroActivity.INTRO_SHOWN, false))
 			this.startActivity(new Intent(this, HomeActivity.class));

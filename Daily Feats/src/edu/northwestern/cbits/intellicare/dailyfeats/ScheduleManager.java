@@ -1,7 +1,6 @@
 package edu.northwestern.cbits.intellicare.dailyfeats;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -10,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import edu.northwestern.cbits.intellicare.StatusNotificationManager;
 
 public class ScheduleManager
@@ -66,8 +64,6 @@ public class ScheduleManager
 		c.set(Calendar.MILLISECOND, 0);
 		
 		long scheduled = c.getTimeInMillis();
-		
-		Log.e("DF", "SCHED: " + new Date(scheduled) + " -- " + new Date(lastNotification) + " (" + (lastNotification < scheduled && now > scheduled) + ")");
 		
 		if (lastNotification < scheduled && now > scheduled)
 		{
