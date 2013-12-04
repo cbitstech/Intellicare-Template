@@ -8,4 +8,8 @@
         android:id="@+id/action_settings"
         robot:showAsAction="never"
         android:title="@string/action_settings"/>
+    <item
+        android:id="@+id/action_hello"
+        robot:showAsAction="never"
+        android:title="hElLo WoRlD"/>
 </menu>

@@ -187,6 +187,11 @@ public class MainActivity extends ConsentedActivity
 			Intent nativeIntent = new Intent(this, SettingsActivity.class);
 			this.startActivity(nativeIntent);
 		}
+		else if (item.getItemId() == R.id.action_hello)
+		{
+			Intent nativeIntent = new Intent(this, HelloWorldActivity.class);
+			this.startActivity(nativeIntent);
+		}
 		
 		return true;
 	}
