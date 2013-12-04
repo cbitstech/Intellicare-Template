@@ -14,14 +14,22 @@
          android:paddingLeft="8dp"
          android:paddingRight="8dp"
          android:layout_weight="1">
-         <TextView android:id="@+id/app_message"
+         <TextView android:id="@+id/app_name"
              android:textSize="18sp"
              android:layout_height="wrap_content"
-             android:layout_width="match_parent" />
-         <TextView android:id="@+id/app_message_details"
+             android:layout_width="match_parent" 
+             android:text="(Application name goes here...)"/>
+         <TextView android:id="@+id/app_details"
              android:textSize="12sp"
-             android:textStyle="bold"
              android:layout_height="wrap_content"
-             android:layout_width="match_parent" />
+             android:layout_width="match_parent" 
+             android:text="(Reason for recommending app goes here...)"/>
      </LinearLayout>
+     <ImageButton android:src="@drawable/ic_action_download"
+         android:layout_marginTop="12dp"
+         android:layout_marginBottom="12dp"
+         android:layout_marginLeft="12dp"
+         android:layout_marginRight="12dp"
+         android:layout_width="48dp"
+         android:layout_height="48dp" />
 </LinearLayout>

@@ -247,16 +247,9 @@ public class ContentProvider
             }
         };
         
-        if (next != null)
-        {
-            Thread t = new Thread(r);
-            t.start();
+        Thread t = new Thread(r);
+        t.start();
 
-            return null;
-        }
-
-        r.run();
-
-        return ContentProvider.fetchCachedUri(context, uri, next);
+        return null;
     }
 }

@@ -8,17 +8,22 @@ import java.util.Date;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,14 +46,15 @@ public class MainActivity extends ConsentedActivity
 		private String _message = null;
 		private String _name = null;
 		private long _time = 0;
+		private boolean _expired = false;
 
-		public AppCell(String name, Uri icon, String message, int badgeCount) 
+		public AppCell(String name, Uri icon, String message, int badgeCount, long time) 
 		{
 			this._iconUri = icon;
 			this._message = message;
 			this._name = name;
 			
-			this._time = System.currentTimeMillis() - (1000 * 60 * this._message.length());
+			this._time = time;
 		}
 
 		public Uri iconUri() 
@@ -70,6 +76,16 @@ public class MainActivity extends ConsentedActivity
 		{
 			return this._name ;
 		}
+
+		public boolean getExpired() 
+		{
+			return this._expired;
+		}
+
+		public void setExpired(boolean expired) 
+		{
+			this._expired  = expired;
+		}
 	}
 
 	public void onResume()
@@ -90,12 +106,17 @@ public class MainActivity extends ConsentedActivity
 		
 		for (int i = 0; i < appNames.length; i++)
 		{
-			AppCell cell = new AppCell(appNames[i], Uri.parse(appIcons[i]), appMessages[i], Integer.parseInt(appBadges[i]));
+			long time = System.currentTimeMillis() - (9 * 1000 * 60 * 60 * i);
+			
+			AppCell cell = new AppCell(appNames[i], Uri.parse(appIcons[i]), appMessages[i], Integer.parseInt(appBadges[i]), time);
+
+			if (i > 2)
+				cell.setExpired(true);
 			
 			apps.add(cell);
 		}
 		
-        ArrayAdapter<AppCell> adapter = new ArrayAdapter<AppCell>(this, R.layout.cell_app, apps)
+        ArrayAdapter<AppCell> adapter = new ArrayAdapter<AppCell>(this, R.layout.cell_app, apps.subList(0, 3))
         {
             public View getView(int position, View convertView, ViewGroup parent)
             {
@@ -138,7 +159,7 @@ public class MainActivity extends ConsentedActivity
 		{
 			public int compare(AppCell one, AppCell two) 
 			{
-				return (int) (one.getTime() - two.getTime());
+				return (int) (two.getTime() - one.getTime());
 			}
 		});
         
@@ -162,6 +183,29 @@ public class MainActivity extends ConsentedActivity
 
                 UriImageView icon = (UriImageView) convertView.findViewById(R.id.icon);
                 
+                if (app.getExpired())
+                {
+                    ColorMatrix matrix = new ColorMatrix();
+                    matrix.setSaturation(0);
+                    matrix.setScale(1, 1, 1, 0.5f);
+
+                    ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+                    icon.setColorFilter(filter);
+                    
+                    titleView.setTextColor(Color.argb(128, 0, 0, 0));
+                    subtitleView.setTextColor(Color.argb(128, 0, 0, 0));
+                    
+                    convertView.setBackgroundColor(Color.argb(255, 240, 240, 240));
+                }
+                else
+                {
+                	icon.setColorFilter(null);
+                    titleView.setTextColor(Color.argb(255, 0, 0, 0));
+                    subtitleView.setTextColor(Color.argb(255, 0, 0, 0));
+
+                    convertView.setBackgroundColor(Color.argb(255, 255, 255, 255));
+                }
+                
                 icon.setCachedImageUri(app.iconUri());
 
                 return convertView;
@@ -170,7 +214,16 @@ public class MainActivity extends ConsentedActivity
 
         ListView messagesList = (ListView) this.findViewById(R.id.messages);
         messagesList.setAdapter(messagesAdapter);
-
+        
+        ImageView avatar = (ImageView) this.findViewById(R.id.avatar_view);
+        avatar.setOnClickListener(new OnClickListener()
+        {
+			public void onClick(View view) 
+			{
+				Intent nativeIntent = new Intent(me, AvatarActivity.class);
+				me.startActivity(nativeIntent);
+			}
+        });
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) 
@@ -187,12 +240,12 @@ public class MainActivity extends ConsentedActivity
 			Intent nativeIntent = new Intent(this, SettingsActivity.class);
 			this.startActivity(nativeIntent);
 		}
-		else if (item.getItemId() == R.id.action_hello)
+		else if (item.getItemId() == R.id.action_store)
 		{
-			Intent nativeIntent = new Intent(this, HelloWorldActivity.class);
+			Intent nativeIntent = new Intent(this, AppStoreActivity.class);
 			this.startActivity(nativeIntent);
 		}
-		
+
 		return true;
 	}
 }
