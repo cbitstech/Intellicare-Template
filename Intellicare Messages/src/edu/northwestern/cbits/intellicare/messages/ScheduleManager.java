@@ -107,7 +107,7 @@ public class ScheduleManager
 			
 			long notificationTime = this.getNotificationTime(index % 5, now);
 			
-			if (notificationTime > 0)
+			if (notificationTime > 0 && Math.abs(now - notificationTime) < (30 * 60 * 1000))
 			{
 				boolean completed = prefs.getBoolean(ScheduleManager.INSTRUCTION_COMPLETED, false);
 
@@ -374,7 +374,7 @@ public class ScheduleManager
 
 		long start = calendar.getTimeInMillis();
 
-		calendar.set(Calendar.HOUR_OF_DAY, endHour + 1);
+		calendar.set(Calendar.HOUR_OF_DAY, endHour);
 		long end = calendar.getTimeInMillis();
 
 		if (end < firstRun)
@@ -392,9 +392,9 @@ public class ScheduleManager
 		if (end - start < (3 * 60 * 60 * 1000))
 			end = start + (3 * 60 * 60 * 1000);
 		
-		if (now > start && now < end)
+		if (now > (start - 1800000) && now < (end + 1800000))
 		{
-			long delta = (end - start) / 5;
+			long delta = (end - start) / 4;
 	
 			return start + (index * delta);
 		}
