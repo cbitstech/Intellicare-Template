@@ -17,6 +17,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -44,6 +45,12 @@ public class HomeActivity extends ConsentedActivity
         super.onCreate(savedInstanceState);
         
         setContentView(R.layout.activity_home);
+        
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        
+		Editor e = prefs.edit();
+		e.putBoolean(IntroActivity.INTRO_SHOWN, true);
+		e.commit();
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -140,6 +147,8 @@ public class HomeActivity extends ConsentedActivity
 
 		UpdateManager.register(this, APP_ID);
 		CrashManager.register(this, APP_ID);
+		
+		ScheduleManager.getInstance(this);
     }
 
 	protected Feat mostRecentFeat() 
@@ -228,7 +237,7 @@ public class HomeActivity extends ConsentedActivity
      **/
     private String getReminderTimeString() 
     {
-    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 
         String amPM;
         String minutes;
@@ -268,7 +277,7 @@ public class HomeActivity extends ConsentedActivity
 			case R.id.action_time:
 				final HomeActivity me = this;
 				
-		    	final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		    	final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 		        
 		    	int hour = prefs.getInt(ScheduleManager.REMINDER_HOUR, ScheduleManager.DEFAULT_HOUR);
 		        int minutes = prefs.getInt(ScheduleManager.REMINDER_MINUTE, ScheduleManager.DEFAULT_MINUTE);

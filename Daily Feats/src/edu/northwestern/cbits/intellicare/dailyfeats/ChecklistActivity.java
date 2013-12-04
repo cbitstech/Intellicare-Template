@@ -110,12 +110,12 @@ public class ChecklistActivity extends ConsentedActivity
 
 	private ArrayList<ContentValues> feats() 
     {
-    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
     	
     	String selection = "feat_level = ?";
     	String[] args = { "3" };
     	
-        this.mCurrentFeatsLevel = prefs.getInt(getString(R.string.currentFeatsLevelKey), 2);
+        this.mCurrentFeatsLevel = prefs.getInt(FeatsProvider.DEPRESSION_LEVEL, 2);
         
         ArrayList<ContentValues> feats = new ArrayList<ContentValues>();
         

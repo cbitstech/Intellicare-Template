@@ -74,7 +74,7 @@ public class IntroActivity extends ConsentedActivity
         {
 			public void onClick(View view) 
 			{
-		        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
+		        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me.getApplicationContext());
 
 				if (me.mStep == 1 && prefs.contains(FeatsProvider.DEPRESSION_LEVEL) == false)
 				{
@@ -90,8 +90,7 @@ public class IntroActivity extends ConsentedActivity
 					{
 						public void onTimeSet(TimePicker arg0, int hour, int minute) 
 						{
-					        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
-					        SharedPreferences.Editor editor = prefs.edit();
+					        Editor editor = prefs.edit();
 					        
 					        editor.putInt(ScheduleManager.REMINDER_HOUR, hour);
 					        editor.putInt(ScheduleManager.REMINDER_MINUTE, minute);
@@ -146,10 +145,6 @@ public class IntroActivity extends ConsentedActivity
 				}
 				else
 				{
-					Editor e = prefs.edit();
-					e.putBoolean(IntroActivity.INTRO_SHOWN, true);
-					e.commit();
-					
 					me.startActivity(new Intent(me, HomeActivity.class));
 					me.finish();
 				}
@@ -161,7 +156,7 @@ public class IntroActivity extends ConsentedActivity
         {
 			public void onCheckedChanged(RadioGroup group, int id) 
 			{
-		        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
+		        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me.getApplicationContext());
 				Editor e = prefs.edit();
 				
 				switch(id)
@@ -256,7 +251,7 @@ public class IntroActivity extends ConsentedActivity
 		moodLayout.setVisibility(View.GONE);
 		supportersLayout.setVisibility(View.GONE);
 
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 
         Button back = (Button) this.findViewById(R.id.back_button);
         
