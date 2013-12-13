@@ -28,7 +28,7 @@ public class UriImageView extends ImageView
 	{
 		final UriImageView me = this;
 		
-		final Uri imageUri = ContentProvider.fetchCachedUri(this.getContext(), uri, new Runnable()
+		final Uri imageUri = ConductorContentProvider.fetchCachedUri(this.getContext(), uri, new Runnable()
 		{
 			public void run() 
 			{
@@ -38,7 +38,7 @@ public class UriImageView extends ImageView
 				{
 					public void run() 
 					{
-						Uri imageUri = ContentProvider.fetchCachedUri(me.getContext(), uri, null);
+						Uri imageUri = ConductorContentProvider.fetchCachedUri(me.getContext(), uri, null);
 						
 						me.setImageURI(imageUri);
 						

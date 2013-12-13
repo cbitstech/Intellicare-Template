@@ -2,18 +2,15 @@ package edu.northwestern.cbits.intellicare.conductor;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,12 +28,14 @@ import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 public class MainActivity extends ConsentedActivity
 {
+	private boolean _showAll = true;
+	
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
 	
 		this.setContentView(R.layout.activity_main);
-
+		
 //		UpdateManager.register(this, APP_ID);
 	}
 	
@@ -88,6 +87,7 @@ public class MainActivity extends ConsentedActivity
 		}
 	}
 
+	@SuppressLint("SimpleDateFormat")
 	public void onResume()
 	{
 		super.onResume();
@@ -145,76 +145,6 @@ public class MainActivity extends ConsentedActivity
             }
         });
         
-        ArrayList<AppCell> messages = new ArrayList<AppCell>();
-        
-        for (AppCell app : apps)
-        {
-        	String message = app.getMessage();
-        	
-        	if (message != null && message.trim().length() > 0)
-        		messages.add(app);
-        }
-        
-        Collections.sort(messages, new Comparator<AppCell>()
-		{
-			public int compare(AppCell one, AppCell two) 
-			{
-				return (int) (two.getTime() - one.getTime());
-			}
-		});
-        
-        ArrayAdapter<AppCell> messagesAdapter = new ArrayAdapter<AppCell>(this, R.layout.row_app_message, messages) 
-		{
-            public View getView (int position, View convertView, ViewGroup parent)
-            {
-                if (convertView == null)
-                {
-                    LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    convertView = inflater.inflate(R.layout.row_app_message, null);
-                }
-
-                AppCell app = this.getItem(position);
-
-                TextView titleView = (TextView) convertView.findViewById(R.id.app_message);
-                TextView subtitleView = (TextView) convertView.findViewById(R.id.app_message_details);
-                
-                titleView.setText(app.getMessage());
-                subtitleView.setText(me.getString(R.string.message_subtitle, app.getName(), sdf.format(new Date(app.getTime()))));
-
-                UriImageView icon = (UriImageView) convertView.findViewById(R.id.icon);
-                
-                if (app.getExpired())
-                {
-                    ColorMatrix matrix = new ColorMatrix();
-                    matrix.setSaturation(0);
-                    matrix.setScale(1, 1, 1, 0.5f);
-
-                    ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
-                    icon.setColorFilter(filter);
-                    
-                    titleView.setTextColor(Color.argb(128, 0, 0, 0));
-                    subtitleView.setTextColor(Color.argb(128, 0, 0, 0));
-                    
-                    convertView.setBackgroundColor(Color.argb(255, 240, 240, 240));
-                }
-                else
-                {
-                	icon.setColorFilter(null);
-                    titleView.setTextColor(Color.argb(255, 0, 0, 0));
-                    subtitleView.setTextColor(Color.argb(255, 0, 0, 0));
-
-                    convertView.setBackgroundColor(Color.argb(255, 255, 255, 255));
-                }
-                
-                icon.setCachedImageUri(app.iconUri());
-
-                return convertView;
-            }
-        };
-
-        ListView messagesList = (ListView) this.findViewById(R.id.messages);
-        messagesList.setAdapter(messagesAdapter);
-        
         ImageView avatar = (ImageView) this.findViewById(R.id.avatar_view);
         avatar.setOnClickListener(new OnClickListener()
         {
@@ -224,6 +154,87 @@ public class MainActivity extends ConsentedActivity
 				me.startActivity(nativeIntent);
 			}
         });
+        
+        final TextView toggle = (TextView) this.findViewById(R.id.toggle_label);
+        
+        OnClickListener listener = new OnClickListener()
+        {
+			public void onClick(View view) 
+			{
+				me._showAll = (me._showAll == false);
+				
+		        final ListView messagesList = (ListView) me.findViewById(R.id.messages);
+
+		        String selection = null;
+		        String[] selectionArgs = null;
+		        String sortOrder = "responded, date DESC";
+
+		        if (me._showAll)
+				{
+					toggle.setText(R.string.label_show_all);
+					selection = "responded = 0";
+				}
+				else
+				{
+					toggle.setText(R.string.label_show_important);
+					
+			        sortOrder = "responded, weight, date DESC";
+				}
+				
+				Cursor c = me.getContentResolver().query(ConductorContentProvider.MESSAGES_URI, null, selection, selectionArgs, sortOrder);
+
+				SimpleCursorAdapter adapter = new SimpleCursorAdapter(me, R.layout.row_app_message, c, new String[0], new int[0], 0)
+				{
+					public void bindView (View view, Context context, Cursor cursor)
+					{
+		                String text = cursor.getString(cursor.getColumnIndex("message"));
+		                String appName = cursor.getString(cursor.getColumnIndex("name"));
+		                
+		                long timestamp = cursor.getLong(cursor.getColumnIndex("date"));
+		                boolean responded = (0 != cursor.getInt(cursor.getColumnIndex("responded")));		
+
+                		String packageName = cursor.getString(cursor.getColumnIndex("package"));
+		                
+		                Uri imageUri = Uri.parse(ConductorContentProvider.iconUri(packageName));
+		                
+						UriImageView icon = (UriImageView) view.findViewById(R.id.icon);
+						icon.setImageURI(imageUri);
+
+						
+						TextView message = (TextView) view.findViewById(R.id.app_message);
+						message.setText(text);
+						
+		                TextView details = (TextView) view.findViewById(R.id.app_message_details);
+		                details.setText("tOdO: " + appName + " -- " + timestamp);
+
+						if (responded)
+						{
+							view.setBackgroundColor(0xffe0e0e0);
+							details.setTextColor(0xa0323232);
+							message.setTextColor(0xa0323232);
+						}
+						else
+						{
+							view.setBackgroundColor(0xffffffff);
+							details.setTextColor(0xff323232);
+							message.setTextColor(0xff323232);
+						}
+					}
+				};
+
+		        messagesList.setAdapter(adapter);
+		        messagesList.setOnItemClickListener(new OnItemClickListener()
+		        {
+					public void onItemClick(AdapterView<?> list, View view, int position, long id) 
+					{
+						Toast.makeText(me, "TODO: Launch associated app intent.", Toast.LENGTH_LONG).show();
+					}
+		        });
+			}
+        };
+
+        toggle.setOnClickListener(listener);
+        listener.onClick(toggle);
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) 

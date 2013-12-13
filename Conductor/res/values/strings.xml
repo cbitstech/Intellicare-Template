@@ -60,4 +60,12 @@
     <string name="settings_group_notification">Notification Options</string>
     <string name="title_forward_notifications">Forward notifications</string>
     <string name="desc_forward_notifications">Send notifications to the system status bar.</string>
+
+    <string name="label_messages">App Messages</string>
+    <string name="label_show_important">Show Important</string>
+    <string name="label_show_all">Show All</string>
+
+    <string name="db_create_apps_table">CREATE TABLE IF NOT EXISTS apps(_id INTEGER PRIMARY KEY, package TEXT, name TEXT, url TEXT, recommendation TEXT, score INTEGER DEFAULT 0, date INTEGER DEFAULT 0);</string>
+    <string name="db_create_messages_table">CREATE TABLE IF NOT EXISTS messages(_id INTEGER PRIMARY KEY, package TEXT, name TEXT, message TEXT, date INTEGER DEFAULT 0, responded INTEGER DEFAULT 0, weight INTEGER DEFAULT 0);</string>
+        
 </resources>
