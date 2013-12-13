@@ -56,7 +56,7 @@ public class AvatarActivity extends ConsentedActivity
 		}
 
 		super.onCreate(savedInstanceState);
-		mGLView = new GLSurfaceView(getApplication());
+		mGLView = new GLSurfaceView(this.getApplication());
 
 		mGLView.setEGLConfigChooser(new GLSurfaceView.EGLConfigChooser() 
 		{

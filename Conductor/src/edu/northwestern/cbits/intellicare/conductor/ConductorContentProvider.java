@@ -50,7 +50,7 @@ public class ConductorContentProvider extends ContentProvider
     private UriMatcher _matcher = new UriMatcher(UriMatcher.NO_MATCH);
 	private SQLiteDatabase _db = null;
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 4;
 
     private static HashMap<String, String> _cachedHashes = new HashMap<String, String>();
 
@@ -304,7 +304,7 @@ public class ConductorContentProvider extends ContentProvider
                     case 0:
                     	
                     case 1:
-                    	ContentValues message = new ContentValues();
+                    	/* ContentValues message = new ContentValues();
                     	message.put("package", "edu.northwestern.cbits.intellicare.dailyfeats");
                     	message.put("name", "Daily Feats");
                     	message.put("message", "This is a test message. (Weight 1)");
@@ -348,7 +348,13 @@ public class ConductorContentProvider extends ContentProvider
                     	message.put("responded", 1);
                     	message.put("weight", 4);
                     	
-                    	db.insert(ConductorContentProvider.MESSAGES_TABLE, null, message);
+                    	db.insert(ConductorContentProvider.MESSAGES_TABLE, null, message); */
+                    case 2:
+                    	db.execSQL(context.getString(R.string.db_update_apps_add_icon));
+                    	db.execSQL(context.getString(R.string.db_update_apps_add_version));
+                    	db.execSQL(context.getString(R.string.db_update_apps_add_changelog));
+                    case 3:
+                    	db.execSQL(context.getString(R.string.db_update_apps_add_synopsis));
                     default:
                     	break;
                 }
@@ -360,9 +366,17 @@ public class ConductorContentProvider extends ContentProvider
         return true;
     }
 
-	public int delete(Uri arg0, String arg1, String[] arg2) 
+	public int delete(Uri uri, String selection, String[] args) 
 	{
-		return 0;
+        switch(this._matcher.match(uri))
+        {
+            case ConductorContentProvider.APPS:
+                return this._db.delete(APPS_TABLE, selection, args);
+            case ConductorContentProvider.MESSAGES:
+                return this._db.delete(MESSAGES_TABLE, selection, args);
+        }
+
+        return 0;
 	}
 
 	public String getType(Uri uri) 

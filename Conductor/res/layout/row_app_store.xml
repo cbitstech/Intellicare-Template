@@ -11,6 +11,7 @@
          android:layout_width="0dp"
          android:layout_height="wrap_content"
          android:paddingTop="4dp"
+         android:paddingBottom="4dp"
          android:paddingLeft="8dp"
          android:paddingRight="8dp"
          android:layout_weight="1">
@@ -18,14 +19,23 @@
              android:textSize="18sp"
              android:layout_height="wrap_content"
              android:layout_width="match_parent" 
-             android:text="(Application name goes here...)"/>
+             android:text=""/>
          <TextView android:id="@+id/app_details"
              android:textSize="12sp"
              android:layout_height="wrap_content"
              android:layout_width="match_parent" 
-             android:text="(Reason for recommending app goes here...)"/>
-     </LinearLayout>
-     <ImageButton android:src="@drawable/ic_action_download"
+             android:text=""/>
+         <TextView android:id="@+id/update_available"
+             android:textColor="#669900"
+             android:textStyle="bold"
+             android:textSize="12sp"
+             android:layout_height="wrap_content"
+             android:layout_width="match_parent" 
+             android:visibility="gone"
+             android:text="@string/label_update_available"/>
+      </LinearLayout>
+     <ImageButton android:id="@+id/button_download" 
+         android:src="@drawable/ic_action_download"
          android:layout_marginTop="12dp"
          android:layout_marginBottom="12dp"
          android:layout_marginLeft="12dp"

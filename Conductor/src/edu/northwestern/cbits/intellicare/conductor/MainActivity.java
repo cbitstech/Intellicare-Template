@@ -97,7 +97,7 @@ public class MainActivity extends ConsentedActivity
 		
 		GridView appsGrid = (GridView) this.findViewById(R.id.apps_grid);
 
-		final ArrayList<AppCell> apps = new ArrayList<AppCell>();
+		ArrayList<AppCell> apps = new ArrayList<AppCell>();
 
 		String[] appNames = this.getResources().getStringArray(R.array.app_names);
 		String[] appIcons = this.getResources().getStringArray(R.array.app_icons);
@@ -108,7 +108,7 @@ public class MainActivity extends ConsentedActivity
 		{
 			long time = System.currentTimeMillis() - (9 * 1000 * 60 * 60 * i);
 			
-			AppCell cell = new AppCell(appNames[i], Uri.parse(appIcons[i]), appMessages[i], Integer.parseInt(appBadges[i]), time);
+			AppCell cell = new AppCell(appNames[i], null, appMessages[i], Integer.parseInt(appBadges[i]), time);
 
 			if (i > 2)
 				cell.setExpired(true);
@@ -116,7 +116,12 @@ public class MainActivity extends ConsentedActivity
 			apps.add(cell);
 		}
 		
-        ArrayAdapter<AppCell> adapter = new ArrayAdapter<AppCell>(this, R.layout.cell_app, apps.subList(0, 3))
+		apps = new ArrayList<AppCell>(apps.subList(0, 3));
+		
+		while (apps.size() < 4)
+			apps.add(new AppCell("none", null, null, 0, System.currentTimeMillis()));
+		
+        ArrayAdapter<AppCell> adapter = new ArrayAdapter<AppCell>(this, R.layout.cell_app, apps)
         {
             public View getView(int position, View convertView, ViewGroup parent)
             {
@@ -125,9 +130,39 @@ public class MainActivity extends ConsentedActivity
                 if (convertView == null)
                     convertView = me.getLayoutInflater().inflate(R.layout.cell_app, parent, false);
                 
-                UriImageView icon = (UriImageView) convertView.findViewById(R.id.icon);
+                final UriImageView icon = (UriImageView) convertView.findViewById(R.id.icon);
+
+                String selection = "name = ?";
+                String[] args = { app.getName() };
                 
-                icon.setCachedImageUri(app.iconUri());
+				icon.setImageDrawable(me.getResources().getDrawable(R.drawable.ic_app_placeholder));
+
+                Cursor cursor = me.getContentResolver().query(ConductorContentProvider.APPS_URI, null, selection, args, null);
+                
+                if (cursor.moveToNext())
+                {
+                    final Uri imageUri = Uri.parse(cursor.getString(cursor.getColumnIndex("icon")));
+
+                    Uri cachedUri = ConductorContentProvider.fetchCachedUri(me, imageUri, new Runnable()
+                    {
+    					public void run() 
+    					{
+    						me.runOnUiThread(new Runnable()
+    						{
+    							public void run() 
+    							{
+    				                Uri cachedUri = ConductorContentProvider.fetchCachedUri(me, imageUri, null);
+    								
+    				                if (cachedUri != null)
+    									icon.setImageURI(cachedUri);
+    							}
+    						});
+    					}		                
+                    });
+
+    				if (cachedUri != null)
+    					icon.setImageURI(cachedUri);
+                }
                 
                 return convertView;
             }
@@ -139,9 +174,15 @@ public class MainActivity extends ConsentedActivity
         {
             public void onItemClick(AdapterView<?> adapter, View view, int position, long id) 
             {
-                final AppCell app = apps.get(position);
+                final AppCell app = (AppCell) adapter.getItemAtPosition(position);
                 
-                Toast.makeText(me, app.getMessage(), Toast.LENGTH_LONG).show();
+                if (app.iconUri() == null)
+                {
+        			Intent nativeIntent = new Intent(me, AppStoreActivity.class);
+        			me.startActivity(nativeIntent);
+                }
+                else
+                	Toast.makeText(me, app.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
         
