@@ -7,6 +7,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -29,6 +31,7 @@ import edu.northwestern.cbits.intellicare.ConsentedActivity;
 public class MainActivity extends ConsentedActivity
 {
 	private boolean _showAll = true;
+	private String _packageFilter = null;
 	
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -42,18 +45,19 @@ public class MainActivity extends ConsentedActivity
 	private class AppCell
 	{
 		private Uri _iconUri = null;
-		private String _message = null;
+		private String _package = null;
 		private String _name = null;
-		private long _time = 0;
-		private boolean _expired = false;
 
-		public AppCell(String name, Uri icon, String message, int badgeCount, long time) 
+		public AppCell()
+		{
+			
+		}
+
+		public AppCell(String name, Uri icon, String packageName) 
 		{
 			this._iconUri = icon;
-			this._message = message;
+			this._package = packageName;
 			this._name = name;
-			
-			this._time = time;
 		}
 
 		public Uri iconUri() 
@@ -61,29 +65,14 @@ public class MainActivity extends ConsentedActivity
 			return this._iconUri;
 		}
 
-		public String getMessage() 
-		{
-			return this._message;
-		}
-		
-		public long getTime()
-		{
-			return this._time ;
-		}
-
 		public String getName() 
 		{
 			return this._name ;
 		}
 
-		public boolean getExpired() 
+		public String getPackage() 
 		{
-			return this._expired;
-		}
-
-		public void setExpired(boolean expired) 
-		{
-			this._expired  = expired;
+			return this._package;
 		}
 	}
 
@@ -96,30 +85,22 @@ public class MainActivity extends ConsentedActivity
 		final SimpleDateFormat sdf = new SimpleDateFormat(this.getString(R.string.message_date_format));
 		
 		GridView appsGrid = (GridView) this.findViewById(R.id.apps_grid);
-
+		
 		ArrayList<AppCell> apps = new ArrayList<AppCell>();
-
-		String[] appNames = this.getResources().getStringArray(R.array.app_names);
-		String[] appIcons = this.getResources().getStringArray(R.array.app_icons);
-		String[] appMessages = this.getResources().getStringArray(R.array.app_messages);
-		String[] appBadges = this.getResources().getStringArray(R.array.app_badges);
 		
-		for (int i = 0; i < appNames.length; i++)
+		Cursor installedApps = this.getContentResolver().query(ConductorContentProvider.INSTALLED_APPS_URI, null, null, null, null);
+		
+		while (installedApps.moveToNext() && apps.size() < 4)
 		{
-			long time = System.currentTimeMillis() - (9 * 1000 * 60 * 60 * i);
+			String name = installedApps.getString(installedApps.getColumnIndex("name"));
+			String icon = installedApps.getString(installedApps.getColumnIndex("icon"));
+			String packageName = installedApps.getString(installedApps.getColumnIndex("package"));
 			
-			AppCell cell = new AppCell(appNames[i], null, appMessages[i], Integer.parseInt(appBadges[i]), time);
-
-			if (i > 2)
-				cell.setExpired(true);
-			
-			apps.add(cell);
+			apps.add(new AppCell(name, Uri.parse(icon), packageName));
 		}
-		
-		apps = new ArrayList<AppCell>(apps.subList(0, 3));
-		
+
 		while (apps.size() < 4)
-			apps.add(new AppCell("none", null, null, 0, System.currentTimeMillis()));
+			apps.add(new AppCell());
 		
         ArrayAdapter<AppCell> adapter = new ArrayAdapter<AppCell>(this, R.layout.cell_app, apps)
         {
@@ -132,8 +113,8 @@ public class MainActivity extends ConsentedActivity
                 
                 final UriImageView icon = (UriImageView) convertView.findViewById(R.id.icon);
 
-                String selection = "name = ?";
-                String[] args = { app.getName() };
+                String selection = "package = ?";
+                String[] args = { app.getPackage() };
                 
 				icon.setImageDrawable(me.getResources().getDrawable(R.drawable.ic_app_placeholder));
 
@@ -182,7 +163,7 @@ public class MainActivity extends ConsentedActivity
         			me.startActivity(nativeIntent);
                 }
                 else
-                	Toast.makeText(me, app.getMessage(), Toast.LENGTH_LONG).show();
+                	me.filterMessages(app.getPackage());
             }
         });
         
@@ -204,73 +185,7 @@ public class MainActivity extends ConsentedActivity
 			{
 				me._showAll = (me._showAll == false);
 				
-		        final ListView messagesList = (ListView) me.findViewById(R.id.messages);
-
-		        String selection = null;
-		        String[] selectionArgs = null;
-		        String sortOrder = "responded, date DESC";
-
-		        if (me._showAll)
-				{
-					toggle.setText(R.string.label_show_all);
-					selection = "responded = 0";
-				}
-				else
-				{
-					toggle.setText(R.string.label_show_important);
-					
-			        sortOrder = "responded, weight, date DESC";
-				}
-				
-				Cursor c = me.getContentResolver().query(ConductorContentProvider.MESSAGES_URI, null, selection, selectionArgs, sortOrder);
-
-				SimpleCursorAdapter adapter = new SimpleCursorAdapter(me, R.layout.row_app_message, c, new String[0], new int[0], 0)
-				{
-					public void bindView (View view, Context context, Cursor cursor)
-					{
-		                String text = cursor.getString(cursor.getColumnIndex("message"));
-		                String appName = cursor.getString(cursor.getColumnIndex("name"));
-		                
-		                long timestamp = cursor.getLong(cursor.getColumnIndex("date"));
-		                boolean responded = (0 != cursor.getInt(cursor.getColumnIndex("responded")));		
-
-                		String packageName = cursor.getString(cursor.getColumnIndex("package"));
-		                
-		                Uri imageUri = Uri.parse(ConductorContentProvider.iconUri(packageName));
-		                
-						UriImageView icon = (UriImageView) view.findViewById(R.id.icon);
-						icon.setImageURI(imageUri);
-
-						
-						TextView message = (TextView) view.findViewById(R.id.app_message);
-						message.setText(text);
-						
-		                TextView details = (TextView) view.findViewById(R.id.app_message_details);
-		                details.setText("tOdO: " + appName + " -- " + timestamp);
-
-						if (responded)
-						{
-							view.setBackgroundColor(0xffe0e0e0);
-							details.setTextColor(0xa0323232);
-							message.setTextColor(0xa0323232);
-						}
-						else
-						{
-							view.setBackgroundColor(0xffffffff);
-							details.setTextColor(0xff323232);
-							message.setTextColor(0xff323232);
-						}
-					}
-				};
-
-		        messagesList.setAdapter(adapter);
-		        messagesList.setOnItemClickListener(new OnItemClickListener()
-		        {
-					public void onItemClick(AdapterView<?> list, View view, int position, long id) 
-					{
-						Toast.makeText(me, "TODO: Launch associated app intent.", Toast.LENGTH_LONG).show();
-					}
-		        });
+				me.refreshList();
 			}
         };
 
@@ -278,6 +193,121 @@ public class MainActivity extends ConsentedActivity
         listener.onClick(toggle);
 	}
 	
+	protected void filterMessages(String packageName) 
+	{
+		if (this._packageFilter != null && this._packageFilter.equals(packageName))
+			this._packageFilter = null;
+		else
+			this._packageFilter = packageName;
+		
+		this.refreshList();
+	}
+
+	private void refreshList() 
+	{
+		final MainActivity me = this;
+		
+        final ListView messagesList = (ListView) me.findViewById(R.id.messages);
+        final TextView toggle = (TextView) this.findViewById(R.id.toggle_label);
+
+        String selection = null;
+        String[] selectionArgs = null;
+        String sortOrder = "responded, date DESC";
+
+        if (me._showAll)
+		{
+			toggle.setText(R.string.label_show_all);
+			selection = "responded = 0";
+		}
+		else
+		{
+			toggle.setText(R.string.label_show_important);
+			
+	        sortOrder = "responded, weight, date DESC";
+		}
+        
+        if (this._packageFilter != null)
+        {
+        	selection = "package = ?";
+        	String[] args = { this._packageFilter };
+        	
+        	selectionArgs = args;
+        }
+		
+		Cursor c = me.getContentResolver().query(ConductorContentProvider.MESSAGES_URI, null, selection, selectionArgs, sortOrder);
+
+		SimpleCursorAdapter adapter = new SimpleCursorAdapter(me, R.layout.row_app_message, c, new String[0], new int[0], 0)
+		{
+			public void bindView (View view, Context context, Cursor cursor)
+			{
+                String text = cursor.getString(cursor.getColumnIndex("message"));
+                String appName = cursor.getString(cursor.getColumnIndex("name"));
+                
+                long timestamp = cursor.getLong(cursor.getColumnIndex("date"));
+                boolean responded = (0 != cursor.getInt(cursor.getColumnIndex("responded")));		
+
+        		final String packageName = cursor.getString(cursor.getColumnIndex("package"));
+
+        		final UriImageView icon = (UriImageView) view.findViewById(R.id.icon);
+                
+                Uri imageUri = ConductorContentProvider.iconUri(me, packageName, new Runnable()
+                {
+					public void run() 
+					{
+						Uri imageUri = ConductorContentProvider.iconUri(me, packageName, null);
+						
+						icon.setImageURI(imageUri);
+					}
+                });
+
+                if (imageUri != null)
+    				icon.setImageURI(imageUri);
+                
+                if (responded)
+                {
+                    ColorMatrix matrix = new ColorMatrix();
+                    matrix.setSaturation(0);
+                    matrix.setScale(1, 1, 1, 0.5f);
+
+                    ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+                    icon.setColorFilter(filter);
+                }
+                else
+                    icon.setColorFilter(null);
+				
+				TextView message = (TextView) view.findViewById(R.id.app_message);
+				message.setText(text);
+				
+                TextView details = (TextView) view.findViewById(R.id.app_message_details);
+                details.setText("tOdO: " + appName + " -- " + timestamp);
+
+				if (responded)
+				{
+					view.setBackgroundColor(0xffe0e0e0);
+					details.setTextColor(0xa0323232);
+					message.setTextColor(0xa0323232);
+				}
+				else
+				{
+					view.setBackgroundColor(0xffffffff);
+					details.setTextColor(0xff323232);
+					message.setTextColor(0xff323232);
+				}
+			}
+		};
+
+        messagesList.setAdapter(adapter);
+        messagesList.setOnItemClickListener(new OnItemClickListener()
+        {
+			public void onItemClick(AdapterView<?> list, View view, int position, long id) 
+			{
+				Toast.makeText(me, "TODO: Launch associated app intent.", Toast.LENGTH_LONG).show();
+			}
+        });
+        
+        messagesList.setBackgroundColor(0xffe0e0e0);
+	}
+
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
 		this.getMenuInflater().inflate(R.menu.main, menu);

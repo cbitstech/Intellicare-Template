@@ -4,8 +4,8 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
      <edu.northwestern.cbits.intellicare.conductor.UriImageView android:id="@+id/icon"
-         android:layout_width="72dp"
-         android:layout_height="72dp"
+         android:layout_width="48dp"
+         android:layout_height="48dp"
          android:layout_gravity="center" />
      <LinearLayout android:orientation="vertical"
          android:layout_width="0dp"

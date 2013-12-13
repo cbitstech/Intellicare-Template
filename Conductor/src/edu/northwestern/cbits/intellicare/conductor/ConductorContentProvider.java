@@ -23,11 +23,16 @@ import java.util.List;
 
 import javax.net.ssl.SSLException;
 
+import android.app.Activity;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
@@ -39,11 +44,15 @@ public class ConductorContentProvider extends ContentProvider
 {
     private static final int APPS = 1;
     private static final int MESSAGES = 2;
+    private static final int INSTALLED_APPS = 3;
+    
+	private static final String INSTALLED_APPS_TABLE = "installed_apps";
 
     private static final String APPS_TABLE = "apps";
     private static final String MESSAGES_TABLE = "messages";
     private static final String AUTHORITY = "edu.northwestern.cbits.intellicare.conductor";
 
+    public static final Uri INSTALLED_APPS_URI = Uri.parse("content://" + AUTHORITY + "/" + INSTALLED_APPS_TABLE);
     public static final Uri APPS_URI = Uri.parse("content://" + AUTHORITY + "/" + APPS_TABLE);
     public static final Uri MESSAGES_URI = Uri.parse("content://" + AUTHORITY + "/" + MESSAGES_TABLE);
 
@@ -281,6 +290,7 @@ public class ConductorContentProvider extends ContentProvider
     	
     	this._matcher.addURI(AUTHORITY, APPS_TABLE, APPS);
     	this._matcher.addURI(AUTHORITY, MESSAGES_TABLE, MESSAGES);
+    	this._matcher.addURI(AUTHORITY, INSTALLED_APPS_TABLE, INSTALLED_APPS);
     }
 
     public boolean onCreate()
@@ -420,9 +430,71 @@ public class ConductorContentProvider extends ContentProvider
 	            return this._db.query(ConductorContentProvider.APPS_TABLE, projection, selection, selectionArgs, null, null, sortOrder);
 	        case ConductorContentProvider.MESSAGES:
 	            return this._db.query(ConductorContentProvider.MESSAGES_TABLE, projection, selection, selectionArgs, null, null, sortOrder);
+	        case ConductorContentProvider.INSTALLED_APPS:
+	        	return this.getInstalledApps();
         }
 
         return null;
+	}
+
+	private Cursor getInstalledApps() 
+	{
+		String[] columns = { "package", "name", "icon" };
+		
+		HashMap<String, String> names = new HashMap<String, String>();
+		HashMap<String, String> icons = new HashMap<String, String>();
+		
+		MatrixCursor cursor = new MatrixCursor(columns);
+		
+		ArrayList<PackageInfo> packages = new ArrayList<PackageInfo>();
+
+		PackageManager packageManager = this.getContext().getPackageManager();
+		
+		Cursor c = this.query(ConductorContentProvider.APPS_URI, null, null, null, null);
+		
+		while (c.moveToNext())
+		{
+			String packageName = c.getString(c.getColumnIndex("package"));
+
+			try 
+			{
+				PackageInfo info = packageManager.getPackageInfo(packageName, 0);
+
+				packages.add(info);
+				
+				names.put(packageName, c.getString(c.getColumnIndex("name")));
+				icons.put(packageName, c.getString(c.getColumnIndex("icon")));
+
+			}
+			catch (NameNotFoundException e) 
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		Collections.sort(packages, new Comparator<PackageInfo>()
+		{
+			public int compare(PackageInfo one, PackageInfo two) 
+			{
+				long delta = two.lastUpdateTime - one.lastUpdateTime;
+				
+				if (delta > 0)
+					return 1;
+				else if (delta < 0)
+					return -1;
+				
+				return 0;
+			}
+		});
+		
+		for (PackageInfo pkg : packages.subList(0, 4))
+		{
+			Object[] values = { pkg.packageName, names.get(pkg.packageName), icons.get(pkg.packageName) };
+			
+			cursor.addRow(values);
+		}
+		
+		return cursor;
 	}
 
 	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) 
@@ -438,8 +510,36 @@ public class ConductorContentProvider extends ContentProvider
         return 0;
 	}
 
-	public static String iconUri(String packageName) 
+	public static Uri iconUri(final Context context, String packageName, final Runnable next) 
 	{
-		return "https://dl0tgz6ee3upo.cloudfront.net/production/apps/icons/000/049/686/retina/0888dec269a639f371764f762f6cf983.png";
+        String selection = "package = ?";
+        String[] args = { packageName };
+        
+        Cursor cursor = context.getContentResolver().query(ConductorContentProvider.APPS_URI, null, selection, args, null);
+        
+        if (cursor.moveToNext())
+        {
+            final Uri imageUri = Uri.parse(cursor.getString(cursor.getColumnIndex("icon")));
+
+            Uri cachedUri = ConductorContentProvider.fetchCachedUri(context, imageUri, new Runnable()
+            {
+				public void run() 
+				{
+					if (next != null)
+					{
+						if (context instanceof Activity)
+						{
+							Activity activity = (Activity) context;
+							
+							activity.runOnUiThread(next);
+						}
+					}
+				}		                
+            });
+            
+            return cachedUri;
+        }
+        
+        return null;
 	}
 }
