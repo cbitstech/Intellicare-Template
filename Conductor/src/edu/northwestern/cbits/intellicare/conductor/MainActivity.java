@@ -1,7 +1,11 @@
 package edu.northwestern.cbits.intellicare.conductor;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
+import android.content.ActivityNotFoundException;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -97,6 +101,8 @@ public class MainActivity extends ConsentedActivity
 			
 			apps.add(new AppCell(Uri.parse(icon), packageName));
 		}
+		
+		installedApps.close();
 
 		while (apps.size() < 4)
 			apps.add(new AppCell());
@@ -147,6 +153,8 @@ public class MainActivity extends ConsentedActivity
 	    				if (cachedUri != null)
 	    					icon.setImageURI(cachedUri);
 	                }
+	                
+	                cursor.close();
                 }
                 else
                 	icon.setImageResource(R.drawable.ic_app_placeholder);
@@ -243,6 +251,8 @@ public class MainActivity extends ConsentedActivity
 		
 		Cursor c = me.getContentResolver().query(ConductorContentProvider.MESSAGES_URI, null, selection, selectionArgs, sortOrder);
 
+		final DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
+		
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(me, R.layout.row_app_message, c, new String[0], new int[0], 0)
 		{
 			public void bindView (View view, Context context, Cursor cursor)
@@ -286,7 +296,7 @@ public class MainActivity extends ConsentedActivity
 				message.setText(text);
 				
                 TextView details = (TextView) view.findViewById(R.id.app_message_details);
-                details.setText("tOdO: " + appName + " -- " + timestamp);
+                details.setText(appName + " @ " + df.format(new Date(timestamp)));
 
 				if (responded)
 				{
@@ -308,7 +318,40 @@ public class MainActivity extends ConsentedActivity
         {
 			public void onItemClick(AdapterView<?> list, View view, int position, long id) 
 			{
-				Toast.makeText(me, "TODO: Launch associated app intent.", Toast.LENGTH_LONG).show();
+				Cursor cursor = (Cursor) list.getItemAtPosition(position);
+				
+				String urlString = cursor.getString(cursor.getColumnIndex("uri"));
+
+//				urlString = urlString.replace("intellicare",  "http");
+				
+				if (urlString != null)
+				{
+					Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlString));
+					
+					try
+					{
+						me.startActivity(intent);
+						
+						ContentValues values = new ContentValues();
+						values.put("responded", 1);
+						
+						String selection = "uri = ?";
+						String[] args = { urlString };
+						
+						me.getContentResolver().update(ConductorContentProvider.MESSAGES_URI, values, selection, args);
+					}
+					catch (ActivityNotFoundException e)
+					{
+						e.printStackTrace();
+						
+						String s = me.getString(R.string.no_associated_action, urlString);
+
+						Toast.makeText(me, s, Toast.LENGTH_LONG).show();
+
+					}
+				}				
+				else
+					Toast.makeText(me, R.string.no_available_action, Toast.LENGTH_LONG).show();
 			}
         });
         

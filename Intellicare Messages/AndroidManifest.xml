@@ -21,15 +21,35 @@
         </activity>
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".HelpActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".LessonsActivity" android:label="@string/app_name" />
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".LessonActivity" android:label="@string/app_name" android:launchMode="singleTask" />
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".LessonActivity" android:label="@string/app_name" android:launchMode="singleTask">
+			<intent-filter>
+		        <action android:name="android.intent.action.VIEW" />
+        	    <category android:name="android.intent.category.DEFAULT" />
+            	<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="intellicare" android:host="day-to-day" android:pathPrefix="/lesson" />
+			</intent-filter>
+        </activity>
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".SettingsActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".TestActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".MessageRatingActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".MessageActivity" android:label="@string/app_name" />
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".TaskActivity" android:label="@string/app_name" android:launchMode="singleTask" />
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".TaskActivity" android:label="@string/app_name" android:launchMode="singleTask">
+			<intent-filter>
+		        <action android:name="android.intent.action.VIEW" />
+        	    <category android:name="android.intent.category.DEFAULT" />
+            	<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="intellicare" android:host="day-to-day" android:pathPrefix="/task" />
+			</intent-filter>
+        </activity>
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".TipActivity" android:label="@string/app_name" />
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".DiagnosticActivity" android:label="@string/app_name" />
-        
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".DiagnosticActivity" android:label="@string/app_name">
+			<intent-filter>
+		        <action android:name="android.intent.action.VIEW" />
+        	    <category android:name="android.intent.category.DEFAULT" />
+            	<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="intellicare" android:host="day-to-day" android:pathPrefix="/diagnostics" />
+			</intent-filter>
+        </activity>
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.ConsentActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.PhqFourActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.MotivationActivity" android:label="@string/app_name" />

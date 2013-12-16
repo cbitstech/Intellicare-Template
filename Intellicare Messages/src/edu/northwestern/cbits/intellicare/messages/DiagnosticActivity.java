@@ -1,6 +1,7 @@
 package edu.northwestern.cbits.intellicare.messages;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -35,11 +36,10 @@ public class DiagnosticActivity extends ConsentedActivity
 		final ArrayList<Integer> todayIds = new ArrayList<Integer>();
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		long startToday = System.currentTimeMillis(); // prefs.getLong("last_instruction_notification", 0);
+		long startToday = prefs.getLong("last_instruction_notification", 0);
 
 		ScheduleManager schedule = ScheduleManager.getInstance(this);
 
-		/*
 		if (startToday == 0)
 		{
 			int startHour = Integer.parseInt(prefs.getString("config_day_start", "09"));
@@ -54,7 +54,7 @@ public class DiagnosticActivity extends ConsentedActivity
 			
 			startToday = calendar.getTimeInMillis();
 		}
-*/		
+
 		long end = startToday + (72 * 60 * 60 * 1000);
 		
 		int index = prefs.getInt(ScheduleManager.MESSAGE_INDEX, 0);

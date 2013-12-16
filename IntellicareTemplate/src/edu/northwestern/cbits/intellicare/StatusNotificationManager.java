@@ -11,6 +11,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 public class StatusNotificationManager 
 {
@@ -63,6 +64,8 @@ public class StatusNotificationManager
 			conductorIntent.putExtra(StatusNotificationManager.TITLE, title);
 			conductorIntent.putExtra(StatusNotificationManager.MESSAGE, message);
 			conductorIntent.putExtra(StatusNotificationManager.URI, uri.toString());
+			
+			Log.e("STATUS", "STARTING INTENT: "  + conductorIntent);
 			
 			this._context.startService(conductorIntent);
 		} 

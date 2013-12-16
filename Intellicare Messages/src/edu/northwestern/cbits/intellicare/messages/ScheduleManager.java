@@ -11,7 +11,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
+import android.os.Build;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import edu.northwestern.cbits.intellicare.PhqFourActivity;
 import edu.northwestern.cbits.intellicare.StatusNotificationManager;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
@@ -40,7 +42,12 @@ public class ScheduleManager
 		Intent broadcast = new Intent(this._context, ScheduleHelper.class);
 		PendingIntent pi = PendingIntent.getBroadcast(this._context, 0, broadcast, PendingIntent.FLAG_UPDATE_CURRENT);
 		
-		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);
+		long now = System.currentTimeMillis();
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+			alarm.setExact(AlarmManager.RTC_WAKEUP, now + 60000, pi);
+		else
+			alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, 60000, pi);
 	}
 
 	public static ScheduleManager getInstance(Context context)
@@ -56,12 +63,26 @@ public class ScheduleManager
 	
 	public void updateSchedule()
 	{
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
+		Log.e("D2D", "UPDATE!");
 		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+		{
+			Intent broadcast = new Intent(this._context, ScheduleHelper.class);
+			PendingIntent pi = PendingIntent.getBroadcast(this._context, 0, broadcast, PendingIntent.FLAG_UPDATE_CURRENT);
+
+			AlarmManager alarm = (AlarmManager) this._context.getSystemService(Context.ALARM_SERVICE);
+
+			long now = System.currentTimeMillis();
+			
+			alarm.setExact(AlarmManager.RTC_WAKEUP, now + 60000, pi);
+		}
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
+
 		if (prefs.contains(HelpActivity.HELP_COMPLETED) == false)
 			return;
 		
-		boolean showNotification = prefs.getBoolean(ScheduleManager.SHOW_NOTIFICATION, false);
+		boolean showNotification = prefs.getBoolean(ScheduleManager.SHOW_NOTIFICATION, true);
 
 		long now = System.currentTimeMillis();
 		
@@ -101,16 +122,22 @@ public class ScheduleManager
 
 		boolean lessonComplete = prefs.getBoolean(LessonsActivity.LESSON_READ_PREFIX + currentLesson, false);
 		
+		Log.e("D2D", "LESSON COMPLETE: " + lessonComplete + " -- " + currentLesson);
+		
 		if (lessonComplete)
 		{
 			int index = prefs.getInt(ScheduleManager.MESSAGE_INDEX, 0);
 			
 			long notificationTime = this.getNotificationTime(index % 5, now);
 			
+			Log.e("D2D", "MESSAGE: " + index + ((now - notificationTime) / 1000));
+			
 			if (notificationTime > 0 && Math.abs(now - notificationTime) < (30 * 60 * 1000))
 			{
 				boolean completed = prefs.getBoolean(ScheduleManager.INSTRUCTION_COMPLETED, false);
 
+				Log.e("D2D", "INST COMPLETED " + completed);
+				
 				if (index > 0 && index % 5 == 0 && completed == false)
 					index -= 5;
 				
@@ -282,23 +309,34 @@ public class ScheduleManager
 			this._context.getContentResolver().update(ContentProvider.LESSONS_URI, values, where, whereArgs);
 
 			lessonIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			
+			now += 1;
+			
+			long lastLesson = prefs.getLong("notification_last_lesson", 0);
 
-			if (showNotification)
+			if (now - lastLesson > (24 * 60 * 60 * 1000))
 			{
-				PendingIntent pi = PendingIntent.getActivity(this._context, 1, lessonIntent, PendingIntent.FLAG_ONE_SHOT);
+				if (showNotification)
+				{
+					PendingIntent pi = PendingIntent.getActivity(this._context, 1, lessonIntent, PendingIntent.FLAG_ONE_SHOT);
+					
+					HashMap<String, Object> payload = new HashMap<String, Object>();
+					payload.put("message_index", descIndex);
+					LogManager.getInstance(this._context).log("lesson_notification_shown", payload);
+	
+					StatusNotificationManager.getInstance(this._context).notifyBigText(0, R.drawable.ic_notification_color, title, message, pi, LessonActivity.uriForLesson(currentLesson));
+				}
+				else
+					this._context.startActivity(lessonIntent);
 				
-				HashMap<String, Object> payload = new HashMap<String, Object>();
-				payload.put("message_index", descIndex);
-				LogManager.getInstance(this._context).log("lesson_notification_shown", payload);
-
-				StatusNotificationManager.getInstance(this._context).notifyBigText(0, R.drawable.ic_notification_color, title, message, pi, LessonActivity.uriForLesson(currentLesson));
+				Editor e = prefs.edit();
+				e.putLong("notification_last_lesson", now);
+				e.commit();
 			}
-			else
-				this._context.startActivity(lessonIntent);
 		}
 	}
 	
-	private Message getMessage(int lessonId, int index) 
+	public Message getMessage(int lessonId, int index) 
 	{
 		if (index >= 35)
 			return null;

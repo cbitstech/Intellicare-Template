@@ -4,6 +4,8 @@ import edu.northwestern.cbits.intellicare.StatusNotificationManager;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.util.Log;
 
 public class MessagesService extends IntentService 
 {
@@ -23,11 +25,24 @@ public class MessagesService extends IntentService
 		
 		if (StatusNotificationManager.LOG_MESSAGE.equals(action))
 		{
+			String packageName = intent.getStringExtra(StatusNotificationManager.PACKAGE);
+
 			ContentValues values = new ContentValues();
-			values.put("package", intent.getStringExtra(StatusNotificationManager.PACKAGE));
-			values.put("title", intent.getStringExtra(StatusNotificationManager.TITLE));
+			values.put("package", packageName);
+
+			String selection = "package = ?";
+			String[] args = { packageName };
+			
+			Cursor c = this.getContentResolver().query(ConductorContentProvider.APPS_URI, null, selection, args, null);
+			
+			while (c.moveToNext())
+				values.put("name", c.getString(c.getColumnIndex("name")));
+			
+			c.close();
+			
 			values.put("message", intent.getStringExtra(StatusNotificationManager.MESSAGE));
 			values.put("uri", intent.getStringExtra(StatusNotificationManager.URI));
+			values.put("date", System.currentTimeMillis());
 			
 			this.getContentResolver().insert(ConductorContentProvider.MESSAGES_URI, values);
 			

@@ -474,6 +474,8 @@ public class ConductorContentProvider extends ContentProvider
 			}
 		}
 		
+		c.close();
+		
 		Collections.sort(packages, new Comparator<PackageInfo>()
 		{
 			public int compare(PackageInfo one, PackageInfo two) 
@@ -539,9 +541,13 @@ public class ConductorContentProvider extends ContentProvider
 				}		                
             });
             
+            cursor.close();
+            
             return cachedUri;
         }
-        
+
+        cursor.close();
+
         return null;
 	}
 }

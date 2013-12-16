@@ -26,6 +26,6 @@
 		    android:title="@string/title_use_notifications"
 		    android:icon="@drawable/ic_action_bulb"
 		    android:summary="@string/desc_use_notifications"
-		    android:defaultValue="false" />        
+		    android:defaultValue="true" />        
 	</PreferenceCategory>
 </PreferenceScreen>

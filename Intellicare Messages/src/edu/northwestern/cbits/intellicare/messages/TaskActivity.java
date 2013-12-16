@@ -18,6 +18,7 @@ import android.widget.CheckBox;
 import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.RatingActivity;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
+import edu.northwestern.cbits.intellicare.messages.ScheduleManager.Message;
 import edu.northwestern.cbits.intellicare.views.StarRatingView;
 import edu.northwestern.cbits.intellicare.views.StarRatingView.OnRatingChangeListener;
 
@@ -45,11 +46,27 @@ public class TaskActivity extends RatingActivity
 		});
 		
 		Intent intent = this.getIntent();
+		Uri u = intent.getData();
 		
 		if (intent.hasExtra(ScheduleManager.MESSAGE_MESSAGE))
 		{
 			String message = intent.getStringExtra(ScheduleManager.MESSAGE_MESSAGE);
 			String descIndex = intent.getStringExtra(ScheduleManager.MESSAGE_INDEX);
+
+			HashMap<String, Object> payload = new HashMap<String, Object>();
+			payload.put("message_index", descIndex);
+			payload.put("message", message);
+			LogManager.getInstance(this).log("notification_tapped", payload);
+		}
+		else if (u != null)
+		{
+			int currentLesson = Integer.parseInt(u.getPathSegments().get(1));
+			int index = Integer.parseInt(u.getPathSegments().get(2));
+			
+			Message msg = ScheduleManager.getInstance(this).getMessage(currentLesson, index);
+
+			String message = msg.message;
+			String descIndex = "" + index;
 
 			HashMap<String, Object> payload = new HashMap<String, Object>();
 			payload.put("message_index", descIndex);
@@ -134,9 +151,24 @@ public class TaskActivity extends RatingActivity
 	public void onResume()
 	{
 		super.onResume();
+
+		Intent intent = this.getIntent();
+
+		String message = intent.getStringExtra(TaskActivity.MESSAGE);
+		String image = intent.getStringExtra(TaskActivity.IMAGE);
+
+		Uri u = intent.getData();
 		
-		String message = this.getIntent().getStringExtra(TaskActivity.MESSAGE);
-		String image = this.getIntent().getStringExtra(TaskActivity.IMAGE);
+		if (u != null)
+		{
+			int currentLesson = Integer.parseInt(u.getPathSegments().get(1));
+			int index = Integer.parseInt(u.getPathSegments().get(2));
+			
+			Message msg = ScheduleManager.getInstance(this).getMessage(currentLesson, index);
+
+			message = msg.message;
+			image = msg.image;
+		}
 		
 		this.getSupportActionBar().setTitle(R.string.task_title);
 		
