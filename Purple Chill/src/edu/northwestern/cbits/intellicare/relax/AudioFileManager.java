@@ -2,6 +2,9 @@ package edu.northwestern.cbits.intellicare.relax;
 
 import java.io.IOException;
 
+import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -11,8 +14,9 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
+import android.os.Build;
+import android.support.v4.app.NotificationCompat;
 import android.widget.MediaController.MediaPlayerControl;
-import edu.northwestern.cbits.intellicare.StatusNotificationManager;
 
 public class AudioFileManager implements MediaPlayerControl, OnCompletionListener
 {
@@ -140,7 +144,9 @@ public class AudioFileManager implements MediaPlayerControl, OnCompletionListene
 	{
 		this._player.pause();
 		
-		StatusNotificationManager.getInstance(this._context).cancel(AudioFileManager.NOTIFICATION_ID);
+		NotificationManager manager = (NotificationManager) this._context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+		manager.cancel(AudioFileManager.NOTIFICATION_ID);
 	}
 
 	public void seekTo(int location) 
@@ -148,19 +154,53 @@ public class AudioFileManager implements MediaPlayerControl, OnCompletionListene
 		this._player.seekTo(location);
 	}
 
+	@SuppressLint("NewApi")
 	public void start() 
 	{
 		if (this.isPlaceholder(this._currentTrack))
 			return;
 
 		this._player.start();
-		
-		StatusNotificationManager noteManager = StatusNotificationManager.getInstance(this._context);
 
-		noteManager.cancel(ScheduleManager.NOTIFICATION_ID);
+		NotificationManager manager = (NotificationManager) this._context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+		manager.cancel(ScheduleManager.NOTIFICATION_ID);
 		
-		PendingIntent pi = PendingIntent.getActivity(this._context, 0, this.launchIntentForCurrentTrack(), PendingIntent.FLAG_UPDATE_CURRENT);
-		noteManager.notifyPersistentBigText(AudioFileManager.NOTIFICATION_ID, R.drawable.ic_reminder, this._context.getString(R.string.app_name), this._currentTitle, pi);
+        PendingIntent pi = PendingIntent.getActivity(this._context, 0, this.launchIntentForCurrentTrack(), PendingIntent.FLAG_UPDATE_CURRENT);
+
+		Notification note = null;
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+		{
+			Notification.Builder builder = new Notification.Builder(this._context);
+			
+			builder.setContentIntent(pi);
+			builder.setContentTitle(this._context.getString(R.string.app_name));
+			builder.setContentText(this._currentTitle);
+			builder.setSmallIcon(R.drawable.ic_reminder);
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+				builder.setStyle(new Notification.BigTextStyle().bigText(this._currentTitle));
+
+			builder.setTicker(this._currentTitle);
+
+			note = builder.build();
+		}
+		else
+		{
+			NotificationCompat.Builder builder = new NotificationCompat.Builder(this._context);
+
+			builder.setContentIntent(pi);
+			builder.setContentTitle(this._context.getString(R.string.app_name));
+			builder.setContentText(this._currentTitle);
+			builder.setSmallIcon(R.drawable.ic_reminder);
+
+			note = builder.build();
+		}
+		
+		note.flags = Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE;
+		
+		manager.notify(AudioFileManager.NOTIFICATION_ID, note);
 	}
 
 	public void setTrackUri(Uri uri, String title, String description, OnPreparedListener listener) 
@@ -232,7 +272,9 @@ public class AudioFileManager implements MediaPlayerControl, OnCompletionListene
 
 	public void onCompletion(MediaPlayer player) 
 	{
-		StatusNotificationManager.getInstance(this._context).cancel(AudioFileManager.NOTIFICATION_ID);
+		NotificationManager manager = (NotificationManager) this._context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+		manager.cancel(AudioFileManager.NOTIFICATION_ID);
 		
 		Intent intent = this.launchIntentForCurrentTrack();
 		intent.putExtra(PlayerActivity.REQUEST_STRESS, true);

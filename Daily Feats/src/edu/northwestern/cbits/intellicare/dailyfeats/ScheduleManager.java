@@ -73,7 +73,7 @@ public class ScheduleManager
 			Intent intent = new Intent(this._context, ChecklistActivity.class);
 
 			PendingIntent pi = PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-			StatusNotificationManager.getInstance(this._context).notifyBigText(97531, R.drawable.ic_notification_feats, title, message, pi);
+			StatusNotificationManager.getInstance(this._context).notifyBigText(97531, R.drawable.ic_notification_feats, title, message, pi, HomeActivity.URI);
 
 			Editor e = prefs.edit();
 			e.putLong(ScheduleManager.LAST_NOTIFICATION, now);

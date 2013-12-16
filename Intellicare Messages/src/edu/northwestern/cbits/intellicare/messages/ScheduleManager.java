@@ -158,7 +158,7 @@ public class ScheduleManager
 								payload.put("message_index", descIndex);
 								LogManager.getInstance(this._context).log("notification_shown", payload);
 		
-								StatusNotificationManager.getInstance(this._context).notifyBigText(id, icon, msg.title, msg.message, PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT));
+								StatusNotificationManager.getInstance(this._context).notifyBigText(id, icon, msg.title, msg.message, PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT), TaskActivity.uriForMessage(msg));
 							}
 							else
 								this._context.startActivity(intent);
@@ -188,7 +188,7 @@ public class ScheduleManager
 								payload.put("message_index", descIndex);
 								LogManager.getInstance(this._context).log("notification_shown", payload);
 		
-								StatusNotificationManager.getInstance(this._context).notifyBigText(id, icon, msg.title, msg.message, PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT));
+								StatusNotificationManager.getInstance(this._context).notifyBigText(id, icon, msg.title, msg.message, PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT), TaskActivity.uriForMessage(msg));
 							}
 							else
 								this._context.startActivity(intent);
@@ -291,7 +291,7 @@ public class ScheduleManager
 				payload.put("message_index", descIndex);
 				LogManager.getInstance(this._context).log("lesson_notification_shown", payload);
 
-				StatusNotificationManager.getInstance(this._context).notifyBigText(0, R.drawable.ic_notification_color, title, message, pi);
+				StatusNotificationManager.getInstance(this._context).notifyBigText(0, R.drawable.ic_notification_color, title, message, pi, LessonActivity.uriForLesson(currentLesson));
 			}
 			else
 				this._context.startActivity(lessonIntent);
@@ -317,7 +317,7 @@ public class ScheduleManager
 		{
 			cursor.moveToPosition(day);
 			
-			message = new Message();
+			message = new Message(lessonId, index);
 			message.title = this._context.getString(R.string.note_title);
 			
 			switch(offset)
@@ -431,12 +431,21 @@ public class ScheduleManager
 		return offTime;
 	}
 
-	private class Message
+	class Message
 	{
 		public String image = null;
 		public String title = null;
 		public String message = null;
 		
+		public int lessonId = 0;
+		public int index = 0;
+		
+		public Message(int lessonId, int index) 
+		{
+			this.lessonId = lessonId;
+			this.index = index;
+		}
+
 		public String toString()
 		{
 			return this.message;

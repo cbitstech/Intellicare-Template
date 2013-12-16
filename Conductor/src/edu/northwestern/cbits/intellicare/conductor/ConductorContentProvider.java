@@ -59,7 +59,7 @@ public class ConductorContentProvider extends ContentProvider
     private UriMatcher _matcher = new UriMatcher(UriMatcher.NO_MATCH);
 	private SQLiteDatabase _db = null;
 
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     private static HashMap<String, String> _cachedHashes = new HashMap<String, String>();
 
@@ -365,6 +365,8 @@ public class ConductorContentProvider extends ContentProvider
                     	db.execSQL(context.getString(R.string.db_update_apps_add_changelog));
                     case 3:
                     	db.execSQL(context.getString(R.string.db_update_apps_add_synopsis));
+                    case 4:
+                    	db.execSQL(context.getString(R.string.db_update_messages_add_uri));
                     default:
                     	break;
                 }
@@ -486,8 +488,8 @@ public class ConductorContentProvider extends ContentProvider
 				return 0;
 			}
 		});
-		
-		for (PackageInfo pkg : packages.subList(0, 4))
+
+		for (PackageInfo pkg : packages)
 		{
 			Object[] values = { pkg.packageName, names.get(pkg.packageName), icons.get(pkg.packageName) };
 			

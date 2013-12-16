@@ -13,14 +13,16 @@ import org.json.JSONObject;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
-
 
 public class AppStoreService extends IntentService 
 {
 	public static final String REFRESH_APPS = "conductor_refresh_apps";
 	public static final String APPS_UPDATED = "apps_updated";
+	public static final String LAST_REFRESH = "last_refresh";
 
 	public AppStoreService(String name) 
 	{
@@ -46,7 +48,6 @@ public class AppStoreService extends IntentService
 				{
 					try 
 					{
-						Log.e("IC", "1");
 						URL u = new URL(me.getString(R.string.app_store_json));
 
 	                    URLConnection conn = u.openConnection();
@@ -64,13 +65,9 @@ public class AppStoreService extends IntentService
 	                    
 	                    out.close();
 
-						Log.e("IC", "2");
-
 	                    String json = out.toString("utf8");
 	                    
 	                    JSONArray apps = new JSONArray(json);
-
-						Log.e("IC", "3");
 
                     	String selection = "_id != -1";
                     	String[] selectionArgs = {};
@@ -79,7 +76,6 @@ public class AppStoreService extends IntentService
 
 	                    for (int i = 0; i < apps.length(); i++)
 	                    {
-							Log.e("IC", "3.1 " + i);
 	                    	JSONObject app = apps.getJSONObject(i);
 	                    	
 	                    	String packageName = app.getString("package");
@@ -122,13 +118,14 @@ public class AppStoreService extends IntentService
 						e.printStackTrace();
 					}
 					
-					Log.e("IC", "4");
-					
 					LocalBroadcastManager broadcast = LocalBroadcastManager.getInstance(me);
 					broadcast.sendBroadcast(new Intent(AppStoreService.APPS_UPDATED));
 					
-					Log.e("IC", "5");
-
+					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
+					
+					Editor e = prefs.edit();
+					e.putLong(AppStoreService.LAST_REFRESH, System.currentTimeMillis());
+					e.commit();
 				}
 			};
 			

@@ -77,7 +77,8 @@
 	<string name="db_update_apps_add_synopsis">ALTER TABLE apps ADD COLUMN synopsis TEXT;</string>
 	
 	<string name="db_create_messages_table">CREATE TABLE IF NOT EXISTS messages(_id INTEGER PRIMARY KEY, package TEXT, name TEXT, message TEXT, date INTEGER DEFAULT 0, responded INTEGER DEFAULT 0, weight INTEGER DEFAULT 0);</string>
-	
+	<string name="db_update_messages_add_uri">ALTER TABLE messages ADD COLUMN uri TEXT;</string>
+		
 	<string name="apps_updated_toast">App catalog successfully fetched&#8230;</string>
 	<string name="label_update_available">Update available.</string>
 

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
@@ -140,5 +141,12 @@ public class TaskActivity extends RatingActivity
 		this.getSupportActionBar().setTitle(R.string.task_title);
 		
 		this.setContent("file:///android_asset/lesson_images/" + image, message);
+	}
+
+	public static Uri uriForMessage(ScheduleManager.Message message) 
+	{
+		String uriString = "intellicare://day-to-day/task/" + message.lessonId + "/" + message.index;
+
+		return Uri.parse(uriString);
 	}
 }

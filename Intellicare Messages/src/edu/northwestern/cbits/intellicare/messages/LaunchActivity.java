@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.CrashManagerListener;
 import net.hockeyapp.android.UpdateManager;
 
 import android.annotation.SuppressLint;
@@ -15,6 +16,7 @@ import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import edu.northwestern.cbits.intellicare.ConsentActivity;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 public class LaunchActivity extends ConsentedActivity 
@@ -27,6 +29,8 @@ public class LaunchActivity extends ConsentedActivity
 
 		this.setContentView(R.layout.activity_launch);
 		this.getSupportActionBar().setTitle(R.string.app_name);
+
+		UpdateManager.register(this, APP_ID);
 	}
 	
 	@SuppressLint("SimpleDateFormat")
@@ -84,8 +88,16 @@ public class LaunchActivity extends ConsentedActivity
 		else
 			scheduledText.setText(R.string.launch_date_none);
 		
-		UpdateManager.register(this, APP_ID);
-		CrashManager.register(this, APP_ID);
+		if (ConsentActivity.isConsented() == true && prefs.getBoolean(HelpActivity.HELP_COMPLETED, false) == false)
+			this.startActivity(new Intent(this, HelpActivity.class));
+		
+		CrashManager.register(this, APP_ID, new CrashManagerListener() 
+		{
+			public boolean shouldAutoUploadCrashes() 
+			{
+				    return true;
+			}
+		});
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) 

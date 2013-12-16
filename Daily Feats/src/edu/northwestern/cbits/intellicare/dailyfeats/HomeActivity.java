@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
@@ -39,6 +40,7 @@ import edu.northwestern.cbits.intellicare.ConsentedActivity;
 public class HomeActivity extends ConsentedActivity 
 {
 	private static final String APP_ID = "b1fd44d7db88602fa8185ac896a153b1";
+	public static final Uri URI = Uri.parse("intellicare://daily-feats/home");
 
 	public void onCreate(Bundle savedInstanceState) 
     {

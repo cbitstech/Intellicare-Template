@@ -10,13 +10,9 @@
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="19" />
     <application android:allowBackup="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:theme="@style/AppTheme">
-        <activity
-            android:name="edu.northwestern.cbits.intellicare.conductor.MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.AppCompat.Light" >
+        <activity android:name="edu.northwestern.cbits.intellicare.conductor.MainActivity" android:label="@string/app_name" android:theme="@style/Theme.AppCompat.Light">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -25,6 +21,13 @@
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".AvatarActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.ConsentActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.RecruitmentActivity" android:label="@string/app_name" />
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.PhqFourActivity" android:label="@string/app_name">
+			<intent-filter>
+			    <data android:scheme="intellicare" android:host="phq4" />
+			</intent-filter>
+        </activity>
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.MotivationActivity" android:label="@string/app_name" />
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.DemographicActivity" android:label="@string/app_name" />
    		<activity android:name="net.hockeyapp.android.UpdateActivity" />
         <provider android:name="edu.northwestern.cbits.intellicare.conductor.ConductorContentProvider" android:authorities="edu.northwestern.cbits.intellicare.conductor" android:exported="false" />
         <service android:enabled="true" android:name=".AppStoreService" android:exported="false">
@@ -32,5 +35,10 @@
 				<action android:name="conductor_refresh_apps" />
             </intent-filter>
         </service>
-  	</application>
+        <service android:enabled="true" android:name=".MessagesService" android:exported="true">
+			<intent-filter>
+				<action android:name="conductor_log_message" />
+            </intent-filter>
+        </service>
+   	</application>
 </manifest>

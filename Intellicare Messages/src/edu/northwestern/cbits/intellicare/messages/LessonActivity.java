@@ -3,6 +3,7 @@ package edu.northwestern.cbits.intellicare.messages;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import edu.northwestern.cbits.intellicare.SequentialPageActivity;
 
@@ -39,5 +40,10 @@ public class LessonActivity extends SequentialPageActivity
 			Intent intent = new Intent(this, MessageRatingActivity.class);
 			this.startActivity(intent);
 		}
+	}
+
+	public static Uri uriForLesson(int currentLesson) 
+	{
+		return Uri.parse("intellicare://day-to-day/lesson/" + currentLesson);
 	}
 }

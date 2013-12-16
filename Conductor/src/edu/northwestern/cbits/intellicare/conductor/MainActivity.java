@@ -1,18 +1,17 @@
 package edu.northwestern.cbits.intellicare.conductor;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,34 +39,37 @@ public class MainActivity extends ConsentedActivity
 		this.setContentView(R.layout.activity_main);
 		
 //		UpdateManager.register(this, APP_ID);
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		long now = System.currentTimeMillis();
+				
+		if (now - prefs.getLong(AppStoreService.LAST_REFRESH, 0) > 24 * 60 * 60 * 10000)
+		{
+			Intent intent = new Intent(AppStoreService.REFRESH_APPS);
+			this.startService(intent);
+		}
 	}
 	
 	private class AppCell
 	{
 		private Uri _iconUri = null;
 		private String _package = null;
-		private String _name = null;
 
 		public AppCell()
 		{
 			
 		}
 
-		public AppCell(String name, Uri icon, String packageName) 
+		public AppCell(Uri icon, String packageName) 
 		{
 			this._iconUri = icon;
 			this._package = packageName;
-			this._name = name;
 		}
 
 		public Uri iconUri() 
 		{
 			return this._iconUri;
-		}
-
-		public String getName() 
-		{
-			return this._name ;
 		}
 
 		public String getPackage() 
@@ -76,14 +78,12 @@ public class MainActivity extends ConsentedActivity
 		}
 	}
 
-	@SuppressLint("SimpleDateFormat")
 	public void onResume()
 	{
 		super.onResume();
 		
 		final MainActivity me = this;
-		final SimpleDateFormat sdf = new SimpleDateFormat(this.getString(R.string.message_date_format));
-		
+
 		GridView appsGrid = (GridView) this.findViewById(R.id.apps_grid);
 		
 		ArrayList<AppCell> apps = new ArrayList<AppCell>();
@@ -92,11 +92,10 @@ public class MainActivity extends ConsentedActivity
 		
 		while (installedApps.moveToNext() && apps.size() < 4)
 		{
-			String name = installedApps.getString(installedApps.getColumnIndex("name"));
 			String icon = installedApps.getString(installedApps.getColumnIndex("icon"));
 			String packageName = installedApps.getString(installedApps.getColumnIndex("package"));
 			
-			apps.add(new AppCell(name, Uri.parse(icon), packageName));
+			apps.add(new AppCell(Uri.parse(icon), packageName));
 		}
 
 		while (apps.size() < 4)
@@ -113,37 +112,45 @@ public class MainActivity extends ConsentedActivity
                 
                 final UriImageView icon = (UriImageView) convertView.findViewById(R.id.icon);
 
-                String selection = "package = ?";
-                String[] args = { app.getPackage() };
+                String packageName = app.getPackage();
                 
-				icon.setImageDrawable(me.getResources().getDrawable(R.drawable.ic_app_placeholder));
-
-                Cursor cursor = me.getContentResolver().query(ConductorContentProvider.APPS_URI, null, selection, args, null);
-                
-                if (cursor.moveToNext())
+                if (packageName != null)
                 {
-                    final Uri imageUri = Uri.parse(cursor.getString(cursor.getColumnIndex("icon")));
-
-                    Uri cachedUri = ConductorContentProvider.fetchCachedUri(me, imageUri, new Runnable()
-                    {
-    					public void run() 
-    					{
-    						me.runOnUiThread(new Runnable()
-    						{
-    							public void run() 
-    							{
-    				                Uri cachedUri = ConductorContentProvider.fetchCachedUri(me, imageUri, null);
-    								
-    				                if (cachedUri != null)
-    									icon.setImageURI(cachedUri);
-    							}
-    						});
-    					}		                
-                    });
-
-    				if (cachedUri != null)
-    					icon.setImageURI(cachedUri);
+	                String selection = "package = ?";
+	                String[] args = { packageName };
+	                
+					icon.setImageDrawable(me.getResources().getDrawable(R.drawable.ic_app_placeholder));
+	
+	                Cursor cursor = me.getContentResolver().query(ConductorContentProvider.APPS_URI, null, selection, args, null);
+	                
+	                if (cursor.moveToNext())
+	                {
+	                    final Uri imageUri = Uri.parse(cursor.getString(cursor.getColumnIndex("icon")));
+	
+	                    Uri cachedUri = ConductorContentProvider.fetchCachedUri(me, imageUri, new Runnable()
+	                    {
+	    					public void run() 
+	    					{
+	    						me.runOnUiThread(new Runnable()
+	    						{
+	    							public void run() 
+	    							{
+	    				                Uri cachedUri = ConductorContentProvider.fetchCachedUri(me, imageUri, null);
+	    								
+	    				                if (cachedUri != null)
+	    									icon.setImageURI(cachedUri);
+	    							}
+	    						});
+	    					}		                
+	                    });
+	
+	    				if (cachedUri != null)
+	    					icon.setImageURI(cachedUri);
+	                }
                 }
+                else
+                	icon.setImageResource(R.drawable.ic_app_placeholder);
+                	
                 
                 return convertView;
             }
