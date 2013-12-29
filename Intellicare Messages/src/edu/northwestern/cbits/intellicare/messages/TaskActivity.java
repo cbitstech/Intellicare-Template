@@ -175,7 +175,7 @@ public class TaskActivity extends RatingActivity
 		this.setContent("file:///android_asset/lesson_images/" + image, message);
 	}
 
-	public static Uri uriForMessage(ScheduleManager.Message message) 
+	public static Uri uriForTask(Message message) 
 	{
 		String uriString = "intellicare://day-to-day/task/" + message.lessonId + "/" + message.index;
 

@@ -88,4 +88,11 @@
 	<string name="upgrade_label">Update App</string>
 	<string name="install_label">Install App</string>
 	<string name="open_label">Open App</string>
+
+	<string name="note_new_messages_title">New Intellicare Messsages</string>
+	<string name="note_new_message_title">New Intellicare Messsage</string>
+	<string name="note_new_messages_desc" formatted="false">You have %d new messages.</string>
+	<string name="note_new_message_desc">You have a new message.</string>
+			
 </resources>
+

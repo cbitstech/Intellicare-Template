@@ -470,7 +470,7 @@ public class ConductorContentProvider extends ContentProvider
 			}
 			catch (NameNotFoundException e) 
 			{
-				e.printStackTrace();
+		//		e.printStackTrace();
 			}
 		}
 		

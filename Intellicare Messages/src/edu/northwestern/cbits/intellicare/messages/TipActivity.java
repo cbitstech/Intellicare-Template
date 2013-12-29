@@ -3,6 +3,7 @@ package edu.northwestern.cbits.intellicare.messages;
 import java.util.HashMap;
 
 import android.app.AlertDialog;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,6 +12,7 @@ import android.widget.CheckBox;
 import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.RatingActivity;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
+import edu.northwestern.cbits.intellicare.messages.ScheduleManager.Message;
 import edu.northwestern.cbits.intellicare.views.StarRatingView;
 import edu.northwestern.cbits.intellicare.views.StarRatingView.OnRatingChangeListener;
 
@@ -91,5 +93,12 @@ public class TipActivity extends TaskActivity
 			this.getSupportActionBar().setTitle(this.getString(R.string.tip_title, index));
 		else
 			this.getSupportActionBar().setTitle(this.getString(R.string.app_name, index));
+	}
+
+	public static Uri uriForTip(Message message) 
+	{
+		String uriString = "intellicare://day-to-day/tip/" + message.lessonId + "/" + message.index;
+
+		return Uri.parse(uriString);
 	}
 }

@@ -49,10 +49,9 @@ public class MainActivity extends ConsentedActivity
 		long now = System.currentTimeMillis();
 				
 		if (now - prefs.getLong(AppStoreService.LAST_REFRESH, 0) > 24 * 60 * 60 * 10000)
-		{
-			Intent intent = new Intent(AppStoreService.REFRESH_APPS);
-			this.startService(intent);
-		}
+			this.startService(new Intent(AppStoreService.REFRESH_APPS));
+
+    	this.startService(new Intent(MessagesService.REFRESH_MESSAGES));
 	}
 	
 	private class AppCell
@@ -201,6 +200,8 @@ public class MainActivity extends ConsentedActivity
 				me._showAll = (me._showAll == false);
 				
 				me.refreshList();
+
+		    	me.startService(new Intent(MessagesService.REFRESH_MESSAGES));
 			}
         };
 

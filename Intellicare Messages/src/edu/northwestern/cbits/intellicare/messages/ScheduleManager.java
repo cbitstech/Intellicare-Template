@@ -3,6 +3,7 @@ package edu.northwestern.cbits.intellicare.messages;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.ContentValues;
@@ -13,7 +14,6 @@ import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import edu.northwestern.cbits.intellicare.PhqFourActivity;
 import edu.northwestern.cbits.intellicare.StatusNotificationManager;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
@@ -33,6 +33,7 @@ public class ScheduleManager
 
 	private Context _context = null;
 
+	@SuppressLint("NewApi")
 	public ScheduleManager(Context context) 
 	{
 		this._context  = context;
@@ -61,10 +62,9 @@ public class ScheduleManager
 		return ScheduleManager._instance;
 	}
 	
+	@SuppressLint("NewApi")
 	public void updateSchedule()
 	{
-		Log.e("D2D", "UPDATE!");
-		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
 		{
 			Intent broadcast = new Intent(this._context, ScheduleHelper.class);
@@ -122,21 +122,15 @@ public class ScheduleManager
 
 		boolean lessonComplete = prefs.getBoolean(LessonsActivity.LESSON_READ_PREFIX + currentLesson, false);
 		
-		Log.e("D2D", "LESSON COMPLETE: " + lessonComplete + " -- " + currentLesson);
-		
 		if (lessonComplete)
 		{
 			int index = prefs.getInt(ScheduleManager.MESSAGE_INDEX, 0);
 			
 			long notificationTime = this.getNotificationTime(index % 5, now);
 			
-			Log.e("D2D", "MESSAGE: " + index + ((now - notificationTime) / 1000));
-			
 			if (notificationTime > 0 && Math.abs(now - notificationTime) < (30 * 60 * 1000))
 			{
 				boolean completed = prefs.getBoolean(ScheduleManager.INSTRUCTION_COMPLETED, false);
-
-				Log.e("D2D", "INST COMPLETED " + completed);
 				
 				if (index > 0 && index % 5 == 0 && completed == false)
 					index -= 5;
@@ -185,7 +179,7 @@ public class ScheduleManager
 								payload.put("message_index", descIndex);
 								LogManager.getInstance(this._context).log("notification_shown", payload);
 		
-								StatusNotificationManager.getInstance(this._context).notifyBigText(id, icon, msg.title, msg.message, PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT), TaskActivity.uriForMessage(msg));
+								StatusNotificationManager.getInstance(this._context).notifyBigText(id, icon, msg.title, msg.message, PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT), TaskActivity.uriForTask(msg));
 							}
 							else
 								this._context.startActivity(intent);
@@ -215,7 +209,7 @@ public class ScheduleManager
 								payload.put("message_index", descIndex);
 								LogManager.getInstance(this._context).log("notification_shown", payload);
 		
-								StatusNotificationManager.getInstance(this._context).notifyBigText(id, icon, msg.title, msg.message, PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT), TaskActivity.uriForMessage(msg));
+								StatusNotificationManager.getInstance(this._context).notifyBigText(id, icon, msg.title, msg.message, PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT), TipActivity.uriForTip(msg));
 							}
 							else
 								this._context.startActivity(intent);
