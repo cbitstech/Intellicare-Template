@@ -4,9 +4,11 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -102,6 +104,31 @@ public class MainActivity extends ConsentedActivity
 		}
 		
 		installedApps.close();
+
+		if (apps.size() <= 1)
+		{
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder = builder.setTitle(R.string.dialog_no_apps_title);
+			builder = builder.setMessage(R.string.dialog_no_apps_message);
+			builder = builder.setPositiveButton(R.string.dialog_no_apps_yes, new DialogInterface.OnClickListener() 
+			{
+				public void onClick(DialogInterface dialog, int which) 
+				{
+        			Intent nativeIntent = new Intent(me, AppStoreActivity.class);
+        			me.startActivity(nativeIntent);
+				}
+			});
+			
+			builder = builder.setNegativeButton(R.string.dialog_no_apps_no, new DialogInterface.OnClickListener() 
+			{
+				public void onClick(DialogInterface dialog, int which) 
+				{
+
+				}
+			});
+			
+			builder.create().show();
+		}
 
 		while (apps.size() < 4)
 			apps.add(new AppCell());

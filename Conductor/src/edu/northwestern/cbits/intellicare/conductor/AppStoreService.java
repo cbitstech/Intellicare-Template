@@ -97,7 +97,7 @@ public class AppStoreService extends IntentService
 	                    		
 	                    		values.put("date", version.getLong("updated") * 1000);
 
-	                    		values.put("version", version.getString("version"));
+	                    		values.put("version", version.getString("name"));
 	                    		values.put("changelog", version.getString("changelog"));
 	                    		values.put("url", version.getString("url"));
 	                    	}	                    	

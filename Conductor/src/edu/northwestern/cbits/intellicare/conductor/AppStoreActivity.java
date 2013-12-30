@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -122,6 +123,8 @@ public class AppStoreActivity extends ConsentedActivity
                 	if (info != null)
                 	{
                 		isInstalled = true;
+                		
+                		Log.e("IC", version + " =? " + info.versionName);
                 		
                 		if (version != null && version.equals(info.versionName) == false)
                 			updateAvailable = true;

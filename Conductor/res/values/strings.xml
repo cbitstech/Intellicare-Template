@@ -93,6 +93,11 @@
 	<string name="note_new_message_title">New Intellicare Messsage</string>
 	<string name="note_new_messages_desc" formatted="false">You have %d new messages.</string>
 	<string name="note_new_message_desc">You have a new message.</string>
-			
+
+	<string name="dialog_no_apps_title">Intellicare Apps</string>
+	<string name="dialog_no_apps_message">There don\'t appear to be any Intellicare apps installed on your device. Would you like to install a couple?</string>
+	<string name="dialog_no_apps_no">Maybe Later&#8230;</string>
+	<string name="dialog_no_apps_yes">Yes!</string>
+							
 </resources>
 

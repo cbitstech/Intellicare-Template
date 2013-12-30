@@ -77,11 +77,16 @@ public class LaunchActivity extends ConsentedActivity
 
 			startToday += (15 * 60 * 1000);
 		}
-
+		
 		TextView scheduledText = (TextView) this.findViewById(R.id.next_schedule_time);
 
 		if (scheduled != null)
 		{
+			long now = System.currentTimeMillis();
+
+			if (scheduled.getTime() < now)
+				scheduled = new Date(scheduled.getTime() + (1000 * 60 * 60 * 24));
+
 			SimpleDateFormat sdf = new SimpleDateFormat(this.getString(R.string.launch_date_format));
 			scheduledText.setText(sdf.format(scheduled));
 		}
