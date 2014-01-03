@@ -5,8 +5,8 @@ import java.util.HashMap;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
@@ -19,9 +19,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager.BadTokenException;
 import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 
@@ -189,6 +189,16 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
 			builder = builder.setMessage(this._trackDescription);
 			
 			builder.create().show();
+		}
+		else if (item.getItemId() == android.R.id.home)
+		{
+			if (this.isTaskRoot())
+			{
+				Intent intent = new Intent(this, IndexActivity.class);
+				this.startActivity(intent);
+			}
+
+			this.finish();
 		}
 		
 		return true;
