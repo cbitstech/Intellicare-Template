@@ -14,9 +14,10 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
-import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.widget.MediaController.MediaPlayerControl;
+import android.widget.RemoteViews;
 
 public class AudioFileManager implements MediaPlayerControl, OnCompletionListener
 {
@@ -165,41 +166,56 @@ public class AudioFileManager implements MediaPlayerControl, OnCompletionListene
 		NotificationManager manager = (NotificationManager) this._context.getSystemService(Context.NOTIFICATION_SERVICE);
 
 		manager.cancel(ScheduleManager.NOTIFICATION_ID);
+        
+        this.updateNotification();
+	}
+	
+	public static void togglePlayback(Context context) 
+	{
+        AudioFileManager afm = AudioFileManager.getInstance(context);
+        
+        if (afm.isPlaying())
+        	afm._player.pause();
+        else
+        	afm._player.start();
+        
+        afm.updateNotification();
+	}
+
+
+	public void updateNotification() 
+	{
+		Context context = this._context;
+
+        PendingIntent pi = PendingIntent.getActivity(context, 0, this.launchIntentForCurrentTrack(), PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Log.e("PC", "1");
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+		builder.setContentIntent(pi);
+		builder.setSmallIcon(R.drawable.ic_reminder);
+
+		RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.note_player);
+		rv.setTextViewText(R.id.title, this._currentTitle);
+		rv.setTextViewText(R.id.subtitle, this._context.getString(R.string.app_name));
+		rv.setImageViewResource(R.id.icon, R.drawable.ic_reminder);
 		
-        PendingIntent pi = PendingIntent.getActivity(this._context, 0, this.launchIntentForCurrentTrack(), PendingIntent.FLAG_UPDATE_CURRENT);
-
-		Notification note = null;
-		
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-		{
-			Notification.Builder builder = new Notification.Builder(this._context);
-			
-			builder.setContentIntent(pi);
-			builder.setContentTitle(this._context.getString(R.string.app_name));
-			builder.setContentText(this._currentTitle);
-			builder.setSmallIcon(R.drawable.ic_reminder);
-
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-				builder.setStyle(new Notification.BigTextStyle().bigText(this._currentTitle));
-
-			builder.setTicker(this._currentTitle);
-
-			note = builder.build();
-		}
+		if (this.isPlaying())
+			rv.setImageViewResource(R.id.note_toggle, R.drawable.ic_av_pause);
 		else
-		{
-			NotificationCompat.Builder builder = new NotificationCompat.Builder(this._context);
-
-			builder.setContentIntent(pi);
-			builder.setContentTitle(this._context.getString(R.string.app_name));
-			builder.setContentText(this._currentTitle);
-			builder.setSmallIcon(R.drawable.ic_reminder);
-
-			note = builder.build();
-		}
+			rv.setImageViewResource(R.id.note_toggle, R.drawable.ic_av_play);
 		
+		PendingIntent pendingIntent = PendingIntent.getService(context, 0, new Intent(AudioService.TOGGLE_PLAYBACK), 0);
+		
+		rv.setOnClickPendingIntent(R.id.note_toggle, pendingIntent);
+
+		builder.setContent(rv);
+		
+		Notification note = builder.build();
+
 		note.flags = Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE;
-		
+
+		NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		manager.notify(AudioFileManager.NOTIFICATION_ID, note);
 	}
 
