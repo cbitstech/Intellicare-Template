@@ -89,8 +89,8 @@
 	<string name="install_label">Install App</string>
 	<string name="open_label">Open App</string>
 
-	<string name="note_new_messages_title">New Intellicare Messsages</string>
-	<string name="note_new_message_title">New Intellicare Messsage</string>
+	<string name="note_new_messages_title">New Intellicare Messages</string>
+	<string name="note_new_message_title">New Intellicare Message</string>
 	<string name="note_new_messages_desc" formatted="false">You have %d new messages.</string>
 	<string name="note_new_message_desc">You have a new message.</string>
 
@@ -99,5 +99,6 @@
 	<string name="dialog_no_apps_no">Maybe Later&#8230;</string>
 	<string name="dialog_no_apps_yes">Yes!</string>
 							
+	<string name="msg_update_available" formatted="false">%s %s is now available. Tap here to download and install the update&#8230;</string>
 </resources>
 

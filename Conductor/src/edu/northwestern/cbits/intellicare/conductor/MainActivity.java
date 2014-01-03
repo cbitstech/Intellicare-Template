@@ -25,6 +25,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -43,8 +44,6 @@ public class MainActivity extends ConsentedActivity
 		super.onCreate(savedInstanceState);
 	
 		this.setContentView(R.layout.activity_main);
-		
-//		UpdateManager.register(this, APP_ID);
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
@@ -208,6 +207,19 @@ public class MainActivity extends ConsentedActivity
             }
         });
         
+        appsGrid.setOnItemLongClickListener(new OnItemLongClickListener()
+        {
+			public boolean onItemLongClick(AdapterView<?> adapter, View view, int position, long id) 
+			{
+                final AppCell app = (AppCell) adapter.getItemAtPosition(position);
+
+                if (app.iconUri() != null)
+                	me.startActivity(me.getPackageManager().getLaunchIntentForPackage(app._package));
+
+				return true;
+			}
+        });
+        
         ImageView avatar = (ImageView) this.findViewById(R.id.avatar_view);
         avatar.setOnClickListener(new OnClickListener()
         {
@@ -234,6 +246,11 @@ public class MainActivity extends ConsentedActivity
 
         toggle.setOnClickListener(listener);
         listener.onClick(toggle);
+        
+        if (this.visibleItems() == 0)
+        	this._showAll = false;
+        
+        this.refreshList();
 	}
 	
 	protected void filterMessages(String packageName) 
@@ -244,6 +261,34 @@ public class MainActivity extends ConsentedActivity
 			this._packageFilter = packageName;
 		
 		this.refreshList();
+	}
+	
+	private int visibleItems()
+	{
+        String selection = null;
+        String[] selectionArgs = null;
+        String sortOrder = "responded, date DESC";
+
+        if (this._showAll)
+			selection = "responded = 0";
+		else
+	        sortOrder = "responded, weight, date DESC";
+        
+        if (this._packageFilter != null)
+        {
+        	selection = "package = ?";
+        	String[] args = { this._packageFilter };
+        	
+        	selectionArgs = args;
+        }
+		
+		Cursor c = this.getContentResolver().query(ConductorContentProvider.MESSAGES_URI, null, selection, selectionArgs, sortOrder);
+		
+		int count = c.getCount();
+		
+		c.close();
+		
+		return count;
 	}
 
 	private void refreshList() 
@@ -349,8 +394,6 @@ public class MainActivity extends ConsentedActivity
 				Cursor cursor = (Cursor) list.getItemAtPosition(position);
 				
 				String urlString = cursor.getString(cursor.getColumnIndex("uri"));
-
-//				urlString = urlString.replace("intellicare",  "http");
 				
 				if (urlString != null)
 				{

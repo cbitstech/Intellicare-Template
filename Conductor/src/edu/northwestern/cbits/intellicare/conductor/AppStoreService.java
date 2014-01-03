@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,9 +13,14 @@ import org.json.JSONObject;
 
 import android.app.IntentService;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 
@@ -118,6 +124,8 @@ public class AppStoreService extends IntentService
 						e.printStackTrace();
 					}
 					
+					me.updateVersionMessages();
+
 					LocalBroadcastManager broadcast = LocalBroadcastManager.getInstance(me);
 					broadcast.sendBroadcast(new Intent(AppStoreService.APPS_UPDATED));
 					
@@ -132,5 +140,122 @@ public class AppStoreService extends IntentService
 			Thread t = new Thread(r);
 			t.start();
 		}
+	}
+
+	private void updateVersionMessages() 
+	{
+		Cursor c = this.getContentResolver().query(ConductorContentProvider.APPS_URI, null, null, null, "date DESC, name");
+		
+		HashMap<String, HashMap<String, String>> apps = new HashMap<String, HashMap<String, String>>();
+		
+		while(c.moveToNext())
+		{
+			String name = c.getString(c.getColumnIndex("name"));
+			
+			if (apps.containsKey(name) == false)
+			{
+				HashMap<String, String> app = new HashMap<String, String>();
+				
+				app.put("name", name);
+				app.put("version", c.getString(c.getColumnIndex("version")));
+				app.put("package", c.getString(c.getColumnIndex("package")));
+				app.put("url", c.getString(c.getColumnIndex("url")));
+				
+				apps.put(name, app);
+			}
+		}
+		
+		for (String key : apps.keySet())
+		{
+			HashMap<String, String> app = apps.get(key);
+		
+			String packageName = app.get("package");
+			String version = app.get("version");
+			
+			String message = this.getString(R.string.msg_update_available, key, version);
+			
+			String selection = "package = ? AND message = ?";
+			String[] args = { packageName, message };
+			
+			Cursor msgCursor = this.getContentResolver().query(ConductorContentProvider.MESSAGES_URI, null, selection, args, null);
+
+			if (AppStoreService.updateAvailable(this, version, packageName))
+			{
+				if (msgCursor.getCount() > 0)
+				{
+					ContentValues update = new ContentValues();
+					update.put("date", System.currentTimeMillis());
+					update.put("responded", false);
+					
+					this.getContentResolver().update(ConductorContentProvider.MESSAGES_URI, update, selection, args);
+				}
+				else
+				{
+					ContentValues insert = new ContentValues();
+					insert.put("date", System.currentTimeMillis());
+					insert.put("package", packageName);
+					insert.put("message", message);
+					insert.put("name", key);
+					insert.put("uri", app.get("url"));
+					
+					this.getContentResolver().insert(ConductorContentProvider.MESSAGES_URI, insert);
+				}
+			}
+			else
+			{
+				if (msgCursor.getCount() > 0)
+				{
+					ContentValues update = new ContentValues();
+					update.put("responded", true);
+					
+					this.getContentResolver().update(ConductorContentProvider.MESSAGES_URI, update, selection, args);
+				}
+			}
+
+			msgCursor.close();
+		}
+		
+		c.close();
+	}
+
+	public static boolean updateAvailable(Context context, String version, String packageName) 
+	{
+		PackageManager packages = context.getPackageManager();
+
+		try 
+        {
+    		PackageInfo info = packages.getPackageInfo(packageName, PackageManager.GET_META_DATA);
+        	
+        	if (info != null)
+        	{
+        		if (version.equals(info.versionName) == false)
+        			return true;
+        	}
+        } 
+        catch (NameNotFoundException e) 
+        {
+
+        }  
+		
+		return false;
+	}
+
+	public static boolean isInstalled(Context context, String packageName) 
+	{
+		PackageManager packages = context.getPackageManager();
+
+		try 
+        {
+    		PackageInfo info = packages.getPackageInfo(packageName, PackageManager.GET_META_DATA);
+        	
+        	if (info != null)
+        		return true;
+        } 
+        catch (NameNotFoundException e) 
+        {
+
+        }  
+		
+		return false;
 	}
 }

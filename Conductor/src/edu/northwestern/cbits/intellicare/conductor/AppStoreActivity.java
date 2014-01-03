@@ -111,29 +111,12 @@ public class AppStoreActivity extends ConsentedActivity
                 TextView details = (TextView) view.findViewById(R.id.app_details);
                 details.setText(cursor.getString(cursor.getColumnIndex("synopsis")));
 
-                boolean isInstalled = false;
-                boolean updateAvailable = false;
-                
-                try 
-                {
-            		String version = cursor.getString(cursor.getColumnIndex("version"));
+        		String version = cursor.getString(cursor.getColumnIndex("version"));
 
-            		PackageInfo info = packages.getPackageInfo(packageName, PackageManager.GET_META_DATA);
-                	
-                	if (info != null)
-                	{
-                		isInstalled = true;
-                		
-                		Log.e("IC", version + " =? " + info.versionName);
-                		
-                		if (version != null && version.equals(info.versionName) == false)
-                			updateAvailable = true;
-                	}
-                } 
-                catch (NameNotFoundException e) 
-                {
-
-                }  
+        		boolean isInstalled = AppStoreService.isInstalled(me, packageName);
+        		boolean updateAvailable = AppStoreService.updateAvailable(me, version, packageName);
+        		
+        		Log.e("IC", "UPDATE " + packageName + " " + version + " => " + updateAvailable + " / " + isInstalled);
                 
                 ImageButton downloadButton = (ImageButton) view.findViewById(R.id.button_download);
                 
