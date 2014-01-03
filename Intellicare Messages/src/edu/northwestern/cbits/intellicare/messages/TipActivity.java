@@ -54,8 +54,23 @@ public class TipActivity extends TaskActivity
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			
 			builder = builder.setTitle(R.string.task_title);
-			builder = builder.setMessage(this.getIntent().getStringExtra(TipActivity.TASK));
 			
+			if (this.getIntent().hasExtra(TipActivity.TASK))
+				builder = builder.setMessage(this.getIntent().getStringExtra(TipActivity.TASK));
+			else
+			{
+				Uri u = this.getIntent().getData();
+				
+				int currentLesson = Integer.parseInt(u.getPathSegments().get(1));
+				int index = Integer.parseInt(u.getPathSegments().get(2));
+				
+				index = index - (index % 5);
+
+				Message msg = ScheduleManager.getInstance(this).getMessage(currentLesson, index);
+				
+				builder = builder.setMessage(msg.message);
+			}
+				
 			builder.create().show();
 		}
 		else if (item.getItemId() ==  R.id.action_done)
@@ -92,7 +107,7 @@ public class TipActivity extends TaskActivity
 		if (index != null)
 			this.getSupportActionBar().setTitle(this.getString(R.string.tip_title, index));
 		else
-			this.getSupportActionBar().setTitle(this.getString(R.string.app_name, index));
+			this.getSupportActionBar().setTitle(this.getString(R.string.app_name));
 	}
 
 	public static Uri uriForTip(Message message) 
