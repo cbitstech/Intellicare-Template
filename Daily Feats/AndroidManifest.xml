@@ -22,6 +22,12 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+		        <action android:name="android.intent.action.VIEW" />
+        	    <category android:name="android.intent.category.DEFAULT" />
+	           	<category android:name="android.intent.category.BROWSABLE" />
+   				<data android:scheme="intellicare" android:host="daily-feats" android:pathPrefix="/home" />
+            </intent-filter>
         </activity>
         <activity android:name="edu.northwestern.cbits.intellicare.dailyfeats.HomeActivity" android:label="@string/title_activity_view_feat_collection" android:theme="@style/Theme.AppCompat.Light" />
         <activity android:name="edu.northwestern.cbits.intellicare.dailyfeats.IntroActivity" android:label="@string/title_activity_view_feat_collection" android:theme="@style/Theme.AppCompat.Light" />
