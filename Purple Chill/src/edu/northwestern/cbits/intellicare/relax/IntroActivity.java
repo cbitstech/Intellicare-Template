@@ -3,7 +3,6 @@ package edu.northwestern.cbits.intellicare.relax;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import edu.northwestern.cbits.intellicare.SequentialPageActivity;
 
 public class IntroActivity extends SequentialPageActivity 
@@ -26,8 +25,6 @@ public class IntroActivity extends SequentialPageActivity
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		Editor e = prefs.edit();
-		
-		Log.e("PC", "PUTTING KEY " + this.getIntent().getStringExtra(IntroActivity.SEQUENCE_KEY));
 		
 		e.putBoolean(this.getIntent().getStringExtra(IntroActivity.SEQUENCE_KEY), true);
 		

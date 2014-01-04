@@ -15,7 +15,6 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.widget.MediaController.MediaPlayerControl;
 import android.widget.RemoteViews;
 
@@ -188,8 +187,6 @@ public class AudioFileManager implements MediaPlayerControl, OnCompletionListene
 		Context context = this._context;
 
         PendingIntent pi = PendingIntent.getActivity(context, 0, this.launchIntentForCurrentTrack(), PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Log.e("PC", "1");
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 		builder.setContentIntent(pi);

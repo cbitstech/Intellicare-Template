@@ -2,7 +2,6 @@ package edu.northwestern.cbits.intellicare.relax;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.util.Log;
 
 public class AudioService extends IntentService 
 {
@@ -20,8 +19,6 @@ public class AudioService extends IntentService
 
 	protected void onHandleIntent(Intent intent) 
 	{
-		Log.e("PC", "HANDLE INTENT: " + intent);
-		
 		if (AudioService.TOGGLE_PLAYBACK.equals(intent.getAction()))
 		{
 			AudioFileManager.togglePlayback(this);

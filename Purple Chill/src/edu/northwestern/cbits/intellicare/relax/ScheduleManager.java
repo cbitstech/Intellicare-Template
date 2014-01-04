@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import edu.northwestern.cbits.intellicare.StatusNotificationManager;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 
@@ -49,8 +48,6 @@ public class ScheduleManager
 	
 	private void remind()
 	{
-		Log.e("PC", "REMIND");
-		
 		if (AudioFileManager.getInstance(this._context).isPlaying())
 			return;
 		
@@ -75,8 +72,6 @@ public class ScheduleManager
 	
 	public void updateSchedule()
 	{
-		Log.e("PC", "UPDATE");
-
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
 		
 		long lastReminder = prefs.getLong("config_last_reminder", 0);
