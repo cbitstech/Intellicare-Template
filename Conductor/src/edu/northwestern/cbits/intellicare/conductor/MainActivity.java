@@ -3,6 +3,9 @@ package edu.northwestern.cbits.intellicare.conductor;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+
+import net.hockeyapp.android.CrashManager;
 
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
@@ -33,6 +36,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class MainActivity extends ConsentedActivity
 {
@@ -81,10 +85,23 @@ public class MainActivity extends ConsentedActivity
 			return this._package;
 		}
 	}
+	
+	public void onPause()
+	{
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("closed_main", payload);
+		
+		super.onPause();
+	}
 
 	public void onResume()
 	{
 		super.onResume();
+		
+		CrashManager.register(this, "1c80d4f6806c74187d8740450e6cfc31");
+		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("opened_main", payload);
 		
 		final MainActivity me = this;
 
@@ -113,6 +130,9 @@ public class MainActivity extends ConsentedActivity
 			{
 				public void onClick(DialogInterface dialog, int which) 
 				{
+					HashMap<String, Object> payload = new HashMap<String, Object>();
+					LogManager.getInstance(me).log("opened_app_list", payload);
+
         			Intent nativeIntent = new Intent(me, AppStoreActivity.class);
         			me.startActivity(nativeIntent);
 				}
@@ -199,7 +219,10 @@ public class MainActivity extends ConsentedActivity
                 
                 if (app.iconUri() == null)
                 {
-        			Intent nativeIntent = new Intent(me, AppStoreActivity.class);
+					HashMap<String, Object> payload = new HashMap<String, Object>();
+					LogManager.getInstance(me).log("opened_app_list", payload);
+
+					Intent nativeIntent = new Intent(me, AppStoreActivity.class);
         			me.startActivity(nativeIntent);
                 }
                 else
@@ -214,7 +237,13 @@ public class MainActivity extends ConsentedActivity
                 final AppCell app = (AppCell) adapter.getItemAtPosition(position);
 
                 if (app.iconUri() != null)
+                {
                 	me.startActivity(me.getPackageManager().getLaunchIntentForPackage(app._package));
+
+					HashMap<String, Object> payload = new HashMap<String, Object>();
+					payload.put("app_package", app._package);
+					LogManager.getInstance(me).log("launched_app", payload);
+                }
 
 				return true;
 			}
@@ -237,6 +266,11 @@ public class MainActivity extends ConsentedActivity
 			public void onClick(View view) 
 			{
 				me._showAll = (me._showAll == false);
+
+				
+				HashMap<String, Object> payload = new HashMap<String, Object>();
+				payload.put("show_all", "" + me._showAll);
+				LogManager.getInstance(me).log("toggled_list", payload);
 				
 				me.refreshList();
 
@@ -259,6 +293,10 @@ public class MainActivity extends ConsentedActivity
 			this._packageFilter = null;
 		else
 			this._packageFilter = packageName;
+		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		payload.put("package_filter", "" + this._packageFilter);
+		LogManager.getInstance(this).log("filtered_messages", payload);
 		
 		this.refreshList();
 	}
@@ -398,11 +436,16 @@ public class MainActivity extends ConsentedActivity
 				if (urlString != null)
 				{
 					Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlString));
-					
+
+					HashMap<String, Object> payload = new HashMap<String, Object>();
+					payload.put("launch_uri", urlString);
+
 					try
 					{
 						me.startActivity(intent);
-						
+
+						payload.put("handler_found", "" + true);
+
 						ContentValues values = new ContentValues();
 						values.put("responded", 1);
 						
@@ -413,13 +456,14 @@ public class MainActivity extends ConsentedActivity
 					}
 					catch (ActivityNotFoundException e)
 					{
-						e.printStackTrace();
+						payload.put("handler_found", "" + false);
 						
 						String s = me.getString(R.string.no_associated_action, urlString);
 
 						Toast.makeText(me, s, Toast.LENGTH_LONG).show();
-
 					}
+
+					LogManager.getInstance(me).log("launched_uri", payload);
 				}				
 				else
 					Toast.makeText(me, R.string.no_available_action, Toast.LENGTH_LONG).show();

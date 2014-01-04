@@ -28,7 +28,6 @@
         </activity>
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.MotivationActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.DemographicActivity" android:label="@string/app_name" />
-   		<activity android:name="net.hockeyapp.android.UpdateActivity" />
         <provider android:name="edu.northwestern.cbits.intellicare.conductor.ConductorContentProvider" android:authorities="edu.northwestern.cbits.intellicare.conductor" android:exported="false" />
         <service android:enabled="true" android:name=".AppStoreService" android:exported="false">
 			<intent-filter>

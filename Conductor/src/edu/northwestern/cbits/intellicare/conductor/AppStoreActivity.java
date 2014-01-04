@@ -1,5 +1,7 @@
 package edu.northwestern.cbits.intellicare.conductor;
 
+import java.util.HashMap;
+
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,7 +17,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +28,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class AppStoreActivity extends ConsentedActivity 
 {
@@ -77,7 +79,7 @@ public class AppStoreActivity extends ConsentedActivity
 		{
 			public void bindView (View view, Context context, Cursor cursor)
 			{
-        		String packageName = cursor.getString(cursor.getColumnIndex("package"));
+        		final String packageName = cursor.getString(cursor.getColumnIndex("package"));
 
 				final UriImageView icon = (UriImageView) view.findViewById(R.id.icon);
 
@@ -116,8 +118,6 @@ public class AppStoreActivity extends ConsentedActivity
         		boolean isInstalled = AppStoreService.isInstalled(me, packageName);
         		boolean updateAvailable = AppStoreService.updateAvailable(me, version, packageName);
         		
-        		Log.e("IC", "UPDATE " + packageName + " " + version + " => " + updateAvailable + " / " + isInstalled);
-                
                 ImageButton downloadButton = (ImageButton) view.findViewById(R.id.button_download);
                 
                 if (isInstalled == false || updateAvailable == true)
@@ -137,6 +137,11 @@ public class AppStoreActivity extends ConsentedActivity
 	                {
 						public void onClick(View view) 
 						{
+							HashMap<String, Object> payload = new HashMap<String, Object>();
+							payload.put("app_url", appUri.toString());
+							payload.put("app_package", packageName);
+							LogManager.getInstance(me).log("downloaded_app", payload);
+
 							Intent intent = new Intent(Intent.ACTION_VIEW);
 							intent.setData(appUri);
 							
@@ -203,6 +208,11 @@ public class AppStoreActivity extends ConsentedActivity
                     	{
     						public void onClick(DialogInterface dialog, int which) 
     						{
+    							HashMap<String, Object> payload = new HashMap<String, Object>();
+    							payload.put("app_url", appUri.toString());
+    							payload.put("app_package", packageName);
+    							LogManager.getInstance(me).log("downloaded_app", payload);
+
     							Intent intent = new Intent(Intent.ACTION_VIEW);
     							intent.setData(appUri);
     							
@@ -226,6 +236,10 @@ public class AppStoreActivity extends ConsentedActivity
 						    
 						    if (intent != null)
 						    {
+								HashMap<String, Object> payload = new HashMap<String, Object>();
+								payload.put("app_package", packageName);
+								LogManager.getInstance(me).log("launched_app", payload);
+
 							    intent.addCategory(Intent.CATEGORY_LAUNCHER);
 
 							    me.startActivity(intent);
@@ -242,8 +256,19 @@ public class AppStoreActivity extends ConsentedActivity
 	public void onResume()
 	{
 		super.onResume();
-		
+
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("opened_app_list", payload);
+
 		this.refreshList();
+	}
+	
+	public void onPause()
+	{
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("closed_app_list", payload);
+		
+		super.onPause();
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) 
@@ -257,6 +282,9 @@ public class AppStoreActivity extends ConsentedActivity
 	{
 		if (item.getItemId() == R.id.action_refresh)
 		{
+			HashMap<String, Object> payload = new HashMap<String, Object>();
+			LogManager.getInstance(this).log("refreshed_app_list", payload);
+
 			Intent intent = new Intent(AppStoreService.REFRESH_APPS);
 			
 			this.startService(intent);
@@ -264,5 +292,4 @@ public class AppStoreActivity extends ConsentedActivity
 
 		return true;
 	}
-
 }
