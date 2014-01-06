@@ -14,7 +14,7 @@ import android.support.v4.app.NotificationCompat;
 
 public class StatusNotificationManager 
 {
-	private static final String CONDUCTOR_PACKAGE = "edu.northwestern.cbits.intellicare.conductor";
+	public static final String CONDUCTOR_PACKAGE = "edu.northwestern.cbits.intellicare.conductor";
 
 	public static final String LOG_MESSAGE = "conductor_log_message";
 	public static final String PACKAGE = "package";
@@ -69,7 +69,6 @@ public class StatusNotificationManager
 		catch (NameNotFoundException e) 
 		{
 			// Show native dialog if conductor is unavailable
-			e.printStackTrace();
 			
 			Notification note = null;
 			
