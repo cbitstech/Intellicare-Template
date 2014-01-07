@@ -1,0 +1,15 @@
+<div id="content">
+
+  <h2>Cows Are Ruminants</h2>
+  <img class=".img-responsive {{ intro.image.class }}" alt="{{ intro.image.alt }}" ng-src="{{ intro.image.url }}" />
+
+  <div id="description">Intro text goes here...</div>
+
+
+  <!-- Nav bar footer. Copy-paste for now, but at some point, consider using nested partials: http://stackoverflow.com/questions/12863663/angularjs-complex-nesting-of-partials-and-templates -->
+  <div id="pageNav">
+    <a class="btn btn-primary" href="{{ intro.nav.back.url }}">{{ intro.nav.back.title }}</a>
+    <a class="btn btn-primary" href="{{ intro.nav.next.url }}">{{ intro.nav.next.title }}</a>
+  </div>
+
+</div>

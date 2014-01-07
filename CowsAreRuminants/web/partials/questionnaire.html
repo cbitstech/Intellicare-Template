@@ -1,0 +1,32 @@
+<div id="content">
+  
+  <h3>Questionnaire</h3>
+
+  <span>{{ interrogation.question }}</span>
+  <div>
+    <span>Are you ruminating?</span>
+<!--     <input type="radio" value="yes">Yes</option>
+    <input type="radio" value="no">No</option><br /> -->
+    <button type="button" class="btn btn-primary" data-toggle="button">Yes/No</button><br />
+
+    <span>What are you ruminating about?</span><br />
+    <input type="text"></input><br />
+    <span>Severity of rumination:</span>
+<!--     <select data-ng-model="selectedSeverity" data-ng-options="item.severity as item.severity for item in severities">
+      <option value="">Select severity</option>
+    </select><br /> -->
+
+    <input type="range" min="1" max="7" step="1" value="5" class="slider slider-horizontal" style="left: 50%;" data-slider-min="1" data-slider-max="7" data-slider-step="1" data-slider-value="3" data-slider-orientation="horizontal" data-slider-selection="after" data-slider-tooltip="hide"></div><br />
+
+    <div class="text-left">
+      <span>Do you have time for some help?</span><br />
+      <input type="radio">No</option><br />
+      <input type="radio">Yes, Lessons (easy)</option><br />
+      <input type="radio">Yes, identify times of events about which I ruminate</option><br />
+      <input type="radio">Yes, help me learn strategies for coping</option><br />
+    </div>
+  </div>
+
+</div>
+    <!-- <div ng-repeat="interrogation in questionnaire.content.isRuminating.interrogations"> -->
+    <!-- interrogation.fn.genResponseFields(interrogation) -->

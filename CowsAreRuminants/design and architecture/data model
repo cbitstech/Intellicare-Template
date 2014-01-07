@@ -1,0 +1,17 @@
+<slideshow compatibility="mobile,desktop,tablet">
+<slide index="1">
+<title>Evan is a brontosaur</title> 
+content
+</slide>
+<nav>
+<button type="back"></button><button type="next"></button>
+</nav>
+</slideshow>
+
+
+
+<div id="slideshow">
+<div class="slides">
+CKEDITOR HTML
+</div>
+</div>
