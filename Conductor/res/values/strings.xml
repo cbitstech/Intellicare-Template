@@ -1,8 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">Intellicare</string>
 
+    <string name="title_app_catalog">Intellicare App Catalog</string>
+    
     <string name="action_apps">More Apps</string>
     <string name="action_settings">Settings</string>
+    <string name="action_refresh">Refresh Apps</string>
+    
+    <string name="app_store_json">http://intellicare.cbits.northwestern.edu/apps/apps.json</string>
+    
+    <string-array name="app_names">
+        <item>Day-to-Day</item>
+        <item>Purple Chill</item>
+        <item>Daily Feats</item>
+        <item>Day-to-Day</item>
+        <item>Purple Chill</item>
+        <item>Daily Feats</item>
+        <item>Day-to-Day</item>
+        <item>Purple Chill</item>
+        <item>Daily Feats</item>
+    </string-array>
+    
+    <string-array name="app_icons">
+        <item>https://dl0tgz6ee3upo.cloudfront.net/production/apps/icons/000/043/002/retina/9d2675eaa21e1730a72b0c698ee9e11e.png</item>
+        <item>https://dl0tgz6ee3upo.cloudfront.net/production/apps/icons/000/044/474/retina/b3c93f69f8e9bf5a11abadc1d1e02b1f.png</item>
+        <item>https://dl0tgz6ee3upo.cloudfront.net/production/apps/icons/000/049/686/retina/0888dec269a639f371764f762f6cf983.png</item>
+        <item>https://dl0tgz6ee3upo.cloudfront.net/production/apps/icons/000/043/002/retina/9d2675eaa21e1730a72b0c698ee9e11e.png</item>
+        <item>https://dl0tgz6ee3upo.cloudfront.net/production/apps/icons/000/044/474/retina/b3c93f69f8e9bf5a11abadc1d1e02b1f.png</item>
+        <item>https://dl0tgz6ee3upo.cloudfront.net/production/apps/icons/000/049/686/retina/0888dec269a639f371764f762f6cf983.png</item>
+        <item>https://dl0tgz6ee3upo.cloudfront.net/production/apps/icons/000/043/002/retina/9d2675eaa21e1730a72b0c698ee9e11e.png</item>
+        <item>https://dl0tgz6ee3upo.cloudfront.net/production/apps/icons/000/044/474/retina/b3c93f69f8e9bf5a11abadc1d1e02b1f.png</item>
+        <item>https://dl0tgz6ee3upo.cloudfront.net/production/apps/icons/000/049/686/retina/0888dec269a639f371764f762f6cf983.png</item>
+    </string-array>
+
+    <string-array name="app_messages">
+        <item>It\'s time to read your next message.</item>
+        <item></item>
+        <item>Your daily feats are due!</item>
+        <item>It\'s time to read your next message.</item>
+        <item>Let\'s relax!</item>
+        <item>Your daily feats are due!</item>
+        <item>It\'s time to read your next message.</item>
+        <item>You haven\'t relaxed in a while. Give it a go?</item>
+        <item>Your daily feats are due!</item>
+   	</string-array>
+    
+    <string-array name="app_badges">
+        <item>1</item>
+        <item>0</item>
+        <item>3</item>
+        <item>1</item>
+        <item>0</item>
+        <item>3</item>        
+        <item>1</item>
+        <item>0</item>
+        <item>3</item>
+   	</string-array>
+
+    <string name="message_subtitle" formatted="false">%s: %s</string>
+    <string name="message_date_format">EEEE, M/d</string>
+
+    <string name="title_settings">Intellicare Settings</string>
+    <string name="settings_group_notification">Notification Options</string>
+    <string name="title_forward_notifications">Forward notifications</string>
+    <string name="desc_forward_notifications">Send notifications to the system status bar.</string>
+
+    <string name="label_messages">App Messages</string>
+    <string name="label_show_important">Show Important</string>
+    <string name="label_show_all">Show All</string>
+
+    <string name="db_create_apps_table">CREATE TABLE IF NOT EXISTS apps(_id INTEGER PRIMARY KEY, package TEXT, name TEXT, url TEXT, recommendation TEXT, score INTEGER DEFAULT 0, date INTEGER DEFAULT 0);</string>
+	<string name="db_update_apps_add_icon">ALTER TABLE apps ADD COLUMN icon TEXT;</string>
+	<string name="db_update_apps_add_version">ALTER TABLE apps ADD COLUMN version TEXT;</string>
+	<string name="db_update_apps_add_changelog">ALTER TABLE apps ADD COLUMN changelog TEXT;</string>
+	<string name="db_update_apps_add_synopsis">ALTER TABLE apps ADD COLUMN synopsis TEXT;</string>
+	
+	<string name="db_create_messages_table">CREATE TABLE IF NOT EXISTS messages(_id INTEGER PRIMARY KEY, package TEXT, name TEXT, message TEXT, date INTEGER DEFAULT 0, responded INTEGER DEFAULT 0, weight INTEGER DEFAULT 0);</string>
+	<string name="db_update_messages_add_uri">ALTER TABLE messages ADD COLUMN uri TEXT;</string>
+		
+	<string name="apps_updated_toast">App catalog successfully fetched&#8230;</string>
+	<string name="label_update_available">Update available.</string>
+
+	<string name="no_available_action">No action available for this message&#8230;</string>
+	<string name="no_associated_action" formatted="false">No action associated with %s&#8230;</string>
+		
+	<string name="upgrade_label">Update App</string>
+	<string name="install_label">Install App</string>
+	<string name="open_label">Open App</string>
+
+	<string name="note_new_messages_title">New Intellicare Messages</string>
+	<string name="note_new_message_title">New Intellicare Message</string>
+	<string name="note_new_messages_desc" formatted="false">You have %d new messages.</string>
+	<string name="note_new_message_desc">You have a new message.</string>
+
+	<string name="dialog_no_apps_title">Intellicare Apps</string>
+	<string name="dialog_no_apps_message">There don\'t appear to be any Intellicare apps installed on your device. Would you like to install a couple?</string>
+	<string name="dialog_no_apps_no">Maybe Later&#8230;</string>
+	<string name="dialog_no_apps_yes">Yes!</string>
+							
+	<string name="msg_update_available" formatted="false">%s %s is now available. Tap here to download and install the update&#8230;</string>
 </resources>
+

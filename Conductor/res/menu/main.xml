@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:robot="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_schedule"
+        android:id="@+id/action_store"
         android:icon="@drawable/ic_action_puzzle"
         robot:showAsAction="always"
         android:title="@string/action_apps"/>

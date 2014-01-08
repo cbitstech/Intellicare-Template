@@ -1,27 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.northwestern.cbits.intellicare.conductor"
-    android:versionCode="10000"
-    android:versionName="1.0.0" >
+    android:versionCode="10002"
+    android:versionName="1.0.2" >
    	<uses-permission android:name="android.permission.INTERNET" />
    	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
    	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="19" />
-    <application android:allowBackup="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:theme="@style/AppTheme" >
-        <activity
-            android:name="edu.northwestern.cbits.intellicare.conductor.MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.AppCompat.Light" >
+    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="19" />
+    <application android:allowBackup="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:theme="@style/AppTheme">
+        <activity android:name="edu.northwestern.cbits.intellicare.conductor.MainActivity" android:label="@string/app_name" android:theme="@style/Theme.AppCompat.Light">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".AppStoreActivity" android:label="@string/app_name" />
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".SettingsActivity" android:label="@string/app_name" />
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".AvatarActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.ConsentActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.RecruitmentActivity" android:label="@string/app_name" />
-   		<activity android:name="net.hockeyapp.android.UpdateActivity" />
-	</application>
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.PhqFourActivity" android:label="@string/app_name">
+			<intent-filter>
+			    <data android:scheme="intellicare" android:host="phq4" />
+			</intent-filter>
+        </activity>
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.MotivationActivity" android:label="@string/app_name" />
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.DemographicActivity" android:label="@string/app_name" />
+        <provider android:name="edu.northwestern.cbits.intellicare.conductor.ConductorContentProvider" android:authorities="edu.northwestern.cbits.intellicare.conductor" android:exported="false" />
+        <service android:enabled="true" android:name=".AppStoreService" android:exported="false">
+			<intent-filter>
+				<action android:name="conductor_refresh_apps" />
+            </intent-filter>
+        </service>
+        <service android:enabled="true" android:name=".MessagesService" android:exported="true">
+			<intent-filter>
+				<action android:name="conductor_log_message" />
+				<action android:name="conductor_refresh_messages" />
+            </intent-filter>
+        </service>
+		<receiver android:enabled="true" android:name=".BootUpReceiver" android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+			</intent-filter>
+		</receiver>
+   	</application>
 </manifest>

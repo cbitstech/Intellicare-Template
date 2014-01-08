@@ -3,6 +3,7 @@ package edu.northwestern.cbits.intellicare.messages;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.ContentValues;
@@ -11,8 +12,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
+import android.os.Build;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import edu.northwestern.cbits.intellicare.PhqFourActivity;
 import edu.northwestern.cbits.intellicare.StatusNotificationManager;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
@@ -32,6 +33,7 @@ public class ScheduleManager
 
 	private Context _context = null;
 
+	@SuppressLint("NewApi")
 	public ScheduleManager(Context context) 
 	{
 		this._context  = context;
@@ -41,8 +43,12 @@ public class ScheduleManager
 		Intent broadcast = new Intent(this._context, ScheduleHelper.class);
 		PendingIntent pi = PendingIntent.getBroadcast(this._context, 0, broadcast, PendingIntent.FLAG_UPDATE_CURRENT);
 		
-		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);
-///		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, 15000, pi);
+		long now = System.currentTimeMillis();
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+			alarm.setExact(AlarmManager.RTC_WAKEUP, now + 60000, pi);
+		else
+			alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, 60000, pi);
 	}
 
 	public static ScheduleManager getInstance(Context context)
@@ -56,14 +62,27 @@ public class ScheduleManager
 		return ScheduleManager._instance;
 	}
 	
+	@SuppressLint("NewApi")
 	public void updateSchedule()
 	{
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+		{
+			Intent broadcast = new Intent(this._context, ScheduleHelper.class);
+			PendingIntent pi = PendingIntent.getBroadcast(this._context, 0, broadcast, PendingIntent.FLAG_UPDATE_CURRENT);
+
+			AlarmManager alarm = (AlarmManager) this._context.getSystemService(Context.ALARM_SERVICE);
+
+			long now = System.currentTimeMillis();
+			
+			alarm.setExact(AlarmManager.RTC_WAKEUP, now + 60000, pi);
+		}
 		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
+
 		if (prefs.contains(HelpActivity.HELP_COMPLETED) == false)
 			return;
 		
-		boolean showNotification = prefs.getBoolean(ScheduleManager.SHOW_NOTIFICATION, false);
+		boolean showNotification = prefs.getBoolean(ScheduleManager.SHOW_NOTIFICATION, true);
 
 		long now = System.currentTimeMillis();
 		
@@ -109,7 +128,7 @@ public class ScheduleManager
 			
 			long notificationTime = this.getNotificationTime(index % 5, now);
 			
-			if (notificationTime > 0)
+			if (notificationTime > 0 && Math.abs(now - notificationTime) < (30 * 60 * 1000))
 			{
 				boolean completed = prefs.getBoolean(ScheduleManager.INSTRUCTION_COMPLETED, false);
 				
@@ -117,7 +136,7 @@ public class ScheduleManager
 					index -= 5;
 				
 				Message msg = this.getMessage(currentLesson, index);
-				
+
 				if (msg != null)
 				{
 					if (now >= notificationTime)
@@ -160,13 +179,12 @@ public class ScheduleManager
 								payload.put("message_index", descIndex);
 								LogManager.getInstance(this._context).log("notification_shown", payload);
 		
-								StatusNotificationManager.getInstance(this._context).notifyBigText(id, icon, msg.title, msg.message, PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT));
+								StatusNotificationManager.getInstance(this._context).notifyBigText(id, icon, msg.title, msg.message, PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT), TaskActivity.uriForTask(msg));
 							}
 							else
 								this._context.startActivity(intent);
 							
 							e.putLong("last_instruction_notification", System.currentTimeMillis());
-							
 						}
 						else
 						{
@@ -191,7 +209,7 @@ public class ScheduleManager
 								payload.put("message_index", descIndex);
 								LogManager.getInstance(this._context).log("notification_shown", payload);
 		
-								StatusNotificationManager.getInstance(this._context).notifyBigText(id, icon, msg.title, msg.message, PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT));
+								StatusNotificationManager.getInstance(this._context).notifyBigText(id, icon, msg.title, msg.message, PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT), TipActivity.uriForTip(msg));
 							}
 							else
 								this._context.startActivity(intent);
@@ -285,23 +303,34 @@ public class ScheduleManager
 			this._context.getContentResolver().update(ContentProvider.LESSONS_URI, values, where, whereArgs);
 
 			lessonIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			
+			now += 1;
+			
+			long lastLesson = prefs.getLong("notification_last_lesson", 0);
 
-			if (showNotification)
+			if (now - lastLesson > (24 * 60 * 60 * 1000))
 			{
-				PendingIntent pi = PendingIntent.getActivity(this._context, 1, lessonIntent, PendingIntent.FLAG_ONE_SHOT);
+				if (showNotification)
+				{
+					PendingIntent pi = PendingIntent.getActivity(this._context, 1, lessonIntent, PendingIntent.FLAG_ONE_SHOT);
+					
+					HashMap<String, Object> payload = new HashMap<String, Object>();
+					payload.put("message_index", descIndex);
+					LogManager.getInstance(this._context).log("lesson_notification_shown", payload);
+	
+					StatusNotificationManager.getInstance(this._context).notifyBigText(0, R.drawable.ic_notification_color, title, message, pi, LessonActivity.uriForLesson(currentLesson));
+				}
+				else
+					this._context.startActivity(lessonIntent);
 				
-				HashMap<String, Object> payload = new HashMap<String, Object>();
-				payload.put("message_index", descIndex);
-				LogManager.getInstance(this._context).log("lesson_notification_shown", payload);
-
-				StatusNotificationManager.getInstance(this._context).notifyBigText(0, R.drawable.ic_notification_color, title, message, pi);
+				Editor e = prefs.edit();
+				e.putLong("notification_last_lesson", now);
+				e.commit();
 			}
-			else
-				this._context.startActivity(lessonIntent);
 		}
 	}
 	
-	private Message getMessage(int lessonId, int index) 
+	public Message getMessage(int lessonId, int index) 
 	{
 		if (index >= 35)
 			return null;
@@ -320,7 +349,7 @@ public class ScheduleManager
 		{
 			cursor.moveToPosition(day);
 			
-			message = new Message();
+			message = new Message(lessonId, index);
 			message.title = this._context.getString(R.string.note_title);
 			
 			switch(offset)
@@ -353,21 +382,19 @@ public class ScheduleManager
 		return message;
 	}
 
-	private long getNotificationTime(int index, long now) 
+	public long getNotificationTime(int index, long now) 
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
 
 		long lastInst = prefs.getLong("last_instruction_notification", 0);
 		
-		Log.e("D2D", "OFF: " + this.getOffTime());
-		
 		if (index % 5 == 0 && now - lastInst < this.getOffTime())
-			return -1;
+		 	return -1;
 		
 		long firstRun = prefs.getLong(ScheduleManager.FIRST_RUN, 0);
 		
 		int startHour = Integer.parseInt(prefs.getString("config_day_start", "09"));
-		int endHour = Integer.parseInt(prefs.getString("config_day_end", "21"));
+		int endHour = Integer.parseInt(prefs.getString("config_day_end", "20"));
 		
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(now);
@@ -376,26 +403,30 @@ public class ScheduleManager
 		calendar.set(Calendar.SECOND, 0);
 
 		calendar.set(Calendar.HOUR_OF_DAY, startHour);
-		long start = calendar.getTimeInMillis();
 
-		calendar.set(Calendar.MINUTE, 59);
-		calendar.set(Calendar.SECOND, 59);
+		long start = calendar.getTimeInMillis();
 
 		calendar.set(Calendar.HOUR_OF_DAY, endHour);
 		long end = calendar.getTimeInMillis();
 
 		if (end < firstRun)
-			return -1; // Running after 9pm...
+			return -1;
 
 		if (start < firstRun)
 			start = firstRun;
+		
+		if (start < lastInst)
+			start = lastInst;
 
-		if (start > end)
+		if (start >= end)
 			end += (24 * 60 * 60 * 1000);
 		
-		if (now > start && now < end)
+		if (end - start < (3 * 60 * 60 * 1000))
+			end = start + (3 * 60 * 60 * 1000);
+		
+		if (now > (start - 1800000) && now < (end + 1800000))
 		{
-			long delta = (end - start) / 5;
+			long delta = (end - start) / 4;
 	
 			return start + (index * delta);
 		}
@@ -408,7 +439,7 @@ public class ScheduleManager
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
 		
 		int startHour = Integer.parseInt(prefs.getString("config_day_start", "09"));
-		int endHour = Integer.parseInt(prefs.getString("config_day_end", "21"));
+		int endHour = Integer.parseInt(prefs.getString("config_day_end", "20"));
 		
 		long now = System.currentTimeMillis();
 		
@@ -427,17 +458,26 @@ public class ScheduleManager
 		if (start > end)
 			end += (24 * 60 * 60 * 1000);
 		
-		long onTime = end - start;
+		long offTime = end - start;
 		
-		return (24 * 60 * 60 * 1000) - onTime;
+		return offTime;
 	}
 
-	private class Message
+	class Message
 	{
 		public String image = null;
 		public String title = null;
 		public String message = null;
 		
+		public int lessonId = 0;
+		public int index = 0;
+		
+		public Message(int lessonId, int index) 
+		{
+			this.lessonId = lessonId;
+			this.index = index;
+		}
+
 		public String toString()
 		{
 			return this.message;

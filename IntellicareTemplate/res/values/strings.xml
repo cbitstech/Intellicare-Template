@@ -153,4 +153,11 @@
 	<string name="why_not_dont_want">Don\'t wish to participate?</string>
 	<string name="why_not_something_else">Thought this was something else?</string>
 	<string name="why_not_unknown">Don\'t want to say?</string>
+
+	<string name="install_intellicare_title">Install Intellicare?</string>
+	<string name="install_intellicare_message">This app is part of a larger suite of apps called Intellicare. Would you like to install the main app that manages this and other Intellicare apps?</string>
+	<string name="install_intellicare_no">No</string>
+	<string name="install_intellicare_yes">Yes</string>
+	<string name="install_intellicare_link">http://intellicare.cbits.northwestern.edu/media/app_versions/Conductor_1.apk</string>
+					
 </resources>

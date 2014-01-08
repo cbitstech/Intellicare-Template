@@ -3,6 +3,7 @@ package edu.northwestern.cbits.intellicare;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.RadioGroup;
@@ -12,6 +13,7 @@ import edu.northwestern.cbits.ic_template.R;
 public class PhqFourActivity extends FormQuestionActivity 
 {
 	private static final Handler handler = new Handler();
+	private static final Uri URI = Uri.parse("intellicare://phq4");
 	
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -93,14 +95,14 @@ public class PhqFourActivity extends FormQuestionActivity
 		final String message = context.getString(R.string.phq4_message);
 
 		if (immediate)
-			StatusNotificationManager.getInstance(context).notifyBigText(12345, R.drawable.ic_notification_color, title, message, pi);
+			StatusNotificationManager.getInstance(context).notifyBigText(12345, R.drawable.ic_notification_color, title, message, pi, PhqFourActivity.URI);
 		else
 		{
 			PhqFourActivity.handler.postDelayed(new Runnable()
 			{
 				public void run() 
 				{
-					StatusNotificationManager.getInstance(context).notifyBigText(12345, R.drawable.ic_notification_color, title, message, pi);
+					StatusNotificationManager.getInstance(context).notifyBigText(12345, R.drawable.ic_notification_color, title, message, pi, PhqFourActivity.URI);
 				}
 				
 			}, 300000);

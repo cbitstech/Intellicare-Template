@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/settings_group_notification">
+		<CheckBoxPreference android:key="forward_notification"
+		    android:title="@string/title_forward_notifications"
+		    android:icon="@drawable/ic_action_bulb"
+		    android:summary="@string/desc_forward_notifications"
+		    android:defaultValue="true" />        
+	</PreferenceCategory>
+</PreferenceScreen>

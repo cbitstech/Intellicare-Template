@@ -3,11 +3,11 @@
         android:id="@+id/action_schedule"
         android:icon="@drawable/ic_action_clock"
         robot:showAsAction="always"
-        android:title="@string/action_schedule"/> -->
-    <!-- <item
+        android:title="@string/action_schedule"/>
+	 <item
         android:id="@+id/action_test"
         robot:showAsAction="never"
-        android:title="@string/action_test"/> -->
+        android:title="@string/action_test"/> 
     <item
         android:id="@+id/action_phq_four"
         robot:showAsAction="never"
@@ -23,7 +23,7 @@
     <item
         android:id="@+id/action_demographic"
         robot:showAsAction="never"
-        android:title="@string/demographic_title"/>
+        android:title="@string/demographic_title"/> -->
     <item
         android:id="@+id/action_settings"
         robot:showAsAction="never"

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import edu.northwestern.cbits.intellicare.StatusNotificationManager;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
@@ -30,7 +31,8 @@ public class ScheduleManager
 		
 		PendingIntent pi = PendingIntent.getBroadcast(this._context, 0, broadcast, PendingIntent.FLAG_UPDATE_CURRENT);
 		
-		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);
+//		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);
+		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, 60000, pi);
 	}
 
 	public static ScheduleManager getInstance(Context context)
@@ -57,7 +59,9 @@ public class ScheduleManager
 		String title = this._context.getString(R.string.reminder_title);
 		String message = this._context.getString(R.string.reminder_message);
 		
-		StatusNotificationManager.getInstance(this._context).notifyBigText(ScheduleManager.NOTIFICATION_ID, R.drawable.ic_reminder, title, message, pi);
+		Uri u = Uri.parse("intellicare://purple-chill/reminder");
+		
+		StatusNotificationManager.getInstance(this._context).notifyBigText(ScheduleManager.NOTIFICATION_ID, R.drawable.ic_reminder, title, message, pi, u);
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
 
