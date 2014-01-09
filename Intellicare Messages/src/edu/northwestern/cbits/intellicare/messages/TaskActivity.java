@@ -85,13 +85,10 @@ public class TaskActivity extends RatingActivity
 			}
 			else
 			{
-				if (this.getIntent().getBooleanExtra(ScheduleManager.IS_INSTRUCTION, false))
-				{
-					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-					Editor e = prefs.edit();
-					e.putBoolean(ScheduleManager.INSTRUCTION_COMPLETED, true);
-					e.commit();
-				}
+				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+				Editor e = prefs.edit();
+				e.putBoolean(ScheduleManager.INSTRUCTION_COMPLETED, true);
+				e.commit();
 
 				HashMap<String, Object> payload = new HashMap<String, Object>();
 				payload.put("rating", Integer.valueOf(this._rating));
