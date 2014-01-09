@@ -26,6 +26,10 @@
             android:name="com.example.cowsareruminants.TitleActivity"
             android:label="@string/title_activity_title" >
         </activity>
+        <activity
+            android:name="com.example.cowsareruminants.QuestionnaireActivity"
+            android:label="@string/title_activity_questionnaire" >
+        </activity>
     </application>
 
 </manifest>

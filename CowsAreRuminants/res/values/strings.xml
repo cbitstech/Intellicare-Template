@@ -7,5 +7,6 @@
     <string name="next">Next</string>
     <string name="title_activity_title">TitleActivity</string>
     <string name="title_goes_here">Title goes here</string>
+    <string name="title_activity_questionnaire">QuestionnaireActivity</string>
 
 </resources>

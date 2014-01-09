@@ -2,6 +2,7 @@ package com.example.cowsareruminants;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,6 +21,7 @@ public class StartupActivity extends Activity {
 		final Activity startupActivity = this;
 		Toast.makeText(startupActivity, "StartupActivity loaded...", Toast.LENGTH_SHORT).show();
 		
+		// ***** VERSION 0.1: button navs to title activity *****
 		// on Next button click, go to next activity.
 		Button nextButton = (Button) this.findViewById(R.id.nextButton);
 		nextButton.setOnClickListener(new OnClickListener() {
@@ -28,10 +30,15 @@ public class StartupActivity extends Activity {
 			public void onClick(View v) {
 				TextView tv = (TextView) startupActivity.findViewById(R.id.message);
 				Toast.makeText(startupActivity, "should nav to next activity...", Toast.LENGTH_SHORT).show();
-				tv.setText("should leave this world now...");
 				
+				// start Title activity
+				startActivity(new Intent(StartupActivity.this, TitleActivity.class));
 			}
 		});
+
+		
+		// ***** VERSION 1: preload stuff (TODO) during a splash screen, then automatically nav to title activity *****
+		
 	}
 
 	@Override
