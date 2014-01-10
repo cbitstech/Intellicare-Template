@@ -14,7 +14,6 @@ import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import edu.northwestern.cbits.intellicare.PhqFourActivity;
 import edu.northwestern.cbits.intellicare.StatusNotificationManager;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
@@ -96,8 +95,6 @@ public class ScheduleManager
 		
 		int currentLesson = prefs.getInt(LessonsActivity.LESSON_LEVEL, 0);
 		
-		Log.e("D2D", "LESSON: " + currentLesson);
-		
 		if (currentLesson == 0)
 		{
 			Cursor lessonCursor = this._context.getContentResolver().query(ContentProvider.LESSONS_URI, null, null, null, "lesson_order");
@@ -124,14 +121,10 @@ public class ScheduleManager
 		}
 
 		boolean lessonComplete = prefs.getBoolean(LessonsActivity.LESSON_READ_PREFIX + currentLesson, false);
-		
-		Log.e("D2D", "LESSON COMPLETE: " + lessonComplete);
 
 		if (lessonComplete)
 		{
 			int index = prefs.getInt(ScheduleManager.MESSAGE_INDEX, 0);
-
-			Log.e("D2D", "INDEX: " + index + " -- " + prefs.getBoolean(ScheduleManager.INSTRUCTION_COMPLETED, false));
 			
 			long notificationTime = this.getNotificationTime(index % 5, now);
 			
@@ -143,8 +136,6 @@ public class ScheduleManager
 					index -= 5;
 				
 				Message msg = this.getMessage(currentLesson, index);
-
-				Log.e("D2D", "FETCH INDEX: " + index);
 
 				if (msg != null)
 				{
