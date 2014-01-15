@@ -205,7 +205,9 @@ public class HomeActivity extends ConsentedActivity
     	
     	long time = c.getTimeInMillis();
     	
-    	String[] args = { "" + time, "" + (time  + (24 * 60 * 60 * 1000))};
+    	long day = (24 * 60 * 60 * 1000);
+    	
+    	String[] args = { "" + (time - day), "" + (time  + day)};
     	
     	int count = 0;
     	
