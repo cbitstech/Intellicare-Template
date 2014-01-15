@@ -14,7 +14,6 @@ import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
-import android.widget.CheckBox;
 import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.RatingActivity;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
@@ -35,13 +34,15 @@ public class TaskActivity extends RatingActivity
 		
 		StarRatingView ratingView = (StarRatingView) this.findViewById(R.id.star_rating_view);
 		
-		final RatingActivity me = this;
+		final TaskActivity me = this;
 		
 		ratingView.setOnRatingChangeListener(new OnRatingChangeListener()
 		{
 			public void onRatingChanged(View view, int rating) 
 			{
 				me.setRating(rating);
+				
+				me.close();
 			}
 		});
 		
@@ -75,32 +76,30 @@ public class TaskActivity extends RatingActivity
 		}
 	}
 
+	private void close()
+	{
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		Editor e = prefs.edit();
+		e.putBoolean(ScheduleManager.INSTRUCTION_COMPLETED, true);
+		e.commit();
+
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		payload.put("rating", Integer.valueOf(this._rating));
+		payload.put("task", this.getIntent().getStringExtra(TaskActivity.MESSAGE));
+		
+		LogManager.getInstance(this).log("task_rated", payload);
+
+		this.finish();
+	}
+
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 		if (item.getItemId() ==  R.id.action_done)
 		{
 			if (this._rating == 0)
-			{
 				Toast.makeText(this, R.string.message_complete_form, Toast.LENGTH_LONG).show();
-			}
 			else
-			{
-				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-				Editor e = prefs.edit();
-				e.putBoolean(ScheduleManager.INSTRUCTION_COMPLETED, true);
-				e.commit();
-
-				HashMap<String, Object> payload = new HashMap<String, Object>();
-				payload.put("rating", Integer.valueOf(this._rating));
-				payload.put("task", this.getIntent().getStringExtra(TaskActivity.MESSAGE));
-				
-				CheckBox interruption = (CheckBox) this.findViewById(R.id.interrupt_check);
-				payload.put("interruption", interruption.isChecked());
-				
-				LogManager.getInstance(this).log("task_rated", payload);
-
-				this.finish();
-			}
+				this.close();
 		}
 
 		return true;

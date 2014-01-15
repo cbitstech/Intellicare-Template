@@ -23,14 +23,12 @@ import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.ConsentActivity;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.MotivationActivity;
-import edu.northwestern.cbits.intellicare.PhqFourActivity;
 
 public class LessonsActivity extends ConsentedActivity 
 {
 	public static final String LESSON_LEVEL = "LESSON_LEVEL";
 	public static final String LESSON_READ_PREFIX = "lesson_read_";
 
-	private static final String INITIAL_PHQ4_SHOWN = "initial_phq4_shown";
 	private static final String INITIAL_MOTIVATION_SHOWN = "initial_motivation_shown";
 
 	protected void onCreate(Bundle savedInstanceState) 
@@ -194,11 +192,6 @@ public class LessonsActivity extends ConsentedActivity
 		
 		if (ConsentActivity.isConsented() == true && prefs.getBoolean(HelpActivity.HELP_COMPLETED, false) == false)
 			this.startActivity(new Intent(this, HelpActivity.class));
-		else if (prefs.getBoolean(LessonsActivity.INITIAL_PHQ4_SHOWN, false) == false)
-		{
-			this.startActivity(new Intent(this, PhqFourActivity.class));
-			e.putBoolean(LessonsActivity.INITIAL_PHQ4_SHOWN, true);
-		}
 		else if (prefs.getBoolean(LessonsActivity.INITIAL_MOTIVATION_SHOWN, false) == false)
 		{
 			this.startActivity(new Intent(this, MotivationActivity.class));

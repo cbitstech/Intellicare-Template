@@ -74,13 +74,6 @@ public class MessageActivity extends ConsentedActivity
 				e.commit();
 			}
 
-			CheckBox interrupted = (CheckBox) this.findViewById(R.id.interrupt_check);
-			
-			if (interrupted.isChecked())
-				payload.put("interrupted", "true");
-			else
-				payload.put("interrupted", "false");
-
 			LogManager.getInstance(this).log("message_closed", payload);
 
 			this.finish();

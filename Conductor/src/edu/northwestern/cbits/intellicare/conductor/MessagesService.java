@@ -1,5 +1,7 @@
 package edu.northwestern.cbits.intellicare.conductor;
 
+import java.util.HashMap;
+
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.IntentService;
@@ -9,15 +11,23 @@ import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import edu.northwestern.cbits.intellicare.StatusNotificationManager;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class MessagesService extends IntentService 
 {
 	public static final String REFRESH_MESSAGES = "conductor_refresh_messages";
 	private static final int APP_ID = 63847582;
+
+	private static final long PHQ_INTERVAL = (1000 * 60 * 60 * 24 * 7);
+	private static final String PHQ_URI = "intellicare://phq4";
 
 	private static PendingIntent timedIntent = null;
 	private static long lastRefresh = 0;
@@ -88,7 +98,9 @@ public class MessagesService extends IntentService
 				
 				alarm.setExact(AlarmManager.RTC_WAKEUP, now + 60000, MessagesService.timedIntent);
 			}
-			
+
+			this.manageScheduledMessages();
+
 			NotificationManager manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
 	        String selection = "responded = 0";
@@ -168,6 +180,31 @@ public class MessagesService extends IntentService
 			c.close();
 			
 			MessagesService.lastRefresh = now;
+		}
+	}
+
+	private void manageScheduledMessages() 
+	{
+		long now = System.currentTimeMillis();
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		long lastPhqMessage = prefs.getLong("last_phq_notification", 0);
+		
+		if (now - lastPhqMessage > PHQ_INTERVAL)
+		{
+			HashMap<String, Object> payload = new HashMap<String, Object>();
+			LogManager.getInstance(this).log("phq4_prompted", payload);
+
+			Editor e = prefs.edit();
+			e.putLong("last_phq_notification", now);
+			e.commit();
+			
+			Intent phqIntent = new Intent("ACTION_PHQ_" + now);
+
+			PendingIntent pi = PendingIntent.getActivity(this, 1, phqIntent, PendingIntent.FLAG_ONE_SHOT);
+
+			StatusNotificationManager.getInstance(this).notifyBigText(0, R.drawable.ic_stat_messages, this.getString(R.string.phq4_title), this.getString(R.string.phq4_message), pi, Uri.parse(PHQ_URI));
 		}
 	}
 }

@@ -3,9 +3,9 @@
         android:id="@+id/action_task"
         robot:showAsAction="always"
         android:title="@string/task_title"/>
-    <item
+    <!-- <item
         android:id="@+id/action_done"
         android:icon="@drawable/ic_action_tick"
         robot:showAsAction="always"
-        android:title="@string/action_submit"/>
+        android:title="@string/action_submit"/> -->
 </menu>

@@ -8,9 +8,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.Toast;
-import edu.northwestern.cbits.intellicare.RatingActivity;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 import edu.northwestern.cbits.intellicare.messages.ScheduleManager.Message;
 import edu.northwestern.cbits.intellicare.views.StarRatingView;
@@ -29,15 +27,29 @@ public class TipActivity extends TaskActivity
 		
 		StarRatingView ratingView = (StarRatingView) this.findViewById(R.id.star_rating_view);
 		
-		final RatingActivity me = this;
+		final TipActivity me = this;
 		
 		ratingView.setOnRatingChangeListener(new OnRatingChangeListener()
 		{
 			public void onRatingChanged(View view, int rating) 
 			{
 				me.setRating(rating);
+				
+				me.close();
 			}
 		});
+	}
+
+	private void close()
+	{
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		payload.put("rating", Integer.valueOf(this._rating));
+		payload.put("tip", this.getIntent().getStringExtra(TipActivity.MESSAGE));
+		payload.put("task", this.getIntent().getStringExtra(TipActivity.TASK));
+		
+		LogManager.getInstance(this).log("tip_rated", payload);
+
+		this.finish();
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) 
@@ -76,23 +88,9 @@ public class TipActivity extends TaskActivity
 		else if (item.getItemId() ==  R.id.action_done)
 		{
 			if (this._rating == 0)
-			{
 				Toast.makeText(this, R.string.message_complete_form, Toast.LENGTH_LONG).show();
-			}
 			else
-			{
-				HashMap<String, Object> payload = new HashMap<String, Object>();
-				payload.put("rating", Integer.valueOf(this._rating));
-				payload.put("tip", this.getIntent().getStringExtra(TipActivity.MESSAGE));
-				payload.put("task", this.getIntent().getStringExtra(TipActivity.TASK));
-				
-				CheckBox interruption = (CheckBox) this.findViewById(R.id.interrupt_check);
-				payload.put("interruption", interruption.isChecked());
-				
-				LogManager.getInstance(this).log("tip_rated", payload);
-
-				this.finish();
-			}
+				this.close();
 		}
 
 		return true;
