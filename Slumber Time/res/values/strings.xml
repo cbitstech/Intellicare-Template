@@ -8,4 +8,13 @@
 	<string name="label_upcoming_appointment" formatted="false">%s (%s)</string>
 
 	<string name="title_clock_settings">Clock Settings</string>
+
+	<string name="label_active_brightness">Active Brightness</string>
+	<string name="label_resting_brightness">Resting Brightness</string>
+	<string name="label_dim_delay" formatted="false">Dim Delay (%s)</string>
+	<string name="label_dim_delay_default">Dim Delay</string>
+		<string name="label_dim_darkness">Dim When Dark</string>
+
+	<string name="button_close">Close</string>
+				
 </resources>
