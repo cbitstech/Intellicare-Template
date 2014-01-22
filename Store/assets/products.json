@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "id": 1,
+      "name": "Alpha",
+      "description": "A hat",
+      "icon": "",
+      "attachesOnAvatarAtLocation": "headTop",
+      "buyPrice": 22,
+      "sellPrice": 10,
+      "minUnlockLevel": 1
+    },
+    {
+      "id": 2,
+      "name": "Beta",
+      "description": "B shoulder pad",
+      "icon": "",
+      "attachesOnAvatarAtLocation": "shouldersBoth",
+      "buyPrice": 45,
+      "sellPrice": 15,
+      "minUnlockLevel": 3
+    },
+    {
+      "id": 3,
+      "name": "Charlie",
+      "description": "C armor",
+      "icon": "",
+      "attachesOnAvatarAtLocation": "torsoFront",
+      "buyPrice": 300,
+      "sellPrice": 100,
+      "minUnlockLevel": 3
+    },
+    {
+      "id": 4,
+      "name": "Delta",
+      "description": "D pistol",
+      "icon": "",
+      "attachesOnAvatarAtLocation": "thighRight",
+      "buyPrice": 450,
+      "sellPrice": 200,
+      "minUnlockLevel": 5
+    },
+    {
+      "id": 5,
+      "name": "Epsilon",
+      "description": "E boots",
+      "icon": "",
+      "attachesOnAvatarAtLocation": "feet",
+      "buyPrice": 32,
+      "sellPrice": 8,
+      "minUnlockLevel": 2
+    },
+  ]
+}
