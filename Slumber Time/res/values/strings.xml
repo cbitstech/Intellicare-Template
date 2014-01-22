@@ -6,4 +6,6 @@
     <string name="hello_world">Hello world!</string>
 	<string name="label_no_appointments">No upcoming appointments</string>
 	<string name="label_upcoming_appointment" formatted="false">%s (%s)</string>
+
+	<string name="title_clock_settings">Clock Settings</string>
 </resources>

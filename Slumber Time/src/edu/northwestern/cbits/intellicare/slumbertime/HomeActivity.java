@@ -2,8 +2,6 @@ package edu.northwestern.cbits.intellicare.slumbertime;
 
 import java.util.ArrayList;
 
-import edu.northwestern.cbits.ic_template.R;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -64,6 +62,8 @@ public class HomeActivity extends PortraitActivity
 				
 				name.setText(t.name);
 				desc.setText(t.description);
+				
+				return convertView;
 			}
 		};
 		

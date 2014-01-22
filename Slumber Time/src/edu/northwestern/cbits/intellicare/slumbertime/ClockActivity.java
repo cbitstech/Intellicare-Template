@@ -18,6 +18,7 @@ import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.LayoutInflater;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -45,7 +46,7 @@ public class ClockActivity extends Activity
         {
             View root = this.findViewById(R.id.clock_root);
 
-            root.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+            root.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
         }
         
 		final ClockActivity me = this;
@@ -53,6 +54,12 @@ public class ClockActivity extends Activity
         ImageView alarms = (ImageView) this.findViewById(R.id.button_alarms);
         ImageView log = (ImageView) this.findViewById(R.id.button_log);
         ImageView tips = (ImageView) this.findViewById(R.id.button_tips);
+        ImageView settings = (ImageView) this.findViewById(R.id.button_settings);
+        
+        alarms.setColorFilter(0x80000000);
+        log.setColorFilter(0x80000000);
+        tips.setColorFilter(0x80000000);
+        settings.setColorFilter(0x80000000);
         
         alarms.setOnClickListener(new OnClickListener()
         {
@@ -88,6 +95,23 @@ public class ClockActivity extends Activity
 				
 				builder = builder.setTitle("sHoW tIpS lIST!");
 				builder = builder.setMessage("List of tips go here...");
+				
+				builder.create().show();
+			}
+        });
+
+        settings.setOnClickListener(new OnClickListener()
+        {
+			public void onClick(View arg0) 
+			{
+				AlertDialog.Builder builder = new AlertDialog.Builder(me);
+				
+				builder = builder.setTitle(R.string.title_clock_settings);
+				
+				LayoutInflater inflater = LayoutInflater.from(me);
+				View view = inflater.inflate(R.layout.view_clock_settings, null, false);
+				
+				builder = builder.setView(view);
 				
 				builder.create().show();
 			}
