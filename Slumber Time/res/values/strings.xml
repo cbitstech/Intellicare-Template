@@ -4,5 +4,6 @@
     <string name="app_name">Slumber Time</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-
+	<string name="label_no_appointments">No upcoming appointments</string>
+	<string name="label_upcoming_appointment" formatted="false">%s (%s)</string>
 </resources>

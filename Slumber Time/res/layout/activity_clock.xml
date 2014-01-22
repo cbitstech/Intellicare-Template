@@ -1,0 +1,71 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="#000000"
+    android:padding="16dp"
+    android:id="@+id/clock_root">
+    <LinearLayout android:orientation="vertical" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1">
+        <View android:layout_width="match_parent" android:layout_height="0dp"  android:layout_weight="1" />
+        <TextView android:id="@+id/date_view" 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:gravity="center"
+            android:textColor="#ffffff"
+            android:text="wEdNesDaY, oCtoBer 21, ZOIS"/>
+        <LinearLayout android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        	<View android:layout_width="0dp" android:layout_height="1dp"  android:layout_weight="1" />
+            <TextView android:id="@+id/time_view"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:textSize="160sp"
+	            android:gravity="center"
+	            android:textColor="#ffffff"
+	            android:text="1I:Zi"/>
+	        <TextView android:id="@+id/ampm_view"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:textSize="22sp"
+	            android:textStyle="bold"
+	            android:gravity="center"
+	            android:textColor="#ffffff"
+	            android:text="am"/>
+        	<View android:layout_width="0dp" android:layout_height="1dp"  android:layout_weight="1" />
+        </LinearLayout>
+        <View android:layout_width="0dp" android:layout_height="1dp"  android:layout_weight="1" />
+        <TextView android:id="@+id/appointment_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:textColor="#ffffff"
+            android:text="nExT eveNt: mEeTing, 9:3oaM"/>
+    </LinearLayout>
+    
+    <LinearLayout android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <ImageView android:id="@+id/button_alarms" 
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:src="@drawable/clock_alarms" />
+        <View android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+        <ImageView android:id="@+id/button_tips"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:src="@drawable/clock_tips" />
+        <View android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+        <ImageView android:id="@+id/button_log"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:src="@drawable/clock_log" />
+    </LinearLayout>
+</LinearLayout>
