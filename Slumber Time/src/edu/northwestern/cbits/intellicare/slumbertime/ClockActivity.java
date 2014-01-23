@@ -2,6 +2,7 @@ package edu.northwestern.cbits.intellicare.slumbertime;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import android.annotation.TargetApi;
@@ -19,15 +20,24 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ClockActivity extends Activity 
 {
@@ -35,6 +45,10 @@ public class ClockActivity extends Activity
 	protected static final String REST_BRIGHTNESS_OPTION = "rest_brightness_level";
 	protected static final float DEFAULT_ACTIVE_BRIGHTNESS = 1.0f;
 	protected static final float DEFAULT_REST_BRIGHTNESS = 0.25f;
+	protected static final String DIM_DELAY_OPTION = "dim_delay_duration";
+	protected static final int DEFAULT_DIM_DELAY = 4;
+	protected static final String DIM_DARK_OPTION = "dim_when_dark";
+	protected static final boolean DIM_DARK_DEFAULT = true;
 	
 	private Handler _handler = null;
 	private long _lastEventQuery = 0;
@@ -91,10 +105,40 @@ public class ClockActivity extends Activity
 			{
 				AlertDialog.Builder builder = new AlertDialog.Builder(me);
 				
-				builder = builder.setTitle("sHoW lOg InterFaCe!");
-				builder = builder.setMessage("Log interface goes here...");
+				builder = builder.setTitle(R.string.title_clock_log);
 				
-				builder.create().show();
+				LayoutInflater inflater = LayoutInflater.from(me);
+				View view = inflater.inflate(R.layout.view_clock_log, null, false);
+				
+				builder = builder.setView(view);
+				builder.setNegativeButton(R.string.button_discard, new DialogInterface.OnClickListener() 
+				{
+					public void onClick(DialogInterface dialog, int which) 
+					{
+
+					}
+				});
+				
+				builder.setPositiveButton(R.string.button_save, new DialogInterface.OnClickListener() 
+				{
+					public void onClick(DialogInterface dialog, int which) 
+					{
+						Toast.makeText(me, "tOdO: saVe sLeeP lOg", Toast.LENGTH_LONG).show();
+					}
+				});
+
+				AlertDialog d = builder.create();
+				d.show();
+				
+				
+				DisplayMetrics metrics = me.getResources().getDisplayMetrics();
+				
+				WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+
+				lp.copyFrom(d.getWindow().getAttributes());
+				lp.width = (int) (480f * metrics.density);
+
+				d.getWindow().setAttributes(lp);
 			}
         });
 
@@ -104,10 +148,71 @@ public class ClockActivity extends Activity
 			{
 				AlertDialog.Builder builder = new AlertDialog.Builder(me);
 				
-				builder = builder.setTitle("sHoW tIpS lIST!");
-				builder = builder.setMessage("List of tips go here...");
+				builder = builder.setTitle(R.string.title_clock_tips);
 				
-				builder.create().show();
+				LayoutInflater inflater = LayoutInflater.from(me);
+				View view = inflater.inflate(R.layout.view_clock_tips, null, false);
+				
+				GridView contentGrid = (GridView) view.findViewById(R.id.root_grid);
+				
+				final ArrayList<String> testTitles = new ArrayList<String>();
+				testTitles.add("A brief talk on sleeping well.");
+				testTitles.add("Joe sings a lullaby.");
+				testTitles.add("The sounds of the restful forest.");
+				testTitles.add("A brief calming breathing exercise.");
+				testTitles.add("Sleep exercises from Purple Chill.");
+				testTitles.add("Mark Twain on sleep.");
+				testTitles.add("How the experts sleep. (CNN)");
+
+				ArrayAdapter<String> adapter = new ArrayAdapter<String>(me, R.layout.cell_tip, testTitles)
+				{
+					public View getView (int position, View convertView, ViewGroup parent)
+					{
+						if (convertView == null)
+						{
+		    				LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+		    				convertView = inflater.inflate(R.layout.cell_tip, parent, false);
+						}
+						
+						TextView title = (TextView) convertView.findViewById(R.id.title_tip);
+						
+						title.setText(this.getItem(position));
+						
+						return convertView;
+					}
+				};
+				
+				contentGrid.setAdapter(adapter);
+				
+				contentGrid.setOnItemClickListener(new OnItemClickListener()
+				{
+					public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) 
+					{
+						Toast.makeText(me, "tOdO: " + testTitles.get(arg2), Toast.LENGTH_SHORT).show();
+					}
+				});
+				
+				builder = builder.setView(view);
+				builder.setNegativeButton(R.string.button_close, new DialogInterface.OnClickListener() 
+				{
+					public void onClick(DialogInterface dialog, int which) 
+					{
+
+					}
+				});
+
+				AlertDialog d = builder.create();
+				d.show();
+				
+				DisplayMetrics metrics = me.getResources().getDisplayMetrics();
+				
+				WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+
+				lp.copyFrom(d.getWindow().getAttributes());
+				lp.width = (int) (480f * metrics.density);
+				lp.height = (int) (320f * metrics.density);
+
+				d.getWindow().setAttributes(lp);
 			}
         });
 
@@ -129,11 +234,14 @@ public class ClockActivity extends Activity
 				{
 					public void onProgressChanged(SeekBar bar, int position, boolean fromUser) 
 					{
-						WindowManager.LayoutParams params = me.getWindow().getAttributes();
-
-						params.screenBrightness = ((float) position) / 100f;
-
-						me.getWindow().setAttributes(params);
+						if (fromUser)
+						{
+							WindowManager.LayoutParams params = me.getWindow().getAttributes();
+	
+							params.screenBrightness = ((float) position) / 100f;
+	
+							me.getWindow().setAttributes(params);
+						}
 					}
 
 					public void onStartTrackingTouch(SeekBar bar) 
@@ -164,11 +272,14 @@ public class ClockActivity extends Activity
 				{
 					public void onProgressChanged(SeekBar bar, int position, boolean fromUser) 
 					{
-						WindowManager.LayoutParams params = me.getWindow().getAttributes();
-
-						params.screenBrightness = ((float) position) / 100f;
-
-						me.getWindow().setAttributes(params);
+						if (fromUser)
+						{
+							WindowManager.LayoutParams params = me.getWindow().getAttributes();
+	
+							params.screenBrightness = ((float) position) / 100f;
+	
+							me.getWindow().setAttributes(params);
+						}
 					}
 
 					public void onStartTrackingTouch(SeekBar bar) 
@@ -197,13 +308,14 @@ public class ClockActivity extends Activity
 
 				final TextView dimLabel = (TextView) view.findViewById(R.id.dim_label);
 				
-				dimLabel.setText(me.getText(R.string.label_dim_delay, me.getTimeString(prefs.getInt(ClockActivity.DIM_DELAY_OPTION, ClockActivity.DEFAULT_DIM_DELAY))))
+				dimLabel.setText(me.getString(R.string.label_dim_delay, me.getTimeString(prefs.getInt(ClockActivity.DIM_DELAY_OPTION, ClockActivity.DEFAULT_DIM_DELAY) * 15)));
+
 				SeekBar dimDelay = (SeekBar) view.findViewById(R.id.dim_delay);
 				dimDelay.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
 				{
 					public void onProgressChanged(SeekBar bar, int position, boolean fromUser) 
 					{
-						
+						dimLabel.setText(me.getString(R.string.label_dim_delay, me.getTimeString(position * 15)));
 					}
 
 					public void onStartTrackingTouch(SeekBar bar) 
@@ -213,19 +325,28 @@ public class ClockActivity extends Activity
 
 					public void onStopTrackingTouch(SeekBar bar)
 					{
-						WindowManager.LayoutParams params = me.getWindow().getAttributes();
-						params.screenBrightness = me._currentBrightness;
-						
-						me.getWindow().setAttributes(params);
-						
 						SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
 						Editor e = prefs.edit();
-						e.putFloat(ClockActivity.REST_BRIGHTNESS_OPTION, ((float) bar.getProgress()) / 100f);
+						e.putInt(ClockActivity.DIM_DELAY_OPTION, bar.getProgress());
 						e.commit();
 					}
 				});
-
 				
+				dimDelay.setProgress(prefs.getInt(ClockActivity.DIM_DELAY_OPTION, ClockActivity.DEFAULT_DIM_DELAY));
+				
+				final CheckBox darkDim = (CheckBox) view.findViewById(R.id.dark_dim);
+				darkDim.setOnCheckedChangeListener(new OnCheckedChangeListener()
+				{
+					public void onCheckedChanged(CompoundButton check,	boolean checked)
+					{
+						Editor e = prefs.edit();
+						e.putBoolean(ClockActivity.DIM_DARK_OPTION, checked);
+						e.commit();
+					}
+				});
+				
+				darkDim.setChecked(prefs.getBoolean(ClockActivity.DIM_DARK_OPTION, ClockActivity.DIM_DARK_DEFAULT));
+
 				builder = builder.setView(view);
 				builder = builder.setPositiveButton(R.string.button_close, new DialogInterface.OnClickListener() 
 				{
@@ -245,14 +366,25 @@ public class ClockActivity extends Activity
 				lp.copyFrom(d.getWindow().getAttributes());
 				lp.width = (int) (480f * metrics.density);
 
-				//change position of window on screen
-//				lp.x = mwidth/2; //set these values to what work for you; probably like I have here at
-//				lp.y = mheight/2;        //half the screen width and height so it is in center
-
 				d.getWindow().setAttributes(lp);
 			}
         });
     }
+
+	protected String getTimeString(int seconds) 
+	{
+		if (seconds % 60 == 0)
+		{
+			if (seconds == 0)
+				return this.getString(R.string.dim_delay_immediately);
+			else if (seconds == 60)
+				return this.getString(R.string.dim_delay_minute);
+			else
+				return this.getString(R.string.dim_delay_minutes, seconds / 60);
+		}
+		
+		return this.getString(R.string.dim_delay_seconds, seconds);
+	}
 
 	protected void onResume() 
 	{

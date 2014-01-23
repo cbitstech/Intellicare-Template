@@ -7,14 +7,24 @@
 	<string name="label_no_appointments">No upcoming appointments</string>
 	<string name="label_upcoming_appointment" formatted="false">%s (%s)</string>
 
+	<string name="button_close">Close</string>
+	<string name="button_save">Save</string>
+	<string name="button_discard">Discard &amp; Close</string>
+		
 	<string name="title_clock_settings">Clock Settings</string>
-
 	<string name="label_active_brightness">Active Brightness</string>
 	<string name="label_resting_brightness">Resting Brightness</string>
 	<string name="label_dim_delay" formatted="false">Dim Delay (%s)</string>
 	<string name="label_dim_delay_default">Dim Delay</string>
-		<string name="label_dim_darkness">Dim When Dark</string>
+	<string name="label_dim_darkness">Dim When Dark</string>
+	<string name="dim_delay_seconds" formatted="false">%d sec.</string>
+	<string name="dim_delay_minutes" formatted="false">%d min.</string>
+	<string name="dim_delay_minute">1 minute</string>
+	<string name="dim_delay_immediately">Immediately</string>
 
-	<string name="button_close">Close</string>
-				
+	<string name="title_clock_log">Sleep Log</string>
+	<string name="hint_log_description">Please record any sleep notes here.</string>
+	<string name="log_timestamp_label">Your log will be timestamped when you save it.</string>
+	
+	<string name="title_clock_tips">Healthy Sleeping Tips &amp; Tricks</string>
 </resources>

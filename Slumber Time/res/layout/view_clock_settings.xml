@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="640dp"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:padding="16dp"
@@ -17,7 +17,8 @@
         <SeekBar android:id="@+id/active_brightness"
             android:max="100"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp" />
         <TextView android:text="@string/label_resting_brightness"
             android:textSize="18sp"
             android:layout_width="match_parent"
@@ -38,9 +39,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <SeekBar android:id="@+id/dim_delay"
-            android:max="100"
+            android:max="8"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" 
+            android:layout_marginBottom="8dp" />
         <CheckBox android:id="@+id/dark_dim"
             android:text="@string/label_dim_darkness"
             android:textSize="18sp"
