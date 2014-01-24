@@ -20,20 +20,24 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.util.DisplayMetrics;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -54,6 +58,18 @@ public class ClockActivity extends Activity
 	private long _lastEventQuery = 0;
 	private Event _lastEvent = null;
 	protected float _currentBrightness;
+	
+	private class Alarm
+	{
+		String ringtone = null;
+		String dateString = null;
+		
+		public Alarm(String ringtone, String dateString)
+		{
+			this.ringtone = ringtone;
+			this.dateString = dateString;
+		}
+	}
 	
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	public void onCreate(Bundle savedInstanceState) 
@@ -91,11 +107,99 @@ public class ClockActivity extends Activity
 			public void onClick(View arg0) 
 			{
 				AlertDialog.Builder builder = new AlertDialog.Builder(me);
+
+				LayoutInflater inflater = LayoutInflater.from(me);
+				View view = inflater.inflate(R.layout.view_clock_alarms, null, false);
 				
-				builder = builder.setTitle("sHoW aLaRm sEtTinGs!");
-				builder = builder.setMessage("Alarm list + settings go here...");
+				final ListView alarmsList = (ListView) view.findViewById(R.id.list_alarms);
+				final TextView selectMessage = (TextView) view.findViewById(R.id.select_alarm);
+				final LinearLayout alarmEditor = (LinearLayout) view.findViewById(R.id.editor_alarm);
 				
-				builder.create().show();
+				final ArrayList<Alarm> alarms = new ArrayList<Alarm>();
+				alarms.add(new Alarm("'Bad', Michael Jackson", "4am (MTWThF)"));
+				alarms.add(new Alarm("Klaxon", "8:30am (SaSu)"));
+				alarms.add(new Alarm("'Mr. Sandman', The Chordettes", "1:30pm (TTh)"));
+
+				alarmsList.setFocusable(false);
+				alarmsList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+				
+				alarmsList.setOnItemSelectedListener(new OnItemSelectedListener()
+				{
+					public void onItemSelected(AdapterView<?> arg0, View arg1,
+							int arg2, long arg3) {
+						
+						Log.e("ST", "ALBUM SELECT: " + arg2);
+						
+					}
+
+					@Override
+					public void onNothingSelected(AdapterView<?> arg0) {
+						Log.e("ST", "NO SELECT: ");
+						
+					}
+					
+				});
+
+				ArrayAdapter<Alarm> adapter = new ArrayAdapter<Alarm>(me, R.layout.row_alarm, alarms)
+				{
+					public View getView (int position, View convertView, ViewGroup parent)
+					{
+						if (convertView == null)
+						{
+		    				LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+		    				convertView = inflater.inflate(R.layout.row_alarm, parent, false);
+						}
+						
+						TextView title = (TextView) convertView.findViewById(R.id.title_alarm);
+						title.setText(this.getItem(position).ringtone);
+
+						TextView times = (TextView) convertView.findViewById(R.id.times_alarm);
+						times.setText(this.getItem(position).dateString);
+
+						return convertView;
+					}
+				};
+				
+				alarmsList.setAdapter(adapter);
+				
+				alarmsList.setOnItemClickListener(new OnItemClickListener()
+				{
+					public void onItemClick(AdapterView<?> arg0, View arg1, int which, long arg3) 
+					{
+						alarmEditor.setVisibility(View.VISIBLE);
+						selectMessage.setVisibility(View.GONE);
+						
+						Alarm alarm = alarms.get(which);
+						
+						TextView ringtone = (TextView) alarmEditor.findViewById(R.id.label_alarm_tone);
+						TextView time = (TextView) alarmEditor.findViewById(R.id.label_alarm_name);
+						
+						ringtone.setText(alarm.ringtone);
+						time.setText(alarm.dateString);
+					}
+				});
+
+				builder = builder.setView(view);
+
+				builder.setNegativeButton(R.string.button_close, new DialogInterface.OnClickListener() 
+				{
+					public void onClick(DialogInterface dialog, int which) 
+					{
+
+					}
+				});
+
+				AlertDialog d = builder.create();
+				d.show();
+				
+				DisplayMetrics metrics = me.getResources().getDisplayMetrics();
+				
+				WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+
+				lp.copyFrom(d.getWindow().getAttributes());
+				lp.width = (int) (480f * metrics.density);
+
+				d.getWindow().setAttributes(lp);
 			}
         });
         
