@@ -8,17 +8,24 @@ import java.util.Date;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.TimePickerDialog;
+import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
+import android.provider.MediaStore.Audio;
+import android.provider.MediaStore.MediaColumns;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -41,6 +48,7 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 public class ClockActivity extends Activity 
@@ -64,10 +72,31 @@ public class ClockActivity extends Activity
 		String ringtone = null;
 		String dateString = null;
 		
-		public Alarm(String ringtone, String dateString)
+		int hour = 0;
+		int minute = 0;
+		
+		public Alarm(String ringtone, int hour, int minute)
 		{
 			this.ringtone = ringtone;
-			this.dateString = dateString;
+			this.hour = hour;
+			this.minute = minute;
+		}
+		
+		public String getDateString()
+		{
+			String dateString = "";
+			
+			if (hour < 10)
+				dateString = "0";
+			
+			dateString += hour + ":";
+			
+			if (minute < 10)
+				dateString += "0";
+			
+			dateString += minute;
+			
+			return dateString + " (MWTWThF)";
 		}
 	}
 	
@@ -116,9 +145,9 @@ public class ClockActivity extends Activity
 				final LinearLayout alarmEditor = (LinearLayout) view.findViewById(R.id.editor_alarm);
 				
 				final ArrayList<Alarm> alarms = new ArrayList<Alarm>();
-				alarms.add(new Alarm("'Bad', Michael Jackson", "4am (MTWThF)"));
-				alarms.add(new Alarm("Klaxon", "8:30am (SaSu)"));
-				alarms.add(new Alarm("'Mr. Sandman', The Chordettes", "1:30pm (TTh)"));
+				alarms.add(new Alarm("'Bad', Michael Jackson", 4, 0));
+				alarms.add(new Alarm("Klaxon", 20, 30));
+				alarms.add(new Alarm("'Mr. Sandman', The Chordettes", 13, 36));
 
 				alarmsList.setFocusable(false);
 				alarmsList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -128,7 +157,7 @@ public class ClockActivity extends Activity
 					public void onItemSelected(AdapterView<?> arg0, View arg1,
 							int arg2, long arg3) {
 						
-						Log.e("ST", "ALBUM SELECT: " + arg2);
+						Log.e("ST", "ALARM SELECT: " + arg2);
 						
 					}
 
@@ -150,11 +179,13 @@ public class ClockActivity extends Activity
 		    				convertView = inflater.inflate(R.layout.row_alarm, parent, false);
 						}
 						
+						final Alarm alarm = this.getItem(position);
+						
 						TextView title = (TextView) convertView.findViewById(R.id.title_alarm);
-						title.setText(this.getItem(position).ringtone);
+						title.setText(alarm.ringtone);
 
 						TextView times = (TextView) convertView.findViewById(R.id.times_alarm);
-						times.setText(this.getItem(position).dateString);
+						times.setText(alarm.getDateString());
 
 						return convertView;
 					}
@@ -169,13 +200,96 @@ public class ClockActivity extends Activity
 						alarmEditor.setVisibility(View.VISIBLE);
 						selectMessage.setVisibility(View.GONE);
 						
-						Alarm alarm = alarms.get(which);
+						final Alarm alarm = alarms.get(which);
 						
 						TextView ringtone = (TextView) alarmEditor.findViewById(R.id.label_alarm_tone);
 						TextView time = (TextView) alarmEditor.findViewById(R.id.label_alarm_name);
 						
 						ringtone.setText(alarm.ringtone);
-						time.setText(alarm.dateString);
+						time.setText(alarm.getDateString());
+						
+						time.setOnClickListener(new OnClickListener()
+						{
+							public void onClick(View view)
+							{
+								SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
+								boolean useAmPm = prefs.getBoolean("display_am_pm", true);
+
+								TimePickerDialog picker = new TimePickerDialog(me, new OnTimeSetListener()
+								{
+									public void onTimeSet(TimePicker picker, int hour, int minute) 
+									{
+										Log.e("ST", "CHOSE: " + hour + " -- " + minute);
+									}
+								}, alarm.hour, alarm.minute, (useAmPm == false));
+								
+								picker.show();
+							}
+						});
+
+						ringtone.setOnClickListener(new OnClickListener()
+						{
+							public void onClick(View view)
+							{
+								AlertDialog.Builder builder = new AlertDialog.Builder(me);
+
+								LayoutInflater inflater = LayoutInflater.from(me);
+								View searchView = inflater.inflate(R.layout.view_clock_tone_search, null, false);
+								
+								ListView tonesList = (ListView) searchView.findViewById(R.id.list_tones);
+								
+								String[] projection = { Audio.AudioColumns.TITLE, Audio.AudioColumns.ARTIST, Audio.AudioColumns.DATA, Audio.AudioColumns._ID };
+								String selection = Audio.AudioColumns.IS_MUSIC + " != ?";
+								String[] args = { "" + 1 };
+								
+								Cursor c = me.getContentResolver().query(Audio.Media.INTERNAL_CONTENT_URI, projection, selection, args, null);
+
+								String[] emptyString = {};
+								int[] emptyInt = {};
+								
+								SimpleCursorAdapter adapter = new SimpleCursorAdapter(me, R.layout.row_tone, c, emptyString, emptyInt, 0)
+								{
+									public void bindView (View view, Context context, Cursor cursor)
+									{
+										if (view == null)
+										{
+						    				LayoutInflater inflater = LayoutInflater.from(context);
+						    				view = inflater.inflate(R.layout.row_tone, null, false);
+										}
+										
+										for (int i = 0; i < cursor.getColumnCount(); i++)
+										{
+											Log.e("ST", "MEDIA COL " + cursor.getColumnName(i));
+										}
+										
+										TextView title = (TextView) view.findViewById(R.id.label_title);
+										title.setText(cursor.getString(cursor.getColumnIndex(Audio.AudioColumns.TITLE)));
+
+										TextView artist = (TextView) view.findViewById(R.id.label_artist);
+										artist.setText(cursor.getString(cursor.getColumnIndex(Audio.AudioColumns.ARTIST)));
+										
+										Log.e("ST", "DATA: " + cursor.getString(cursor.getColumnIndex(Audio.AudioColumns.DATA)));
+									}
+								};
+								
+								tonesList.setAdapter(adapter);
+								
+								builder = builder.setView(searchView);
+
+								AlertDialog d = builder.create();
+								d.show();
+								
+								DisplayMetrics metrics = me.getResources().getDisplayMetrics();
+								
+								WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+
+								lp.copyFrom(d.getWindow().getAttributes());
+								lp.width = (int) (480f * metrics.density);
+								lp.height = (int) (320f * metrics.density);
+
+								d.getWindow().setAttributes(lp);
+							}
+						});
 					}
 				});
 
@@ -570,7 +684,16 @@ public class ClockActivity extends Activity
 		{
 			SimpleDateFormat apptFormat = new SimpleDateFormat("EEEE, " + timeFormat.toPattern());
 
-			apptText.setText(this.getString(R.string.label_upcoming_appointment, event.title, apptFormat.format(new Date(event.timestamp))));
+			String date = apptFormat.format(new Date(event.timestamp));
+
+			if (useAmPm)
+			{
+				SimpleDateFormat ampmFormat = new SimpleDateFormat("a");
+
+				date += ampmFormat.format(new Date(event.timestamp)).toLowerCase();
+			}
+			
+			apptText.setText(this.getString(R.string.label_upcoming_appointment, event.title, date));
 		}
 		else
 			apptText.setText(R.string.label_no_appointments);

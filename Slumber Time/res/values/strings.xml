@@ -30,5 +30,13 @@
 
 	<string name="title_clock_alarms">Alarms</string>
 	<string name="message_select_alarm">Please select or add an alarm.</string>
-			
+	<string name="hint_search_tone">Search for alarm tone&#8230;</string>
+				
+	<!-- Databases -->
+    <string name="db_create_alarms_table">CREATE TABLE IF NOT EXISTS alarms(_id INTEGER PRIMARY KEY, name TEXT, hour INTEGER DEFAULT 8, INTEGER DEFAULT 30, sunday INTEGER DEFAULT 0, monday INTEGER DEFAULT 1, tuesday INTEGER DEFAULT 1, wednesday INTEGER DEFAULT 1, thursday INTEGER DEFAULT 1, friday INTEGER DEFAULT 1, saturday INTEGER DEFAULT 0, content_uri TEXT);</string>
+    <string name="db_create_notes_table">CREATE TABLE IF NOT EXISTS notes(_id INTEGER PRIMARY KEY, note TEXT, timestamp INTEGER);</string>
+    <string name="db_create_tips_table">CREATE TABLE IF NOT EXISTS tips(_id INTEGER PRIMARY KEY, title TEXT, description TEXT, url TEXT);</string>
+
+    <string name="db_update_alarms_add_enabled">ALTER TABLE alarms ADD COLUMN enabled INTEGER DEFAULT 1;</string>
+    
 </resources>
