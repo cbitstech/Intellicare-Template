@@ -6,7 +6,8 @@
     <EditText android:id="@+id/text_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/hint_search_tone" />
+        android:hint="@string/hint_search_tone" 
+        android:layout_margin="8dp"/>
     <ListView android:id="@+id/list_tones"
         android:layout_width="match_parent"
         android:layout_height="0dp"

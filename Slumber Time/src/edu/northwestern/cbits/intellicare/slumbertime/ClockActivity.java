@@ -239,8 +239,8 @@ public class ClockActivity extends Activity
 								ListView tonesList = (ListView) searchView.findViewById(R.id.list_tones);
 								
 								String[] projection = { Audio.AudioColumns.TITLE, Audio.AudioColumns.ARTIST, Audio.AudioColumns.DATA, Audio.AudioColumns._ID };
-								String selection = Audio.AudioColumns.IS_MUSIC + " != ?";
-								String[] args = { "" + 1 };
+								String selection = Audio.AudioColumns.IS_MUSIC + " = ? OR " + Audio.AudioColumns.IS_RINGTONE + " = ?";
+								String[] args = { "1", "1"};
 								
 								Cursor c = me.getContentResolver().query(Audio.Media.INTERNAL_CONTENT_URI, projection, selection, args, null);
 
