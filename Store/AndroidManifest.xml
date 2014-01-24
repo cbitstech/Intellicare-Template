@@ -22,6 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <provider android:name=".SQLiteContentProvider" android:authorities="edu.northwestern.cbits.intellicare.store" android:exported="false" />
     </application>
-
+    
 </manifest>

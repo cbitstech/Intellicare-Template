@@ -11,7 +11,7 @@ import android.content.res.AssetManager;
 import android.util.Log;
 
 
-public class DataService {
+public class JsonFileReader {
 	
 //	private enum JSONTypes {
 //		STR, INT, DBL, OBJ, ARR, DATETIME
