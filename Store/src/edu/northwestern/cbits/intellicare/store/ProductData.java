@@ -8,6 +8,28 @@ import android.util.Log;
 
 public class ProductData {
 	
+	public static ArrayList<Product> getMarketItemList(Cursor c) {
+		ArrayList<Product> products = new ArrayList<Product>();
+
+		// filter the product list to only those NOT owned by the user
+		for(Product p : ProductData.getAllProductsAsArrayListFromCursor(c)) {
+			if(p.userOwnsThis != 1)
+				products.add(p);
+		}
+		return products;
+	}
+	
+	public static ArrayList<Product> getInventoryItemList(Cursor c) {
+		ArrayList<Product> products = new ArrayList<Product>();
+		
+		// filter the product list to only those owned by the user
+		for(Product p : ProductData.getAllProductsAsArrayListFromCursor(c)) {
+			if(p.userOwnsThis == 1)
+				products.add(p);
+		}
+		return products;
+	}
+	
 	public static Product[] getAllProductsAsArray() {
 		return new Product[]{
 			new Product("Alpha","A hat","","headTop",22, 1),
