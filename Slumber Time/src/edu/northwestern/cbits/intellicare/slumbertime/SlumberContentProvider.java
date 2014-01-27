@@ -39,6 +39,8 @@ public class SlumberContentProvider extends ContentProvider
 	public static final String ALARM_SATURDAY = "saturday";
 	public static final String ALARM_ENABLED = "enabled";
 	public static final String ALARM_CONTENT_URI = "content_uri";
+	public static final String NOTE_TEXT = "note";
+	public static final String NOTE_TIMESTAMP = "timestamp";
 
     private UriMatcher _matcher = new UriMatcher(UriMatcher.NO_MATCH);
     private SQLiteDatabase _db = null;
@@ -159,7 +161,7 @@ public class SlumberContentProvider extends ContentProvider
 	            id = this._db.insert(SlumberContentProvider.ALARMS_TABLE, null, values);
 	            break;
 	        case SlumberContentProvider.NOTES:
-	            id = this._db.insert(SlumberContentProvider.ALARMS_TABLE, null, values);
+	            id = this._db.insert(SlumberContentProvider.NOTES_TABLE, null, values);
 	            break;
         }
         

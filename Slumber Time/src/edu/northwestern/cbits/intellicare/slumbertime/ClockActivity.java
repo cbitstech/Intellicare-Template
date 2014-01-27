@@ -572,11 +572,32 @@ public class ClockActivity extends Activity
 					}
 				});
 				
+				final EditText logField = (EditText) view.findViewById(R.id.field_log_text);
+				
 				builder.setPositiveButton(R.string.button_save, new DialogInterface.OnClickListener() 
 				{
 					public void onClick(DialogInterface dialog, int which) 
 					{
-						Toast.makeText(me, "tOdO: saVe sLeeP lOg", Toast.LENGTH_LONG).show();
+						String logText = logField.getEditableText().toString().trim();
+						
+						if (logText.length() > 0)
+						{
+							long now = System.currentTimeMillis();
+							
+							ContentValues values = new ContentValues();
+							values.put(SlumberContentProvider.NOTE_TEXT, logText);
+							values.put(SlumberContentProvider.NOTE_TIMESTAMP, now);
+							
+							Log.e("ST", "VALUES: " + values);
+							
+							me.getContentResolver().insert(SlumberContentProvider.NOTES_URI, values);
+							
+							dialog.cancel();
+
+							Toast.makeText(me, R.string.toast_note_saved, Toast.LENGTH_SHORT).show();
+						}
+						else
+							Toast.makeText(me, R.string.toast_provide_note, Toast.LENGTH_SHORT).show();
 					}
 				});
 

@@ -25,7 +25,12 @@
 	<string name="title_clock_log">Sleep Log</string>
 	<string name="hint_log_description">Please record any sleep notes here.</string>
 	<string name="log_timestamp_label">Your log will be timestamped when you save it.</string>
-
+	<string name="toast_provide_note">Please enter a note to save&#8230;</string>
+	<string name="toast_note_saved">Note saved.</string>
+	<string name="tool_sleep_log_notes">Review Sleep Log Notes</string>
+	<string name="desc_sleep_log_notes">Review your sleep log notes and your last minute thoughts here.</string>
+	<string name="title_sleep_log_activity">Review Sleep Log</string>
+				
 	<string name="title_clock_tips">Healthy Sleeping Tips &amp; Tricks</string>
 
 	<string name="title_clock_alarms">Alarms</string>

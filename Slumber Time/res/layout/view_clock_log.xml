@@ -5,8 +5,9 @@
     android:orientation="vertical"
     android:padding="16dp"
     android:id="@+id/settings_root">
-    <EditText android:layout_width="match_parent"
+    <EditText android:id="@+id/field_log_text"
         android:layout_height="wrap_content"
+        android:layout_width="match_parent"
         android:hint="@string/hint_log_description" 
 		android:inputType="textMultiLine"
         android:singleLine="false" />
