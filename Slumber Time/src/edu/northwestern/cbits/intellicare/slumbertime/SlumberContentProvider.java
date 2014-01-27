@@ -14,22 +14,25 @@ public class SlumberContentProvider extends ContentProvider
     private static final int ALARMS = 1;
     private static final int NOTES = 2;
     private static final int TIPS = 3;
+    private static final int CHECKLIST_ITEMS = 4;
 
     private static final String ALARMS_TABLE = "alarms";
     private static final String NOTES_TABLE = "notes";
     private static final String TIPS_TABLE = "tips";
+    private static final String CHECKLIST_ITEMS_TABLE = "checklist_items";
     
     private static final String AUTHORITY = "edu.northwestern.cbits.intellicare.slumbertime";
 
     public static final Uri ALARMS_URI = Uri.parse("content://" + AUTHORITY + "/" + ALARMS_TABLE);
     public static final Uri NOTES_URI = Uri.parse("content://" + AUTHORITY + "/" + NOTES_TABLE);
     public static final Uri TIPS_URI = Uri.parse("content://" + AUTHORITY + "/" + TIPS_TABLE);
+    public static final Uri CHECKLIST_ITEMS_URI = Uri.parse("content://" + AUTHORITY + "/" + CHECKLIST_ITEMS_TABLE);
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
-    protected static final String ALARM_NAME = "name";
-    protected static final String ALARM_HOUR = "hour";
-    protected static final String ALARM_MINUTE = "minute";
+    public static final String ALARM_NAME = "name";
+    public static final String ALARM_HOUR = "hour";
+    public static final String ALARM_MINUTE = "minute";
 	public static final String ALARM_SUNDAY = "sunday";
     public static final String ALARM_MONDAY = "monday";
 	public static final String ALARM_TUESDAY = "tuesday";
@@ -41,6 +44,9 @@ public class SlumberContentProvider extends ContentProvider
 	public static final String ALARM_CONTENT_URI = "content_uri";
 	public static final String NOTE_TEXT = "note";
 	public static final String NOTE_TIMESTAMP = "timestamp";
+	public static final String CHECKLIST_ITEM_NAME = "name";
+	public static final String CHECKLIST_ITEM_CATEGORY = "category";
+	public static final String CHECKLIST_ITEM_ENABLED = "enabled";
 
     private UriMatcher _matcher = new UriMatcher(UriMatcher.NO_MATCH);
     private SQLiteDatabase _db = null;
@@ -52,6 +58,7 @@ public class SlumberContentProvider extends ContentProvider
         this._matcher.addURI(AUTHORITY, ALARMS_TABLE, ALARMS);
         this._matcher.addURI(AUTHORITY, NOTES_TABLE, NOTES);
         this._matcher.addURI(AUTHORITY, TIPS_TABLE, TIPS);
+        this._matcher.addURI(AUTHORITY, CHECKLIST_ITEMS_TABLE, CHECKLIST_ITEMS);
     }
 
     public boolean onCreate() 
@@ -77,6 +84,22 @@ public class SlumberContentProvider extends ContentProvider
 	
 	                case 1:
 	                	db.execSQL(context.getString(R.string.db_update_alarms_add_enabled));
+	                case 2:
+	                	db.execSQL(context.getString(R.string.db_create_checklist_items_table));
+	                	
+	                	for (String item : context.getResources().getStringArray(R.array.initial_checklist_items))
+	                	{
+	                		String[] tokens = item.split("/");
+	                		
+	                		if (tokens.length > 1)
+	                		{
+		                		ContentValues values = new ContentValues();
+		                		values.put(SlumberContentProvider.CHECKLIST_ITEM_NAME, tokens[0].trim());
+		                		values.put(SlumberContentProvider.CHECKLIST_ITEM_CATEGORY, tokens[1].trim());
+		                		
+		                		db.insert(SlumberContentProvider.CHECKLIST_ITEMS_TABLE, null, values);
+	                		}	                		
+	                	}
 	                default:
                         break;
             	}
@@ -98,6 +121,8 @@ public class SlumberContentProvider extends ContentProvider
 	            return this._db.query(SlumberContentProvider.TIPS_TABLE, projection, selection, selectionArgs, null, null, sortOrder);
 	        case SlumberContentProvider.NOTES:
 	            return this._db.query(SlumberContentProvider.NOTES_TABLE, projection, selection, selectionArgs, null, null, sortOrder);
+	        case SlumberContentProvider.CHECKLIST_ITEMS:
+	            return this._db.query(SlumberContentProvider.CHECKLIST_ITEMS_TABLE, projection, selection, selectionArgs, null, null, sortOrder);
         }
         
         return null;
@@ -113,6 +138,8 @@ public class SlumberContentProvider extends ContentProvider
 	            return this._db.update(SlumberContentProvider.TIPS_TABLE, values, selection, selectionArgs);
 	        case SlumberContentProvider.NOTES:
 	            return this._db.update(SlumberContentProvider.NOTES_TABLE, values, selection, selectionArgs);
+	        case SlumberContentProvider.CHECKLIST_ITEMS:
+	            return this._db.update(SlumberContentProvider.CHECKLIST_ITEMS_TABLE, values, selection, selectionArgs);
         }
 
 		return 0;
@@ -128,6 +155,8 @@ public class SlumberContentProvider extends ContentProvider
 	            return this._db.delete(SlumberContentProvider.TIPS_TABLE, selection, selectionArgs);
 	        case SlumberContentProvider.NOTES:
 	            return this._db.delete(SlumberContentProvider.NOTES_TABLE, selection, selectionArgs);
+	        case SlumberContentProvider.CHECKLIST_ITEMS:
+	            return this._db.delete(SlumberContentProvider.CHECKLIST_ITEMS_TABLE, selection, selectionArgs);
         }
 
         return 0;
@@ -143,6 +172,8 @@ public class SlumberContentProvider extends ContentProvider
 	        	return "vnd.android.cursor.dir/" + AUTHORITY + ".tip";
 	        case SlumberContentProvider.NOTES:
 	        	return "vnd.android.cursor.dir/" + AUTHORITY + ".note";
+	        case SlumberContentProvider.CHECKLIST_ITEMS:
+	        	return "vnd.android.cursor.dir/" + AUTHORITY + ".checklist_item";
         }
         
         return null;
@@ -162,6 +193,9 @@ public class SlumberContentProvider extends ContentProvider
 	            break;
 	        case SlumberContentProvider.NOTES:
 	            id = this._db.insert(SlumberContentProvider.NOTES_TABLE, null, values);
+	            break;
+	        case SlumberContentProvider.CHECKLIST_ITEMS:
+	            id = this._db.insert(SlumberContentProvider.CHECKLIST_ITEMS_TABLE, null, values);
 	            break;
         }
         

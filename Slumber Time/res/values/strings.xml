@@ -3,6 +3,7 @@
 
     <string name="app_name">Slumber Time</string>
     <string name="action_settings">Settings</string>
+    <string name="action_help">Help</string>
     <string name="hello_world">Hello world!</string>
 	<string name="label_no_appointments">No upcoming appointments</string>
 	<string name="label_upcoming_appointment" formatted="false">%s (%s)</string>
@@ -10,7 +11,8 @@
 	<string name="button_close">Close</string>
 	<string name="button_save">Save</string>
 	<string name="button_discard">Discard &amp; Close</string>
-		
+	<string name="button_delete_entry">Delete Entry</string>
+			
 	<string name="title_clock_settings">Clock Settings</string>
 	<string name="label_active_brightness">Active Brightness</string>
 	<string name="label_resting_brightness">Resting Brightness</string>
@@ -30,7 +32,14 @@
 	<string name="tool_sleep_log_notes">Review Sleep Log Notes</string>
 	<string name="desc_sleep_log_notes">Review your sleep log notes and your last minute thoughts here.</string>
 	<string name="title_sleep_log_activity">Review Sleep Log</string>
-				
+	<string name="help_sleep_log">Tap a log entry to read it.\n\nLong-press a log entry for additional options.</string>
+	<string name="title_sleep_log_help">Sleep Log Instructions</string>
+	<string name="action_add_log">Add Log Note</string>
+
+	<string name="tool_bedtime_checklist">Bedtime Checklist</string>
+	<string name="desc_bedtime_checklist">Wrap up your day by checking off tasks before bed.</string>
+			
+							
 	<string name="title_clock_tips">Healthy Sleeping Tips &amp; Tricks</string>
 
 	<string name="title_clock_alarms">Alarms</string>
@@ -54,5 +63,27 @@
     <string name="db_create_tips_table">CREATE TABLE IF NOT EXISTS tips(_id INTEGER PRIMARY KEY, title TEXT, description TEXT, url TEXT);</string>
 
     <string name="db_update_alarms_add_enabled">ALTER TABLE alarms ADD COLUMN enabled INTEGER DEFAULT 1;</string>
-    
+    <string name="db_create_checklist_items_table">CREATE TABLE IF NOT EXISTS checklist_items(_id INTEGER PRIMARY KEY, name TEXT, category TEXT, enabled INTEGER DEFAULT 1);</string>
+
+	<string-array name="initial_checklist_items">
+        <item>Close the curtains and blinds? / Limit the amount of light in your bedroom! Did you&#8230;</item>
+        <item>Turn off all the lights in the house? / Limit the amount of light in your bedroom! Did you&#8230;</item>
+        <item>Turn off TV, computer, and tablet? / Limit the amount of light in your bedroom! Did you&#8230;</item>
+        <item>Use a sleeping mask? / Limit the amount of light in your bedroom! Did you&#8230;</item>
+        <item>Turn off your stereo? / Eliminate excess noise! Did you&#8230;</item>
+        <item>Close the doors? / Eliminate excess noise! Did you&#8230;</item>
+        <item>Kick your pets out of the bedroom? / Eliminate excess noise! Did you&#8230;</item>
+        <item>Turn on a fan, white noise machine, or use earplugs? / Eliminate excess noise! Did you&#8230;</item>
+        <item>Use the bathroom. / Make yourself comfortable! You can&#8230;</item>
+        <item>Take a bath. / Make yourself comfortable! You can&#8230;</item>
+        <item>Adjust the temperature to your liking. / Make yourself comfortable! You can&#8230;</item>
+        <item>Turn the clock around so you don\'t see the time. / Make yourself comfortable! You can&#8230;</item>
+        <item>Clear your mind by jotting down last-minute notes. / Make yourself comfortable! You can&#8230;</item>
+        <item>Tell yourself you\'re going to try your best to sleep tonight. / Make yourself comfortable! You can&#8230;</item>
+        <item>Set out your clothes for tomorrow. / Some other things&#8230;</item>
+        <item>Pack your breakfast or lunch. / Some other things&#8230;</item>
+        <item>Lock the doors. / Some other things&#8230;</item>
+        <item>Turn off the appliances. / Some other things&#8230;</item>
+        <item>Set your alarm clock. / Some other things&#8230;</item>
+  	</string-array>
 </resources>

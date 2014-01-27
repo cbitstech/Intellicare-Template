@@ -1,13 +1,26 @@
 package edu.northwestern.cbits.intellicare.slumbertime;
 
+import java.util.Date;
+
+import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Log;
+import android.text.format.DateFormat;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 public class SleepLogActivity extends ConsentedActivity
@@ -18,9 +31,11 @@ public class SleepLogActivity extends ConsentedActivity
 
 		this.setContentView(R.layout.activity_sleep_log);
 		
-		this.getSupportActionBar().setTitle(R.string.title_sleep_log_activity);
+		this.getSupportActionBar().setTitle(R.string.tool_sleep_log_notes);
+		this.getSupportActionBar().setIcon(R.drawable.ic_launcher_plain);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void onResume()
 	{
 		super.onResume();
@@ -29,8 +44,7 @@ public class SleepLogActivity extends ConsentedActivity
 		
 		Cursor c = this.getContentResolver().query(SlumberContentProvider.NOTES_URI, null, null, null, "timestamp DESC");
 		
-		Log.e("ST", "CURSOR COUNT: " + c.getCount());
-		
+		this.startManagingCursor(c);
 		int[] emptyInts = {};
 		String[] emptyStrings = {};
 		
@@ -38,21 +52,127 @@ public class SleepLogActivity extends ConsentedActivity
 		{
 			public void bindView (View view, Context context, Cursor cursor)
 			{
-				Log.e("ST", "BIND VIEW");
-				
-				for (int i = 0; i < cursor.getColumnCount(); i++)
-				{
-					Log.e("PR", cursor.getColumnName(i) + " -> " + cursor.getString(i));
-				}
-				
 				TextView logText = (TextView) view.findViewById(R.id.label_log_notes);
 				logText.setText(cursor.getString(cursor.getColumnIndex(SlumberContentProvider.NOTE_TEXT)));
 
+				java.text.DateFormat dateFormat = DateFormat.getLongDateFormat(context);
+				java.text.DateFormat timeFormat = DateFormat.getTimeFormat(context);
+				
+				Date now = new Date(cursor.getLong(cursor.getColumnIndex(SlumberContentProvider.NOTE_TIMESTAMP)));
+				
 				TextView time = (TextView) view.findViewById(R.id.label_log_time);
-				time.setText("" + cursor.getString(cursor.getColumnIndex(SlumberContentProvider.NOTE_TIMESTAMP)));
+				time.setText(timeFormat.format(now) + " (" + dateFormat.format(now) + ")");
 			}
 		};
 		
 		logList.setAdapter(adapter);
+		
+		final SleepLogActivity me = this;
+		
+		logList.setOnItemClickListener(new OnItemClickListener()
+		{
+			public void onItemClick(AdapterView<?> parent, View view, int position, final long id) 
+			{
+				Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+				
+				java.text.DateFormat dateFormat = DateFormat.getLongDateFormat(me);
+				java.text.DateFormat timeFormat = DateFormat.getTimeFormat(me);
+				
+				Date now = new Date(cursor.getLong(cursor.getColumnIndex(SlumberContentProvider.NOTE_TIMESTAMP)));
+				
+				AlertDialog.Builder builder = new AlertDialog.Builder(me);
+				builder = builder.setTitle(timeFormat.format(now) + " (" + dateFormat.format(now) + ")");
+				builder = builder.setMessage(cursor.getString(cursor.getColumnIndex(SlumberContentProvider.NOTE_TEXT)));
+				
+				builder = builder.setPositiveButton(R.string.button_close, new OnClickListener()
+				{
+					public void onClick(DialogInterface arg0, int arg1) 
+					{
+
+					}
+				});
+				
+				builder = builder.setNegativeButton(R.string.button_delete_entry, new OnClickListener()
+				{
+					public void onClick(DialogInterface arg0, int arg1) 
+					{
+						String selection = "_id = ?";
+						String[] args = { "" + id };
+						
+						me.getContentResolver().delete(SlumberContentProvider.NOTES_URI, selection, args);
+						
+						me.onResume();
+					}
+				});
+
+				builder.create().show();
+			}
+		});
 	}
+	
+	public boolean onCreateOptionsMenu(Menu menu) 
+	{
+		this.getMenuInflater().inflate(R.menu.menu_sleep_log, menu);
+
+		return true;
+	}
+	
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		final SleepLogActivity me = this;
+		
+		if (item.getItemId() == R.id.action_add)
+		{
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			
+			builder = builder.setTitle(R.string.title_clock_log);
+			
+			LayoutInflater inflater = LayoutInflater.from(this);
+			View view = inflater.inflate(R.layout.view_clock_log, null, false);
+			
+			builder = builder.setView(view);
+			builder.setNegativeButton(R.string.button_discard, new DialogInterface.OnClickListener() 
+			{
+				public void onClick(DialogInterface dialog, int which) 
+				{
+
+				}
+			});
+			
+			final EditText logField = (EditText) view.findViewById(R.id.field_log_text);
+			
+			builder.setPositiveButton(R.string.button_save, new DialogInterface.OnClickListener() 
+			{
+				public void onClick(DialogInterface dialog, int which) 
+				{
+					String logText = logField.getEditableText().toString().trim();
+					
+					if (logText.length() > 0)
+					{
+						long now = System.currentTimeMillis();
+						
+						ContentValues values = new ContentValues();
+						values.put(SlumberContentProvider.NOTE_TEXT, logText);
+						values.put(SlumberContentProvider.NOTE_TIMESTAMP, now);
+						
+						me.getContentResolver().insert(SlumberContentProvider.NOTES_URI, values);
+						
+						dialog.cancel();
+
+						me.onResume();
+
+						Toast.makeText(me, R.string.toast_note_saved, Toast.LENGTH_SHORT).show();
+					}
+					else
+						Toast.makeText(me, R.string.toast_provide_note, Toast.LENGTH_SHORT).show();
+				}
+			});
+
+			AlertDialog d = builder.create();
+			d.show();
+		}
+
+		return true;
+	}
+
 }

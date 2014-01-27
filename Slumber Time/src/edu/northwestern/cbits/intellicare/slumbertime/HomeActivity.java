@@ -44,10 +44,8 @@ public class HomeActivity extends PortraitActivity
 		
 		ArrayList<Tool> tools = new ArrayList<Tool>();
 		
-		tools.add(new Tool("bEdTimE cHeckList", "bedtime checklist desc goes here...", 0, null));
 		tools.add(new Tool(this.getString(R.string.tool_sleep_log_notes), this.getString(R.string.desc_sleep_log_notes), R.drawable.clock_log, new Intent(this, SleepLogActivity.class)));
-		tools.add(new Tool("fOOd & exERCise", "FAE desc goes here...", 0, null));
-		tools.add(new Tool("relAXinG cONTeNt", "RC desc goes here...", 0, null));
+		tools.add(new Tool(this.getString(R.string.tool_bedtime_checklist), this.getString(R.string.desc_bedtime_checklist), R.drawable.clock_checklist, new Intent(this, BedtimeChecklistActivity.class)));
 
 		ListView toolsList = (ListView) this.findViewById(R.id.list_tools);
 		
