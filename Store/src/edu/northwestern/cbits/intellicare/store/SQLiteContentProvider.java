@@ -210,9 +210,9 @@ public class SQLiteContentProvider extends ContentProvider {
 		// REFRESH ALL DB DATA: delete all data, then re-insert.
 		a.getContentResolver().delete(SQLiteContentProvider.StoreUri.PRODUCTS, null, null);
 		ContentValues values = new ContentValues();
-		for(Product i : ProductData.getAllProducts()) {
+		for(Product i : ProductData.getAllProductsAsArray()) {
 			// TODO this is ugly and verbose; find a list+functional-ish way of dealing w/ the cols and values to insert.
-	        values.put(SQLiteContentProvider.Products.COLNM_USERHAZIT, 0);
+	        values.put(SQLiteContentProvider.Products.COLNM_USERHAZIT, i.userOwnsThis);
 	        //values.put(SQLiteContentProvider.Products.COLNM_BLOB, "null");
 	        values.put(SQLiteContentProvider.Products.COLNM_NAME, i.name);
 	        values.put(SQLiteContentProvider.Products.COLNM_DESC, i.description);
