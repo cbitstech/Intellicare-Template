@@ -27,6 +27,19 @@ public class SlumberContentProvider extends ContentProvider
 
     private static final int DATABASE_VERSION = 2;
 
+    protected static final String ALARM_NAME = "name";
+    protected static final String ALARM_HOUR = "hour";
+    protected static final String ALARM_MINUTE = "minute";
+	public static final String ALARM_SUNDAY = "sunday";
+    public static final String ALARM_MONDAY = "monday";
+	public static final String ALARM_TUESDAY = "tuesday";
+	public static final String ALARM_WEDNESDAY = "wednesday";
+	public static final String ALARM_THURSDAY = "thursday";
+	public static final String ALARM_FRIDAY = "friday";
+	public static final String ALARM_SATURDAY = "saturday";
+	public static final String ALARM_ENABLED = "enabled";
+	public static final String ALARM_CONTENT_URI = "content_uri";
+
     private UriMatcher _matcher = new UriMatcher(UriMatcher.NO_MATCH);
     private SQLiteDatabase _db = null;
 
@@ -151,5 +164,43 @@ public class SlumberContentProvider extends ContentProvider
         }
         
         return Uri.withAppendedPath(uri, "" + id);
+	}
+
+	public static String dateStringForAlarmCursor(Context context, Cursor cursor) 
+	{
+		int hour = cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.ALARM_HOUR));
+		int minute = cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.ALARM_MINUTE));
+		
+		String dateString = hour + ":";
+		
+		if (minute < 10)
+			dateString += "0";
+		
+		dateString += minute + " (";
+		
+		if (cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.ALARM_SUNDAY)) > 0)
+			dateString += context.getString(R.string.abbrev_sunday);
+
+		if (cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.ALARM_MONDAY)) > 0)
+			dateString += context.getString(R.string.abbrev_monday);
+
+		if (cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.ALARM_TUESDAY)) > 0)
+			dateString += context.getString(R.string.abbrev_tuesday);
+
+		if (cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.ALARM_WEDNESDAY)) > 0)
+			dateString += context.getString(R.string.abbrev_wednesday);
+
+		if (cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.ALARM_THURSDAY)) > 0)
+			dateString += context.getString(R.string.abbrev_thursday);
+
+		if (cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.ALARM_FRIDAY)) > 0)
+			dateString += context.getString(R.string.abbrev_friday);
+
+		if (cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.ALARM_SATURDAY)) > 0)
+			dateString += context.getString(R.string.abbrev_saturday);
+		
+		dateString += ")";
+		
+		return dateString;
 	}
 }

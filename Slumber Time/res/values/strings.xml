@@ -29,11 +29,22 @@
 	<string name="title_clock_tips">Healthy Sleeping Tips &amp; Tricks</string>
 
 	<string name="title_clock_alarms">Alarms</string>
+	<string name="name_new_alarm">New Alarm</string>
 	<string name="message_select_alarm">Please select or add an alarm.</string>
 	<string name="hint_search_tone">Search for alarm tone&#8230;</string>
-				
+	<string name="action_audio_open">Play audio&#8230;</string>
+	<string name="action_audio_use">Use audio as alarm tone&#8230;</string>
+
+	<string name="abbrev_sunday">Su</string>
+	<string name="abbrev_monday">M</string>
+	<string name="abbrev_tuesday">Tu</string>
+	<string name="abbrev_wednesday">W</string>
+	<string name="abbrev_thursday">Th</string>
+	<string name="abbrev_friday">F</string>
+	<string name="abbrev_saturday">Sa</string>
+										
 	<!-- Databases -->
-    <string name="db_create_alarms_table">CREATE TABLE IF NOT EXISTS alarms(_id INTEGER PRIMARY KEY, name TEXT, hour INTEGER DEFAULT 8, INTEGER DEFAULT 30, sunday INTEGER DEFAULT 0, monday INTEGER DEFAULT 1, tuesday INTEGER DEFAULT 1, wednesday INTEGER DEFAULT 1, thursday INTEGER DEFAULT 1, friday INTEGER DEFAULT 1, saturday INTEGER DEFAULT 0, content_uri TEXT);</string>
+    <string name="db_create_alarms_table">CREATE TABLE IF NOT EXISTS alarms(_id INTEGER PRIMARY KEY, name TEXT, hour INTEGER DEFAULT 8, minute INTEGER DEFAULT 30, sunday INTEGER DEFAULT 0, monday INTEGER DEFAULT 1, tuesday INTEGER DEFAULT 1, wednesday INTEGER DEFAULT 1, thursday INTEGER DEFAULT 1, friday INTEGER DEFAULT 1, saturday INTEGER DEFAULT 0, content_uri TEXT);</string>
     <string name="db_create_notes_table">CREATE TABLE IF NOT EXISTS notes(_id INTEGER PRIMARY KEY, note TEXT, timestamp INTEGER);</string>
     <string name="db_create_tips_table">CREATE TABLE IF NOT EXISTS tips(_id INTEGER PRIMARY KEY, title TEXT, description TEXT, url TEXT);</string>
 
