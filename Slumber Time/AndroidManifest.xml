@@ -7,7 +7,7 @@
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 	<uses-permission android:name="android.permission.WRITE_CALENDAR"/>
 	<uses-permission android:name="android.permission.READ_CALENDAR"/>
-		<uses-sdk android:minSdkVersion="9" android:targetSdkVersion="19" />
+	<uses-sdk android:minSdkVersion="9" android:targetSdkVersion="19" />
     <application android:allowBackup="true" android:icon="@drawable/ic_launcher_slumber" android:label="@string/app_name" android:theme="@style/AppTheme">
         <activity android:theme="@style/Theme.AppCompat" android:name=".HomeActivity" android:label="@string/app_name">
             <intent-filter>
@@ -16,10 +16,11 @@
             </intent-filter>
         </activity>
         <activity android:theme="@style/Theme.AppCompat" android:name=".ClockActivity" android:label="@string/app_name" />
-        
+        <activity android:theme="@style/Theme.AppCompat" android:name=".SleepLogActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.ConsentActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.RecruitmentActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.MotivationActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.DemographicActivity" android:label="@string/app_name" />
-	</application>
+        <provider android:name=".SlumberContentProvider" android:authorities="edu.northwestern.cbits.intellicare.slumbertime" android:exported="false" />
+   	</application>
 </manifest>

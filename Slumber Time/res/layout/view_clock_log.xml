@@ -1,0 +1,20 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:id="@+id/settings_root">
+    <EditText android:id="@+id/field_log_text"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:hint="@string/hint_log_description" 
+		android:inputType="textMultiLine"
+        android:singleLine="false" />
+    <TextView android:text="@string/log_timestamp_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:padding="8dp"
+        android:singleLine="false" />
+</LinearLayout>

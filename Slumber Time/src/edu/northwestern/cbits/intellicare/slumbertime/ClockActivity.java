@@ -1,33 +1,59 @@
 package edu.northwestern.cbits.intellicare.slumbertime;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.TimePickerDialog;
+import android.app.TimePickerDialog.OnTimeSetListener;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.database.MergeCursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
+import android.provider.MediaStore.Audio;
+import android.support.v4.widget.SimpleCursorAdapter;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 public class ClockActivity extends Activity 
 {
@@ -35,11 +61,17 @@ public class ClockActivity extends Activity
 	protected static final String REST_BRIGHTNESS_OPTION = "rest_brightness_level";
 	protected static final float DEFAULT_ACTIVE_BRIGHTNESS = 1.0f;
 	protected static final float DEFAULT_REST_BRIGHTNESS = 0.25f;
+	protected static final String DIM_DELAY_OPTION = "dim_delay_duration";
+	protected static final int DEFAULT_DIM_DELAY = 4;
+	protected static final String DIM_DARK_OPTION = "dim_when_dark";
+	protected static final boolean DIM_DARK_DEFAULT = true;
 	
 	private Handler _handler = null;
 	private long _lastEventQuery = 0;
 	private Event _lastEvent = null;
 	protected float _currentBrightness;
+	protected long _searchLastUpdate = 0;
+	protected AlertDialog _toneListDialog = null;
 	
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	public void onCreate(Bundle savedInstanceState) 
@@ -74,14 +106,449 @@ public class ClockActivity extends Activity
         
         alarms.setOnClickListener(new OnClickListener()
         {
-			public void onClick(View arg0) 
+			public void onClick(final View alarmView) 
 			{
 				AlertDialog.Builder builder = new AlertDialog.Builder(me);
+
+				LayoutInflater inflater = LayoutInflater.from(me);
+				View view = inflater.inflate(R.layout.view_clock_alarms, null, false);
 				
-				builder = builder.setTitle("sHoW aLaRm sEtTinGs!");
-				builder = builder.setMessage("Alarm list + settings go here...");
+				final ListView alarmsList = (ListView) view.findViewById(R.id.list_alarms);
+				final TextView selectMessage = (TextView) view.findViewById(R.id.select_alarm);
+				final LinearLayout alarmEditor = (LinearLayout) view.findViewById(R.id.editor_alarm);
 				
-				builder.create().show();
+				alarmsList.setFocusable(false);
+				alarmsList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+				
+				final String[] emptyString = {};
+				final int[] emptyInt = {};
+
+				Cursor alarmsCursor = me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null);
+				
+				if (alarmsCursor.getCount() == 0)
+				{
+					alarmsCursor.close();
+					
+					ContentValues values = new ContentValues();
+					values.put(SlumberContentProvider.ALARM_NAME, me.getString(R.string.name_new_alarm));
+					
+					me.getContentResolver().insert(SlumberContentProvider.ALARMS_URI, values);
+
+					alarmsCursor = me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null);
+				}
+				
+				final SimpleCursorAdapter adapter = new SimpleCursorAdapter(me, R.layout.row_alarm, alarmsCursor,  emptyString, emptyInt, 0)
+				{
+					public void bindView (View view, Context context, Cursor cursor)
+					{
+						final long id = cursor.getLong(cursor.getColumnIndex("_id"));
+						
+						TextView title = (TextView) view.findViewById(R.id.title_alarm);
+						title.setText(cursor.getString(cursor.getColumnIndex(SlumberContentProvider.ALARM_NAME)));
+
+						TextView times = (TextView) view.findViewById(R.id.times_alarm);
+						times.setText(SlumberContentProvider.dateStringForAlarmCursor(me, cursor));
+						
+						CheckBox enabled = (CheckBox) view.findViewById(R.id.alarm_enabled);
+						
+						enabled.setChecked(cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.ALARM_ENABLED)) > 0);
+						
+						enabled.setOnCheckedChangeListener(new OnCheckedChangeListener()
+						{
+							public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) 
+							{
+								ContentValues values = new ContentValues();
+								values.put(SlumberContentProvider.ALARM_ENABLED, isChecked);
+								
+								String where = "_id = ?";
+								String[] args = { "" + id };
+								
+								me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
+							}
+						});
+					}
+				};
+				
+				alarmsList.setAdapter(adapter);
+				
+				alarmsList.setOnItemClickListener(new OnItemClickListener()
+				{
+					public void onItemClick(final AdapterView<?> parent, final View view, final int which, final long alarmId) 
+					{
+						final OnItemClickListener clickListener = this;
+						
+						alarmEditor.setVisibility(View.VISIBLE);
+						selectMessage.setVisibility(View.GONE);
+						
+						Cursor c = adapter.getCursor();
+						
+						String toneName = c.getString(c.getColumnIndex(SlumberContentProvider.ALARM_NAME));
+						
+						TextView ringtone = (TextView) alarmEditor.findViewById(R.id.label_alarm_tone);
+						final TextView time = (TextView) alarmEditor.findViewById(R.id.label_alarm_name);
+						
+						CheckBox sunday = (CheckBox) alarmEditor.findViewById(R.id.check_sunday);
+						CheckBox monday = (CheckBox) alarmEditor.findViewById(R.id.check_monday);
+						CheckBox tuesday = (CheckBox) alarmEditor.findViewById(R.id.check_tuesday);
+						CheckBox wednesday = (CheckBox) alarmEditor.findViewById(R.id.check_wednesday);
+						CheckBox thursday = (CheckBox) alarmEditor.findViewById(R.id.check_thursday);
+						CheckBox friday = (CheckBox) alarmEditor.findViewById(R.id.check_friday);
+						CheckBox saturday = (CheckBox) alarmEditor.findViewById(R.id.check_saturday);
+
+						sunday.setChecked(c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_SUNDAY)) > 0);
+						monday.setChecked(c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_MONDAY)) > 0);
+						tuesday.setChecked(c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_TUESDAY)) > 0);
+						wednesday.setChecked(c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_WEDNESDAY)) > 0);
+						thursday.setChecked(c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_THURSDAY)) > 0);
+						friday.setChecked(c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_FRIDAY)) > 0);
+						saturday.setChecked(c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_SATURDAY)) > 0);
+						
+						sunday.setOnCheckedChangeListener(new OnCheckedChangeListener()
+						{
+							public void onCheckedChanged(CompoundButton button, boolean checked) 
+							{
+								ContentValues values = new ContentValues();
+								values.put(SlumberContentProvider.ALARM_SUNDAY, checked);
+								
+								String where = "_id = ?";
+								String[] args = { "" + alarmId };
+								
+								me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
+								
+								adapter.swapCursor(me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null));
+
+								clickListener.onItemClick(parent, view, which, alarmId);
+							}
+						});
+						
+						monday.setOnCheckedChangeListener(new OnCheckedChangeListener()
+						{
+							public void onCheckedChanged(CompoundButton button, boolean checked) 
+							{
+								ContentValues values = new ContentValues();
+								values.put(SlumberContentProvider.ALARM_MONDAY, checked);
+								
+								String where = "_id = ?";
+								String[] args = { "" + alarmId };
+								
+								me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
+
+								adapter.swapCursor(me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null));
+
+								clickListener.onItemClick(parent, view, which, alarmId);
+							}
+						});
+
+						tuesday.setOnCheckedChangeListener(new OnCheckedChangeListener()
+						{
+							public void onCheckedChanged(CompoundButton button, boolean checked) 
+							{
+								ContentValues values = new ContentValues();
+								values.put(SlumberContentProvider.ALARM_TUESDAY, checked);
+								
+								String where = "_id = ?";
+								String[] args = { "" + alarmId };
+								
+								me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
+
+								adapter.swapCursor(me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null));
+								clickListener.onItemClick(parent, view, which, alarmId);
+							}
+						});
+
+						wednesday.setOnCheckedChangeListener(new OnCheckedChangeListener()
+						{
+							public void onCheckedChanged(CompoundButton button, boolean checked) 
+							{
+								ContentValues values = new ContentValues();
+								values.put(SlumberContentProvider.ALARM_WEDNESDAY, checked);
+								
+								String where = "_id = ?";
+								String[] args = { "" + alarmId };
+								
+								me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
+
+								adapter.swapCursor(me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null));
+								clickListener.onItemClick(parent, view, which, alarmId);
+							}
+						});
+
+						thursday.setOnCheckedChangeListener(new OnCheckedChangeListener()
+						{
+							public void onCheckedChanged(CompoundButton button, boolean checked) 
+							{
+								ContentValues values = new ContentValues();
+								values.put(SlumberContentProvider.ALARM_THURSDAY, checked);
+								
+								String where = "_id = ?";
+								String[] args = { "" + alarmId };
+								
+								me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
+
+								adapter.swapCursor(me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null));
+								clickListener.onItemClick(parent, view, which, alarmId);
+							}
+						});
+
+						friday.setOnCheckedChangeListener(new OnCheckedChangeListener()
+						{
+							public void onCheckedChanged(CompoundButton button, boolean checked) 
+							{
+								ContentValues values = new ContentValues();
+								values.put(SlumberContentProvider.ALARM_FRIDAY, checked);
+								
+								String where = "_id = ?";
+								String[] args = { "" + alarmId };
+								
+								me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
+
+								adapter.swapCursor(me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null));
+								clickListener.onItemClick(parent, view, which, alarmId);
+							}
+						});
+
+						saturday.setOnCheckedChangeListener(new OnCheckedChangeListener()
+						{
+							public void onCheckedChanged(CompoundButton button, boolean checked) 
+							{
+								ContentValues values = new ContentValues();
+								values.put(SlumberContentProvider.ALARM_SATURDAY, checked);
+								
+								String where = "_id = ?";
+								String[] args = { "" + alarmId };
+								
+								me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
+
+								adapter.swapCursor(me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null));
+								clickListener.onItemClick(parent, view, which, alarmId);
+							}
+						});
+
+						ringtone.setText(toneName);
+						time.setText(SlumberContentProvider.dateStringForAlarmCursor(me, c));
+						
+						final int hour = c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_HOUR));
+						final int minute = c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_MINUTE));
+						
+						time.setOnClickListener(new OnClickListener()
+						{
+							public void onClick(View timeView)
+							{
+								SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
+								boolean useAmPm = prefs.getBoolean("display_am_pm", true);
+
+								TimePickerDialog picker = new TimePickerDialog(me, new OnTimeSetListener()
+								{
+									public void onTimeSet(TimePicker picker, int hour, int minute) 
+									{
+										ContentValues values = new ContentValues();
+										values.put(SlumberContentProvider.ALARM_HOUR, hour);
+										values.put(SlumberContentProvider.ALARM_MINUTE, minute);
+										
+										String where = "_id = ?";
+										String[] args = { "" + alarmId };
+										
+										me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
+
+										adapter.swapCursor(me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null));
+										clickListener.onItemClick(parent, view, which, alarmId);
+									}
+								}, hour, minute, (useAmPm == false));
+								
+								picker.show();
+							}
+						});
+
+						ringtone.setOnClickListener(new OnClickListener()
+						{
+							public void onClick(View toneView)
+							{
+								AlertDialog.Builder builder = new AlertDialog.Builder(me);
+
+								LayoutInflater inflater = LayoutInflater.from(me);
+								View searchView = inflater.inflate(R.layout.view_clock_tone_search, null, false);
+								
+								ListView tonesList = (ListView) searchView.findViewById(R.id.list_tones);
+								
+								String[] projection = { Audio.AudioColumns.TITLE, Audio.AudioColumns.ARTIST, Audio.AudioColumns.DATA, Audio.AudioColumns._ID };
+								String selection = Audio.AudioColumns.IS_MUSIC + " = ? OR " + Audio.AudioColumns.IS_RINGTONE + " = ?";
+								String[] args = { "1", "1"};
+								
+								Cursor internal = me.getContentResolver().query(Audio.Media.INTERNAL_CONTENT_URI, projection, selection, args, null);
+								Cursor external = me.getContentResolver().query(Audio.Media.EXTERNAL_CONTENT_URI, projection, selection, args, null);
+								
+								Cursor[] cursors = { internal, external };
+								
+								MergeCursor c = new MergeCursor(cursors);
+								
+								final SimpleCursorAdapter toneAdapter = new SimpleCursorAdapter(me, R.layout.row_tone, c, emptyString, emptyInt, 0)
+								{
+									public void bindView (View matchView, Context context, Cursor cursor)
+									{
+										for (int i = 0; i < cursor.getColumnCount(); i++)
+										{
+											Log.e("ST", "MEDIA COL " + cursor.getColumnName(i));
+										}
+										
+										TextView title = (TextView) matchView.findViewById(R.id.label_title);
+										title.setText(cursor.getString(cursor.getColumnIndex(Audio.AudioColumns.TITLE)));
+
+										TextView artist = (TextView) matchView.findViewById(R.id.label_artist);
+										artist.setText(cursor.getString(cursor.getColumnIndex(Audio.AudioColumns.ARTIST)));
+									}
+								};
+								
+								tonesList.setAdapter(toneAdapter);
+								
+								tonesList.setOnItemClickListener(new OnItemClickListener()
+								{
+									public void onItemClick(AdapterView<?> arg0, View matchView, int position, long id) 
+									{
+										Cursor c = toneAdapter.getCursor();
+										
+										c.moveToPosition(position);
+
+										final String title = c.getString(c.getColumnIndex(Audio.AudioColumns.TITLE));
+										final String data = c.getString(c.getColumnIndex(Audio.AudioColumns.DATA));
+												
+										Log.e("ST", "T: " + title + " -- D: " + data);
+										
+										AlertDialog.Builder builder = new AlertDialog.Builder(me);
+										builder = builder.setTitle(title);
+
+										String[] items = { me.getString(R.string.action_audio_open), me.getString(R.string.action_audio_use) };
+										builder = builder.setItems(items, new DialogInterface.OnClickListener() 
+										{
+											public void onClick(DialogInterface dialog, int which) 
+											{
+												switch (which)
+												{
+													case 0:
+														Intent playIntent = new Intent(Intent.ACTION_VIEW);
+														playIntent.setDataAndType(Uri.fromFile(new File(data)), "audio/*");
+														
+														me.startActivity(playIntent);
+														break;
+													case 1:
+
+														ContentValues values = new ContentValues();
+														values.put(SlumberContentProvider.ALARM_NAME, title);
+														values.put(SlumberContentProvider.ALARM_CONTENT_URI, Uri.fromFile(new File(data)).toString());
+														
+														String where = "_id = ?";
+														String[] args = { "" + alarmId };
+														
+														me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
+
+														adapter.swapCursor(me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null));
+														clickListener.onItemClick(parent, view, which, alarmId);
+														
+														dialog.cancel();
+														me._toneListDialog.cancel();
+														
+														break;
+												}
+											}
+										});
+										
+										builder = builder.setNegativeButton(R.string.button_close, new DialogInterface.OnClickListener() 
+										{
+											public void onClick(DialogInterface dialog, int which) 
+											{
+
+											}
+										});
+										
+										builder.create().show();
+									}
+								});
+								
+								EditText searchField = (EditText) searchView.findViewById(R.id.text_search);
+								searchField.addTextChangedListener(new TextWatcher()
+								{
+									public void afterTextChanged(final Editable editable) 
+									{
+										me._searchLastUpdate  = System.currentTimeMillis();
+										
+										me._handler.postDelayed(new Runnable()
+										{
+											public void run() 
+											{
+												long now = System.currentTimeMillis();
+												
+												if (now - me._searchLastUpdate > 900)
+												{
+													String[] projection = { Audio.AudioColumns.TITLE, Audio.AudioColumns.ARTIST, Audio.AudioColumns.DATA, Audio.AudioColumns._ID };
+													String selection = "(" + Audio.AudioColumns.IS_MUSIC + " = ? OR " + Audio.AudioColumns.IS_RINGTONE + " = ?) AND (" + Audio.AudioColumns.TITLE + " LIKE ? OR " + Audio.AudioColumns.ARTIST + " LIKE ?)";
+													
+													String likeString = "%" + editable.toString() + "%";
+													
+													String[] args = { "1", "1", likeString, likeString } ;
+													
+													Cursor internal = me.getContentResolver().query(Audio.Media.INTERNAL_CONTENT_URI, projection, selection, args, null);
+													Cursor external = me.getContentResolver().query(Audio.Media.EXTERNAL_CONTENT_URI, projection, selection, args, null);
+													
+													Cursor[] cursors = { internal, external };
+													
+													MergeCursor c = new MergeCursor(cursors);
+													
+													toneAdapter.changeCursor(c);
+												}
+											}
+										}, 1000);
+									}
+
+									public void beforeTextChanged(CharSequence s, int start, int count, int after) 
+									{
+
+									}
+
+									public void onTextChanged(CharSequence s, int start, int count, int after) 
+									{
+
+									}
+								});
+								
+								builder = builder.setView(searchView);
+
+								me._toneListDialog = builder.create();
+								me._toneListDialog.show();
+								
+								DisplayMetrics metrics = me.getResources().getDisplayMetrics();
+								
+								WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+
+								lp.copyFrom(me._toneListDialog.getWindow().getAttributes());
+								lp.width = (int) (480f * metrics.density);
+								lp.height = (int) (320f * metrics.density);
+
+								me._toneListDialog.getWindow().setAttributes(lp);
+							}
+						});
+					}
+				});
+
+				builder = builder.setView(view);
+
+				builder.setNegativeButton(R.string.button_close, new DialogInterface.OnClickListener() 
+				{
+					public void onClick(DialogInterface dialog, int which) 
+					{
+
+					}
+				});
+
+				AlertDialog d = builder.create();
+				d.show();
+				
+				DisplayMetrics metrics = me.getResources().getDisplayMetrics();
+				
+				WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+
+				lp.copyFrom(d.getWindow().getAttributes());
+				lp.width = (int) (480f * metrics.density);
+
+				d.getWindow().setAttributes(lp);
 			}
         });
         
@@ -91,10 +558,61 @@ public class ClockActivity extends Activity
 			{
 				AlertDialog.Builder builder = new AlertDialog.Builder(me);
 				
-				builder = builder.setTitle("sHoW lOg InterFaCe!");
-				builder = builder.setMessage("Log interface goes here...");
+				builder = builder.setTitle(R.string.title_clock_log);
 				
-				builder.create().show();
+				LayoutInflater inflater = LayoutInflater.from(me);
+				View view = inflater.inflate(R.layout.view_clock_log, null, false);
+				
+				builder = builder.setView(view);
+				builder.setNegativeButton(R.string.button_discard, new DialogInterface.OnClickListener() 
+				{
+					public void onClick(DialogInterface dialog, int which) 
+					{
+
+					}
+				});
+				
+				final EditText logField = (EditText) view.findViewById(R.id.field_log_text);
+				
+				builder.setPositiveButton(R.string.button_save, new DialogInterface.OnClickListener() 
+				{
+					public void onClick(DialogInterface dialog, int which) 
+					{
+						String logText = logField.getEditableText().toString().trim();
+						
+						if (logText.length() > 0)
+						{
+							long now = System.currentTimeMillis();
+							
+							ContentValues values = new ContentValues();
+							values.put(SlumberContentProvider.NOTE_TEXT, logText);
+							values.put(SlumberContentProvider.NOTE_TIMESTAMP, now);
+							
+							Log.e("ST", "VALUES: " + values);
+							
+							me.getContentResolver().insert(SlumberContentProvider.NOTES_URI, values);
+							
+							dialog.cancel();
+
+							Toast.makeText(me, R.string.toast_note_saved, Toast.LENGTH_SHORT).show();
+						}
+						else
+							Toast.makeText(me, R.string.toast_provide_note, Toast.LENGTH_SHORT).show();
+					}
+				});
+
+				AlertDialog d = builder.create();
+				d.show();
+				
+				
+				DisplayMetrics metrics = me.getResources().getDisplayMetrics();
+				
+				WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+
+				lp.copyFrom(d.getWindow().getAttributes());
+				lp.width = (int) (480f * metrics.density);
+
+				d.getWindow().setAttributes(lp);
 			}
         });
 
@@ -104,10 +622,71 @@ public class ClockActivity extends Activity
 			{
 				AlertDialog.Builder builder = new AlertDialog.Builder(me);
 				
-				builder = builder.setTitle("sHoW tIpS lIST!");
-				builder = builder.setMessage("List of tips go here...");
+				builder = builder.setTitle(R.string.title_clock_tips);
 				
-				builder.create().show();
+				LayoutInflater inflater = LayoutInflater.from(me);
+				View view = inflater.inflate(R.layout.view_clock_tips, null, false);
+				
+				GridView contentGrid = (GridView) view.findViewById(R.id.root_grid);
+				
+				final ArrayList<String> testTitles = new ArrayList<String>();
+				testTitles.add("A brief talk on sleeping well.");
+				testTitles.add("Joe sings a lullaby.");
+				testTitles.add("The sounds of the restful forest.");
+				testTitles.add("A brief calming breathing exercise.");
+				testTitles.add("Sleep exercises from Purple Chill.");
+				testTitles.add("Mark Twain on sleep.");
+				testTitles.add("How the experts sleep. (CNN)");
+
+				ArrayAdapter<String> adapter = new ArrayAdapter<String>(me, R.layout.cell_tip, testTitles)
+				{
+					public View getView (int position, View convertView, ViewGroup parent)
+					{
+						if (convertView == null)
+						{
+		    				LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+		    				convertView = inflater.inflate(R.layout.cell_tip, parent, false);
+						}
+						
+						TextView title = (TextView) convertView.findViewById(R.id.title_tip);
+						
+						title.setText(this.getItem(position));
+						
+						return convertView;
+					}
+				};
+				
+				contentGrid.setAdapter(adapter);
+				
+				contentGrid.setOnItemClickListener(new OnItemClickListener()
+				{
+					public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) 
+					{
+						Toast.makeText(me, "tOdO: " + testTitles.get(arg2), Toast.LENGTH_SHORT).show();
+					}
+				});
+				
+				builder = builder.setView(view);
+				builder.setNegativeButton(R.string.button_close, new DialogInterface.OnClickListener() 
+				{
+					public void onClick(DialogInterface dialog, int which) 
+					{
+
+					}
+				});
+
+				AlertDialog d = builder.create();
+				d.show();
+				
+				DisplayMetrics metrics = me.getResources().getDisplayMetrics();
+				
+				WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+
+				lp.copyFrom(d.getWindow().getAttributes());
+				lp.width = (int) (480f * metrics.density);
+				lp.height = (int) (320f * metrics.density);
+
+				d.getWindow().setAttributes(lp);
 			}
         });
 
@@ -129,11 +708,14 @@ public class ClockActivity extends Activity
 				{
 					public void onProgressChanged(SeekBar bar, int position, boolean fromUser) 
 					{
-						WindowManager.LayoutParams params = me.getWindow().getAttributes();
-
-						params.screenBrightness = ((float) position) / 100f;
-
-						me.getWindow().setAttributes(params);
+						if (fromUser)
+						{
+							WindowManager.LayoutParams params = me.getWindow().getAttributes();
+	
+							params.screenBrightness = ((float) position) / 100f;
+	
+							me.getWindow().setAttributes(params);
+						}
 					}
 
 					public void onStartTrackingTouch(SeekBar bar) 
@@ -164,11 +746,14 @@ public class ClockActivity extends Activity
 				{
 					public void onProgressChanged(SeekBar bar, int position, boolean fromUser) 
 					{
-						WindowManager.LayoutParams params = me.getWindow().getAttributes();
-
-						params.screenBrightness = ((float) position) / 100f;
-
-						me.getWindow().setAttributes(params);
+						if (fromUser)
+						{
+							WindowManager.LayoutParams params = me.getWindow().getAttributes();
+	
+							params.screenBrightness = ((float) position) / 100f;
+	
+							me.getWindow().setAttributes(params);
+						}
 					}
 
 					public void onStartTrackingTouch(SeekBar bar) 
@@ -197,13 +782,14 @@ public class ClockActivity extends Activity
 
 				final TextView dimLabel = (TextView) view.findViewById(R.id.dim_label);
 				
-				dimLabel.setText(me.getText(R.string.label_dim_delay, me.getTimeString(prefs.getInt(ClockActivity.DIM_DELAY_OPTION, ClockActivity.DEFAULT_DIM_DELAY))))
+				dimLabel.setText(me.getString(R.string.label_dim_delay, me.getTimeString(prefs.getInt(ClockActivity.DIM_DELAY_OPTION, ClockActivity.DEFAULT_DIM_DELAY) * 15)));
+
 				SeekBar dimDelay = (SeekBar) view.findViewById(R.id.dim_delay);
 				dimDelay.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
 				{
 					public void onProgressChanged(SeekBar bar, int position, boolean fromUser) 
 					{
-						
+						dimLabel.setText(me.getString(R.string.label_dim_delay, me.getTimeString(position * 15)));
 					}
 
 					public void onStartTrackingTouch(SeekBar bar) 
@@ -213,19 +799,28 @@ public class ClockActivity extends Activity
 
 					public void onStopTrackingTouch(SeekBar bar)
 					{
-						WindowManager.LayoutParams params = me.getWindow().getAttributes();
-						params.screenBrightness = me._currentBrightness;
-						
-						me.getWindow().setAttributes(params);
-						
 						SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
 						Editor e = prefs.edit();
-						e.putFloat(ClockActivity.REST_BRIGHTNESS_OPTION, ((float) bar.getProgress()) / 100f);
+						e.putInt(ClockActivity.DIM_DELAY_OPTION, bar.getProgress());
 						e.commit();
 					}
 				});
-
 				
+				dimDelay.setProgress(prefs.getInt(ClockActivity.DIM_DELAY_OPTION, ClockActivity.DEFAULT_DIM_DELAY));
+				
+				final CheckBox darkDim = (CheckBox) view.findViewById(R.id.dark_dim);
+				darkDim.setOnCheckedChangeListener(new OnCheckedChangeListener()
+				{
+					public void onCheckedChanged(CompoundButton check,	boolean checked)
+					{
+						Editor e = prefs.edit();
+						e.putBoolean(ClockActivity.DIM_DARK_OPTION, checked);
+						e.commit();
+					}
+				});
+				
+				darkDim.setChecked(prefs.getBoolean(ClockActivity.DIM_DARK_OPTION, ClockActivity.DIM_DARK_DEFAULT));
+
 				builder = builder.setView(view);
 				builder = builder.setPositiveButton(R.string.button_close, new DialogInterface.OnClickListener() 
 				{
@@ -245,14 +840,25 @@ public class ClockActivity extends Activity
 				lp.copyFrom(d.getWindow().getAttributes());
 				lp.width = (int) (480f * metrics.density);
 
-				//change position of window on screen
-//				lp.x = mwidth/2; //set these values to what work for you; probably like I have here at
-//				lp.y = mheight/2;        //half the screen width and height so it is in center
-
 				d.getWindow().setAttributes(lp);
 			}
         });
     }
+
+	protected String getTimeString(int seconds) 
+	{
+		if (seconds % 60 == 0)
+		{
+			if (seconds == 0)
+				return this.getString(R.string.dim_delay_immediately);
+			else if (seconds == 60)
+				return this.getString(R.string.dim_delay_minute);
+			else
+				return this.getString(R.string.dim_delay_minutes, seconds / 60);
+		}
+		
+		return this.getString(R.string.dim_delay_seconds, seconds);
+	}
 
 	protected void onResume() 
 	{
@@ -334,7 +940,16 @@ public class ClockActivity extends Activity
 		{
 			SimpleDateFormat apptFormat = new SimpleDateFormat("EEEE, " + timeFormat.toPattern());
 
-			apptText.setText(this.getString(R.string.label_upcoming_appointment, event.title, apptFormat.format(new Date(event.timestamp))));
+			String date = apptFormat.format(new Date(event.timestamp));
+
+			if (useAmPm)
+			{
+				SimpleDateFormat ampmFormat = new SimpleDateFormat("a");
+
+				date += ampmFormat.format(new Date(event.timestamp)).toLowerCase();
+			}
+			
+			apptText.setText(this.getString(R.string.label_upcoming_appointment, event.title, date));
 		}
 		else
 			apptText.setText(R.string.label_no_appointments);
