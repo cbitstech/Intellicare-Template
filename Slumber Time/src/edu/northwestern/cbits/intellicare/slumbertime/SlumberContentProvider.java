@@ -15,11 +15,13 @@ public class SlumberContentProvider extends ContentProvider
     private static final int NOTES = 2;
     private static final int TIPS = 3;
     private static final int CHECKLIST_ITEMS = 4;
+    private static final int CHECKLIST_EVENTS = 5;
 
     private static final String ALARMS_TABLE = "alarms";
     private static final String NOTES_TABLE = "notes";
     private static final String TIPS_TABLE = "tips";
     private static final String CHECKLIST_ITEMS_TABLE = "checklist_items";
+    private static final String CHECKLIST_EVENTS_TABLE = "checklist_events";
     
     private static final String AUTHORITY = "edu.northwestern.cbits.intellicare.slumbertime";
 
@@ -27,8 +29,9 @@ public class SlumberContentProvider extends ContentProvider
     public static final Uri NOTES_URI = Uri.parse("content://" + AUTHORITY + "/" + NOTES_TABLE);
     public static final Uri TIPS_URI = Uri.parse("content://" + AUTHORITY + "/" + TIPS_TABLE);
     public static final Uri CHECKLIST_ITEMS_URI = Uri.parse("content://" + AUTHORITY + "/" + CHECKLIST_ITEMS_TABLE);
+    public static final Uri CHECKLIST_EVENTS_URI = Uri.parse("content://" + AUTHORITY + "/" + CHECKLIST_EVENTS_TABLE);
 
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     public static final String ALARM_NAME = "name";
     public static final String ALARM_HOUR = "hour";
@@ -48,6 +51,9 @@ public class SlumberContentProvider extends ContentProvider
 	public static final String CHECKLIST_ITEM_CATEGORY = "category";
 	public static final String CHECKLIST_ITEM_ENABLED = "enabled";
 
+	public static final String CHECKLIST_EVENT_ITEM_ID = "item_id";
+	public static final String CHECKLIST_EVENT_TIMESTAMP = "timestamp";
+
     private UriMatcher _matcher = new UriMatcher(UriMatcher.NO_MATCH);
     private SQLiteDatabase _db = null;
 
@@ -59,6 +65,7 @@ public class SlumberContentProvider extends ContentProvider
         this._matcher.addURI(AUTHORITY, NOTES_TABLE, NOTES);
         this._matcher.addURI(AUTHORITY, TIPS_TABLE, TIPS);
         this._matcher.addURI(AUTHORITY, CHECKLIST_ITEMS_TABLE, CHECKLIST_ITEMS);
+        this._matcher.addURI(AUTHORITY, CHECKLIST_EVENTS_TABLE, CHECKLIST_EVENTS);
     }
 
     public boolean onCreate() 
@@ -100,6 +107,8 @@ public class SlumberContentProvider extends ContentProvider
 		                		db.insert(SlumberContentProvider.CHECKLIST_ITEMS_TABLE, null, values);
 	                		}	                		
 	                	}
+	                case 3:
+	                	db.execSQL(context.getString(R.string.db_create_checklist_events_table));
 	                default:
                         break;
             	}
@@ -123,6 +132,8 @@ public class SlumberContentProvider extends ContentProvider
 	            return this._db.query(SlumberContentProvider.NOTES_TABLE, projection, selection, selectionArgs, null, null, sortOrder);
 	        case SlumberContentProvider.CHECKLIST_ITEMS:
 	            return this._db.query(SlumberContentProvider.CHECKLIST_ITEMS_TABLE, projection, selection, selectionArgs, null, null, sortOrder);
+	        case SlumberContentProvider.CHECKLIST_EVENTS:
+	            return this._db.query(SlumberContentProvider.CHECKLIST_EVENTS_TABLE, projection, selection, selectionArgs, null, null, sortOrder);
         }
         
         return null;
@@ -140,6 +151,8 @@ public class SlumberContentProvider extends ContentProvider
 	            return this._db.update(SlumberContentProvider.NOTES_TABLE, values, selection, selectionArgs);
 	        case SlumberContentProvider.CHECKLIST_ITEMS:
 	            return this._db.update(SlumberContentProvider.CHECKLIST_ITEMS_TABLE, values, selection, selectionArgs);
+	        case SlumberContentProvider.CHECKLIST_EVENTS:
+	            return this._db.update(SlumberContentProvider.CHECKLIST_EVENTS_TABLE, values, selection, selectionArgs);
         }
 
 		return 0;
@@ -157,6 +170,8 @@ public class SlumberContentProvider extends ContentProvider
 	            return this._db.delete(SlumberContentProvider.NOTES_TABLE, selection, selectionArgs);
 	        case SlumberContentProvider.CHECKLIST_ITEMS:
 	            return this._db.delete(SlumberContentProvider.CHECKLIST_ITEMS_TABLE, selection, selectionArgs);
+	        case SlumberContentProvider.CHECKLIST_EVENTS:
+	            return this._db.delete(SlumberContentProvider.CHECKLIST_EVENTS_TABLE, selection, selectionArgs);
         }
 
         return 0;
@@ -174,6 +189,8 @@ public class SlumberContentProvider extends ContentProvider
 	        	return "vnd.android.cursor.dir/" + AUTHORITY + ".note";
 	        case SlumberContentProvider.CHECKLIST_ITEMS:
 	        	return "vnd.android.cursor.dir/" + AUTHORITY + ".checklist_item";
+	        case SlumberContentProvider.CHECKLIST_EVENTS:
+	        	return "vnd.android.cursor.dir/" + AUTHORITY + ".checklist_event";
         }
         
         return null;
@@ -196,6 +213,9 @@ public class SlumberContentProvider extends ContentProvider
 	            break;
 	        case SlumberContentProvider.CHECKLIST_ITEMS:
 	            id = this._db.insert(SlumberContentProvider.CHECKLIST_ITEMS_TABLE, null, values);
+	            break;
+	        case SlumberContentProvider.CHECKLIST_EVENTS:
+	            id = this._db.insert(SlumberContentProvider.CHECKLIST_EVENTS_TABLE, null, values);
 	            break;
         }
         
