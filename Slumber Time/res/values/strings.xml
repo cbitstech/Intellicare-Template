@@ -13,7 +13,28 @@
 	<string name="button_remove">Remove</string>
 	<string name="button_discard">Discard &amp; Close</string>
 	<string name="button_delete_entry">Delete Entry</string>
-			
+	<string name="label_yes">Yes</string>
+	<string name="label_no">No</string>
+	
+	<string name="time_select_placeholder">(Tap to select the time.)</string>
+		
+	<string name="tool_sleep_diaries">Sleep Diaries</string>
+	<string name="action_add_diary">New Diary</string>
+	<string name="desc_sleep_diaries">Record how well you slept last night.</string>
+	<string name="action_save_diary">Save Diary</string>
+	<string name="tool_sleep_diary">New Sleep Diary</string>
+	<string name="question_nap">Did you nap or doze yesterday?</string>					
+	<string name="question_bed_time">What time did you get into bed yesterday?</string>					
+	<string name="question_sleep_time">What time did you try to go to sleep?</string>					
+	<string name="question_sleep_delay">How long did it take for you to fall asleep?</string>					
+	<string name="question_wake_times">How many times did you wake up, not counting your final awakening?</string>					
+	<string name="question_wake_time">What time was your final awakening?</string>					
+	<string name="question_wake_earlier">Did you wake up earlier than you desired?</string>					
+	<string name="question_up_time">What time did you get out of bed for the day?</string>					
+	<string name="question_sleep_quality">How would you rate the quality of your sleep?</string>					
+	<string name="question_comments">Do you have any additional notes or comments?</string>					
+	<string name="hint_comments">Enter comments here. (Optional)</string>					
+									
 	<string name="title_clock_settings">Clock Settings</string>
 	<string name="label_active_brightness">Active Brightness</string>
 	<string name="label_resting_brightness">Resting Brightness</string>
