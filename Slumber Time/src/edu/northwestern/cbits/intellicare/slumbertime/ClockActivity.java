@@ -352,7 +352,7 @@ public class ClockActivity extends Activity
 										adapter.swapCursor(me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null));
 										clickListener.onItemClick(parent, view, which, alarmId);
 									}
-								}, hour, minute, (useAmPm == false));
+								}, hour, minute, useAmPm);
 								
 								picker.show();
 							}
@@ -916,7 +916,7 @@ public class ClockActivity extends Activity
 		
 		SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm");
 		
-		if (useAmPm)
+		if (useAmPm == false)
 		{
 			SimpleDateFormat ampmFormat = new SimpleDateFormat("a");
 
@@ -940,7 +940,7 @@ public class ClockActivity extends Activity
 
 			String date = apptFormat.format(new Date(event.timestamp));
 
-			if (useAmPm)
+			if (useAmPm == false)
 			{
 				SimpleDateFormat ampmFormat = new SimpleDateFormat("a");
 

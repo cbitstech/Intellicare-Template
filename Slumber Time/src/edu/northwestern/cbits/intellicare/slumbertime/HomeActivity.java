@@ -2,12 +2,15 @@ package edu.northwestern.cbits.intellicare.slumbertime;
 
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -35,6 +38,7 @@ public class HomeActivity extends PortraitActivity
 		}
 	}
 
+	@SuppressLint("SetJavaScriptEnabled")
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
@@ -88,12 +92,20 @@ public class HomeActivity extends PortraitActivity
 				
 				if (t.launchIntent != null)
 					me.startActivity(t.launchIntent);
-				else
-					Toast.makeText(me, "ToDo: AssiGN laUNCh iNtenT to TooL...", Toast.LENGTH_SHORT).show();
 			}
 		});
 		
 		WebView graphView = (WebView) this.findViewById(R.id.graph_web_view);
+		graphView.getSettings().setJavaScriptEnabled(true);
+		
+		graphView.setWebChromeClient(new WebChromeClient() 
+		{
+			  public void onConsoleMessage(String message, int lineNumber, String sourceID) 
+			  {
+				  Log.d("ST", message + " -- From line " + lineNumber + " of " + sourceID);
+			  }
+		});
+		
 		graphView.loadUrl("file:///android_asset/home_graph.html");
 	}
 
