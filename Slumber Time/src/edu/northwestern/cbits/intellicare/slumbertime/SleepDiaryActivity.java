@@ -1,9 +1,18 @@
 package edu.northwestern.cbits.intellicare.slumbertime;
 
+import java.sql.Date;
+
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.widget.SimpleCursorAdapter;
+import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 public class SleepDiaryActivity extends ConsentedActivity
@@ -15,41 +24,41 @@ public class SleepDiaryActivity extends ConsentedActivity
 		this.setContentView(R.layout.activity_sleep_diaries);
 		
 		this.getSupportActionBar().setTitle(R.string.tool_sleep_diaries);
-		this.getSupportActionBar().setIcon(R.drawable.ic_launcher_plain);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void onResume()
 	{
 		super.onResume();
 
-		// ListView diaryList = (ListView) this.findViewById(R.id.list_diaries);
+		ListView diaryList = (ListView) this.findViewById(R.id.list_diaries);
 		
-/*		Cursor c = this.getContentResolver().query(SlumberContentProvider.NOTES_URI, null, null, null, "timestamp DESC");
+		Cursor c = this.getContentResolver().query(SlumberContentProvider.SLEEP_DIARIES_URI, null, null, null, "timestamp DESC");
 		
 		this.startManagingCursor(c);
 		int[] emptyInts = {};
 		String[] emptyStrings = {};
 		
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.row_sleep_log, c, emptyStrings, emptyInts, 0)
+		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.row_sleep_diary, c, emptyStrings, emptyInts, 0)
 		{
 			public void bindView (View view, Context context, Cursor cursor)
 			{
-				TextView logText = (TextView) view.findViewById(R.id.label_log_notes);
-				logText.setText(cursor.getString(cursor.getColumnIndex(SlumberContentProvider.NOTE_TEXT)));
-
 				java.text.DateFormat dateFormat = DateFormat.getLongDateFormat(context);
 				java.text.DateFormat timeFormat = DateFormat.getTimeFormat(context);
+
+				Date now = new Date(cursor.getLong(cursor.getColumnIndex(SlumberContentProvider.DIARY_TIMESTAMP)));
+
+				TextView timeText = (TextView) view.findViewById(R.id.label_time);
+				timeText.setText(timeFormat.format(now));
 				
-				Date now = new Date(cursor.getLong(cursor.getColumnIndex(SlumberContentProvider.NOTE_TIMESTAMP)));
-				
-				TextView time = (TextView) view.findViewById(R.id.label_log_time);
-				time.setText(timeFormat.format(now) + " (" + dateFormat.format(now) + ")");
+				TextView dateText = (TextView) view.findViewById(R.id.label_date);
+				dateText.setText(dateFormat.format(now));
 			}
 		};
 		
-		logList.setAdapter(adapter);
+		diaryList.setAdapter(adapter);
 		
-		final SleepDiaryActivity me = this;
+/*		final SleepDiaryActivity me = this;
 		
 		logList.setOnItemClickListener(new OnItemClickListener()
 		{
@@ -112,5 +121,4 @@ public class SleepDiaryActivity extends ConsentedActivity
 
 		return true;
 	}
-
 }

@@ -17,7 +17,5 @@ public class PortraitActivity extends ConsentedActivity
 			Intent clockIntent = new Intent(this, ClockActivity.class);
 			this.startActivity(clockIntent);
 		}
-		
-		this.getSupportActionBar().setIcon(R.drawable.ic_launcher_plain);
 	}
 }

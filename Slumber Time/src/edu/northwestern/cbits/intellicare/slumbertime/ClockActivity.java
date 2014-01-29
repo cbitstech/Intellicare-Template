@@ -334,8 +334,7 @@ public class ClockActivity extends Activity
 						{
 							public void onClick(View timeView)
 							{
-								SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
-								boolean useAmPm = prefs.getBoolean("display_am_pm", true);
+								boolean useAmPm = android.text.format.DateFormat.is24HourFormat(me);
 
 								TimePickerDialog picker = new TimePickerDialog(me, new OnTimeSetListener()
 								{
@@ -913,8 +912,7 @@ public class ClockActivity extends Activity
 		
 		dateText.setText(dateFormat.format(now));
 		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		boolean useAmPm = prefs.getBoolean("display_am_pm", true);
+		boolean useAmPm = android.text.format.DateFormat.is24HourFormat(this);
 		
 		SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm");
 		

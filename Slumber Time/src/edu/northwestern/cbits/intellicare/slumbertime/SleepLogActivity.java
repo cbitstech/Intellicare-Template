@@ -32,7 +32,6 @@ public class SleepLogActivity extends ConsentedActivity
 		this.setContentView(R.layout.activity_sleep_log);
 		
 		this.getSupportActionBar().setTitle(R.string.tool_sleep_log_notes);
-		this.getSupportActionBar().setIcon(R.drawable.ic_launcher_plain);
 	}
 	
 	@SuppressWarnings("deprecation")

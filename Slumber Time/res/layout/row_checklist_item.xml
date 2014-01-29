@@ -9,6 +9,7 @@
         android:textSize="14sp"
         android:background="#323335"
         android:visibility="gone"
+        android:textColor="#ffffff"
         android:textStyle="bold" 
         android:padding="8dp"/>
     <CheckBox android:id="@+id/check_item"

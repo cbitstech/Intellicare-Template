@@ -34,7 +34,53 @@
 	<string name="question_sleep_quality">How would you rate the quality of your sleep?</string>					
 	<string name="question_comments">Do you have any additional notes or comments?</string>					
 	<string name="hint_comments">Enter comments here. (Optional)</string>					
-									
+	
+	<string name="bullet_one">1.</string>
+	<string name="bullet_two">2.</string>
+	<string name="bullet_three">3.</string>
+	<string name="bullet_four">4.</string>
+	<string name="bullet_five">5.</string>
+	<string name="bullet_six">6.</string>
+	<string name="bullet_seven">7.</string>
+	<string name="bullet_eight">8.</string>
+	<string name="bullet_nine">9.</string>
+	<string name="bullet_ten">10.</string>
+
+	<string name="message_complete_nap">Please answer the question about napping to continue.</string>
+	<string name="message_complete_earlier">Please answer the question about waking earlier than desired to continue.</string>
+	<string name="message_complete_bedtime">Please enter when you went to bed to continue. (A close guess will work.)</string>
+	<string name="message_complete_sleeptime">Please enter when you went to sleep to continue. (A close guess will work.)</string>
+	<string name="message_complete_waketime">Please enter when you woke up to continue. (A close guess will work.)</string>
+	<string name="message_complete_uptime">Please enter when got out of bed to continue. (A close guess will work.)</string>
+	<string name="message_complete_sleep_delay">Please enter how long it took to get to sleep. (A close guess will work.)</string>
+	<string name="message_complete_wake_count">Please enter how many times you woke up in the night. (A close guess will work.)</string>
+	<string name="message_complete_sleep_quality">Please enter the quality of your sleep.</string>
+			
+	<string name="label_immediately">Immediately</string>																	
+	<string name="label_never">Never</string>																	
+
+	<string name="value_immediately">Immediately</string>																	
+	<string name="value_five_min">Less than 5 minutes</string>																	
+	<string name="value_fifteen_min">Less than 15 minutes</string>																	
+	<string name="value_thirty_min">Less than a half-hour</string>																	
+	<string name="value_one_hour">Less than an hour</string>																	
+	<string name="value_two_hour">Less than 2 hours</string>																	
+	<string name="value_four_hour">Less than 4 hours</string>																	
+	<string name="value_eight_hour">Less than 8 hours</string>																	
+	<string name="value_never">Never</string>																	
+
+	<string name="value_once">Once</string>																	
+	<string name="value_multiple_times" formatted="false">%d times</string>																	
+	<string name="value_greater_ten">More than 10 times</string>																	
+
+	<string name="value_terrible">Terrible</string>																	
+	<string name="value_excellent">Excellent</string>																	
+	<string name="value_poor">Poor</string>																	
+	<string name="value_good">Good</string>																	
+	<string name="value_adequate">Adequate</string>																	
+	
+	<string name="toast_sleep_diary_recorded">Sleep diary recorded.</string>																	
+										
 	<string name="title_clock_settings">Clock Settings</string>
 	<string name="label_active_brightness">Active Brightness</string>
 	<string name="label_resting_brightness">Resting Brightness</string>
@@ -45,7 +91,10 @@
 	<string name="dim_delay_minutes" formatted="false">%d min.</string>
 	<string name="dim_delay_minute">1 minute</string>
 	<string name="dim_delay_immediately">Immediately</string>
-
+	
+	<string name="placeholder_sleep_efficiency">XX%</string>
+	<string name="label_sleep_efficiency">Sleep Efficiency</string>
+	
 	<string name="title_clock_log">Sleep Log</string>
 	<string name="hint_log_description">Please record any sleep notes here.</string>
 	<string name="log_timestamp_label">Your log will be timestamped when you save it.</string>
@@ -56,7 +105,7 @@
 	<string name="title_sleep_log_activity">Review Sleep Log</string>
 	<string name="help_sleep_log">Tap a log entry to read it.\n\nLong-press a log entry for additional options.</string>
 	<string name="title_sleep_log_help">Sleep Log Instructions</string>
-	<string name="action_add_log">Add Log Note</string>
+	<string name="action_add_log">Add Note</string>
 
 	<string name="tool_bedtime_checklist">Bedtime Checklist</string>
 	<string name="desc_bedtime_checklist">Wrap up your day by checking off tasks before bed.</string>
@@ -98,6 +147,9 @@
     <string name="db_update_alarms_add_enabled">ALTER TABLE alarms ADD COLUMN enabled INTEGER DEFAULT 1;</string>
     <string name="db_create_checklist_items_table">CREATE TABLE IF NOT EXISTS checklist_items(_id INTEGER PRIMARY KEY, name TEXT, category TEXT, enabled INTEGER DEFAULT 1);</string>
     <string name="db_create_checklist_events_table">CREATE TABLE IF NOT EXISTS checklist_events(_id INTEGER PRIMARY KEY, item_id INTEGER, timestamp INTEGER);</string>
+
+    <string name="db_create_sleep_diary_table">CREATE TABLE IF NOT EXISTS sleep_diaries(_id INTEGER PRIMARY KEY, did_nap INTEGER DEFAULT 0, woke_earlier INTEGER DEFAULT 0, bed_hour INTEGER DEFAULT 12, bed_minute INTEGER DEFAULT 0, sleep_hour INTEGER DEFAULT 12, sleep_minute INTEGER DEFAULT 0, wake_hour INTEGER DEFAULT 12, wake_minute INTEGER DEFAULT 0, up_hour INTEGER DEFAULT 12, up_minute INTEGER DEFAULT 0, sleep_delay INTEGER DEFAULT 0,wake_count INTEGER DEFAULT 0, sleep_quality INTEGER DEFAULT 0, timestamp INTEGER);</string>
+    <string name="db_update_sleep_diary_add_comments">ALTER TABLE sleep_diaries ADD COLUMN comments TEXT;</string>
     
 	<string-array name="initial_checklist_items">
         <item>Close the curtains and blinds? / Limit the amount of light in your bedroom! Did you&#8230;</item>

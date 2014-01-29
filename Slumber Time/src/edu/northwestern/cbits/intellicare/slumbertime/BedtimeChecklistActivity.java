@@ -25,7 +25,6 @@ public class BedtimeChecklistActivity extends ConsentedActivity
 		this.setContentView(R.layout.activity_bedtime_checklist);
 		
 		this.getSupportActionBar().setTitle(R.string.tool_bedtime_checklist);
-		this.getSupportActionBar().setIcon(R.drawable.ic_launcher_plain);
 	}
 	
 	@SuppressWarnings("deprecation")

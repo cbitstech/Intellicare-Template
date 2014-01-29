@@ -1,0 +1,39 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+	android:padding="8dp">
+	<LinearLayout android:orientation="vertical"
+	    android:layout_width="0dp"
+	    android:layout_weight="1"
+	    android:layout_height="wrap_content">
+	    <TextView android:id="@+id/label_time"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:singleLine="true"
+	        android:textSize="24sp" />
+	    <TextView android:id="@+id/label_date"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:singleLine="true"
+	        android:textSize="12sp" />
+	</LinearLayout>
+	<LinearLayout android:orientation="vertical"
+	    android:layout_width="0dp"
+	    android:layout_weight="1"
+	    android:layout_height="wrap_content">
+		<TextView android:id="@+id/label_efficiency"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:singleLine="true"
+	        android:gravity="right"
+	        android:text="@string/placeholder_sleep_efficiency"
+	        android:textSize="24sp" />
+	    <TextView android:text="@string/label_sleep_efficiency"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:singleLine="true"
+	        android:gravity="right"
+	        android:textSize="12sp" />
+	</LinearLayout>
+</LinearLayout>

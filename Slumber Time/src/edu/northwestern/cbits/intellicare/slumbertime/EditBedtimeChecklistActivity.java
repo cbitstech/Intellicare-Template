@@ -36,7 +36,6 @@ public class EditBedtimeChecklistActivity extends ConsentedActivity
 		
 		this.getSupportActionBar().setTitle(R.string.tool_edit_bedtime_checklist);
 		this.getSupportActionBar().setSubtitle(R.string.subtitle_edit_bedtime_checklist);
-		this.getSupportActionBar().setIcon(R.drawable.ic_launcher_plain);
 	}
 	
 	@SuppressWarnings("deprecation")
