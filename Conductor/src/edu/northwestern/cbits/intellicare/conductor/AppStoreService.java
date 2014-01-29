@@ -1,11 +1,17 @@
 package edu.northwestern.cbits.intellicare.conductor;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
+
+import javax.security.auth.x500.X500Principal;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,6 +26,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -54,7 +61,10 @@ public class AppStoreService extends IntentService
 				{
 					try 
 					{
-						URL u = new URL(me.getString(R.string.app_store_json));
+						URL u = new URL(me.getString(R.string.app_store_json_release));
+						
+						if (me.isDebugBuild())
+							u = new URL(me.getString(R.string.app_store_json_debug));
 
 	                    URLConnection conn = u.openConnection();
 	                    InputStream in = conn.getInputStream();
@@ -106,9 +116,16 @@ public class AppStoreService extends IntentService
 	                    		values.put("version", version.getString("name"));
 	                    		values.put("changelog", version.getString("changelog"));
 	                    		values.put("url", version.getString("url"));
+
+	                    		me.getContentResolver().insert(ConductorContentProvider.APPS_URI, values);
 	                    	}	                    	
-	                    	
-	                    	me.getContentResolver().insert(ConductorContentProvider.APPS_URI, values);
+	                    	else
+	                    	{
+	                    		String where = "package = ?";
+	                    		String[] args = { packageName };
+	                    		
+	                    		me.getContentResolver().delete(ConductorContentProvider.APPS_URI, where, args);
+	                    	}
 	                    }
 					}
 					catch (MalformedURLException e) 
@@ -140,6 +157,41 @@ public class AppStoreService extends IntentService
 			Thread t = new Thread(r);
 			t.start();
 		}
+	}
+
+	protected boolean isDebugBuild() 
+	{
+		// Via: http://stackoverflow.com/questions/7085644/how-to-check-if-apk-is-signed-or-debug-build
+		
+		X500Principal debugDn = new X500Principal("CN=Android Debug,O=Android,C=US");
+
+		try
+		{
+	        PackageInfo pinfo = this.getPackageManager().getPackageInfo(this.getPackageName(), PackageManager.GET_SIGNATURES);
+	        Signature signatures[] = pinfo.signatures;
+
+	        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+
+	        for ( int i = 0; i < signatures.length;i++)
+	        {   
+	            ByteArrayInputStream stream = new ByteArrayInputStream(signatures[i].toByteArray());
+
+	            X509Certificate cert = (X509Certificate) cf.generateCertificate(stream);       
+	            
+	            if (cert.getSubjectX500Principal().equals(debugDn))
+	            	return true;
+	        }
+	    }
+	    catch (NameNotFoundException e)
+	    {
+	        //debuggable variable will remain false
+	    }
+	    catch (CertificateException e)
+	    {
+	        //debuggable variable will remain false
+	    }
+		
+		return false;
 	}
 
 	private void updateVersionMessages() 
@@ -220,6 +272,9 @@ public class AppStoreService extends IntentService
 
 	public static boolean updateAvailable(Context context, String version, String packageName) 
 	{
+		if (version == null)
+			return false;
+		
 		PackageManager packages = context.getPackageManager();
 
 		try 
