@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -44,9 +45,9 @@ public class HomeActivity extends PortraitActivity
 		
 		ArrayList<Tool> tools = new ArrayList<Tool>();
 		
-		tools.add(new Tool(this.getString(R.string.tool_sleep_log_notes), this.getString(R.string.desc_sleep_log_notes), R.drawable.clock_log, new Intent(this, SleepLogActivity.class)));
-		tools.add(new Tool(this.getString(R.string.tool_bedtime_checklist), this.getString(R.string.desc_bedtime_checklist), R.drawable.clock_checklist, new Intent(this, BedtimeChecklistActivity.class)));
-		tools.add(new Tool(this.getString(R.string.tool_sleep_diaries), this.getString(R.string.desc_sleep_diaries), R.drawable.clock_checklist, new Intent(this, SleepDiaryActivity.class)));
+		tools.add(new Tool(this.getString(R.string.tool_sleep_log_notes), this.getString(R.string.desc_sleep_log_notes), R.drawable.clock_log_dark, new Intent(this, SleepLogActivity.class)));
+		tools.add(new Tool(this.getString(R.string.tool_bedtime_checklist), this.getString(R.string.desc_bedtime_checklist), R.drawable.clock_checklist_dark, new Intent(this, BedtimeChecklistActivity.class)));
+		tools.add(new Tool(this.getString(R.string.tool_sleep_diaries), this.getString(R.string.desc_sleep_diaries), R.drawable.clock_checklist_dark, new Intent(this, SleepDiaryActivity.class)));
 
 		ListView toolsList = (ListView) this.findViewById(R.id.list_tools);
 		
@@ -91,6 +92,9 @@ public class HomeActivity extends PortraitActivity
 					Toast.makeText(me, "ToDo: AssiGN laUNCh iNtenT to TooL...", Toast.LENGTH_SHORT).show();
 			}
 		});
+		
+		WebView graphView = (WebView) this.findViewById(R.id.graph_web_view);
+		graphView.loadUrl("file:///android_asset/home_graph.html");
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) 
