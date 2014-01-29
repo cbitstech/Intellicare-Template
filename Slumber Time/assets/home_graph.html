@@ -1,9 +1,13 @@
 <html>
 	<head>
 		<link rel="stylesheet" type="text/css" href="styles.css" />
+	    <link href="nv.d3.min.css" rel="stylesheet">
+
 	    <script src="d3.min.js"></script>
 	    <script src="nv.d3.min.js"></script>
-	    <link href="nv.d3.min.css" rel="stylesheet">
+<!--	    <script src="models/legend.js"></script>
+	    <script src="models/line.js"></script>
+	    <script src="utils.js"></script> -->
 	    
 		<script type="text/javascript">
 			function sinAndCos()
@@ -30,24 +34,30 @@
 				];
 			}
 
-			nv.addGraph(function() 
-			{  
-				var chart = nv.models.lineChart();
-				
-				chart.xAxis.axisLabel('Time (ms)').tickFormat(d3.format(',r'));
+			nv.addGraph({
+				generate: function() {
+					var width = nv.utils.windowSize().width, height = nv.utils.windowSize().height;
+					var chart = nv.models.line().width(width).height(height).margin({top: 0, right: 0, bottom: 0, left: 0});
 
-				chart.yAxis..tickFormat(d3.format('.02f'));
 
-				d3.select('#chart svg').datum(sinAndCos()).transition().duration(500).call(chart);
+					d3.select('#chart').attr('width', width).attr('height', height).datum(sinAndCos()).call(chart);
 
-				nv.utils.windowResize(function() { d3.select('#chart svg').call(chart) });
-
-				return chart;
+					return chart;
+				},
+				callback: function(graph) {
+					window.onresize = function() {
+						var width = nv.utils.windowSize().width, height = nv.utils.windowSize().height, margin = graph.margin();
+	
+						graph.width(width).height(height);
+	
+						d3.select('#chart').attr('width', width).attr('height', height).call(graph);
+					};
+				}
 			});
 		</script>
 	</head>
 	<body>
-		<svg style="width:100%; height: 100%;"></svg>
+		<svg style="width:100%; height: 100%;" id="chart"></svg>
 	</body>
 </html>
 	
