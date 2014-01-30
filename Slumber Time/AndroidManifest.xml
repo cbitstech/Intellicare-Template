@@ -26,5 +26,13 @@
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.MotivationActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.DemographicActivity" android:label="@string/app_name" />
         <provider android:name=".SlumberContentProvider" android:authorities="edu.northwestern.cbits.intellicare.slumbertime" android:exported="false" />
+		<service android:enabled="true" android:name=".AlarmService" android:exported="false">
+			<intent-filter>
+				<action android:name="edu.northwestern.cbits.intellicare.slumbertime.START_TIMER" />
+				<action android:name="edu.northwestern.cbits.intellicare.slumbertime.TIMER_TICK" />
+				<action android:name="edu.northwestern.cbits.intellicare.slumbertime.START_ALARM" />
+				<action android:name="edu.northwestern.cbits.intellicare.slumbertime.STOP_ALARM" />
+			</intent-filter>
+	    </service>
    	</application>
 </manifest>

@@ -18,7 +18,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class HomeActivity extends PortraitActivity 
 {
@@ -42,6 +41,9 @@ public class HomeActivity extends PortraitActivity
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
+		
+		Intent startAlarms = new Intent(AlarmService.START_TIMER, null, this.getApplicationContext(), AlarmService.class);
+		this.startService(startAlarms);
 
 		this.setContentView(R.layout.activity_home);
 		

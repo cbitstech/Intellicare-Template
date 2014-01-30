@@ -19,6 +19,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.database.MergeCursor;
 import android.net.Uri;
 import android.os.Build;
@@ -40,6 +41,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -137,393 +139,600 @@ public class ClockActivity extends Activity
 					alarmsCursor = me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null);
 				}
 				
-				final SimpleCursorAdapter adapter = new SimpleCursorAdapter(me, R.layout.row_alarm, alarmsCursor,  emptyString, emptyInt, 0)
+				final String[] columnNames = { "_id", "ADD_ITEM" };
+				final String[] columnObjects = { "0", "ADD_ITEM" };
+				
+				MatrixCursor addItemCursor = new MatrixCursor(columnNames);
+				addItemCursor.addRow(columnObjects);
+				
+				Cursor[] cursors = { alarmsCursor, addItemCursor };
+				
+				final MergeCursor merged = new MergeCursor(cursors);
+				
+				final SimpleCursorAdapter adapter = new SimpleCursorAdapter(me, R.layout.row_alarm, merged,  emptyString, emptyInt, 0)
 				{
 					public void bindView (View view, Context context, Cursor cursor)
 					{
-						final long id = cursor.getLong(cursor.getColumnIndex("_id"));
+						LinearLayout albumCell = (LinearLayout) view.findViewById(R.id.album_cell);
+						TextView addAlbumCell = (TextView) view.findViewById(R.id.add_album_cell);
 						
-						TextView title = (TextView) view.findViewById(R.id.title_alarm);
-						title.setText(cursor.getString(cursor.getColumnIndex(SlumberContentProvider.ALARM_NAME)));
-
-						TextView times = (TextView) view.findViewById(R.id.times_alarm);
-						times.setText(SlumberContentProvider.dateStringForAlarmCursor(me, cursor));
-						
-						CheckBox enabled = (CheckBox) view.findViewById(R.id.alarm_enabled);
-						
-						enabled.setChecked(cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.ALARM_ENABLED)) > 0);
-						
-						enabled.setOnCheckedChangeListener(new OnCheckedChangeListener()
+						if (cursor.getColumnIndex("ADD_ITEM") != -1)
 						{
-							public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) 
+							albumCell.setVisibility(View.GONE);
+							addAlbumCell.setVisibility(View.VISIBLE);
+						}
+						else
+						{
+							albumCell.setVisibility(View.VISIBLE);
+							addAlbumCell.setVisibility(View.GONE);
+
+							final long id = cursor.getLong(cursor.getColumnIndex("_id"));
+
+							final SimpleCursorAdapter meAdapter = this;
+							
+							TextView title = (TextView) view.findViewById(R.id.title_alarm);
+							title.setText(cursor.getString(cursor.getColumnIndex(SlumberContentProvider.ALARM_NAME)));
+	
+							TextView times = (TextView) view.findViewById(R.id.times_alarm);
+							times.setText(SlumberContentProvider.dateStringForAlarmCursor(me, cursor));
+							
+							CheckBox enabled = (CheckBox) view.findViewById(R.id.alarm_enabled);
+
+							enabled.setOnCheckedChangeListener(new OnCheckedChangeListener()
 							{
-								ContentValues values = new ContentValues();
-								values.put(SlumberContentProvider.ALARM_ENABLED, isChecked);
-								
-								String where = "_id = ?";
-								String[] args = { "" + id };
-								
-								me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
-							}
-						});
+								public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) 
+								{
+
+								}
+							});
+							
+							enabled.setChecked(cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.ALARM_ENABLED)) > 0);
+							
+							enabled.setOnCheckedChangeListener(new OnCheckedChangeListener()
+							{
+								public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) 
+								{
+									ContentValues values = new ContentValues();
+									values.put(SlumberContentProvider.ALARM_ENABLED, isChecked);
+									
+									String where = "_id = ?";
+									String[] args = { "" + id };
+									
+									me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
+
+									Cursor alarmsCursor = me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null);
+
+									MatrixCursor addItemCursor = new MatrixCursor(columnNames);
+									addItemCursor.addRow(columnObjects);
+									
+									Cursor[] cursors = { alarmsCursor, addItemCursor };
+									final MergeCursor newMerged = new MergeCursor(cursors);
+									
+									Cursor old = meAdapter.swapCursor(newMerged);
+									old.close();
+								}
+							});
+						}
 					}
 				};
 				
 				alarmsList.setAdapter(adapter);
 				
+				alarmsList.setOnItemLongClickListener(new OnItemLongClickListener()
+				{
+					public boolean onItemLongClick(AdapterView<?> parent, View view, int position, final long id) 
+					{
+						Cursor c = adapter.getCursor();
+
+						if (c.getColumnIndex("ADD_ITEM") == -1)
+						{
+							final String name = c.getString(c.getColumnIndex(SlumberContentProvider.ALARM_NAME));
+							
+							AlertDialog.Builder builder = new AlertDialog.Builder(me);
+							builder = builder.setTitle(R.string.title_delete_alarm);
+							builder = builder.setMessage(me.getString(R.string.message_delete_alarm, name));
+							
+							builder = builder.setPositiveButton(R.string.button_remove, new DialogInterface.OnClickListener() 
+							{
+								public void onClick(DialogInterface dialog, int which) 
+								{
+									String selection = "_id = ?";
+									String[] args = { "" + id };
+									
+									me.getContentResolver().delete(SlumberContentProvider.ALARMS_URI, selection, args);
+
+									Cursor alarmsCursor = me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null);
+
+									MatrixCursor addItemCursor = new MatrixCursor(columnNames);
+									addItemCursor.addRow(columnObjects);
+									
+									Cursor[] cursors = { alarmsCursor, addItemCursor };
+									final MergeCursor newMerged = new MergeCursor(cursors);
+									
+									Cursor old = adapter.swapCursor(newMerged);
+									old.close();
+								}
+							});
+
+							builder = builder.setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() 
+							{
+								public void onClick(DialogInterface dialog, int which) 
+								{
+
+								}
+							});
+
+							builder.create().show();
+						}
+						
+						return true;
+					}
+				});
+				
 				alarmsList.setOnItemClickListener(new OnItemClickListener()
 				{
 					public void onItemClick(final AdapterView<?> parent, final View view, final int which, final long alarmId) 
 					{
-						final OnItemClickListener clickListener = this;
-						
-						alarmEditor.setVisibility(View.VISIBLE);
-						selectMessage.setVisibility(View.GONE);
-						
 						Cursor c = adapter.getCursor();
-						
-						String toneName = c.getString(c.getColumnIndex(SlumberContentProvider.ALARM_NAME));
-						
-						TextView ringtone = (TextView) alarmEditor.findViewById(R.id.label_alarm_tone);
-						final TextView time = (TextView) alarmEditor.findViewById(R.id.label_alarm_name);
-						
-						CheckBox sunday = (CheckBox) alarmEditor.findViewById(R.id.check_sunday);
-						CheckBox monday = (CheckBox) alarmEditor.findViewById(R.id.check_monday);
-						CheckBox tuesday = (CheckBox) alarmEditor.findViewById(R.id.check_tuesday);
-						CheckBox wednesday = (CheckBox) alarmEditor.findViewById(R.id.check_wednesday);
-						CheckBox thursday = (CheckBox) alarmEditor.findViewById(R.id.check_thursday);
-						CheckBox friday = (CheckBox) alarmEditor.findViewById(R.id.check_friday);
-						CheckBox saturday = (CheckBox) alarmEditor.findViewById(R.id.check_saturday);
 
-						sunday.setChecked(c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_SUNDAY)) > 0);
-						monday.setChecked(c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_MONDAY)) > 0);
-						tuesday.setChecked(c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_TUESDAY)) > 0);
-						wednesday.setChecked(c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_WEDNESDAY)) > 0);
-						thursday.setChecked(c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_THURSDAY)) > 0);
-						friday.setChecked(c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_FRIDAY)) > 0);
-						saturday.setChecked(c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_SATURDAY)) > 0);
-						
-						sunday.setOnCheckedChangeListener(new OnCheckedChangeListener()
+						if (c.getColumnIndex("ADD_ITEM") != -1)
 						{
-							public void onCheckedChanged(CompoundButton button, boolean checked) 
-							{
-								ContentValues values = new ContentValues();
-								values.put(SlumberContentProvider.ALARM_SUNDAY, checked);
-								
-								String where = "_id = ?";
-								String[] args = { "" + alarmId };
-								
-								me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
-								
-								adapter.swapCursor(me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null));
+							ContentValues values = new ContentValues();
+							values.put(SlumberContentProvider.ALARM_NAME, me.getString(R.string.name_new_alarm));
+							
+							me.getContentResolver().insert(SlumberContentProvider.ALARMS_URI, values);
 
-								clickListener.onItemClick(parent, view, which, alarmId);
-							}
-						});
-						
-						monday.setOnCheckedChangeListener(new OnCheckedChangeListener()
+							Cursor alarmsCursor = me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null);
+
+							MatrixCursor addItemCursor = new MatrixCursor(columnNames);
+							addItemCursor.addRow(columnObjects);
+							
+							Cursor[] cursors = { alarmsCursor, addItemCursor };
+							final MergeCursor newMerged = new MergeCursor(cursors);
+							
+							Cursor old = adapter.swapCursor(newMerged);
+							old.close();
+
+							return;
+						}
+						else
 						{
-							public void onCheckedChanged(CompoundButton button, boolean checked) 
+							final OnItemClickListener clickListener = this;
+							
+							alarmEditor.setVisibility(View.VISIBLE);
+							selectMessage.setVisibility(View.GONE);
+							
+							String toneName = c.getString(c.getColumnIndex(SlumberContentProvider.ALARM_NAME));
+							
+							TextView ringtone = (TextView) alarmEditor.findViewById(R.id.label_alarm_tone);
+							final TextView time = (TextView) alarmEditor.findViewById(R.id.label_alarm_name);
+							
+							CheckBox sunday = (CheckBox) alarmEditor.findViewById(R.id.check_sunday);
+							CheckBox monday = (CheckBox) alarmEditor.findViewById(R.id.check_monday);
+							CheckBox tuesday = (CheckBox) alarmEditor.findViewById(R.id.check_tuesday);
+							CheckBox wednesday = (CheckBox) alarmEditor.findViewById(R.id.check_wednesday);
+							CheckBox thursday = (CheckBox) alarmEditor.findViewById(R.id.check_thursday);
+							CheckBox friday = (CheckBox) alarmEditor.findViewById(R.id.check_friday);
+							CheckBox saturday = (CheckBox) alarmEditor.findViewById(R.id.check_saturday);
+	
+							sunday.setChecked(c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_SUNDAY)) > 0);
+							monday.setChecked(c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_MONDAY)) > 0);
+							tuesday.setChecked(c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_TUESDAY)) > 0);
+							wednesday.setChecked(c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_WEDNESDAY)) > 0);
+							thursday.setChecked(c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_THURSDAY)) > 0);
+							friday.setChecked(c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_FRIDAY)) > 0);
+							saturday.setChecked(c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_SATURDAY)) > 0);
+							
+							sunday.setOnCheckedChangeListener(new OnCheckedChangeListener()
 							{
-								ContentValues values = new ContentValues();
-								values.put(SlumberContentProvider.ALARM_MONDAY, checked);
-								
-								String where = "_id = ?";
-								String[] args = { "" + alarmId };
-								
-								me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
-
-								adapter.swapCursor(me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null));
-
-								clickListener.onItemClick(parent, view, which, alarmId);
-							}
-						});
-
-						tuesday.setOnCheckedChangeListener(new OnCheckedChangeListener()
-						{
-							public void onCheckedChanged(CompoundButton button, boolean checked) 
-							{
-								ContentValues values = new ContentValues();
-								values.put(SlumberContentProvider.ALARM_TUESDAY, checked);
-								
-								String where = "_id = ?";
-								String[] args = { "" + alarmId };
-								
-								me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
-
-								adapter.swapCursor(me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null));
-								clickListener.onItemClick(parent, view, which, alarmId);
-							}
-						});
-
-						wednesday.setOnCheckedChangeListener(new OnCheckedChangeListener()
-						{
-							public void onCheckedChanged(CompoundButton button, boolean checked) 
-							{
-								ContentValues values = new ContentValues();
-								values.put(SlumberContentProvider.ALARM_WEDNESDAY, checked);
-								
-								String where = "_id = ?";
-								String[] args = { "" + alarmId };
-								
-								me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
-
-								adapter.swapCursor(me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null));
-								clickListener.onItemClick(parent, view, which, alarmId);
-							}
-						});
-
-						thursday.setOnCheckedChangeListener(new OnCheckedChangeListener()
-						{
-							public void onCheckedChanged(CompoundButton button, boolean checked) 
-							{
-								ContentValues values = new ContentValues();
-								values.put(SlumberContentProvider.ALARM_THURSDAY, checked);
-								
-								String where = "_id = ?";
-								String[] args = { "" + alarmId };
-								
-								me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
-
-								adapter.swapCursor(me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null));
-								clickListener.onItemClick(parent, view, which, alarmId);
-							}
-						});
-
-						friday.setOnCheckedChangeListener(new OnCheckedChangeListener()
-						{
-							public void onCheckedChanged(CompoundButton button, boolean checked) 
-							{
-								ContentValues values = new ContentValues();
-								values.put(SlumberContentProvider.ALARM_FRIDAY, checked);
-								
-								String where = "_id = ?";
-								String[] args = { "" + alarmId };
-								
-								me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
-
-								adapter.swapCursor(me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null));
-								clickListener.onItemClick(parent, view, which, alarmId);
-							}
-						});
-
-						saturday.setOnCheckedChangeListener(new OnCheckedChangeListener()
-						{
-							public void onCheckedChanged(CompoundButton button, boolean checked) 
-							{
-								ContentValues values = new ContentValues();
-								values.put(SlumberContentProvider.ALARM_SATURDAY, checked);
-								
-								String where = "_id = ?";
-								String[] args = { "" + alarmId };
-								
-								me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
-
-								adapter.swapCursor(me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null));
-								clickListener.onItemClick(parent, view, which, alarmId);
-							}
-						});
-
-						ringtone.setText(toneName);
-						time.setText(SlumberContentProvider.dateStringForAlarmCursor(me, c));
-						
-						final int hour = c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_HOUR));
-						final int minute = c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_MINUTE));
-						
-						time.setOnClickListener(new OnClickListener()
-						{
-							public void onClick(View timeView)
-							{
-								boolean useAmPm = android.text.format.DateFormat.is24HourFormat(me);
-
-								TimePickerDialog picker = new TimePickerDialog(me, new OnTimeSetListener()
+								public void onCheckedChanged(CompoundButton button, boolean checked) 
 								{
-									public void onTimeSet(TimePicker picker, int hour, int minute) 
-									{
-										ContentValues values = new ContentValues();
-										values.put(SlumberContentProvider.ALARM_HOUR, hour);
-										values.put(SlumberContentProvider.ALARM_MINUTE, minute);
-										
-										String where = "_id = ?";
-										String[] args = { "" + alarmId };
-										
-										me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
+									ContentValues values = new ContentValues();
+									values.put(SlumberContentProvider.ALARM_SUNDAY, checked);
+									
+									String where = "_id = ?";
+									String[] args = { "" + alarmId };
+									
+									me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
+									
+									Cursor alarmsCursor = me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null);
 
-										adapter.swapCursor(me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null));
-										clickListener.onItemClick(parent, view, which, alarmId);
-									}
-								}, hour, minute, useAmPm);
-								
-								picker.show();
-							}
-						});
-
-						ringtone.setOnClickListener(new OnClickListener()
-						{
-							public void onClick(View toneView)
+									MatrixCursor addItemCursor = new MatrixCursor(columnNames);
+									addItemCursor.addRow(columnObjects);
+									
+									Cursor[] cursors = { alarmsCursor, addItemCursor };
+									final MergeCursor newMerged = new MergeCursor(cursors);
+									
+									Cursor old = adapter.swapCursor(newMerged);
+									old.close();
+	
+									clickListener.onItemClick(parent, view, which, alarmId);
+								}
+							});
+							
+							monday.setOnCheckedChangeListener(new OnCheckedChangeListener()
 							{
-								AlertDialog.Builder builder = new AlertDialog.Builder(me);
-
-								LayoutInflater inflater = LayoutInflater.from(me);
-								View searchView = inflater.inflate(R.layout.view_clock_tone_search, null, false);
-								
-								ListView tonesList = (ListView) searchView.findViewById(R.id.list_tones);
-								
-								String[] projection = { Audio.AudioColumns.TITLE, Audio.AudioColumns.ARTIST, Audio.AudioColumns.DATA, Audio.AudioColumns._ID };
-								String selection = Audio.AudioColumns.IS_MUSIC + " = ? OR " + Audio.AudioColumns.IS_RINGTONE + " = ?";
-								String[] args = { "1", "1"};
-								
-								Cursor internal = me.getContentResolver().query(Audio.Media.INTERNAL_CONTENT_URI, projection, selection, args, null);
-								Cursor external = me.getContentResolver().query(Audio.Media.EXTERNAL_CONTENT_URI, projection, selection, args, null);
-								
-								Cursor[] cursors = { internal, external };
-								
-								MergeCursor c = new MergeCursor(cursors);
-								
-								final SimpleCursorAdapter toneAdapter = new SimpleCursorAdapter(me, R.layout.row_tone, c, emptyString, emptyInt, 0)
+								public void onCheckedChanged(CompoundButton button, boolean checked) 
 								{
-									public void bindView (View matchView, Context context, Cursor cursor)
+									ContentValues values = new ContentValues();
+									values.put(SlumberContentProvider.ALARM_MONDAY, checked);
+									
+									String where = "_id = ?";
+									String[] args = { "" + alarmId };
+									
+									me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
+	
+									Cursor alarmsCursor = me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null);
+
+									MatrixCursor addItemCursor = new MatrixCursor(columnNames);
+									addItemCursor.addRow(columnObjects);
+									
+									Cursor[] cursors = { alarmsCursor, addItemCursor };
+									final MergeCursor newMerged = new MergeCursor(cursors);
+									
+									Cursor old = adapter.swapCursor(newMerged);
+									old.close();
+	
+									clickListener.onItemClick(parent, view, which, alarmId);
+								}
+							});
+	
+							tuesday.setOnCheckedChangeListener(new OnCheckedChangeListener()
+							{
+								public void onCheckedChanged(CompoundButton button, boolean checked) 
+								{
+									ContentValues values = new ContentValues();
+									values.put(SlumberContentProvider.ALARM_TUESDAY, checked);
+									
+									String where = "_id = ?";
+									String[] args = { "" + alarmId };
+									
+									me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
+	
+									Cursor alarmsCursor = me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null);
+
+									MatrixCursor addItemCursor = new MatrixCursor(columnNames);
+									addItemCursor.addRow(columnObjects);
+									
+									Cursor[] cursors = { alarmsCursor, addItemCursor };
+									final MergeCursor newMerged = new MergeCursor(cursors);
+									
+									Cursor old = adapter.swapCursor(newMerged);
+									old.close();
+
+									clickListener.onItemClick(parent, view, which, alarmId);
+								}
+							});
+	
+							wednesday.setOnCheckedChangeListener(new OnCheckedChangeListener()
+							{
+								public void onCheckedChanged(CompoundButton button, boolean checked) 
+								{
+									ContentValues values = new ContentValues();
+									values.put(SlumberContentProvider.ALARM_WEDNESDAY, checked);
+									
+									String where = "_id = ?";
+									String[] args = { "" + alarmId };
+									
+									me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
+	
+									Cursor alarmsCursor = me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null);
+
+									MatrixCursor addItemCursor = new MatrixCursor(columnNames);
+									addItemCursor.addRow(columnObjects);
+									
+									Cursor[] cursors = { alarmsCursor, addItemCursor };
+									final MergeCursor newMerged = new MergeCursor(cursors);
+									
+									Cursor old = adapter.swapCursor(newMerged);
+									old.close();
+
+									clickListener.onItemClick(parent, view, which, alarmId);
+								}
+							});
+	
+							thursday.setOnCheckedChangeListener(new OnCheckedChangeListener()
+							{
+								public void onCheckedChanged(CompoundButton button, boolean checked) 
+								{
+									ContentValues values = new ContentValues();
+									values.put(SlumberContentProvider.ALARM_THURSDAY, checked);
+									
+									String where = "_id = ?";
+									String[] args = { "" + alarmId };
+									
+									me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
+	
+									Cursor alarmsCursor = me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null);
+
+									MatrixCursor addItemCursor = new MatrixCursor(columnNames);
+									addItemCursor.addRow(columnObjects);
+									
+									Cursor[] cursors = { alarmsCursor, addItemCursor };
+									final MergeCursor newMerged = new MergeCursor(cursors);
+									
+									Cursor old = adapter.swapCursor(newMerged);
+									old.close();
+
+									clickListener.onItemClick(parent, view, which, alarmId);
+								}
+							});
+	
+							friday.setOnCheckedChangeListener(new OnCheckedChangeListener()
+							{
+								public void onCheckedChanged(CompoundButton button, boolean checked) 
+								{
+									ContentValues values = new ContentValues();
+									values.put(SlumberContentProvider.ALARM_FRIDAY, checked);
+									
+									String where = "_id = ?";
+									String[] args = { "" + alarmId };
+									
+									me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
+	
+									Cursor alarmsCursor = me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null);
+
+									MatrixCursor addItemCursor = new MatrixCursor(columnNames);
+									addItemCursor.addRow(columnObjects);
+									
+									Cursor[] cursors = { alarmsCursor, addItemCursor };
+									final MergeCursor newMerged = new MergeCursor(cursors);
+									
+									Cursor old = adapter.swapCursor(newMerged);
+									old.close();
+
+									clickListener.onItemClick(parent, view, which, alarmId);
+								}
+							});
+	
+							saturday.setOnCheckedChangeListener(new OnCheckedChangeListener()
+							{
+								public void onCheckedChanged(CompoundButton button, boolean checked) 
+								{
+									ContentValues values = new ContentValues();
+									values.put(SlumberContentProvider.ALARM_SATURDAY, checked);
+									
+									String where = "_id = ?";
+									String[] args = { "" + alarmId };
+									
+									me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
+	
+									Cursor alarmsCursor = me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null);
+
+									MatrixCursor addItemCursor = new MatrixCursor(columnNames);
+									addItemCursor.addRow(columnObjects);
+									
+									Cursor[] cursors = { alarmsCursor, addItemCursor };
+									final MergeCursor newMerged = new MergeCursor(cursors);
+									
+									Cursor old = adapter.swapCursor(newMerged);
+									old.close();
+
+									clickListener.onItemClick(parent, view, which, alarmId);
+								}
+							});
+	
+							ringtone.setText(toneName);
+							time.setText(SlumberContentProvider.dateStringForAlarmCursor(me, c));
+							
+							final int hour = c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_HOUR));
+							final int minute = c.getInt(c.getColumnIndex(SlumberContentProvider.ALARM_MINUTE));
+							
+							time.setOnClickListener(new OnClickListener()
+							{
+								public void onClick(View timeView)
+								{
+									boolean useAmPm = android.text.format.DateFormat.is24HourFormat(me);
+	
+									TimePickerDialog picker = new TimePickerDialog(me, new OnTimeSetListener()
 									{
-										for (int i = 0; i < cursor.getColumnCount(); i++)
+										public void onTimeSet(TimePicker picker, int hour, int minute) 
 										{
-											Log.e("ST", "MEDIA COL " + cursor.getColumnName(i));
+											ContentValues values = new ContentValues();
+											values.put(SlumberContentProvider.ALARM_HOUR, hour);
+											values.put(SlumberContentProvider.ALARM_MINUTE, minute);
+											
+											String where = "_id = ?";
+											String[] args = { "" + alarmId };
+											
+											me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
+	
+											Cursor alarmsCursor = me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null);
+
+											MatrixCursor addItemCursor = new MatrixCursor(columnNames);
+											addItemCursor.addRow(columnObjects);
+											
+											Cursor[] cursors = { alarmsCursor, addItemCursor };
+											final MergeCursor newMerged = new MergeCursor(cursors);
+											
+											Cursor old = adapter.swapCursor(newMerged);
+											old.close();
+
+											clickListener.onItemClick(parent, view, which, alarmId);
 										}
-										
-										TextView title = (TextView) matchView.findViewById(R.id.label_title);
-										title.setText(cursor.getString(cursor.getColumnIndex(Audio.AudioColumns.TITLE)));
-
-										TextView artist = (TextView) matchView.findViewById(R.id.label_artist);
-										artist.setText(cursor.getString(cursor.getColumnIndex(Audio.AudioColumns.ARTIST)));
-									}
-								};
-								
-								tonesList.setAdapter(toneAdapter);
-								
-								tonesList.setOnItemClickListener(new OnItemClickListener()
+									}, hour, minute, useAmPm);
+									
+									picker.show();
+								}
+							});
+	
+							ringtone.setOnClickListener(new OnClickListener()
+							{
+								public void onClick(View toneView)
 								{
-									public void onItemClick(AdapterView<?> arg0, View matchView, int position, long id) 
+									AlertDialog.Builder builder = new AlertDialog.Builder(me);
+	
+									LayoutInflater inflater = LayoutInflater.from(me);
+									View searchView = inflater.inflate(R.layout.view_clock_tone_search, null, false);
+									
+									ListView tonesList = (ListView) searchView.findViewById(R.id.list_tones);
+									
+									String[] projection = { Audio.AudioColumns.TITLE, Audio.AudioColumns.ARTIST, Audio.AudioColumns.DATA, Audio.AudioColumns._ID };
+									String selection = Audio.AudioColumns.IS_MUSIC + " = ? OR " + Audio.AudioColumns.IS_RINGTONE + " = ?";
+									String[] args = { "1", "1"};
+									
+									Cursor internal = me.getContentResolver().query(Audio.Media.INTERNAL_CONTENT_URI, projection, selection, args, null);
+									Cursor external = me.getContentResolver().query(Audio.Media.EXTERNAL_CONTENT_URI, projection, selection, args, null);
+									
+									Cursor[] cursors = { internal, external };
+									
+									MergeCursor c = new MergeCursor(cursors);
+									
+									final SimpleCursorAdapter toneAdapter = new SimpleCursorAdapter(me, R.layout.row_tone, c, emptyString, emptyInt, 0)
 									{
-										Cursor c = toneAdapter.getCursor();
-										
-										c.moveToPosition(position);
-
-										final String title = c.getString(c.getColumnIndex(Audio.AudioColumns.TITLE));
-										final String data = c.getString(c.getColumnIndex(Audio.AudioColumns.DATA));
-												
-										Log.e("ST", "T: " + title + " -- D: " + data);
-										
-										AlertDialog.Builder builder = new AlertDialog.Builder(me);
-										builder = builder.setTitle(title);
-
-										String[] items = { me.getString(R.string.action_audio_open), me.getString(R.string.action_audio_use) };
-										builder = builder.setItems(items, new DialogInterface.OnClickListener() 
+										public void bindView (View matchView, Context context, Cursor cursor)
 										{
-											public void onClick(DialogInterface dialog, int which) 
+											for (int i = 0; i < cursor.getColumnCount(); i++)
 											{
-												switch (which)
+												Log.e("ST", "MEDIA COL " + cursor.getColumnName(i));
+											}
+											
+											TextView title = (TextView) matchView.findViewById(R.id.label_title);
+											title.setText(cursor.getString(cursor.getColumnIndex(Audio.AudioColumns.TITLE)));
+	
+											TextView artist = (TextView) matchView.findViewById(R.id.label_artist);
+											artist.setText(cursor.getString(cursor.getColumnIndex(Audio.AudioColumns.ARTIST)));
+										}
+									};
+									
+									tonesList.setAdapter(toneAdapter);
+									
+									tonesList.setOnItemClickListener(new OnItemClickListener()
+									{
+										public void onItemClick(AdapterView<?> arg0, View matchView, int position, long id) 
+										{
+											Cursor c = toneAdapter.getCursor();
+											
+											c.moveToPosition(position);
+	
+											final String title = c.getString(c.getColumnIndex(Audio.AudioColumns.TITLE));
+											final String data = c.getString(c.getColumnIndex(Audio.AudioColumns.DATA));
+													
+											Log.e("ST", "T: " + title + " -- D: " + data);
+											
+											AlertDialog.Builder builder = new AlertDialog.Builder(me);
+											builder = builder.setTitle(title);
+	
+											String[] items = { me.getString(R.string.action_audio_open), me.getString(R.string.action_audio_use) };
+											builder = builder.setItems(items, new DialogInterface.OnClickListener() 
+											{
+												public void onClick(DialogInterface dialog, int which) 
 												{
-													case 0:
-														Intent playIntent = new Intent(Intent.ACTION_VIEW);
-														playIntent.setDataAndType(Uri.fromFile(new File(data)), "audio/*");
-														
-														me.startActivity(playIntent);
-														break;
-													case 1:
+													switch (which)
+													{
+														case 0:
+															Intent playIntent = new Intent(Intent.ACTION_VIEW);
+															playIntent.setDataAndType(Uri.fromFile(new File(data)), "audio/*");
+															
+															me.startActivity(playIntent);
+															break;
+														case 1:
+	
+															ContentValues values = new ContentValues();
+															values.put(SlumberContentProvider.ALARM_NAME, title);
+															values.put(SlumberContentProvider.ALARM_CONTENT_URI, Uri.fromFile(new File(data)).toString());
+															
+															String where = "_id = ?";
+															String[] args = { "" + alarmId };
+															
+															me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
+	
+															Cursor alarmsCursor = me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null);
 
-														ContentValues values = new ContentValues();
-														values.put(SlumberContentProvider.ALARM_NAME, title);
-														values.put(SlumberContentProvider.ALARM_CONTENT_URI, Uri.fromFile(new File(data)).toString());
-														
-														String where = "_id = ?";
-														String[] args = { "" + alarmId };
-														
-														me.getContentResolver().update(SlumberContentProvider.ALARMS_URI, values, where, args);
+															MatrixCursor addItemCursor = new MatrixCursor(columnNames);
+															addItemCursor.addRow(columnObjects);
+															
+															Cursor[] cursors = { alarmsCursor, addItemCursor };
+															final MergeCursor newMerged = new MergeCursor(cursors);
+															
+															Cursor old = adapter.swapCursor(newMerged);
+															old.close();
 
-														adapter.swapCursor(me.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null));
-														clickListener.onItemClick(parent, view, which, alarmId);
-														
-														dialog.cancel();
-														me._toneListDialog.cancel();
-														
-														break;
+															clickListener.onItemClick(parent, view, which, alarmId);
+															
+															dialog.cancel();
+															me._toneListDialog.cancel();
+															
+															break;
+													}
 												}
-											}
-										});
-										
-										builder = builder.setNegativeButton(R.string.button_close, new DialogInterface.OnClickListener() 
-										{
-											public void onClick(DialogInterface dialog, int which) 
+											});
+											
+											builder = builder.setNegativeButton(R.string.button_close, new DialogInterface.OnClickListener() 
 											{
-
-											}
-										});
-										
-										builder.create().show();
-									}
-								});
-								
-								EditText searchField = (EditText) searchView.findViewById(R.id.text_search);
-								searchField.addTextChangedListener(new TextWatcher()
-								{
-									public void afterTextChanged(final Editable editable) 
-									{
-										me._searchLastUpdate  = System.currentTimeMillis();
-										
-										me._handler.postDelayed(new Runnable()
-										{
-											public void run() 
-											{
-												long now = System.currentTimeMillis();
-												
-												if (now - me._searchLastUpdate > 900)
+												public void onClick(DialogInterface dialog, int which) 
 												{
-													String[] projection = { Audio.AudioColumns.TITLE, Audio.AudioColumns.ARTIST, Audio.AudioColumns.DATA, Audio.AudioColumns._ID };
-													String selection = "(" + Audio.AudioColumns.IS_MUSIC + " = ? OR " + Audio.AudioColumns.IS_RINGTONE + " = ?) AND (" + Audio.AudioColumns.TITLE + " LIKE ? OR " + Audio.AudioColumns.ARTIST + " LIKE ?)";
-													
-													String likeString = "%" + editable.toString() + "%";
-													
-													String[] args = { "1", "1", likeString, likeString } ;
-													
-													Cursor internal = me.getContentResolver().query(Audio.Media.INTERNAL_CONTENT_URI, projection, selection, args, null);
-													Cursor external = me.getContentResolver().query(Audio.Media.EXTERNAL_CONTENT_URI, projection, selection, args, null);
-													
-													Cursor[] cursors = { internal, external };
-													
-													MergeCursor c = new MergeCursor(cursors);
-													
-													toneAdapter.changeCursor(c);
+	
 												}
-											}
-										}, 1000);
-									}
-
-									public void beforeTextChanged(CharSequence s, int start, int count, int after) 
+											});
+											
+											builder.create().show();
+										}
+									});
+									
+									EditText searchField = (EditText) searchView.findViewById(R.id.text_search);
+									searchField.addTextChangedListener(new TextWatcher()
 									{
-
-									}
-
-									public void onTextChanged(CharSequence s, int start, int count, int after) 
-									{
-
-									}
-								});
-								
-								builder = builder.setView(searchView);
-
-								me._toneListDialog = builder.create();
-								me._toneListDialog.show();
-								
-								DisplayMetrics metrics = me.getResources().getDisplayMetrics();
-								
-								WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-
-								lp.copyFrom(me._toneListDialog.getWindow().getAttributes());
-								lp.width = (int) (480f * metrics.density);
-								lp.height = (int) (320f * metrics.density);
-
-								me._toneListDialog.getWindow().setAttributes(lp);
-							}
-						});
+										public void afterTextChanged(final Editable editable) 
+										{
+											me._searchLastUpdate  = System.currentTimeMillis();
+											
+											me._handler.postDelayed(new Runnable()
+											{
+												public void run() 
+												{
+													long now = System.currentTimeMillis();
+													
+													if (now - me._searchLastUpdate > 900)
+													{
+														String[] projection = { Audio.AudioColumns.TITLE, Audio.AudioColumns.ARTIST, Audio.AudioColumns.DATA, Audio.AudioColumns._ID };
+														String selection = "(" + Audio.AudioColumns.IS_MUSIC + " = ? OR " + Audio.AudioColumns.IS_RINGTONE + " = ?) AND (" + Audio.AudioColumns.TITLE + " LIKE ? OR " + Audio.AudioColumns.ARTIST + " LIKE ?)";
+														
+														String likeString = "%" + editable.toString() + "%";
+														
+														String[] args = { "1", "1", likeString, likeString } ;
+														
+														Cursor internal = me.getContentResolver().query(Audio.Media.INTERNAL_CONTENT_URI, projection, selection, args, null);
+														Cursor external = me.getContentResolver().query(Audio.Media.EXTERNAL_CONTENT_URI, projection, selection, args, null);
+														
+														Cursor[] cursors = { internal, external };
+														
+														MergeCursor c = new MergeCursor(cursors);
+														
+														toneAdapter.changeCursor(c);
+													}
+												}
+											}, 1000);
+										}
+	
+										public void beforeTextChanged(CharSequence s, int start, int count, int after) 
+										{
+	
+										}
+	
+										public void onTextChanged(CharSequence s, int start, int count, int after) 
+										{
+	
+										}
+									});
+									
+									builder = builder.setView(searchView);
+	
+									me._toneListDialog = builder.create();
+									me._toneListDialog.show();
+									
+									DisplayMetrics metrics = me.getResources().getDisplayMetrics();
+									
+									WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+	
+									lp.copyFrom(me._toneListDialog.getWindow().getAttributes());
+									lp.width = (int) (480f * metrics.density);
+									lp.height = (int) (320f * metrics.density);
+	
+									me._toneListDialog.getWindow().setAttributes(lp);
+								}
+							});
+						}
 					}
 				});
 
@@ -546,6 +755,7 @@ public class ClockActivity extends Activity
 
 				lp.copyFrom(d.getWindow().getAttributes());
 				lp.width = (int) (480f * metrics.density);
+				lp.height = (int) (300f * metrics.density);
 
 				d.getWindow().setAttributes(lp);
 			}
