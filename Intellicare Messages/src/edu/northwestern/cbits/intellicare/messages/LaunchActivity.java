@@ -11,6 +11,7 @@ import net.hockeyapp.android.UpdateManager;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
@@ -122,6 +123,31 @@ public class LaunchActivity extends ConsentedActivity
 		else if (item.getItemId() == R.id.action_help)
 		{
 			Intent helpIntent = new Intent(this, HelpActivity.class);
+			this.startActivity(helpIntent);
+		}
+		else if (item.getItemId() == R.id.action_one)
+		{
+			Intent helpIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("intellicare://day-to-day/lesson/" + R.array.one_titles + "/" + R.array.one_urls));
+			this.startActivity(helpIntent);
+		}
+		else if (item.getItemId() == R.id.action_two)
+		{
+			Intent helpIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("intellicare://day-to-day/lesson/" + R.array.two_titles + "/" + R.array.two_urls));
+			this.startActivity(helpIntent);
+		}
+		else if (item.getItemId() == R.id.action_three)
+		{
+			Intent helpIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("intellicare://day-to-day/lesson/" + R.array.three_titles + "/" + R.array.three_urls));
+			this.startActivity(helpIntent);
+		}
+		else if (item.getItemId() == R.id.action_four)
+		{
+			Intent helpIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("intellicare://day-to-day/lesson/" + R.array.four_titles + "/" + R.array.four_urls));
+			this.startActivity(helpIntent);
+		}
+		else if (item.getItemId() == R.id.action_five)
+		{
+			Intent helpIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("intellicare://day-to-day/lesson/" + R.array.five_titles + "/" + R.array.five_urls));
 			this.startActivity(helpIntent);
 		}
 		

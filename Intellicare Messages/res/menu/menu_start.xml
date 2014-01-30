@@ -32,4 +32,28 @@
         android:id="@+id/action_help"
         robot:showAsAction="never"
         android:title="@string/action_help"/>
+    <item
+        android:id="@+id/action_one"
+        robot:showAsAction="never"
+        android:title="Lesson One"/>
+    <item
+        android:id="@+id/action_one"
+        robot:showAsAction="never"
+        android:title="Lesson One"/>
+    <item
+        android:id="@+id/action_two"
+        robot:showAsAction="never"
+        android:title="Lesson Two"/>
+    <item
+        android:id="@+id/action_three"
+        robot:showAsAction="never"
+        android:title="Lesson Three"/>
+    <item
+        android:id="@+id/action_four"
+        robot:showAsAction="never"
+        android:title="Lesson Four"/>
+    <item
+        android:id="@+id/action_five"
+        robot:showAsAction="never"
+        android:title="Lesson Five"/>
 </menu>

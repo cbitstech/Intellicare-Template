@@ -8,7 +8,8 @@
     <string name="action_settings">Settings</string>
     <string name="action_refresh">Refresh Apps</string>
     
-    <string name="app_store_json">http://intellicare.cbits.northwestern.edu/apps/apps.json</string>
+    <string name="app_store_json_release">http://intellicare.cbits.northwestern.edu/apps/release.json</string>
+    <string name="app_store_json_debug">http://intellicare.cbits.northwestern.edu/apps/debug.json</string>
     
     <string-array name="app_names">
         <item>Day-to-Day</item>

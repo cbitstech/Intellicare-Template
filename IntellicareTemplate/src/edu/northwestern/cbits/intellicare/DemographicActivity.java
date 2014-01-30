@@ -1,10 +1,17 @@
 package edu.northwestern.cbits.intellicare;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -273,6 +280,49 @@ public class DemographicActivity extends FormQuestionActivity
 	
 	protected boolean canSubmit() 
 	{
-		return this._payload.size() >= 5;
+		if (this._payload.size() >= 5)
+		{
+			File root = Environment.getExternalStorageDirectory();
+			
+			File intellicare = new File(root, "Intellicare Shared");
+			
+			if (intellicare.exists() == false)
+				intellicare.mkdirs();
+	
+			File consent = new File(intellicare, "Demographic Record.txt");
+			
+			try 
+			{
+				TimeZone tz = TimeZone.getTimeZone("UTC");
+	
+				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+				df.setTimeZone(tz);
+				
+				PrintWriter out = new PrintWriter(consent);
+				out.print(df.format(new Date()));
+				out.close();
+			} 
+			catch (FileNotFoundException e) 
+			{
+				e.printStackTrace();
+			}
+			
+			return true;
+		}
+		
+		return false;
+	}
+
+	public static boolean showedQuestionnaire() 
+	{
+		File root = Environment.getExternalStorageDirectory();
+		File intellicare = new File(root, "Intellicare Shared");
+
+		if (intellicare.exists() == false)
+			intellicare.mkdirs();
+		
+		File recruitment = new File(intellicare, "Demographic Record.txt");
+		
+		return recruitment.exists();
 	}
 }

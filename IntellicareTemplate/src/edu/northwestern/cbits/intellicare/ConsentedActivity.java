@@ -30,6 +30,12 @@ public class ConsentedActivity extends ActionBarActivity
 			
 			this.startActivity(activity);
 		}
+		else if (DemographicActivity.showedQuestionnaire() == false)
+		{
+			Intent activity = new Intent(this, DemographicActivity.class);
+			
+			this.startActivity(activity);
+		}
 		else if (this.showedConductor() == false)
 		{
 			try 

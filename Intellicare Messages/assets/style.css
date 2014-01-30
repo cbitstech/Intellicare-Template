@@ -8,7 +8,7 @@ img
 {
 	max-width: 100%;
 	height: auto;
-	width: auto; /* for ie9 */
+	width: 100%; /* for ie9 */
 	margin: 0 0 1em;
 	box-shadow: 0 -2px 5px 5px #888888;
 }
