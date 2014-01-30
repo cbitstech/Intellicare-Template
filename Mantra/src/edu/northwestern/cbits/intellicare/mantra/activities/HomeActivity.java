@@ -2,9 +2,6 @@ package edu.northwestern.cbits.intellicare.mantra.activities;
 
 import edu.northwestern.cbits.intellicare.mantra.FocusBoardGridFragment;
 import edu.northwestern.cbits.intellicare.mantra.R;
-import edu.northwestern.cbits.intellicare.mantra.R.id;
-import edu.northwestern.cbits.intellicare.mantra.R.layout;
-import edu.northwestern.cbits.intellicare.mantra.R.menu;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

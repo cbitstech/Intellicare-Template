@@ -1,7 +1,6 @@
 package edu.northwestern.cbits.intellicare.mantra.activities;
 
 import edu.northwestern.cbits.intellicare.mantra.R;
-import edu.northwestern.cbits.intellicare.mantra.R.layout;
 import android.app.Activity;
 import android.os.Bundle;
 

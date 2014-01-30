@@ -3,9 +3,8 @@ package edu.northwestern.cbits.intellicare.mantra.activities;
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper;
 import edu.northwestern.cbits.intellicare.mantra.FocusBoardCursorAdapter;
 import edu.northwestern.cbits.intellicare.mantra.FocusBoardManager;
-import edu.northwestern.cbits.intellicare.mantra.R;
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusBoardCursor;
-import edu.northwestern.cbits.intellicare.mantra.R.layout;
+import edu.northwestern.cbits.intellicare.mantra.R;
 import android.app.ListActivity;
 import android.os.Bundle;
 

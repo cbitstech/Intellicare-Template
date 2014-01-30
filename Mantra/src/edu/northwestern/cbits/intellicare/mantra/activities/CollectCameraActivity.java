@@ -11,8 +11,6 @@ import edu.northwestern.cbits.intellicare.mantra.CameraPreview;
 import edu.northwestern.cbits.intellicare.mantra.FocusBoardManager;
 import edu.northwestern.cbits.intellicare.mantra.FocusImage;
 import edu.northwestern.cbits.intellicare.mantra.R;
-import edu.northwestern.cbits.intellicare.mantra.R.id;
-import edu.northwestern.cbits.intellicare.mantra.R.layout;
 
 import android.app.Activity;
 import android.content.Intent;

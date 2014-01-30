@@ -1,10 +1,6 @@
 package edu.northwestern.cbits.intellicare.mantra.activities;
 
 import edu.northwestern.cbits.intellicare.mantra.R;
-import edu.northwestern.cbits.intellicare.mantra.R.array;
-import edu.northwestern.cbits.intellicare.mantra.R.id;
-import edu.northwestern.cbits.intellicare.mantra.R.layout;
-import edu.northwestern.cbits.intellicare.mantra.R.menu;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;

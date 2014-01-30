@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import edu.northwestern.cbits.intellicare.mantra.PhotoAdapter;
 import edu.northwestern.cbits.intellicare.mantra.R;
-import edu.northwestern.cbits.intellicare.mantra.R.layout;
 
 import android.app.ListActivity;
 import android.os.Bundle;
