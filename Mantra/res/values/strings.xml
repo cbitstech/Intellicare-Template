@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Mantra</string>
+    <string name="action_new_focus_board">New Focus Board</string>
+    <string name="focus_boards_header">Focus Boards</string>
+    <string name="new_mantra_input_label">add a new mantra</string>
+    <string name="new_mantra_examples_label">or select a mantra</string>
+    <string name="new_mantra_label">New Mantra</string>
+    <string name="new_mantra_placeholder">Enter your mantra here</string>
+
+    <string-array name="sample_mantras">
+        <item></item>
+        <item>You are loved - despite your sadness</item>
+        <item>You are strong</item>
+        <item>I think I can</item>
+        <item>Just do it</item>
+    </string-array>
+
+    <string name="empty_mantra_toast">Please write or select a mantra.</string>
+    <string name="collect_camera_label">Collect</string>
+    <string name="camera_capture_button_label">Capture</string>
+    <string name="browse_photos_label">Mantra Photos</string>
+    <string name="new_focus_board_label">New Focus Board</string>
+    <string name="new_focus_board_cancel_label">Cancel</string>
+    <string name="new_focus_board_submit_label">Create</string>
+    <string name="new_image_action">New Image</string>
+    <string name="focus_board_list_label">Focus Boards</string>
+    <string name="focus_board_label">Focus Board</string>
+    <string name="image_thumbnail_alt">Image Thumbnail</string>
+
+</resources>

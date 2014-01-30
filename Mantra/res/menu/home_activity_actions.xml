@@ -1,0 +1,7 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:mantra="http://schemas.android.com/apk/res-auto" >
+    <item android:id="@+id/action_new_focus_board"
+          android:icon="@drawable/content_new"
+          android:title="@string/action_new_focus_board"
+          mantra:showAsAction="always" />
+</menu>
