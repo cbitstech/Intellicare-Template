@@ -11,10 +11,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
@@ -28,11 +30,11 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.provider.MediaStore.Audio;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -71,6 +73,13 @@ public class ClockActivity extends Activity
 	private Handler _handler = null;
 	private long _lastEventQuery = 0;
 	private Event _lastEvent = null;
+	
+	private BroadcastReceiver _startAlarmReceiver = null;
+	private BroadcastReceiver _endAlarmReceiver = null;
+	private Uri _lastAudioUri = null;
+	
+	private AlertDialog _alarmDialog = null;
+	
 	protected float _currentBrightness;
 	protected long _searchLastUpdate = 0;
 	protected AlertDialog _toneListDialog = null;
@@ -582,11 +591,6 @@ public class ClockActivity extends Activity
 									{
 										public void bindView (View matchView, Context context, Cursor cursor)
 										{
-											for (int i = 0; i < cursor.getColumnCount(); i++)
-											{
-												Log.e("ST", "MEDIA COL " + cursor.getColumnName(i));
-											}
-											
 											TextView title = (TextView) matchView.findViewById(R.id.label_title);
 											title.setText(cursor.getString(cursor.getColumnIndex(Audio.AudioColumns.TITLE)));
 	
@@ -607,8 +611,6 @@ public class ClockActivity extends Activity
 	
 											final String title = c.getString(c.getColumnIndex(Audio.AudioColumns.TITLE));
 											final String data = c.getString(c.getColumnIndex(Audio.AudioColumns.DATA));
-													
-											Log.e("ST", "T: " + title + " -- D: " + data);
 											
 											AlertDialog.Builder builder = new AlertDialog.Builder(me);
 											builder = builder.setTitle(title);
@@ -796,8 +798,6 @@ public class ClockActivity extends Activity
 							ContentValues values = new ContentValues();
 							values.put(SlumberContentProvider.NOTE_TEXT, logText);
 							values.put(SlumberContentProvider.NOTE_TIMESTAMP, now);
-							
-							Log.e("ST", "VALUES: " + values);
 							
 							me.getContentResolver().insert(SlumberContentProvider.NOTES_URI, values);
 							
@@ -1080,12 +1080,12 @@ public class ClockActivity extends Activity
 			Intent homeIntent = new Intent(this, HomeActivity.class);
 			this.startActivity(homeIntent);
 		}
+
+		final ClockActivity me = this;
 		
 		if (this._handler == null)
 		{
 			this._handler = new Handler();
-			
-			final ClockActivity me = this;
 			
 			this._handler.postDelayed(new Runnable()
 			{
@@ -1099,12 +1099,99 @@ public class ClockActivity extends Activity
 				
 			}, 250);
 		}
+		
+		LocalBroadcastManager broadcasts = LocalBroadcastManager.getInstance(this.getApplicationContext());
+		
+		if (this._startAlarmReceiver == null)
+		{
+			this._startAlarmReceiver = new BroadcastReceiver()
+			{
+				public void onReceive(final Context context, final Intent intent) 
+				{
+					me.runOnUiThread(new Runnable()
+					{
+						public void run() 
+						{
+							WindowManager.LayoutParams params = me.getWindow().getAttributes();
+							params.screenBrightness = 1.0f;
+							me.getWindow().setAttributes(params);
+
+							if (me._alarmDialog != null)
+							{
+								me._alarmDialog.dismiss();
+								me._alarmDialog = null;
+							}
+							
+							String name = intent.getStringExtra(SlumberContentProvider.ALARM_NAME);
+
+							AlertDialog.Builder builder = new AlertDialog.Builder(me);
+							
+							builder = builder.setTitle(R.string.title_cancel_alarm);
+							builder = builder.setMessage(context.getString(R.string.message_cancel_alarm, name));
+							builder = builder.setPositiveButton(R.string.button_cancel_alarm, new DialogInterface.OnClickListener()
+							{
+								public void onClick(DialogInterface dialog, int which) 
+								{
+									Intent stopIntent = new Intent(AlarmService.STOP_ALARM, null, context, AlarmService.class);
+									context.startService(stopIntent);
+								}
+							});
+							
+							me._alarmDialog = builder.create();
+							me._alarmDialog.show();						
+						}
+					});
+				}
+			};
+			
+			IntentFilter filter = new IntentFilter(AlarmService.START_ALARM);
+			filter.addDataScheme("file");
+			
+			broadcasts.registerReceiver(this._startAlarmReceiver, filter);
+		}
+
+		if (this._endAlarmReceiver == null)
+		{
+			this._endAlarmReceiver = new BroadcastReceiver()
+			{
+				public void onReceive(final Context context, final Intent intent) 
+				{
+					me.runOnUiThread(new Runnable()
+					{
+						public void run() 
+						{
+							me._alarmDialog.dismiss();
+							
+							me._alarmDialog = null;
+						}
+					});
+				}
+			};
+			
+			IntentFilter filter = new IntentFilter(AlarmService.STOP_ALARM);
+			
+			broadcasts.registerReceiver(this._endAlarmReceiver, filter);
+		}
 	}
 	
 	protected void onPause()
 	{
 		super.onPause();
-		
+
+		LocalBroadcastManager broadcasts = LocalBroadcastManager.getInstance(this.getApplicationContext());
+
+		if (this._startAlarmReceiver != null)
+		{
+			broadcasts.unregisterReceiver(this._startAlarmReceiver);
+			this._startAlarmReceiver = null;
+		}
+
+		if (this._endAlarmReceiver != null)
+		{
+			broadcasts.unregisterReceiver(this._endAlarmReceiver);
+			this._endAlarmReceiver = null;
+		}
+
 		this._handler.removeCallbacksAndMessages(null);
 		this._handler = null;
 	}

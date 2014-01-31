@@ -132,8 +132,12 @@
 	<string name="action_audio_use">Use audio as alarm tone&#8230;</string>
 	<string name="action_add_alarm">Create new alarm&#8230;</string>
 	<string name="title_delete_alarm">Remove Alarm?</string>
-	<string name="message_delete_alarm" formatted="false">Are you sure you wish to remove this alarm?\n\n%s</string>
-			
+	<string name="message_delete_alarm" formatted="false">Are you sure you wish to remove this alarm?\n\n%s\n\n</string>
+	<string name="title_cancel_alarm">Cancel Alarm</string>
+	<string name="message_cancel_alarm" formatted="false">Now Playing:\n\n%s\n\n</string>
+	<string name="button_cancel_alarm">Cancel Alarm</string>
+	<string name="note_slumber_time" formatted="false">Slumber Time Alarm: %s</string>
+				
 	<string name="abbrev_sunday">Su</string>
 	<string name="abbrev_monday">M</string>
 	<string name="abbrev_tuesday">Tu</string>
