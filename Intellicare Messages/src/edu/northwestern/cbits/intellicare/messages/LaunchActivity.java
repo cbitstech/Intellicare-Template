@@ -125,30 +125,9 @@ public class LaunchActivity extends ConsentedActivity
 			Intent helpIntent = new Intent(this, HelpActivity.class);
 			this.startActivity(helpIntent);
 		}
-		else if (item.getItemId() == R.id.action_one)
+		else if (item.getItemId() == R.id.action_feedback)
 		{
-			Intent helpIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("intellicare://day-to-day/lesson/" + R.array.one_titles + "/" + R.array.one_urls));
-			this.startActivity(helpIntent);
-		}
-		else if (item.getItemId() == R.id.action_two)
-		{
-			Intent helpIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("intellicare://day-to-day/lesson/" + R.array.two_titles + "/" + R.array.two_urls));
-			this.startActivity(helpIntent);
-		}
-		else if (item.getItemId() == R.id.action_three)
-		{
-			Intent helpIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("intellicare://day-to-day/lesson/" + R.array.three_titles + "/" + R.array.three_urls));
-			this.startActivity(helpIntent);
-		}
-		else if (item.getItemId() == R.id.action_four)
-		{
-			Intent helpIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("intellicare://day-to-day/lesson/" + R.array.four_titles + "/" + R.array.four_urls));
-			this.startActivity(helpIntent);
-		}
-		else if (item.getItemId() == R.id.action_five)
-		{
-			Intent helpIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("intellicare://day-to-day/lesson/" + R.array.five_titles + "/" + R.array.five_urls));
-			this.startActivity(helpIntent);
+			this.sendFeedback(this.getString(R.string.app_name));
 		}
 		
 		return true;

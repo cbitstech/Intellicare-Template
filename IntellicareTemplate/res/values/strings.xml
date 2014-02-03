@@ -158,6 +158,17 @@
 	<string name="install_intellicare_message">This app is part of a larger suite of apps called Intellicare. Would you like to install the main app that manages this and other Intellicare apps?</string>
 	<string name="install_intellicare_no">No</string>
 	<string name="install_intellicare_yes">Yes</string>
-	<string name="install_intellicare_link">http://intellicare.cbits.northwestern.edu/media/app_versions/Conductor_1.apk</string>
-					
+	<string name="install_intellicare_link">https://play.google.com/store/apps/details?id=edu.northwestern.cbits.intellicare.conductor</string>
+	
+	<string name="title_beta_testing">Pardon our dust</string>
+	<string name="message_beta_testing">We appreciate that you downloaded and will be using this app.\n\nPlease keep in mind that it\'s still under active development. If you experience an issue, please let us know by sending an e-mail from the Feedback item in the Options menu.</string>
+	<string name="button_continue">Continue</string>
+	
+	<string name="email_feedback_address">c-karr@northwestern.edu</string>
+	<string name="email_feedback_subject" formatted="false">Feedback: %s</string>
+	<string name="email_feedback_body" formatted="false">Have thoughts about %s? Let us know!</string>
+	<string name="email_toast_no_client">Unable to send message using standard client. Please send a note to c-karr@northwestern.edu and let us know what\'s going on.</string>
+
+	<string name="action_feedback">Feedback</string>
+											
 </resources>

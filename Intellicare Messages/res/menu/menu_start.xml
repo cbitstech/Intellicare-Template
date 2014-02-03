@@ -1,29 +1,4 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:robot="http://schemas.android.com/apk/res-auto">
-    <!-- <item
-        android:id="@+id/action_schedule"
-        android:icon="@drawable/ic_action_clock"
-        robot:showAsAction="always"
-        android:title="@string/action_schedule"/>
-	 <item
-        android:id="@+id/action_test"
-        robot:showAsAction="never"
-        android:title="@string/action_test"/> 
-    <item
-        android:id="@+id/action_phq_four"
-        robot:showAsAction="never"
-        android:title="@string/phq_title"/>
-    <item
-        android:id="@+id/action_motivation"
-        robot:showAsAction="never"
-        android:title="Motivation (TBR)"/>
-    <item
-        android:id="@+id/action_test"
-        robot:showAsAction="never"
-        android:title="@string/test_title"/>
-    <item
-        android:id="@+id/action_demographic"
-        robot:showAsAction="never"
-        android:title="@string/demographic_title"/> -->
     <item
         android:id="@+id/action_settings"
         robot:showAsAction="never"
@@ -33,27 +8,7 @@
         robot:showAsAction="never"
         android:title="@string/action_help"/>
     <item
-        android:id="@+id/action_one"
+        android:id="@+id/action_feedback"
         robot:showAsAction="never"
-        android:title="Lesson One"/>
-    <item
-        android:id="@+id/action_one"
-        robot:showAsAction="never"
-        android:title="Lesson One"/>
-    <item
-        android:id="@+id/action_two"
-        robot:showAsAction="never"
-        android:title="Lesson Two"/>
-    <item
-        android:id="@+id/action_three"
-        robot:showAsAction="never"
-        android:title="Lesson Three"/>
-    <item
-        android:id="@+id/action_four"
-        robot:showAsAction="never"
-        android:title="Lesson Four"/>
-    <item
-        android:id="@+id/action_five"
-        robot:showAsAction="never"
-        android:title="Lesson Five"/>
+        android:title="@string/action_feedback"/>
 </menu>

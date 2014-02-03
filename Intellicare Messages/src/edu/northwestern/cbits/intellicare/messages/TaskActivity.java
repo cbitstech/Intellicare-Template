@@ -11,10 +11,9 @@ import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.MenuItem;
+import android.view.Menu;
 import android.view.View;
 import android.webkit.WebView;
-import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.RatingActivity;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 import edu.northwestern.cbits.intellicare.messages.ScheduleManager.Message;
@@ -91,20 +90,7 @@ public class TaskActivity extends RatingActivity
 
 		this.finish();
 	}
-
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
-		if (item.getItemId() ==  R.id.action_done)
-		{
-			if (this._rating == 0)
-				Toast.makeText(this, R.string.message_complete_form, Toast.LENGTH_LONG).show();
-			else
-				this.close();
-		}
-
-		return true;
-	}
-
+	
 	protected void onNewIntent (Intent intent)
 	{
 		super.onNewIntent(intent);
@@ -169,6 +155,11 @@ public class TaskActivity extends RatingActivity
 		this.getSupportActionBar().setTitle(R.string.task_title);
 		
 		this.setContent("file:///android_asset/lesson_images/" + image, message);
+	}
+
+	public boolean onCreateOptionsMenu(Menu menu) 
+	{
+		return true;
 	}
 
 	public static Uri uriForTask(Message message) 
