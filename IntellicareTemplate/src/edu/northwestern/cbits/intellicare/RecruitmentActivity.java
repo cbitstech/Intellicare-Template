@@ -136,7 +136,7 @@ public class RecruitmentActivity extends ActionBarActivity
 	{
 		super.onResume();
 		
-		if (RecruitmentActivity.showedRecruitment())
+		if (RecruitmentActivity.showedRecruitment() && this.getIntent().getData() == null)
 			this.finish();
 	}
 	

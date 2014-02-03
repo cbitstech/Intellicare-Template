@@ -118,12 +118,12 @@
     <string name="phq4_message">Please fill out this personal questionnaire.</string>
 
     <string name="recruitment_title">Recruitment</string>
-    <string name="recruitment_intro">CBITs, a research group at Northwestern University, created this app to help people suffering from mood disorders. To learn more about our other projects, please complete the form below.</string>
+    <string name="recruitment_intro">We are always looking for participants for future research studies. \n\nIf you agree that someone may contact you in the future, after your participation in this study is over, to ask you to be in more research, please fill out the form below. Agreeing to be contacted increases the risk to your privacy. It will be your responsibility to tell the project if your contact information changes.\n\nIf you do not agree that someone may contact you in the future, after your participation in this study is over, and to ask you to be in more research, simply select the "Skip" option above.</string>
     <string name="recruitment_name_label">Your name:</string>
     <string name="recruitment_email_label">Your preferred e-mail:</string>
     <string name="recruitment_phone_label">Phone number (optional):</string>
     <string name="recruitment_time_label">Best time to contact you (optional):</string>
-    <string name="recruitment_time_choose">Tap to choose a time&#8230;</string>
+    <string name="recruitment_time_choose">(Tap to choose a time&#8230;)</string>
 
     <string name="recruitment_time_title">Best time to contact</string>
     <string-array name="recruitment_time_labels">

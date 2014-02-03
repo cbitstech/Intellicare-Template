@@ -281,6 +281,8 @@ public class LogManager
 					HttpEntity httpEntity = response.getEntity();
 					
 					Log.e("PR-LOGGING", "Log upload result: " + EntityUtils.toString(httpEntity));
+					
+					httpEntity.consumeContent();
 				}
 				
 				mgr.shutdown();
