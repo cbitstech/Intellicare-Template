@@ -101,5 +101,14 @@
 	<string name="dialog_no_apps_yes">Yes!</string>
 							
 	<string name="msg_update_available" formatted="false">%s %s is now available. Tap here to download and install the update&#8230;</string>
+	
+	<string name="settings_group_assessments">Assessments</string>
+	<string name="prefs_phq4_form">Patient Health Questionnaire (PHQ-4)</string>
+	<string name="prefs_consent_form">Consent Form</string>
+	<string name="prefs_motivation_form">Motivation Questionnaire</string>
+	<string name="prefs_demographic_form">Demographic Questionnaire</string>
+	<string name="prefs_recruitment_form">Recruitment Form</string>
+
+	<string name="toast_avatar_in_progress">The avatar view is still under construction&#8230;</string>
 </resources>
 

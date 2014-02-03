@@ -254,8 +254,10 @@ public class MainActivity extends ConsentedActivity
         {
 			public void onClick(View view) 
 			{
-				Intent nativeIntent = new Intent(me, AvatarActivity.class);
-				me.startActivity(nativeIntent);
+//				Intent nativeIntent = new Intent(me, AvatarActivity.class);
+//				me.startActivity(nativeIntent);
+				
+				Toast.makeText(me, R.string.toast_avatar_in_progress, Toast.LENGTH_SHORT).show();
 			}
         });
         
@@ -492,6 +494,8 @@ public class MainActivity extends ConsentedActivity
 			Intent nativeIntent = new Intent(this, AppStoreActivity.class);
 			this.startActivity(nativeIntent);
 		}
+		else if (item.getItemId() == R.id.action_feedback)
+			this.sendFeedback(this.getString(R.string.app_name));
 
 		return true;
 	}

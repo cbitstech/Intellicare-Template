@@ -7,4 +7,21 @@
 		    android:summary="@string/desc_forward_notifications"
 		    android:defaultValue="true" />        
 	</PreferenceCategory>
+    <PreferenceCategory android:title="@string/settings_group_assessments">
+		<Preference android:title="@string/prefs_phq4_form" >
+    		<intent android:action="android.intent.action.VIEW" android:data="intellicare://phq4" />
+		</Preference>
+		<Preference android:title="@string/prefs_consent_form" >
+    		<intent android:action="android.intent.action.VIEW" android:data="intellicare://consent" />
+		</Preference>
+		<Preference android:title="@string/prefs_recruitment_form" >
+    		<intent android:action="android.intent.action.VIEW" android:data="intellicare://recruitment" />
+		</Preference>
+		<Preference android:title="@string/prefs_motivation_form" >
+    		<intent android:action="android.intent.action.VIEW" android:data="intellicare://motivation" />
+		</Preference>
+		<Preference android:title="@string/prefs_demographic_form" >
+    		<intent android:action="android.intent.action.VIEW" android:data="intellicare://demographic" />
+		</Preference>
+			</PreferenceCategory>
 </PreferenceScreen>
