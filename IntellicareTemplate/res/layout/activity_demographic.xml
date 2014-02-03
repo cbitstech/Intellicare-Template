@@ -23,8 +23,8 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:textStyle="bold"
-	        android:textColor="#008000"
-	        android:textSize="14sp"
+	        android:textColor="#0099cc"
+	        android:textSize="18sp"
 	        android:layout_marginBottom="16dp" />
 
   	    <TextView android:id="@+id/gender_label"  
@@ -37,8 +37,8 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:textStyle="bold"
-	        android:textColor="#008000"
-	        android:textSize="14sp"
+	        android:textColor="#0099cc"
+	        android:textSize="18sp"
 	        android:layout_marginBottom="16dp" />
 
    	    <TextView android:id="@+id/ethnicity_label"  
@@ -51,8 +51,8 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:textStyle="bold"
-	        android:textColor="#008000"
-	        android:textSize="14sp"
+	        android:textColor="#0099cc"
+	        android:textSize="18sp"
 	        android:layout_marginBottom="16dp" />
 	    
    	    <TextView android:id="@+id/race_label" 
@@ -65,8 +65,8 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:textStyle="bold"
-	        android:textColor="#008000"
-	        android:textSize="14sp"
+	        android:textColor="#0099cc"
+	        android:textSize="18sp"
 	        android:layout_marginBottom="16dp" />
 
   	    <TextView android:id="@+id/education_label"  
@@ -79,8 +79,8 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:textStyle="bold"
-	        android:textColor="#008000"
-	        android:textSize="14sp"
+	        android:textColor="#0099cc"
+	        android:textSize="18sp"
 	        android:layout_marginBottom="16dp" />
    	</LinearLayout>
 </ScrollView>

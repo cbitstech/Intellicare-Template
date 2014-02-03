@@ -23,5 +23,8 @@
 		<Preference android:title="@string/prefs_demographic_form" >
     		<intent android:action="android.intent.action.VIEW" android:data="intellicare://demographic" />
 		</Preference>
-			</PreferenceCategory>
+		<Preference android:title="@string/prefs_sleep_diary_form" android:key="sleep_diary_url">
+    		<intent android:action="android.intent.action.VIEW" android:data="intellicare://sleep-diary" />
+		</Preference>
+	</PreferenceCategory>
 </PreferenceScreen>

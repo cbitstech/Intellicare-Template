@@ -108,7 +108,10 @@
 	<string name="prefs_motivation_form">Motivation Questionnaire</string>
 	<string name="prefs_demographic_form">Demographic Questionnaire</string>
 	<string name="prefs_recruitment_form">Recruitment Form</string>
-
+	<string name="prefs_sleep_diary_form">Sleep Diary</string>
+	
+	<string name="summary_install_slumber_time">Install Slumber Time to access this form.</string>
+	
 	<string name="toast_avatar_in_progress">The avatar view is still under construction&#8230;</string>
 </resources>
 

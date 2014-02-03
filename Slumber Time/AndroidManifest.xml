@@ -18,7 +18,14 @@
         <activity android:theme="@style/Theme.AppCompat" android:name=".ClockActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".SleepLogActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".SleepDiaryActivity" android:label="@string/app_name" />
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".AddSleepDiaryActivity" android:label="@string/app_name" />
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".AddSleepDiaryActivity" android:label="@string/app_name">
+   			<intent-filter>
+		        <action android:name="android.intent.action.VIEW" />
+        	    <category android:name="android.intent.category.DEFAULT" />
+            	<category android:name="android.intent.category.BROWSABLE" />
+   			    <data android:scheme="intellicare" android:host="sleep-diary" />
+			</intent-filter>
+		</activity>
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".BedtimeChecklistActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".EditBedtimeChecklistActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.ConsentActivity" android:label="@string/app_name" />

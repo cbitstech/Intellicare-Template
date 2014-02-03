@@ -3,7 +3,10 @@ package edu.northwestern.cbits.intellicare.conductor;
 import java.util.HashMap;
 
 import edu.northwestern.cbits.intellicare.logging.LogManager;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 
 public class SettingsActivity extends PreferenceActivity 
@@ -16,6 +19,14 @@ public class SettingsActivity extends PreferenceActivity
 		this.setTitle(R.string.title_settings);
 		
 		this.addPreferencesFromResource(R.layout.activity_settings);
+		
+		Preference sleepDiaryPref = this.findPreference("sleep_diary_url");
+		
+		if (this.packageInstalled("edu.northwestern.cbits.intellicare.slumbertime") == false)
+		{
+			sleepDiaryPref.setEnabled(false);
+			sleepDiaryPref.setSummary(R.string.summary_install_slumber_time);
+		}
 	}
 	
 	public void onResume()
@@ -33,4 +44,18 @@ public class SettingsActivity extends PreferenceActivity
 		
 		super.onPause();
 	}
+	
+	private boolean packageInstalled(String packageName)
+	{
+        PackageManager pm = this.getPackageManager();        
+
+        for (ApplicationInfo packageInfo : pm.getInstalledApplications(0)) 
+        {
+        	if(packageInfo.packageName.equals(packageName)) 
+        		return true;
+        }       
+        
+        return false;
+    }
+
 }
