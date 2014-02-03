@@ -189,6 +189,10 @@ public class IndexActivity extends ConsentedActivity
 			Intent settingsIntent = new Intent(this, SettingsActivity.class);
 			this.startActivity(settingsIntent);
 		}
+		else if (item.getItemId() == R.id.action_feedback)
+		{
+			this.sendFeedback(this.getString(R.string.app_name));
+		}
 		
 		return true;
 	}

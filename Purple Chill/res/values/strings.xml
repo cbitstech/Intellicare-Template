@@ -24,7 +24,7 @@
         <item>file:///android_asset/www/help_0.html</item>
 	</string-array>
 	<string-array name="help_titles">
-        <item>Purple Chill Introduction (1/?)</item>
+        <item>Purple Chill Introduction</item>
     </string-array>
 
     <string name="breathing_title">Breathing Exercises</string>
