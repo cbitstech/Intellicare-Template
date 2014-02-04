@@ -102,7 +102,8 @@
 	
 	<string name="db_create_responses_table">CREATE TABLE IF NOT EXISTS responses (_id INTEGER PRIMARY KEY NOT NULL, depression_level INTEGER NOT NULL, recorded INTEGER NOT NULL, feat TEXT NOT NULL);</string>
 	<string name="db_create_feats_table">CREATE TABLE IF NOT EXISTS feats (_id INTEGER PRIMARY KEY NOT NULL, feat_name VARCHAR(255) NOT NULL, feat_level INTEGER NOT NULL);</string>
-
+	<string name="db_alter_feats_table_add_enabled">ALTER TABLE feats ADD COLUMN enabled INTEGER DEFAULT 1;</string>
+	
 	<string name="feat_1_0">I got out of bed.</string>	
 	<string name="feat_1_1">I groomed myself.</string>	
 	<string name="feat_1_2">I am satisfied with how I ate.</string>	
@@ -124,5 +125,29 @@
 	
 	<string name="note_title">Daily Feats</string>
 	<string name="note_message">It\'s time to enter your feats for the day!</string>
+
+	<string name="action_last_month">Last Month</string>
+	<string name="action_next_month">Next Month</string>
+
+	<string name="action_today">Today</string>
+
+	<string name="label_category" formatted="false">Level %d</string>
+	<string name="label_category_my_feats">My Feats</string>
 		
+	<string name="action_edit_feats">Edit Feats List</string>
+	<string name="tool_edit_feats_checklist">Edit Feats Checklist</string>
+	<string name="subtitle_edit_feats_checklist">Uncheck feats to hide</string>
+	<string name="action_add_item">Add Feat</string>
+
+	<string name="button_close">Close</string>
+	<string name="button_save">Save</string>
+	<string name="button_cancel">Cancel</string>
+	<string name="button_remove">Remove</string>
+	
+	<string name="title_delete_feat">Delete feat?</string>
+	<string name="message_delete_feat" formatted="false">Are you sure that you want to delete this feat:\n\n%s\n</string>
+	<string name="toast_feat_added">New feat added.</string>
+	<string name="toast_feat_removed">Feat removed.</string>
+	<string name="title_add_feat_item">Add new feat</string>
+	<string name="hint_add_feat_item">Your new feat</string>
 </resources>

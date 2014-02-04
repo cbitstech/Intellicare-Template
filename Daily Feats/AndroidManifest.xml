@@ -35,6 +35,7 @@
    				<data android:scheme="intellicare" android:host="daily-feats" android:pathPrefix="/home" />
             </intent-filter>
         </activity>
+        <activity android:name="edu.northwestern.cbits.intellicare.dailyfeats.EditFeatsChecklistActivity" android:label="@string/title_activity_view_feat_collection" android:theme="@style/Theme.AppCompat.Light" />
         <activity android:name="edu.northwestern.cbits.intellicare.dailyfeats.HomeActivity" android:label="@string/title_activity_view_feat_collection" android:theme="@style/Theme.AppCompat.Light" />
         <activity android:name="edu.northwestern.cbits.intellicare.dailyfeats.IntroActivity" android:label="@string/title_activity_view_feat_collection" android:theme="@style/Theme.AppCompat.Light" />
         <activity android:name="edu.northwestern.cbits.intellicare.dailyfeats.ChecklistActivity" android:label="@string/title_activity_view_feat_collection" android:theme="@style/Theme.AppCompat.Light" />

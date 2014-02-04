@@ -3,6 +3,9 @@
  */
 package edu.northwestern.cbits.intellicare.dailyfeats;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
@@ -31,7 +34,7 @@ public class FeatsProvider extends android.content.ContentProvider
     private UriMatcher mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     private SQLiteDatabase mDb = null;
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     
     public FeatsProvider()
     {
@@ -45,7 +48,15 @@ public class FeatsProvider extends android.content.ContentProvider
 
     public int delete(Uri uri, String selection, String[] selectionArgs)
     {
-        return 0;
+        switch(this.mUriMatcher.match(uri))
+        {
+	        case FeatsProvider.FEATS:
+	            return this.mDb.delete(FeatsProvider.FEATS_TABLE, selection, selectionArgs);
+	        case FeatsProvider.RESPONSES:
+	            return this.mDb.delete(FeatsProvider.RESPONSES_TABLE, selection, selectionArgs);
+        }
+
+		return 0;
     }
 
     public boolean onCreate()
@@ -143,6 +154,8 @@ public class FeatsProvider extends android.content.ContentProvider
                 {
                     case 0:
                     	
+                    case 1: 
+	                	db.execSQL(context.getString(R.string.db_alter_feats_table_add_enabled));
                     default:
                     	break;
                 }
@@ -244,8 +257,76 @@ public class FeatsProvider extends android.content.ContentProvider
         return selection;
     }
 
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs)
-    {
-        return 0;
-    }
+	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) 
+	{
+        switch(this.mUriMatcher.match(uri))
+        {
+	        case FeatsProvider.FEATS:
+	            return this.mDb.update(FeatsProvider.FEATS_TABLE, values, selection, selectionArgs);
+        }
+
+		return 0;
+	}
+
+	public static boolean hasFeatForDate(Context context, String featName, Date date) 
+	{
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		
+		calendar.set(Calendar.HOUR, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+
+		long start = calendar.getTimeInMillis();
+		
+		calendar.set(Calendar.HOUR, 23);
+		calendar.set(Calendar.MINUTE, 59);
+		calendar.set(Calendar.MILLISECOND, 999);
+
+		long end = calendar.getTimeInMillis();
+
+		String selection = "recorded >= ? AND recorded <= ? AND feat = ?";
+		String[] args = { "" + start, "" + end, featName };
+		
+		Cursor c = context.getContentResolver().query(FeatsProvider.RESPONSES_URI, null, selection, args, null);
+		
+		boolean hasFeat = c.getCount() > 0;
+		
+		c.close();
+		
+		return hasFeat;
+	}
+	
+	public static void clearFeats(Context context, String featName, Date date)
+	{
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		
+		calendar.set(Calendar.HOUR, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+
+		long start = calendar.getTimeInMillis();
+		
+		calendar.set(Calendar.HOUR, 23);
+		calendar.set(Calendar.MINUTE, 59);
+		calendar.set(Calendar.MILLISECOND, 999);
+
+		long end = calendar.getTimeInMillis();
+
+		String selection = "recorded >= ? AND recorded <= ? AND feat = ?";
+		String[] args = { "" + start, "" + end, featName };
+		
+		context.getContentResolver().delete(FeatsProvider.RESPONSES_URI, selection, args);
+	}
+	
+	public static void createFeat(Context context, String featName, int depressionLevel)
+	{
+		ContentValues values = new ContentValues();
+		values.put("depression_level", depressionLevel);
+		values.put("recorded", System.currentTimeMillis());
+		values.put("feat", featName);
+		
+		context.getContentResolver().insert(RESPONSES_URI, values);
+	}
 }

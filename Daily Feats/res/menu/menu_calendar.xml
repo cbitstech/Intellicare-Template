@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:ic="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_today"
+        android:title="@string/action_today"
+        ic:showAsAction="always"
+        android:showAsAction="always" />
+    <item android:id="@+id/action_edit_feats"
+        android:title="@string/action_edit_feats"
+        ic:showAsAction="never"
+        android:showAsAction="never" />
+    <item android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        ic:showAsAction="never"
+        android:showAsAction="never" />
+    <item android:id="@+id/action_feedback"
+        android:title="@string/action_feedback"
+        ic:showAsAction="never"
+        android:showAsAction="never" />
+</menu>
