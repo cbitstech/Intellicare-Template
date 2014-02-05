@@ -150,4 +150,7 @@
 	<string name="toast_feat_removed">Feat removed.</string>
 	<string name="title_add_feat_item">Add new feat</string>
 	<string name="hint_add_feat_item">Your new feat</string>
+
+	<string name="message_no_feats">No feats recorded for this date.</string>
+	<string name="toast_recommended_feat">Recommended based on your current mood level.</string>
 </resources>

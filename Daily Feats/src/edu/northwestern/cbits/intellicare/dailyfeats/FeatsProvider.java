@@ -329,4 +329,33 @@ public class FeatsProvider extends android.content.ContentProvider
 		
 		context.getContentResolver().insert(RESPONSES_URI, values);
 	}
+
+	public static int featCountForDate(Context context, Date date) 
+	{
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		
+		calendar.set(Calendar.HOUR, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+
+		long start = calendar.getTimeInMillis();
+		
+		calendar.set(Calendar.HOUR, 23);
+		calendar.set(Calendar.MINUTE, 59);
+		calendar.set(Calendar.MILLISECOND, 999);
+
+		long end = calendar.getTimeInMillis();
+
+		String selection = "recorded >= ? AND recorded <= ?";
+		String[] args = { "" + start, "" + end };
+		
+		Cursor c = context.getContentResolver().query(FeatsProvider.RESPONSES_URI, null, selection, args, null);
+		
+		int count = c.getCount();
+		
+		c.close();
+		
+		return count;
+	}
 }

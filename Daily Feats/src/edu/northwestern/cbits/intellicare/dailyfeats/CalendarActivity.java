@@ -2,17 +2,20 @@ package edu.northwestern.cbits.intellicare.dailyfeats;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +24,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
 import android.widget.TextView;
+import edu.emory.mathcs.backport.java.util.Collections;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.dailyfeats.views.CalendarView;
 
@@ -28,6 +32,7 @@ public class CalendarActivity extends ConsentedActivity
 {
 	private Date _currentDate = null;
 	
+	@SuppressLint("SimpleDateFormat")
 	public void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
@@ -42,8 +47,6 @@ public class CalendarActivity extends ConsentedActivity
         {
 			public void onDateChanged(Date date) 
 			{
-				Log.e("DF", "DATE: " + date);
-				
 				SimpleDateFormat sdf = new SimpleDateFormat("LLLL yyyy");
 				me.getSupportActionBar().setTitle(sdf.format(date));
 				me.getSupportActionBar().setSubtitle(R.string.app_name);
@@ -91,6 +94,8 @@ public class CalendarActivity extends ConsentedActivity
 			
 			Cursor featsCursor = this.getContentResolver().query(FeatsProvider.FEATS_URI, null, where, args, "feat_level, feat_name");
 			this.startManagingCursor(featsCursor);
+			
+	        final CalendarView calendar = (CalendarView) this.findViewById(R.id.view_calendar);
 
 			SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.row_feat_checkbox, featsCursor, new String[0], new int[0], 0)
 			{
@@ -126,6 +131,8 @@ public class CalendarActivity extends ConsentedActivity
 							}
 							else
 						        FeatsProvider.clearFeats(me, featName, me._currentDate);
+							
+							calendar.setDate(new Date(), false);
 						}
 					});
 
@@ -177,18 +184,93 @@ public class CalendarActivity extends ConsentedActivity
 			String[] args = { "" + start.getTime(), "" + end.getTime() };
 			
 			Cursor featsCursor = this.getContentResolver().query(FeatsProvider.RESPONSES_URI, null, where, args, "depression_level, feat");
-			this.startManagingCursor(featsCursor);
+			
+			String[] matrixColumns = { "_id", "feat_name", "feat_level" };
 
-			SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.row_feat_count, featsCursor, new String[0], new int[0], 0)
+			ArrayList<Object[]> rows = new ArrayList<Object[]>();
+			
+			while (featsCursor.moveToNext())
 			{
-				public void bindView (View view, Context context, Cursor cursor)
+				String selection = "feat_name = ?";
+				String[] selectionArgs = { featsCursor.getString(featsCursor.getColumnIndex("feat")) };
+				
+				Cursor itemCursor = this.getContentResolver().query(FeatsProvider.FEATS_URI, matrixColumns, selection, selectionArgs, null);
+				
+				if (itemCursor.moveToNext())
 				{
-					TextView featName = (TextView) view.findViewById(R.id.feat_label);
-					featName.setText(cursor.getString(cursor.getColumnIndex("feat")));
+					Object[] row = { itemCursor.getLong(itemCursor.getColumnIndex("_id")), itemCursor.getString(itemCursor.getColumnIndex("feat_name")), itemCursor.getInt(itemCursor.getColumnIndex("feat_level")) } ;
+					
+					rows.add(row);
+				}
+				else
+				{
+					Object[] row = { System.currentTimeMillis(), selectionArgs[0], 0 } ;
+					
+					rows.add(row);
+				}
+				
+				itemCursor.close();
+			}
+			
+			featsCursor.close();
+
+			Collections.sort(rows, new Comparator<Object[]>()
+			{
+				public int compare(Object[] lhs, Object[] rhs) 
+				{
+					Integer left = (Integer) lhs[2];
+					Integer right = (Integer) rhs[2];
+					
+					return left.compareTo(right);
+				}
+			});
+			
+			MatrixCursor cursor = new MatrixCursor(matrixColumns);
+			
+			for (Object[] row : rows)
+				cursor.addRow(row);
+
+			cursor.moveToFirst();
+			
+			this.startManagingCursor(cursor);
+
+			SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.row_feat_review, cursor, new String[0], new int[0], 0)
+			{
+				public void bindView(View view, Context context, Cursor cursor)
+				{
+					TextView feat = (TextView) view.findViewById(R.id.feat_name);
+					
+					final String featName = cursor.getString(cursor.getColumnIndex("feat_name"));
+					
+					feat.setText(featName);
+					
+					int featLevel = cursor.getInt(cursor.getColumnIndex("feat_level"));
+					
+					TextView categoryLabel = (TextView) view.findViewById(R.id.label_category_name);
+
+					if (featLevel != 0)
+						categoryLabel.setText(context.getString(R.string.label_category, featLevel));
+					else
+						categoryLabel.setText(R.string.label_category_my_feats);
+
+					categoryLabel.setVisibility(View.GONE);
+
+					if (cursor.moveToPrevious() == false)
+						categoryLabel.setVisibility(View.VISIBLE);
+					else
+					{
+						int nextLevel = cursor.getInt(cursor.getColumnIndex("feat_level"));
+						
+						if (featLevel != nextLevel)
+							categoryLabel.setVisibility(View.VISIBLE);
+						
+						cursor.moveToNext();
+					}
 				}
 			};
 			
 			featsList.setAdapter(adapter);
+			featsList.setEmptyView(this.findViewById(R.id.empty_list));
 		}
 	}
 

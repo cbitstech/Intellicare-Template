@@ -13,4 +13,21 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
+	<LinearLayout android:id="@+id/empty_list"
+	    android:orientation="vertical"
+	    android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" 
+        android:visibility="gone">
+	    <View android:layout_width="match_parent"
+	        android:layout_height="0dp"
+	        android:layout_weight="1" />
+	    <TextView android:text="@string/message_no_feats"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:gravity="center" />
+	    <View android:layout_width="match_parent"
+	        android:layout_height="0dp"
+	        android:layout_weight="1" />
+	</LinearLayout>    
 </LinearLayout>

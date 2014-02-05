@@ -4,9 +4,11 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,6 +19,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +51,9 @@ public class EditFeatsChecklistActivity extends ConsentedActivity
 		this.startManagingCursor(c);
 		int[] emptyInts = {};
 		String[] emptyStrings = {};
+
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
+		final int level = prefs.getInt(FeatsProvider.DEPRESSION_LEVEL, 2);
 
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.row_feat_checkbox, c, emptyStrings, emptyInts, 0)
 		{
@@ -155,6 +161,21 @@ public class EditFeatsChecklistActivity extends ConsentedActivity
 					
 					cursor.moveToNext();
 				}
+				
+				ImageView recommended = (ImageView) view.findViewById(R.id.icon_recommended);
+				
+				if (featLevel == level || featLevel == 0)
+					recommended.setVisibility(View.VISIBLE);
+				else
+					recommended.setVisibility(View.GONE);
+				
+				recommended.setOnClickListener(new View.OnClickListener()
+				{
+					public void onClick(View v) 
+					{
+						Toast.makeText(me, R.string.toast_recommended_feat, Toast.LENGTH_SHORT).show();
+					}
+				});
 			}
 		};
 		

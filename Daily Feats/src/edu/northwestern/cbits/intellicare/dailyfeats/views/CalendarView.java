@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
+import edu.northwestern.cbits.intellicare.dailyfeats.FeatsProvider;
 import edu.northwestern.cbits.intellicare.dailyfeats.R;
 
 public class CalendarView extends LinearLayout 
@@ -31,11 +32,6 @@ public class CalendarView extends LinearLayout
 
 	private float _startX = -1;
 	
-	public CalendarView(Context context, AttributeSet attrs, int defStyle) 
-	{
-		super(context, attrs, defStyle);
-	}
-
 	public CalendarView(Context context, AttributeSet attrs) 
 	{
 		super(context, attrs);
@@ -50,9 +46,9 @@ public class CalendarView extends LinearLayout
 		super(context);
 	}
 
-	public void setDate(final Date date) 
+	public void setDate(final Date date, boolean doCallbacks) 
 	{
-		this._date  = date;
+		this._date = date;
 		
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
@@ -79,9 +75,16 @@ public class CalendarView extends LinearLayout
 			final DayView dayView = (DayView) this.findViewById(id);
 			
 			final int dateDay = (i - weekDay + 1);
-
-			dayView.setDay(dateDay);
 			
+			calendar.set(Calendar.DAY_OF_MONTH, dateDay);
+			
+			int featsCount = FeatsProvider.featCountForDate(this.getContext(), calendar.getTime());
+
+			if (featsCount > 0)
+				dayView.setDay("" + featsCount, dateDay);
+			else
+				dayView.setDay("", dateDay);
+				
 			if (i - weekDay + 1 == todayMonth)
 			{
 				Calendar nowCalendar = Calendar.getInstance();
@@ -92,7 +95,8 @@ public class CalendarView extends LinearLayout
 					dayView.setIsToday(true);
 				}
 				
-				dayView.select();
+				if (doCallbacks)
+					dayView.select();
 			}
 			
 			dayView.setOnClickListener(new OnClickListener()
@@ -132,7 +136,7 @@ public class CalendarView extends LinearLayout
 		else
 			sixWeek.setVisibility(View.VISIBLE);
 		
-		if (this._dateChangeListener != null)
+		if (this._dateChangeListener != null && doCallbacks)
 			this._dateChangeListener.onDateChanged(date);
 	}
 
@@ -198,5 +202,10 @@ public class CalendarView extends LinearLayout
 			this._startX = -1;
 
 	    return false;
+	}
+
+	public void setDate(Date date) 
+	{
+		this.setDate(date, true);
 	}
 }

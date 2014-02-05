@@ -3,20 +3,14 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView android:id="@+id/label_day"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="right"
-        android:paddingRight="4dp"/>
     <View android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
-    <TextView android:id="@+id/label_value"
+    <TextView android:text="@string/message_no_feats"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="left"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:paddingLeft="4dp"
-        android:paddingTop="4dp"/>
+        android:gravity="center" />
+    <View android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 </LinearLayout>
