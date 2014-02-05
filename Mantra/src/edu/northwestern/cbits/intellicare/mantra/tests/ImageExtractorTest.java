@@ -3,17 +3,22 @@
  */
 package edu.northwestern.cbits.intellicare.mantra.tests;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jsoup.Connection.Response;
+import org.jsoup.HttpStatusException;
 
 import edu.northwestern.cbits.intellicare.mantra.ImageExtractor;
 import junit.framework.TestCase;
@@ -45,12 +50,13 @@ public class ImageExtractorTest extends TestCase {
 		super.tearDown();
 	}
 
-	/**
-	 * Test method for {@link edu.northwestern.cbits.intellicare.mantra.ImageExtractor#getImage(java.lang.String)}.
-	 */
+
+	
+	/***** test methods *****/
+
 	public void testGetImageIsNotNullForAnonymousSite() {
 		// * input params *
-		String testMethodName = methodName();
+		String testMethodName = ImageExtractor.methodName();
 		String   baseUrl = "http://cbits.northwestern.edu/images/"
 				,fileName = "cbitsfulllogo.png"
 				,url = baseUrl + fileName;
@@ -60,20 +66,21 @@ public class ImageExtractorTest extends TestCase {
 		// * execute *
 		try {
 			// * test *
-			log(testMethodName, "Fetching image from: " + url);
+			ImageExtractor.log(testMethodName, "Fetching image from: " + url);
 			byte[] image = ImageExtractor.getImage(url);
 			assertNotNull(image);
 			// let's write the image so we can easily view it: http://stackoverflow.com/questions/12465586/how-can-i-download-an-image-using-jsoup
-			saveImage(testMethodName, image, outputFolder + outputFileName);
+			ImageExtractor.saveImage(image, outputFolder + outputFileName);
 		} catch (IOException e) {
 			e.printStackTrace();
 			fail("IOException during HTTP(S) call.");
 		}
 	}
 
+	
 	public void testGetImageListIsNotNullOrEmpty() throws Exception {
 		// * input params *
-		String testMethodName = methodName();
+		String testMethodName = ImageExtractor.methodName();
 		String   baseUrl = "http://cbits.northwestern.edu/"
 				,fileName = ""
 				,url = baseUrl + fileName;
@@ -83,10 +90,10 @@ public class ImageExtractorTest extends TestCase {
 		// * execute *
 		try {
 			// * test *
-			log(testMethodName, "Fetching page from: " + url);
-			ArrayList<String> imageUrlList = ImageExtractor.getImageList(url, false);
+			ImageExtractor.log(testMethodName, "Fetching page from: " + url);
+			Set<String> imageUrlList = ImageExtractor.getImageList(url, false);
 			assertNotNull(imageUrlList);
-			log(testMethodName, "list = " + imageUrlList);
+			ImageExtractor.log(testMethodName, "list = " + imageUrlList);
 		} catch (IOException e) {
 			e.printStackTrace();
 			fail("IOException during HTTP(S) call.");
@@ -94,12 +101,9 @@ public class ImageExtractorTest extends TestCase {
 	}
 
 	
-	
-//	.replaceAll("([\\w-_\\+\\='\"\\?,\\.%\\&:]+)\\.(\\w+)$", testMethodName + "_" + "$1" + ".$2");
-
 	public void testListAndDownloadImages() throws Exception {
 		// * input params *
-		String testMethodName = methodName();
+		String testMethodName = ImageExtractor.methodName();
 		String   baseUrl = "http://cbits.northwestern.edu/"
 				,fileName = ""
 				,url = baseUrl + fileName;
@@ -108,10 +112,10 @@ public class ImageExtractorTest extends TestCase {
 		// * execute *
 		try {
 			// * test *
-			log(testMethodName, "Fetching page from: " + url);
-			ArrayList<String> imageUrlList = ImageExtractor.getImageList(url, false);
-			log(testMethodName, "list = " + imageUrlList);
-			downloadAndSaveImages(outputFolder, imageUrlList);
+			ImageExtractor.log(testMethodName, "Fetching page from: " + url);
+			Set<String> imageUrlList = ImageExtractor.getImageList(url, false);
+			ImageExtractor.log(testMethodName, "list = " + imageUrlList);
+			ImageExtractor.downloadAndSaveImages(outputFolder, imageUrlList);
 		} catch (IOException e) {
 			e.printStackTrace();
 			fail("IOException during HTTP(S) call.");
@@ -119,8 +123,83 @@ public class ImageExtractorTest extends TestCase {
 	}
 	
 	public void testListAndDownloadImagesFromMultipleUrls() throws Exception {
-		String testMethodName = methodName();
+		String testMethodName = ImageExtractor.methodName();
 
+		ArrayList<String> urls = getUrlTestSet();
+		String 	baseOutputFolder = "C:\\temp\\Intellicare\\";
+
+		// * execute *
+		try {
+			// * test *
+			for(String u : urls) {
+				ImageExtractor.log(testMethodName, "Fetching page from: " + u);
+				try {
+					Set<String> imageUrlList = ImageExtractor.getImageList(u, false);
+					ImageExtractor.log(testMethodName, "  imageUrlList = " + imageUrlList);
+					String outputFolder = baseOutputFolder + ImageExtractor.extractHostName(u) + "\\";
+					ImageExtractor.log(testMethodName, "  outputFolder = " + outputFolder);
+					ImageExtractor.downloadAndSaveImages(outputFolder, imageUrlList);
+				} catch (HttpStatusException e) {
+					e.printStackTrace();
+					ImageExtractor.log(testMethodName, "HttpStatusException during HTTP(S) call: " + e.getMessage());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Exception during HTTP(S) call: " + e.getMessage());
+		}
+	}
+
+	public void testListAndGetFileSizesFromMultipleUrls() throws Exception {
+		String testMethodName = ImageExtractor.methodName();
+
+		ArrayList<String> urls = getUrlTestSet();
+		String 	baseOutputFolder = "C:\\temp\\Intellicare\\";
+
+		// * execute *
+		try {
+			// * test *
+			System.out.println("\"size\",\"url\"");
+			for(String u : urls) {
+				ImageExtractor.log(testMethodName, "Fetching page from: " + u);
+				try {
+					// get the set of image URLs
+					Set<String> imageUrlList = ImageExtractor.getImageList(u, false);
+					ImageExtractor.log(testMethodName, "  imageUrlList = " + imageUrlList);
+					
+					// get the sizes for each file specified by each image URL
+					Map<String, Integer> hostImagesLength = ImageExtractor.getRemoteContentLength(imageUrlList);
+					for(String url : hostImagesLength.keySet()) {
+						System.out.println(hostImagesLength.get(url) + ",\"" + url + "\"");
+					}
+				} catch (HttpStatusException e) {
+					e.printStackTrace();
+					ImageExtractor.log(testMethodName, "HttpStatusException during HTTP(S) call: " + e.getMessage());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Exception during HTTP(S) call: " + e.getMessage());
+		}
+	}
+
+	public void testGetRemoteContentLength() throws Exception {
+		String testMethodName = ImageExtractor.methodName();
+		String   baseUrl = "http://cbits.northwestern.edu/images/"
+				,fileName = "cbitsfulllogo.png"
+				,url = baseUrl + fileName;
+		int length = ImageExtractor.getRemoteContentLength(url);
+		assertTrue("greater at least zero?", length >= 0);
+		ImageExtractor.log(testMethodName, "length (in bytes) = " + length);
+	}
+	
+	
+	
+	/***** setup/teardown and utility methods *****/
+	/**
+	 * @return
+	 */
+	private ArrayList<String> getUrlTestSet() {
 		ArrayList<String> urls = new ArrayList<String>();
 		urls.add("http://www.flickr.com/explore");
 		urls.add("http://www.flickr.com/map");
@@ -132,64 +211,8 @@ public class ImageExtractorTest extends TestCase {
 		urls.add("http://addicted2success.com/quotes/images-56-inspirational-picture-quotes-that-will-motivate-your-mind/");
 		urls.add("http://www.pinterest.com/justcoachit/inspiring-pics-quotes/");
 		urls.add("http://mashable.com/2012/12/08/inspiring-photos-2012/");
-
-		String 	baseOutputFolder = "C:\\temp\\Intellicare\\";
-
-		// * execute *
-		try {
-			// * test *
-			for(String u : urls) {
-				log(testMethodName, "Fetching page from: " + u);
-//				ArrayList<String> imageUrlList = ImageExtractor.getImageList(u, false);
-				String outputFolder = baseOutputFolder + extractFQDN(u) + "\\";
-				log(testMethodName, "outputFolder = " + outputFolder); // + " ; list = " + imageUrlList);
-//				downloadAndSaveImages(outputFolder, imageUrlList);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail("IOException during HTTP(S) call.");
-		}
+		return urls;
 	}
-	
-	public static String extractFQDN(String url) {
-		return url.replace("(?i)https{0,1}://(.*)", "$1"); //.replace("^(.*?)/.*$", "$1");
-	}
-	
-	
-
-	/***** test utility functions *****/
-	
-	private static void log(String fn, String msg) {
-		System.out.println("[" + fn + "] " + msg);
-	}
-	
-	private static void saveImage(String testMethodName, byte[] image, String fullFilePath) throws IOException {
-		FileOutputStream out = (new FileOutputStream(new java.io.File(fullFilePath)));
-		log(testMethodName, "Writing image to: " + fullFilePath);
-        out.write(image);           // resultImageResponse.body() is where the image's contents are.
-        out.close();
-	}
-	
-	/**
-	 * @param testMethodName
-	 * @param outputFolder
-	 * @param imageUrlList
-	 */
-	private void downloadAndSaveImages(String outputFolder, ArrayList<String> imageUrlList) {
-		String testMethodName = methodName();
-		
-		// download and write the files
-		for(String u : imageUrlList) {
-			String outputFileName = u.replaceAll("^.*/(.*)\\??.*$", "$1");
-			log(testMethodName, "outputFileName = " + outputFileName + "; u = " + u);
-			try{
-				saveImage(testMethodName, ImageExtractor.getImage(u), outputFolder + outputFileName);
-			} catch(Exception e) {
-				log(testMethodName, "ERROR: Couldn't write file at: " + outputFileName + " from URL (" + u + "). Reason: " + e.getMessage());
-			}
-		}
-	}
-	
 	
 	// enables getting the currently-executing method name.
 	// src: http://stackoverflow.com/questions/442747/getting-the-name-of-the-current-executing-method/8592871#8592871
@@ -199,7 +222,7 @@ public class ImageExtractorTest extends TestCase {
         int i = 0;
         for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
             i++;
-            if (ste.getClassName().equals(ImageExtractorTest.class.getName())) {
+            if (ste.getClassName().equals(ImageExtractor.class.getName())) {
                 break;
             }
         }

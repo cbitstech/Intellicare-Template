@@ -7,10 +7,21 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import edu.northwestern.cbits.intellicare.mantra.tests.ImageExtractorTest;
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -63,8 +74,8 @@ public class ImageExtractor
 	 * @return
 	 * @throws IOException
 	 */
-	public static ArrayList<String> getImageList(String url, boolean returnRelativePaths) throws IOException {
-		ArrayList<String> ret = new ArrayList<String>();
+	public static Set<String> getImageList(String url, boolean returnRelativePaths) throws IOException {
+		Set<String> ret = new HashSet<String>();
 		
 		Document doc = Jsoup.connect(url).get();
 		Elements links = doc.select("img");
@@ -75,9 +86,6 @@ public class ImageExtractor
 				// if a relative path is requested, then return it...
 				returnRelativePaths
 				? e.attr("src")
-//						: e.attr("src").matches("(?i)https{0,1}://")
-//						: (REGEX_HTTP_HTTPS_URL_PROTO.matcher(e.attr("src"))).matches()
-						
 						// ...else, an absolute path is requested, so let's determine whether the image source already contains an absolute path, and return it if so, else prepend the base URL and return.
 						// no idea why regexes (dynamically-compiled and pre-compiled, respectively) above weren't working, but the following works, and should use fewer resources. 
 						: (e.attr("src").startsWith("http://") || e.attr("src").startsWith("https://") || e.attr("src").startsWith("HTTP://") || e.attr("src").startsWith("HTTPS://"))
@@ -88,6 +96,127 @@ public class ImageExtractor
 		
 		return ret;
 	}
-//	private static final Pattern REGEX_HTTP_HTTPS_URL_PROTO = Pattern.compile("http", Pattern.CASE_INSENSITIVE);		// case-insensitive match of HTTP/HTTPS
 	
+	/**
+	 * Gets the file size of the remote content at some URL.
+	 * @param url
+	 * @return
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 */
+	public static int getRemoteContentLength(String url) throws MalformedURLException, IOException {
+		return (new URL(url)).openConnection().getContentLength();
+	}
+	
+	/**
+	 * Gets a set of content sizes for a set of URLs. Size will be -1 if an exception in getting the size of a file occurs.
+	 * @param imageUrlList
+	 * @return
+	 */
+	public static Map<String, Integer> getRemoteContentLength(Set<String> imageUrlList) {
+		Map<String, Integer> ret = new HashMap<String, Integer>();
+
+		for(String u : imageUrlList) {
+			try {
+				ret.put(u, getRemoteContentLength(u));
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+				ret.put(u, -1);
+			} catch (IOException e) {
+				e.printStackTrace();
+				ret.put(u, -1);
+			}
+		}
+		
+		return ret;
+	}
+
+	
+	
+	/***** utility functions *****/
+	
+	public static void log(String fn, String msg) {
+		System.out.println("[" + fn + "] " + msg);
+	}
+	
+	/**
+	 * Gets the host name of a URL.
+	 * @param url
+	 * @return
+	 * @throws URISyntaxException
+	 */
+	public static String extractHostName(String url) throws URISyntaxException {
+		// src: http://stackoverflow.com/questions/9607903/get-domain-name-from-given-url
+		return (new URI(url)).getHost();
+	}
+
+	/**
+	 * Gets the file or route leaf-name from a URL. 
+	 * @param u
+	 * @return
+	 * @throws URISyntaxException 
+	 */
+	public static String extractUrlFileName(String u) throws URISyntaxException {
+		// src: http://stackoverflow.com/questions/6250200/how-to-get-the-size-of-an-image-in-java
+		return ((new URI(u)).getPath()).replaceAll("^.*/(.*)$", "$1");
+	}
+	
+	
+	/**
+	 * Saves an image.
+	 * @param image
+	 * @param fullFilePath
+	 * @throws IOException
+	 */
+	public static void saveImage(byte[] image, String fullFilePath) throws IOException {
+		FileOutputStream out = (new FileOutputStream(new java.io.File(fullFilePath)));
+		log(methodName(), "Writing image to: " + fullFilePath);
+        out.write(image);           // resultImageResponse.body() is where the image's contents are.
+        out.close();
+	}
+	
+	/**
+	 * Like the method says - it downloads and saves images.
+	 * @param outputFolder
+	 * @param imageUrlList
+	 */
+	public static void downloadAndSaveImages(String outputFolder, Set<String> imageUrlList) {
+		String testMethodName = methodName();
+
+		// create the containing folder if it doesn't exist
+		(new File(outputFolder)).mkdirs();
+
+		// download and write the files
+		for(String u : imageUrlList) {
+			try {
+				String outputFileName = extractUrlFileName(u);
+				try{
+					saveImage(ImageExtractor.getImage(u), outputFolder + outputFileName);
+				} catch(Exception e) {
+					log(testMethodName, "ERROR: Couldn't write file to: " + outputFolder + outputFileName + " from URL (" + u + "). Reason: " + e.getMessage());
+				}
+			} catch (URISyntaxException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
+	
+	
+	// enables getting the currently-executing method name.
+	// src: http://stackoverflow.com/questions/442747/getting-the-name-of-the-current-executing-method/8592871#8592871
+    private static final int CLIENT_CODE_STACK_INDEX;
+    static {
+        // Finds out the index of "this code" in the returned stack trace - funny but it differs in JDK 1.5 and 1.6
+        int i = 0;
+        for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
+            i++;
+            if (ste.getClassName().equals(ImageExtractor.class.getName())) {
+                break;
+            }
+        }
+        CLIENT_CODE_STACK_INDEX = i;
+    }
+    public static String methodName() {
+        return Thread.currentThread().getStackTrace()[CLIENT_CODE_STACK_INDEX].getMethodName();
+    }
 }
