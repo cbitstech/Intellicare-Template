@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.transform.DftNormalization;
@@ -48,6 +49,7 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -1404,16 +1406,27 @@ public class ClockActivity extends Activity implements SensorEventListener
 		{
 			SimpleDateFormat apptFormat = new SimpleDateFormat("EEEE, " + timeFormat.toPattern());
 
-			String date = apptFormat.format(new Date(event.timestamp));
-
-			if (useAmPm == false)
+			if (event.allDay == false)
 			{
-				SimpleDateFormat ampmFormat = new SimpleDateFormat("a");
+				String date = apptFormat.format(new Date(event.timestamp));
+	
+				if (useAmPm == false)
+				{
+					SimpleDateFormat ampmFormat = new SimpleDateFormat("a");
+	
+					date += ampmFormat.format(new Date(event.timestamp)).toLowerCase();
+				}
 
-				date += ampmFormat.format(new Date(event.timestamp)).toLowerCase();
+				apptText.setText(this.getString(R.string.label_upcoming_appointment, event.title, date));
 			}
-			
-			apptText.setText(this.getString(R.string.label_upcoming_appointment, event.title, date));
+			else
+			{
+				apptFormat = new SimpleDateFormat("EEEE");
+
+				String date = apptFormat.format(new Date(event.timestamp));
+
+				apptText.setText(this.getString(R.string.label_upcoming_appointment, event.title, date));
+			}
 		}
 		else
 			apptText.setText(R.string.label_no_appointments);
@@ -1423,6 +1436,7 @@ public class ClockActivity extends Activity implements SensorEventListener
 	{
 		public String title;
 		public long timestamp;
+		public boolean allDay;
 	}
 
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -1436,21 +1450,33 @@ public class ClockActivity extends Activity implements SensorEventListener
 
 	        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	        {
-	        	String[] projection = { CalendarContract.Instances.BEGIN, CalendarContract.Instances.EVENT_ID };
+	        	String[] projection = { CalendarContract.Instances.BEGIN, CalendarContract.Instances.EVENT_ID, CalendarContract.Instances.ALL_DAY };
 			
 	        	Cursor c = CalendarContract.Instances.query(this.getContentResolver(), projection, now, now + (1000 * 3600 * 24 * 6)); 
 	        	
 	        	String title = null;
 	        	long timestamp = Long.MAX_VALUE;
+	        	boolean allDay = false;
+	        	boolean thisAllDay = false;
 	        	
 	        	while (c.moveToNext())
 	        	{
 	        		long eventTime = c.getLong(c.getColumnIndex(CalendarContract.Instances.BEGIN));
-	        		
+
+	        		allDay = c.getInt(c.getColumnIndex(CalendarContract.Instances.ALL_DAY)) != 0;
+
+	        		if (allDay)
+	        		{
+	        			eventTime -= TimeZone.getDefault().getRawOffset();
+	        			
+	        			eventTime += (1000 * 60 * 60 * 24) - 1;
+	        		}
+
 	        		if (eventTime < timestamp)
 	        		{
-	        			timestamp = eventTime;
-	        			
+		        		timestamp = eventTime;
+		        		thisAllDay = allDay;
+		        		
 		        		long eventId = c.getLong(c.getColumnIndex(CalendarContract.Instances.EVENT_ID));
 		        		
 		        		String eventSelection = CalendarContract.Events._ID + " = ?";
@@ -1470,6 +1496,7 @@ public class ClockActivity extends Activity implements SensorEventListener
 	        	{
 	        		this._lastEvent = new Event();
 	        		this._lastEvent.timestamp = timestamp;
+	        		this._lastEvent.allDay = thisAllDay;
 	        		this._lastEvent.title = title;
 	        		
 	        		return this._lastEvent;
