@@ -49,8 +49,8 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -104,6 +104,11 @@ public class ClockActivity extends Activity implements SensorEventListener
 	protected float _currentBrightness;
 	protected long _searchLastUpdate = 0;
 	protected AlertDialog _toneListDialog = null;
+	private SharedPreferences _cachedPreferences = null;
+	private long _lastDimCheck = 0;
+	private long _lastInteraction = 0;
+	private float _lastBrightness = -99;
+	private float _lastTemperature = -278;
 	
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	public void onCreate(Bundle savedInstanceState) 
@@ -1094,7 +1099,8 @@ public class ClockActivity extends Activity implements SensorEventListener
 	protected void onResume() 
 	{
 		super.onResume();
-		
+	
+		this._lastInteraction = System.currentTimeMillis();
 		this._sampleAudio = true;
 
 		if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
@@ -1141,7 +1147,11 @@ public class ClockActivity extends Activity implements SensorEventListener
 							if (intentUri.equals(me._lastAudioUri) == false)
 							{
 								WindowManager.LayoutParams params = me.getWindow().getAttributes();
-								params.screenBrightness = 1.0f;
+								
+								SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
+
+								float active = prefs.getFloat(ClockActivity.ACTIVE_BRIGHTNESS_OPTION, ClockActivity.DEFAULT_ACTIVE_BRIGHTNESS);
+								params.screenBrightness = active;
 								me.getWindow().setAttributes(params);
 
 								if (me._alarmDialog != null)
@@ -1318,6 +1328,22 @@ public class ClockActivity extends Activity implements SensorEventListener
 		t.start();
 	}
 	
+	public boolean dispatchTouchEvent (MotionEvent ev)
+	{
+		this._lastInteraction = System.currentTimeMillis();
+
+		if (this._cachedPreferences == null)
+			this._cachedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		WindowManager.LayoutParams params = this.getWindow().getAttributes();
+
+		float active = this._cachedPreferences.getFloat(ClockActivity.ACTIVE_BRIGHTNESS_OPTION, ClockActivity.DEFAULT_ACTIVE_BRIGHTNESS);
+		params.screenBrightness = active;
+		this.getWindow().setAttributes(params);
+
+		return super.dispatchTouchEvent(ev);
+	}
+
 	protected void logSensorValue(String name, double value)
 	{
 		this.logSensorValue(name, value, System.currentTimeMillis());
@@ -1430,8 +1456,46 @@ public class ClockActivity extends Activity implements SensorEventListener
 		}
 		else
 			apptText.setText(R.string.label_no_appointments);
+		
+		this.manageBrightness();
 	}
 	
+	@SuppressLint("InlinedApi")
+	private void manageBrightness() 
+	{
+		long now = System.currentTimeMillis();
+		
+		if (now - this._lastDimCheck > 1000)
+		{
+			if (this._cachedPreferences == null)
+				this._cachedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+			
+			int dimDuration = this._cachedPreferences.getInt(ClockActivity.DIM_DELAY_OPTION, ClockActivity.DEFAULT_DIM_DELAY) * 15;
+			
+			if (now - this._lastInteraction  > dimDuration * 1000)
+			{
+				WindowManager.LayoutParams params = this.getWindow().getAttributes();
+				
+				float restBrightness = this._cachedPreferences.getFloat(ClockActivity.REST_BRIGHTNESS_OPTION, ClockActivity.DEFAULT_REST_BRIGHTNESS);
+
+				if (params.screenBrightness != restBrightness)
+				{
+					params.screenBrightness = restBrightness;
+					this.getWindow().setAttributes(params);
+				}
+				
+				this._lastInteraction = Long.MAX_VALUE;
+				
+		        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+		        {
+		            View root = this.findViewById(R.id.clock_root);
+
+		            root.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+		        }
+			}
+		}		
+	}
+
 	private class Event
 	{
 		public String title;
@@ -1521,6 +1585,25 @@ public class ClockActivity extends Activity implements SensorEventListener
 		switch (event.sensor.getType())
 		{
 			case Sensor.TYPE_LIGHT:
+				if (event.values[0] < 10)
+				{
+					if (this._cachedPreferences == null)
+						this._cachedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+					
+					if (this._cachedPreferences.getBoolean(ClockActivity.DIM_DARK_OPTION, ClockActivity.DIM_DARK_DEFAULT))
+					{
+						this._lastInteraction = 0;
+						this._lastDimCheck = 0;
+							
+						this.manageBrightness();
+					}
+				}
+				
+				if (Math.abs(event.values[0] - this._lastBrightness ) > 10)
+					this._lastLightReading = 0;
+				
+				this._lastBrightness = event.values[0];
+				
 				if (now - this._lastLightReading > ClockActivity.SAMPLE_RATE)
 				{
 					this.logSensorValue(SlumberContentProvider.LIGHT_LEVEL, event.values[0], event.timestamp / (1000 * 1000));
@@ -1530,6 +1613,11 @@ public class ClockActivity extends Activity implements SensorEventListener
 				
 				break;
 			case Sensor.TYPE_AMBIENT_TEMPERATURE:
+				if (Math.abs(event.values[0] - this._lastTemperature ) > 1)
+					this._lastTemperatureReading = 0;
+				
+				this._lastTemperature  = event.values[0];
+
 				if (now - this._lastTemperatureReading > ClockActivity.SAMPLE_RATE)
 				{
 					this.logSensorValue(SlumberContentProvider.TEMPERATURE, event.values[0], event.timestamp / (1000 * 1000));
