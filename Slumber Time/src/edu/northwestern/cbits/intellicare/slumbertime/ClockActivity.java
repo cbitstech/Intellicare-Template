@@ -6,6 +6,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.apache.commons.math3.complex.Complex;
+import org.apache.commons.math3.transform.DftNormalization;
+import org.apache.commons.math3.transform.FastFourierTransformer;
+import org.apache.commons.math3.transform.TransformType;
+
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -23,6 +29,13 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.MergeCursor;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.media.AudioFormat;
+import android.media.AudioRecord;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -59,7 +72,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-public class ClockActivity extends Activity 
+public class ClockActivity extends Activity implements SensorEventListener 
 {
 	protected static final String ACTIVE_BRIGHTNESS_OPTION = "active_brightness_level";
 	protected static final String REST_BRIGHTNESS_OPTION = "rest_brightness_level";
@@ -69,6 +82,10 @@ public class ClockActivity extends Activity
 	protected static final int DEFAULT_DIM_DELAY = 4;
 	protected static final String DIM_DARK_OPTION = "dim_when_dark";
 	protected static final boolean DIM_DARK_DEFAULT = true;
+	protected static final long SAMPLE_RATE = 300000;
+	
+	private long _lastLightReading = 0;
+	private long _lastTemperatureReading = 0;
 	
 	private Handler _handler = null;
 	private long _lastEventQuery = 0;
@@ -79,6 +96,8 @@ public class ClockActivity extends Activity
 	private Uri _lastAudioUri = null;
 	
 	private AlertDialog _alarmDialog = null;
+	
+	private boolean _sampleAudio = true;
 	
 	protected float _currentBrightness;
 	protected long _searchLastUpdate = 0;
@@ -1069,10 +1088,13 @@ public class ClockActivity extends Activity
 		return this.getString(R.string.dim_delay_seconds, seconds);
 	}
 
+	@SuppressLint("InlinedApi")
 	protected void onResume() 
 	{
 		super.onResume();
 		
+		this._sampleAudio = true;
+
 		if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
 		{
 			this.finish();
@@ -1112,42 +1134,52 @@ public class ClockActivity extends Activity
 					{
 						public void run() 
 						{
-							WindowManager.LayoutParams params = me.getWindow().getAttributes();
-							params.screenBrightness = 1.0f;
-							me.getWindow().setAttributes(params);
-
-							if (me._alarmDialog != null)
-							{
-								me._alarmDialog.dismiss();
-								me._alarmDialog = null;
-							}
+							Uri intentUri = intent.getData();
 							
-							String name = intent.getStringExtra(SlumberContentProvider.ALARM_NAME);
-
-							AlertDialog.Builder builder = new AlertDialog.Builder(me);
-							
-							builder = builder.setTitle(R.string.title_cancel_alarm);
-							builder = builder.setMessage(context.getString(R.string.message_cancel_alarm, name));
-							builder = builder.setPositiveButton(R.string.button_cancel_alarm, new DialogInterface.OnClickListener()
+							if (intentUri.equals(me._lastAudioUri) == false)
 							{
-								public void onClick(DialogInterface dialog, int which) 
+								WindowManager.LayoutParams params = me.getWindow().getAttributes();
+								params.screenBrightness = 1.0f;
+								me.getWindow().setAttributes(params);
+
+								if (me._alarmDialog != null)
 								{
-									Intent stopIntent = new Intent(AlarmService.STOP_ALARM, null, context, AlarmService.class);
-									context.startService(stopIntent);
+									me._alarmDialog.dismiss();
+									me._alarmDialog = null;
 								}
-							});
-							
-							me._alarmDialog = builder.create();
-							me._alarmDialog.show();						
+								
+								String name = intent.getStringExtra(SlumberContentProvider.ALARM_NAME);
+	
+								AlertDialog.Builder builder = new AlertDialog.Builder(me);
+								
+								builder = builder.setTitle(R.string.title_cancel_alarm);
+								builder = builder.setMessage(context.getString(R.string.message_cancel_alarm, name));
+								builder = builder.setPositiveButton(R.string.button_cancel_alarm, new DialogInterface.OnClickListener()
+								{
+									public void onClick(DialogInterface dialog, int which) 
+									{
+										Intent stopIntent = new Intent(AlarmService.STOP_ALARM, null, context, AlarmService.class);
+										context.startService(stopIntent);
+									}
+								});
+								
+								me._alarmDialog = builder.create();
+								me._alarmDialog.show();					
+							}
 						}
 					});
 				}
 			};
 			
-			IntentFilter filter = new IntentFilter(AlarmService.START_ALARM);
-			filter.addDataScheme("file");
-			
-			broadcasts.registerReceiver(this._startAlarmReceiver, filter);
+			IntentFilter infoFilter = new IntentFilter(AlarmService.BROADCAST_TRACK_INFO);
+			infoFilter.addDataScheme("file");
+
+			broadcasts.registerReceiver(this._startAlarmReceiver, infoFilter);
+
+			IntentFilter startFilter = new IntentFilter(AlarmService.START_ALARM);
+			startFilter.addDataScheme("file");
+
+			broadcasts.registerReceiver(this._startAlarmReceiver, startFilter);
 		}
 
 		if (this._endAlarmReceiver == null)
@@ -1163,6 +1195,7 @@ public class ClockActivity extends Activity
 							me._alarmDialog.dismiss();
 							
 							me._alarmDialog = null;
+							me._lastAudioUri = null;
 						}
 					});
 				}
@@ -1172,8 +1205,132 @@ public class ClockActivity extends Activity
 			
 			broadcasts.registerReceiver(this._endAlarmReceiver, filter);
 		}
+
+		Intent fetchTrackInfo = new Intent(AlarmService.BROADCAST_TRACK_INFO, null, this, AlarmService.class);
+		this.startService(fetchTrackInfo);
+		
+		SensorManager sensors = (SensorManager) this.getSystemService(Context.SENSOR_SERVICE);
+		
+		sensors.registerListener(this, sensors.getDefaultSensor(Sensor.TYPE_LIGHT), SensorManager.SENSOR_DELAY_NORMAL);
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+			sensors.registerListener(this, sensors.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE), SensorManager.SENSOR_DELAY_NORMAL);
+		
+		Runnable r = new Runnable()
+		{
+			@SuppressWarnings("deprecation")
+			public void run() 
+			{
+				while (me._sampleAudio)
+				{
+					int bufferSize = AudioRecord.getMinBufferSize(44100, AudioFormat.CHANNEL_CONFIGURATION_MONO, AudioFormat.ENCODING_PCM_16BIT);
+
+					AudioRecord recorder = null;
+
+					int[] rates = new int[] { 44100, 22050, 11025, 8000 };
+
+					for (int rate : rates)
+					{
+						if (recorder == null)
+						{
+							AudioRecord newRecorder = new AudioRecord(MediaRecorder.AudioSource.MIC, rate, AudioFormat.CHANNEL_CONFIGURATION_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize);
+
+							if (newRecorder.getState() == AudioRecord.STATE_INITIALIZED)
+								recorder = newRecorder;
+
+							else
+								newRecorder.release();
+						}
+					}						
+
+					if (recorder != null)
+					{
+						double[] samples = new double[32768];
+						
+						recorder.startRecording();
+
+						short[] buffer = new short[bufferSize];
+
+						int index = 0;
+
+						int read = 0;
+
+						while (index < samples.length && 0 <= (read = recorder.read(buffer, 0, bufferSize)))
+						{
+							for (int i = 0; i < read; i++)
+							{
+								if (index < samples.length)
+								{
+									samples[index] = (double) buffer[i];
+									index += 1;
+								}
+							}
+						}
+
+						recorder.stop();
+						recorder.release();
+
+						FastFourierTransformer fft = new FastFourierTransformer(DftNormalization.STANDARD);
+
+						Complex[] values = fft.transform(samples, TransformType.FORWARD);
+
+						double maxFrequency = 0;
+						double maxMagnitude = 0;
+
+						double minMagnitude = Double.MAX_VALUE;
+
+						for (int i = 0; i < values.length / 2; i++) 
+						{
+							Complex value = values[i];
+
+							double magnitude = value.abs();
+
+							if (magnitude > maxMagnitude)
+							{
+								maxMagnitude = magnitude;
+								maxFrequency = (i * 44100.0) / (double) samples.length;
+							}
+
+							if (magnitude < minMagnitude)
+								minMagnitude = magnitude;
+						}
+						
+						me.logSensorValue(SlumberContentProvider.AUDIO_FREQUENCY, maxFrequency);
+						me.logSensorValue(SlumberContentProvider.AUDIO_MAGNITUDE, maxMagnitude);
+					}
+					
+					try 
+					{
+						// TODO: Make configurable?
+						Thread.sleep(ClockActivity.SAMPLE_RATE);
+					} 
+					catch (InterruptedException e) 
+					{
+
+					}
+				}
+			}
+		};
+		
+		Thread t = new Thread(r);
+		t.start();
 	}
 	
+	protected void logSensorValue(String name, double value)
+	{
+		this.logSensorValue(name, value, System.currentTimeMillis());
+	}
+
+	protected void logSensorValue(String name, double value, long timestamp)
+	{
+		ContentValues values = new ContentValues();
+		values.put(SlumberContentProvider.READING_NAME, name);
+		values.put(SlumberContentProvider.READING_VALUE, value);
+		values.put(SlumberContentProvider.READING_RECORDED, timestamp);
+		
+		this.getContentResolver().insert(SlumberContentProvider.SENSOR_READINGS_URI, values);
+	}
+
 	protected void onPause()
 	{
 		super.onPause();
@@ -1191,11 +1348,23 @@ public class ClockActivity extends Activity
 			broadcasts.unregisterReceiver(this._endAlarmReceiver);
 			this._endAlarmReceiver = null;
 		}
+		
+		if (this._alarmDialog != null)
+		{
+			this._alarmDialog.dismiss();
+			this._alarmDialog = null;
+		}
 
 		this._handler.removeCallbacksAndMessages(null);
 		this._handler = null;
+		
+		SensorManager sensors = (SensorManager) this.getSystemService(Context.SENSOR_SERVICE);
+		sensors.unregisterListener(this);
+		
+		this._sampleAudio = false;
 	}
 
+	@SuppressLint({ "SimpleDateFormat", "DefaultLocale" })
 	protected void updateClock() 
 	{
 		TextView dateText = (TextView) this.findViewById(R.id.date_view);
@@ -1311,5 +1480,37 @@ public class ClockActivity extends Activity
 		}
 		
 		return this._lastEvent;
+	}
+
+	public void onAccuracyChanged(Sensor sensor, int accuracy) 
+	{
+
+	}
+
+	public void onSensorChanged(SensorEvent event) 
+	{
+		long now = System.currentTimeMillis();
+		
+		switch (event.sensor.getType())
+		{
+			case Sensor.TYPE_LIGHT:
+				if (now - this._lastLightReading > ClockActivity.SAMPLE_RATE)
+				{
+					this.logSensorValue(SlumberContentProvider.LIGHT_LEVEL, event.values[0], event.timestamp / (1000 * 1000));
+					
+					this._lastLightReading = now;
+				}
+				
+				break;
+			case Sensor.TYPE_AMBIENT_TEMPERATURE:
+				if (now - this._lastTemperatureReading > ClockActivity.SAMPLE_RATE)
+				{
+					this.logSensorValue(SlumberContentProvider.TEMPERATURE, event.values[0], event.timestamp / (1000 * 1000));
+					
+					this._lastTemperatureReading = now;
+				}
+
+				break;
+		}
 	}
 }

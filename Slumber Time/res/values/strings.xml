@@ -157,6 +157,8 @@
 
     <string name="db_create_sleep_diary_table">CREATE TABLE IF NOT EXISTS sleep_diaries(_id INTEGER PRIMARY KEY, did_nap INTEGER DEFAULT 0, woke_earlier INTEGER DEFAULT 0, bed_hour INTEGER DEFAULT 12, bed_minute INTEGER DEFAULT 0, sleep_hour INTEGER DEFAULT 12, sleep_minute INTEGER DEFAULT 0, wake_hour INTEGER DEFAULT 12, wake_minute INTEGER DEFAULT 0, up_hour INTEGER DEFAULT 12, up_minute INTEGER DEFAULT 0, sleep_delay INTEGER DEFAULT 0,wake_count INTEGER DEFAULT 0, sleep_quality INTEGER DEFAULT 0, timestamp INTEGER);</string>
     <string name="db_update_sleep_diary_add_comments">ALTER TABLE sleep_diaries ADD COLUMN comments TEXT;</string>
+
+    <string name="db_create_sensor_readings_table">CREATE TABLE IF NOT EXISTS sensor_readings(_id INTEGER PRIMARY KEY, name TEXT, value REAL, recorded INTEGER);</string>
     
 	<string-array name="initial_checklist_items">
         <item>Close the curtains and blinds? / Limit the amount of light in your bedroom! Did you&#8230;</item>

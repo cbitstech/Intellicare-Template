@@ -17,6 +17,7 @@ public class SlumberContentProvider extends ContentProvider
     private static final int CHECKLIST_ITEMS = 4;
     private static final int CHECKLIST_EVENTS = 5;
     private static final int SLEEP_DIARIES = 6;
+    private static final int SENSOR_READINGS = 7;
 
     private static final String ALARMS_TABLE = "alarms";
     private static final String NOTES_TABLE = "notes";
@@ -24,6 +25,7 @@ public class SlumberContentProvider extends ContentProvider
     private static final String CHECKLIST_ITEMS_TABLE = "checklist_items";
     private static final String CHECKLIST_EVENTS_TABLE = "checklist_events";
     private static final String SLEEP_DIARIES_TABLE = "sleep_diaries";
+    private static final String SENSOR_READINGS_TABLE = "sensor_readings";
     
     private static final String AUTHORITY = "edu.northwestern.cbits.intellicare.slumbertime";
 
@@ -33,8 +35,9 @@ public class SlumberContentProvider extends ContentProvider
     public static final Uri CHECKLIST_ITEMS_URI = Uri.parse("content://" + AUTHORITY + "/" + CHECKLIST_ITEMS_TABLE);
     public static final Uri CHECKLIST_EVENTS_URI = Uri.parse("content://" + AUTHORITY + "/" + CHECKLIST_EVENTS_TABLE);
     public static final Uri SLEEP_DIARIES_URI = Uri.parse("content://" + AUTHORITY + "/" + SLEEP_DIARIES_TABLE);
+    public static final Uri SENSOR_READINGS_URI = Uri.parse("content://" + AUTHORITY + "/" + SENSOR_READINGS_TABLE);
 
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
 
     public static final String ALARM_NAME = "name";
     public static final String ALARM_HOUR = "hour";
@@ -73,6 +76,15 @@ public class SlumberContentProvider extends ContentProvider
 	public static final String DIARY_TIMESTAMP = "timestamp";
 	public static final String DIARY_COMMENTS = "comments";
 
+	public static final String READING_NAME = "name";
+	public static final String READING_VALUE = "value";
+	public static final String READING_RECORDED = "recorded";
+
+	public static final String AUDIO_FREQUENCY = "audio_frequency";
+	public static final String AUDIO_MAGNITUDE = "audio_magnitude";
+	public static final String LIGHT_LEVEL = "light_level";
+	public static final String TEMPERATURE = "temperature";
+
     private UriMatcher _matcher = new UriMatcher(UriMatcher.NO_MATCH);
     private SQLiteDatabase _db = null;
 
@@ -86,6 +98,7 @@ public class SlumberContentProvider extends ContentProvider
         this._matcher.addURI(AUTHORITY, CHECKLIST_ITEMS_TABLE, CHECKLIST_ITEMS);
         this._matcher.addURI(AUTHORITY, CHECKLIST_EVENTS_TABLE, CHECKLIST_EVENTS);
         this._matcher.addURI(AUTHORITY, SLEEP_DIARIES_TABLE, SLEEP_DIARIES);
+        this._matcher.addURI(AUTHORITY, SENSOR_READINGS_TABLE, SENSOR_READINGS);
     }
 
     public boolean onCreate() 
@@ -133,6 +146,8 @@ public class SlumberContentProvider extends ContentProvider
 	                	db.execSQL(context.getString(R.string.db_create_sleep_diary_table));
 	                case 5:
 	                	db.execSQL(context.getString(R.string.db_update_sleep_diary_add_comments));
+	                case 6:
+	                	db.execSQL(context.getString(R.string.db_create_sensor_readings_table));
 	                default:
                         break;
             	}
@@ -160,6 +175,8 @@ public class SlumberContentProvider extends ContentProvider
 	            return this._db.query(SlumberContentProvider.CHECKLIST_EVENTS_TABLE, projection, selection, selectionArgs, null, null, sortOrder);
 	        case SlumberContentProvider.SLEEP_DIARIES:
 	            return this._db.query(SlumberContentProvider.SLEEP_DIARIES_TABLE, projection, selection, selectionArgs, null, null, sortOrder);
+	        case SlumberContentProvider.SENSOR_READINGS:
+	            return this._db.query(SlumberContentProvider.SENSOR_READINGS_TABLE, projection, selection, selectionArgs, null, null, sortOrder);
         }
         
         return null;
@@ -181,6 +198,8 @@ public class SlumberContentProvider extends ContentProvider
 	            return this._db.update(SlumberContentProvider.CHECKLIST_EVENTS_TABLE, values, selection, selectionArgs);
 	        case SlumberContentProvider.SLEEP_DIARIES:
 	            return this._db.update(SlumberContentProvider.SLEEP_DIARIES_TABLE, values, selection, selectionArgs);
+	        case SlumberContentProvider.SENSOR_READINGS:
+	            return this._db.update(SlumberContentProvider.SENSOR_READINGS_TABLE, values, selection, selectionArgs);
         }
 
 		return 0;
@@ -202,6 +221,8 @@ public class SlumberContentProvider extends ContentProvider
 	            return this._db.delete(SlumberContentProvider.CHECKLIST_EVENTS_TABLE, selection, selectionArgs);
 	        case SlumberContentProvider.SLEEP_DIARIES:
 	            return this._db.delete(SlumberContentProvider.SLEEP_DIARIES_TABLE, selection, selectionArgs);
+	        case SlumberContentProvider.SENSOR_READINGS:
+	            return this._db.delete(SlumberContentProvider.SENSOR_READINGS_TABLE, selection, selectionArgs);
         }
 
         return 0;
@@ -223,6 +244,8 @@ public class SlumberContentProvider extends ContentProvider
 	        	return "vnd.android.cursor.dir/" + AUTHORITY + ".checklist_event";
 	        case SlumberContentProvider.SLEEP_DIARIES:
 	        	return "vnd.android.cursor.dir/" + AUTHORITY + ".sleep_diary";
+	        case SlumberContentProvider.SENSOR_READINGS:
+	        	return "vnd.android.cursor.dir/" + AUTHORITY + ".sensor_reading";
         }
         
         return null;
@@ -251,6 +274,9 @@ public class SlumberContentProvider extends ContentProvider
 	            break;
 	        case SlumberContentProvider.SLEEP_DIARIES:
 	            id = this._db.insert(SlumberContentProvider.SLEEP_DIARIES_TABLE, null, values);
+	            break;
+	        case SlumberContentProvider.SENSOR_READINGS:
+	            id = this._db.insert(SlumberContentProvider.SENSOR_READINGS_TABLE, null, values);
 	            break;
         }
         

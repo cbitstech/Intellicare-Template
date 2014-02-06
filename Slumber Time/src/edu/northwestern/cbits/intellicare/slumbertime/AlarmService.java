@@ -25,6 +25,7 @@ public class AlarmService extends IntentService
 	public static final String TIMER_TICK = "edu.northwestern.cbits.intellicare.slumbertime.TIMER_TICK";
 	public static final String START_ALARM = "edu.northwestern.cbits.intellicare.slumbertime.START_ALARM";
 	public static final String STOP_ALARM = "edu.northwestern.cbits.intellicare.slumbertime.STOP_ALARM";
+	public static final String BROADCAST_TRACK_INFO = "edu.northwestern.cbits.intellicare.slumbertime.BROADCAST_TRACK_INFO";
 
 	private static final int ALARM_NOTE_ID = 82772387;
 	
@@ -33,6 +34,8 @@ public class AlarmService extends IntentService
 	private static MediaPlayer _player = null;
 	
 	private static String _lastDateCheck = null;
+	private static String _currentTrackName = null;
+	private static Uri _currentUri = null;
 
 	public AlarmService()
 	{
@@ -107,9 +110,15 @@ public class AlarmService extends IntentService
 				
 				if (cursor.moveToNext())
 				{
+					String name = cursor.getString(cursor.getColumnIndex(SlumberContentProvider.ALARM_NAME));
+					Uri uri = Uri.parse(cursor.getString(cursor.getColumnIndex(SlumberContentProvider.ALARM_CONTENT_URI)));
+
 					Intent startIntent = new Intent(AlarmService.START_ALARM, null, this.getApplicationContext(), AlarmService.class);
-					startIntent.setData(Uri.parse(cursor.getString(cursor.getColumnIndex(SlumberContentProvider.ALARM_CONTENT_URI))));
-					startIntent.putExtra(SlumberContentProvider.ALARM_NAME, cursor.getString(cursor.getColumnIndex(SlumberContentProvider.ALARM_NAME)));
+					startIntent.setData(uri);
+					startIntent.putExtra(SlumberContentProvider.ALARM_NAME, name);
+					
+					AlarmService._currentTrackName = name;
+					AlarmService._currentUri = uri;
 
 					this.startService(startIntent);
 				}
@@ -221,6 +230,22 @@ public class AlarmService extends IntentService
 			
 			NotificationManager notes = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 			notes.cancel(AlarmService.ALARM_NOTE_ID);
+			
+			AlarmService._currentTrackName = null;
+			AlarmService._currentUri = null;
+		}
+		else if (AlarmService.BROADCAST_TRACK_INFO.equals(action))
+		{
+			if (AlarmService._currentUri != null && AlarmService._currentTrackName != null)
+			{
+				LocalBroadcastManager broadcasts = LocalBroadcastManager.getInstance(this.getApplicationContext());
+
+				Intent startIntent = new Intent(AlarmService.BROADCAST_TRACK_INFO, null, this.getApplicationContext(), AlarmService.class);
+				startIntent.setData(AlarmService._currentUri);
+				startIntent.putExtra(SlumberContentProvider.ALARM_NAME, AlarmService._currentTrackName);
+				
+				broadcasts.sendBroadcast(startIntent);
+			}
 		}
 		else
 		{
