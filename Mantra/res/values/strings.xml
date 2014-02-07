@@ -28,5 +28,9 @@
     <string name="focus_board_list_label">Focus Boards</string>
     <string name="focus_board_label">Focus Board</string>
     <string name="image_thumbnail_alt">Image Thumbnail</string>
+    <string name="title_activity_browse_photos2">BrowsePhotos2Activity</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="existing_image_action">Existing Image</string>
 
 </resources>
