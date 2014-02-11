@@ -14,6 +14,7 @@ import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.RatingActivity;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 import edu.northwestern.cbits.intellicare.messages.ScheduleManager.Message;
@@ -40,7 +41,9 @@ public class TaskActivity extends RatingActivity
 			public void onRatingChanged(View view, int rating) 
 			{
 				me.setRating(rating);
-				
+
+				Toast.makeText(me, R.string.toast_rating_thanks, Toast.LENGTH_LONG).show();
+
 				me.close();
 			}
 		});

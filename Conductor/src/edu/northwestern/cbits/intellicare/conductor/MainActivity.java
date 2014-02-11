@@ -15,6 +15,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
@@ -44,7 +45,8 @@ import edu.northwestern.cbits.intellicare.logging.LogManager;
 public class MainActivity extends ConsentedActivity
 {
 	protected static final String APP_ICON_VIEW = "app_icon_view_";
-	private boolean _showAll = true;
+	protected static final String SHOW_ALL = "show_all_notifications";
+	protected static final boolean SHOW_ALL_DEFAULT = true;
 	private String _packageFilter = null;
 	
 	protected void onCreate(Bundle savedInstanceState) 
@@ -53,7 +55,7 @@ public class MainActivity extends ConsentedActivity
 	
 		this.setContentView(R.layout.activity_main);
 		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 		
 		long now = System.currentTimeMillis();
 				
@@ -111,7 +113,7 @@ public class MainActivity extends ConsentedActivity
 
 		GridView appsGrid = (GridView) this.findViewById(R.id.apps_grid);
 		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 		long lastRefresh = prefs.getLong(AppStoreService.LAST_REFRESH, -1);
 
 		if (lastRefresh > 0)
@@ -233,11 +235,19 @@ public class MainActivity extends ConsentedActivity
         {
 			public void onClick(View view) 
 			{
-				me._showAll = (me._showAll == false);
-
+				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me.getApplicationContext());
+				
+				boolean showAll = prefs.getBoolean(MainActivity.SHOW_ALL, MainActivity.SHOW_ALL_DEFAULT);
+				
+				showAll = (showAll == false);
+				
+				Editor e = prefs.edit();
+				e.putBoolean(MainActivity.SHOW_ALL, showAll);
+				e.commit();
+				e.apply();
 				
 				HashMap<String, Object> payload = new HashMap<String, Object>();
-				payload.put("show_all", "" + me._showAll);
+				payload.put("show_all", "" + showAll);
 				LogManager.getInstance(me).log("toggled_list", payload);
 				
 				me.refreshList();
@@ -247,10 +257,14 @@ public class MainActivity extends ConsentedActivity
         };
 
         toggle.setOnClickListener(listener);
-        listener.onClick(toggle);
         
         if (this.visibleItems() == 0)
-        	this._showAll = false;
+        {
+			Editor e = prefs.edit();
+			e.putBoolean(MainActivity.SHOW_ALL, true);
+			e.commit();
+			e.apply();
+        }
         
         this.refreshList();
 	}
@@ -417,14 +431,16 @@ public class MainActivity extends ConsentedActivity
 	
 	private int visibleItems()
 	{
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+		
         String selection = null;
         String[] selectionArgs = null;
         String sortOrder = "responded, date DESC";
 
-        if (this._showAll)
-			selection = "responded = 0";
-		else
+        if (prefs.getBoolean(MainActivity.SHOW_ALL, MainActivity.SHOW_ALL_DEFAULT))
 	        sortOrder = "responded, weight, date DESC";
+		else
+			selection = "responded = 0";
         
         if (this._packageFilter != null)
         {
@@ -443,8 +459,11 @@ public class MainActivity extends ConsentedActivity
 		return count;
 	}
 
+	@SuppressWarnings("deprecation")
 	private void refreshList() 
 	{
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+
 		final MainActivity me = this;
 		
         final ListView messagesList = (ListView) me.findViewById(R.id.messages);
@@ -454,16 +473,15 @@ public class MainActivity extends ConsentedActivity
         String[] selectionArgs = null;
         String sortOrder = "responded, date DESC";
 
-        if (me._showAll)
+        if (prefs.getBoolean(MainActivity.SHOW_ALL, MainActivity.SHOW_ALL_DEFAULT))
 		{
-			toggle.setText(R.string.label_show_all);
-			selection = "responded = 0";
+			toggle.setText(R.string.label_show_important);
+	        sortOrder = "responded, weight, date DESC";
 		}
 		else
 		{
-			toggle.setText(R.string.label_show_important);
-			
-	        sortOrder = "responded, weight, date DESC";
+			toggle.setText(R.string.label_show_all);
+			selection = "responded = 0";
 		}
         
         if (this._packageFilter != null)
@@ -476,6 +494,8 @@ public class MainActivity extends ConsentedActivity
 		
 		Cursor c = me.getContentResolver().query(ConductorContentProvider.MESSAGES_URI, null, selection, selectionArgs, sortOrder);
 
+		this.startManagingCursor(c);
+		
 		final DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
 		
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(me, R.layout.row_app_message, c, new String[0], new int[0], 0)
@@ -489,6 +509,9 @@ public class MainActivity extends ConsentedActivity
                 boolean responded = (0 != cursor.getInt(cursor.getColumnIndex("responded")));		
 
         		final String packageName = cursor.getString(cursor.getColumnIndex("package"));
+        		
+        		if (appName == null)
+        			appName = me.getString(R.string.app_name);
 
         		final UriImageView icon = (UriImageView) view.findViewById(R.id.icon);
                 

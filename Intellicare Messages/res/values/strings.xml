@@ -274,4 +274,5 @@
   	<string name="launch_date_format">\'Shortly after \'h:mm a\' on \'EEEE\'.\'</string>
   	<string name="launch_date_none">No upcoming messages scheduled.</string>
   					
+  	<string name="toast_rating_thanks">Thanks for the rating!</string>
 </resources>

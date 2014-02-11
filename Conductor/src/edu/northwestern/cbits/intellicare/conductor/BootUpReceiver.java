@@ -16,9 +16,7 @@ public class BootUpReceiver extends BroadcastReceiver
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
     	
     	Editor e = prefs.edit();
-    	
     	e.putLong(BootUpReceiver.BOOT_KEY, System.currentTimeMillis());
-    	
     	e.commit();
     	
     	context.startService(new Intent(MessagesService.REFRESH_MESSAGES));

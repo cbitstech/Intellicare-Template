@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -42,12 +43,14 @@ public class LaunchActivity extends ConsentedActivity
 
 		ScheduleManager schedule = ScheduleManager.getInstance(this);
 
+		long now = System.currentTimeMillis();
+		
 		if (startToday == 0)
 		{
 			int startHour = Integer.parseInt(prefs.getString("config_day_start", "09"));
 			
 			Calendar calendar = Calendar.getInstance();
-			calendar.setTimeInMillis(System.currentTimeMillis());
+			calendar.setTimeInMillis(now);
 			
 			calendar.set(Calendar.MINUTE, 0);
 			calendar.set(Calendar.SECOND, 0);
@@ -55,6 +58,8 @@ public class LaunchActivity extends ConsentedActivity
 			calendar.set(Calendar.HOUR_OF_DAY, startHour);
 			
 			startToday = calendar.getTimeInMillis();
+			
+			Log.e("D2D", "START: " + (new Date(startToday)));
 		}
 		
 		long end = startToday + (72 * 60 * 60 * 1000);
@@ -62,6 +67,8 @@ public class LaunchActivity extends ConsentedActivity
 		int index = prefs.getInt(ScheduleManager.MESSAGE_INDEX, 0);
 		
 		Date scheduled = null;
+		
+		Date nextScheduled = null;
 		
 		while (startToday < end && index < 35)
 		{
@@ -73,6 +80,9 @@ public class LaunchActivity extends ConsentedActivity
 				
 				index += 1;
 			}
+			
+			if (time > now && nextScheduled == null)
+				nextScheduled = new Date(time);
 
 			startToday += (15 * 60 * 1000);
 		}
@@ -81,13 +91,11 @@ public class LaunchActivity extends ConsentedActivity
 
 		if (scheduled != null)
 		{
-			long now = System.currentTimeMillis();
-
 			if (scheduled.getTime() < now)
 				scheduled = new Date(scheduled.getTime() + (1000 * 60 * 60 * 24));
 
 			SimpleDateFormat sdf = new SimpleDateFormat(this.getString(R.string.launch_date_format));
-			scheduledText.setText(sdf.format(scheduled));
+			scheduledText.setText(sdf.format(nextScheduled));
 		}
 		else
 			scheduledText.setText(R.string.launch_date_none);

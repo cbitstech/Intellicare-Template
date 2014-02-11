@@ -21,11 +21,11 @@
         		android:targetClass="edu.northwestern.cbits.intellicare.messages.DiagnosticActivity" />
 		</Preference>
 	</PreferenceCategory>
-    <PreferenceCategory android:title="@string/settings_group_notification">
+    <!-- <PreferenceCategory android:title="@string/settings_group_notification">
 		<CheckBoxPreference android:key="show_notification"
 		    android:title="@string/title_use_notifications"
 		    android:icon="@drawable/ic_action_bulb"
 		    android:summary="@string/desc_use_notifications"
 		    android:defaultValue="true" />        
-	</PreferenceCategory>
+	</PreferenceCategory> -->
 </PreferenceScreen>

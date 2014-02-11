@@ -35,6 +35,8 @@ public class TipActivity extends TaskActivity
 			{
 				me.setRating(rating);
 				
+				Toast.makeText(me, R.string.toast_rating_thanks, Toast.LENGTH_LONG).show();
+
 				me.close();
 			}
 		});
