@@ -46,7 +46,9 @@ public abstract class FormQuestionActivity extends ActionBarActivity
 				}
 				
 				LogManager.getInstance(this).log(this.responsesKey(), payload);
-				
+
+				Toast.makeText(this, R.string.message_submitted_form, Toast.LENGTH_LONG).show();
+
 				this.finish();
 			}
 		}

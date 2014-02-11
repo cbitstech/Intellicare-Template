@@ -2,11 +2,15 @@ package edu.northwestern.cbits.intellicare;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
+
+import org.apache.commons.io.FileUtils;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -14,11 +18,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +42,7 @@ public class ConsentActivity extends ActionBarActivity implements ConsentWebView
 	public static final String DEFAULT_FORM_URL = "file:///android_asset/www/default_consent_form.html";
 	protected static final String CONSENTED = "CONSENTED";
 	protected static final String REASON = "REASON";
+	private boolean _isReview = false;
 	
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -71,6 +78,59 @@ public class ConsentActivity extends ActionBarActivity implements ConsentWebView
 		TextView dateField = (TextView) this.findViewById(R.id.date_text_field); 
 		dateField.setText(format.format(new Date()));
 		dateField.setVisibility(View.GONE);
+	}
+	
+	public void onResume()
+	{
+		super.onResume();
+		
+		Uri data = this.getIntent().getData();
+		
+		if (data != null)
+			this._isReview = data.toString().endsWith("review=true");
+		else
+			this._isReview = false;
+
+		View signature = this.findViewById(R.id.view_signature);
+
+		if (this._isReview)
+		{
+			signature.setVisibility(View.GONE);
+
+			File root = Environment.getExternalStorageDirectory();
+			File intellicare = new File(root, "Intellicare Shared");
+
+			if (intellicare.exists() == false)
+				intellicare.mkdirs();
+			
+			File consent = new File(intellicare, "Consent Record.txt");
+			
+			try 
+			{
+				String consentTimestamp = FileUtils.readFileToString(consent);
+
+				TimeZone tz = TimeZone.getTimeZone("UTC");
+
+				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+				df.setTimeZone(tz);
+				
+				Date consentDate = df.parse(consentTimestamp);
+				
+				java.text.DateFormat out = DateFormat.getDateFormat(this);
+				
+				this.getSupportActionBar().setSubtitle(this.getString(R.string.subtitle_consented_date, out.format(consentDate)));
+			}
+			catch (IOException e) 
+			{
+				LogManager.getInstance(this).logException(e);
+			}
+			catch (ParseException e) 
+			{
+				LogManager.getInstance(this).logException(e);
+			}
+		}
+		else
+			signature.setVisibility(View.VISIBLE);
 	}
 	
 	public static boolean isConsented()
@@ -184,6 +244,13 @@ public class ConsentActivity extends ActionBarActivity implements ConsentWebView
 	
 	public void onBackPressed()
 	{
+		if (this._isReview)
+		{
+			this.finish();
+			
+			return;
+		}
+		
 		final String[] items = 
 		{ 
 			this.getString(R.string.why_not_too_long), 

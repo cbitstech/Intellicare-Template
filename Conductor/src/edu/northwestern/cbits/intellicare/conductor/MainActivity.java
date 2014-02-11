@@ -6,20 +6,23 @@ import java.util.Date;
 import java.util.HashMap;
 
 import net.hockeyapp.android.CrashManager;
-
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +43,7 @@ import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class MainActivity extends ConsentedActivity
 {
+	protected static final String APP_ICON_VIEW = "app_icon_view_";
 	private boolean _showAll = true;
 	private String _packageFilter = null;
 	
@@ -107,109 +111,71 @@ public class MainActivity extends ConsentedActivity
 
 		GridView appsGrid = (GridView) this.findViewById(R.id.apps_grid);
 		
-		ArrayList<AppCell> apps = new ArrayList<AppCell>();
-		
-		Cursor installedApps = this.getContentResolver().query(ConductorContentProvider.INSTALLED_APPS_URI, null, null, null, null);
-		
-		while (installedApps.moveToNext() && apps.size() < 4)
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		long lastRefresh = prefs.getLong(AppStoreService.LAST_REFRESH, -1);
+
+		if (lastRefresh > 0)
 		{
-			String icon = installedApps.getString(installedApps.getColumnIndex("icon"));
-			String packageName = installedApps.getString(installedApps.getColumnIndex("package"));
+			ArrayList<AppCell> apps = new ArrayList<AppCell>();
 			
-			apps.add(new AppCell(Uri.parse(icon), packageName));
-		}
-		
-		installedApps.close();
+			Cursor installedApps = this.getContentResolver().query(ConductorContentProvider.INSTALLED_APPS_URI, null, null, null, null);
+			
+			while (installedApps.moveToNext() && apps.size() < 4)
+			{
+				String icon = installedApps.getString(installedApps.getColumnIndex("icon"));
+				String packageName = installedApps.getString(installedApps.getColumnIndex("package"));
+				
+				apps.add(new AppCell(Uri.parse(icon), packageName));
+			}
 
-		if (apps.size() <= 1)
+			installedApps.close();
+
+			if (apps.size() <= 1)
+				this.addAppsPrompt();
+			
+			while (apps.size() < 4)
+				apps.add(new AppCell());
+			
+			this.refreshAppsList(apps);
+		}
+		else
 		{
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder = builder.setTitle(R.string.dialog_no_apps_title);
-			builder = builder.setMessage(R.string.dialog_no_apps_message);
-			builder = builder.setPositiveButton(R.string.dialog_no_apps_yes, new DialogInterface.OnClickListener() 
-			{
-				public void onClick(DialogInterface dialog, int which) 
-				{
-					HashMap<String, Object> payload = new HashMap<String, Object>();
-					LogManager.getInstance(me).log("opened_app_list", payload);
+			final LocalBroadcastManager broadcasts = LocalBroadcastManager.getInstance(this);
 
-        			Intent nativeIntent = new Intent(me, AppStoreActivity.class);
-        			me.startActivity(nativeIntent);
-				}
-			});
-			
-			builder = builder.setNegativeButton(R.string.dialog_no_apps_no, new DialogInterface.OnClickListener() 
+			BroadcastReceiver appUpdateReceiver = new BroadcastReceiver()
 			{
-				public void onClick(DialogInterface dialog, int which) 
+				public void onReceive(Context context, Intent intent) 
 				{
+					Cursor installedApps = me.getContentResolver().query(ConductorContentProvider.INSTALLED_APPS_URI, null, null, null, null);
 
+					ArrayList<AppCell> apps = new ArrayList<AppCell>();
+
+					while (installedApps.moveToNext() && apps.size() < 4)
+					{
+						String icon = installedApps.getString(installedApps.getColumnIndex("icon"));
+						String packageName = installedApps.getString(installedApps.getColumnIndex("package"));
+						
+						apps.add(new AppCell(Uri.parse(icon), packageName));
+					}
+
+					installedApps.close();
+
+					if (apps.size() <= 1)
+						me.addAppsPrompt();
+					
+					while (apps.size() < 4)
+						apps.add(new AppCell());
+
+					me.refreshAppsList(apps);
+
+					broadcasts.unregisterReceiver(this);
 				}
-			});
+			};
 			
-			builder.create().show();
+			IntentFilter filter = new IntentFilter(AppStoreService.APPS_UPDATED);
+			
+			broadcasts.registerReceiver(appUpdateReceiver, filter);
 		}
-
-		while (apps.size() < 4)
-			apps.add(new AppCell());
-		
-        ArrayAdapter<AppCell> adapter = new ArrayAdapter<AppCell>(this, R.layout.cell_app, apps)
-        {
-            public View getView(int position, View convertView, ViewGroup parent)
-            {
-                final AppCell app = this.getItem(position);
-                
-                if (convertView == null)
-                    convertView = me.getLayoutInflater().inflate(R.layout.cell_app, parent, false);
-                
-                final UriImageView icon = (UriImageView) convertView.findViewById(R.id.icon);
-
-                String packageName = app.getPackage();
-                
-                if (packageName != null)
-                {
-	                String selection = "package = ?";
-	                String[] args = { packageName };
-	                
-					icon.setImageDrawable(me.getResources().getDrawable(R.drawable.ic_app_placeholder));
-	
-	                Cursor cursor = me.getContentResolver().query(ConductorContentProvider.APPS_URI, null, selection, args, null);
-	                
-	                if (cursor.moveToNext())
-	                {
-	                    final Uri imageUri = Uri.parse(cursor.getString(cursor.getColumnIndex("icon")));
-	
-	                    Uri cachedUri = ConductorContentProvider.fetchCachedUri(me, imageUri, new Runnable()
-	                    {
-	    					public void run() 
-	    					{
-	    						me.runOnUiThread(new Runnable()
-	    						{
-	    							public void run() 
-	    							{
-	    				                Uri cachedUri = ConductorContentProvider.fetchCachedUri(me, imageUri, null);
-	    								
-	    				                if (cachedUri != null)
-	    									icon.setImageURI(cachedUri);
-	    							}
-	    						});
-	    					}		                
-	                    });
-	
-	    				if (cachedUri != null)
-	    					icon.setImageURI(cachedUri);
-	                }
-	                
-	                cursor.close();
-                }
-                else
-                	icon.setImageResource(R.drawable.ic_app_placeholder);
-                	
-                
-                return convertView;
-            }
-        };
-
-        appsGrid.setAdapter(adapter);
 
         appsGrid.setOnItemClickListener(new OnItemClickListener()
         {
@@ -226,7 +192,7 @@ public class MainActivity extends ConsentedActivity
         			me.startActivity(nativeIntent);
                 }
                 else
-                	me.filterMessages(app.getPackage());
+                	me.filterMessages(app.getPackage(), position);
             }
         });
         
@@ -289,12 +255,158 @@ public class MainActivity extends ConsentedActivity
         this.refreshList();
 	}
 	
-	protected void filterMessages(String packageName) 
+	private void refreshAppsList(ArrayList<AppCell> apps) 
+	{
+		final MainActivity me = this;
+
+		GridView appsGrid = (GridView) this.findViewById(R.id.apps_grid);
+
+        ArrayAdapter<AppCell> adapter = new ArrayAdapter<AppCell>(this, R.layout.cell_app, apps)
+        {
+            public View getView(int position, View convertView, ViewGroup parent)
+            {
+                final AppCell app = this.getItem(position);
+                
+                if (convertView == null)
+                    convertView = me.getLayoutInflater().inflate(R.layout.cell_app, parent, false);
+                
+                final UriImageView icon = (UriImageView) convertView.findViewById(R.id.icon);
+
+                String packageName = app.getPackage();
+                
+            	convertView.setTag(MainActivity.APP_ICON_VIEW + position);
+
+            	if (packageName != null)
+                {
+                	
+	                String selection = "package = ?";
+	                String[] args = { packageName };
+	                
+					icon.setImageDrawable(me.getResources().getDrawable(R.drawable.ic_app_placeholder));
+	
+	                Cursor cursor = me.getContentResolver().query(ConductorContentProvider.APPS_URI, null, selection, args, null);
+	                
+	                if (cursor.moveToNext())
+	                {
+	                    final Uri imageUri = Uri.parse(cursor.getString(cursor.getColumnIndex("icon")));
+	
+	                    Uri cachedUri = ConductorContentProvider.fetchCachedUri(me, imageUri, new Runnable()
+	                    {
+	    					public void run() 
+	    					{
+	    						me.runOnUiThread(new Runnable()
+	    						{
+	    							public void run() 
+	    							{
+	    				                Uri cachedUri = ConductorContentProvider.fetchCachedUri(me, imageUri, null);
+	    								
+	    				                if (cachedUri != null)
+	    									icon.setImageURI(cachedUri);
+	    							}
+	    						});
+	    					}		                
+	                    });
+	
+	    				if (cachedUri != null)
+	    					icon.setImageURI(cachedUri);
+	                }
+	                
+	                cursor.close();
+                }
+                else
+                	icon.setImageResource(R.drawable.ic_app_placeholder);
+                	
+                
+                return convertView;
+            }
+        };
+
+        appsGrid.setAdapter(adapter);
+	}
+
+	private void addAppsPrompt() 
+	{
+		final MainActivity me = this;
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder = builder.setTitle(R.string.dialog_no_apps_title);
+		builder = builder.setMessage(R.string.dialog_no_apps_message);
+		builder = builder.setPositiveButton(R.string.dialog_no_apps_yes, new DialogInterface.OnClickListener() 
+		{
+			public void onClick(DialogInterface dialog, int which) 
+			{
+				HashMap<String, Object> payload = new HashMap<String, Object>();
+				LogManager.getInstance(me).log("opened_app_list", payload);
+
+    			Intent nativeIntent = new Intent(me, AppStoreActivity.class);
+    			me.startActivity(nativeIntent);
+			}
+		});
+		
+		builder = builder.setNegativeButton(R.string.dialog_no_apps_no, new DialogInterface.OnClickListener() 
+		{
+			public void onClick(DialogInterface dialog, int which) 
+			{
+
+			}
+		});
+		
+		builder.create().show();
+	}
+
+	@SuppressWarnings("deprecation")
+	protected void filterMessages(String packageName, int position)
 	{
 		if (this._packageFilter != null && this._packageFilter.equals(packageName))
 			this._packageFilter = null;
 		else
 			this._packageFilter = packageName;
+		
+		GridView appsGrid = (GridView) this.findViewById(R.id.apps_grid);
+		
+		for (int i = 0; i < appsGrid.getAdapter().getCount(); i++)
+		{
+			String tag = MainActivity.APP_ICON_VIEW + i;
+			
+			View view = appsGrid.findViewWithTag(tag);
+			
+			if (view != null)
+			{
+				UriImageView icon = (UriImageView) view.findViewById(R.id.icon);
+				
+				if (this._packageFilter != null)
+				{
+					if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
+						icon.setAlpha(64);
+					else
+						icon.setImageAlpha(64);
+				}
+				else
+				{
+					if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
+						icon.setAlpha(255);
+					else
+						icon.setImageAlpha(255);
+				}
+			}
+		}
+
+		if (this._packageFilter != null)
+		{
+			String tag = MainActivity.APP_ICON_VIEW + position;
+			
+			View view = appsGrid.findViewWithTag(tag);
+			
+			if (view != null)
+			{
+				UriImageView icon = (UriImageView) view.findViewById(R.id.icon);
+				
+				if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
+					icon.setAlpha(255);
+				else
+					icon.setImageAlpha(255);
+			}
+		}
 		
 		HashMap<String, Object> payload = new HashMap<String, Object>();
 		payload.put("package_filter", "" + this._packageFilter);

@@ -142,15 +142,15 @@ public class AppStoreService extends IntentService
 					}
 					
 					me.updateVersionMessages();
-
-					LocalBroadcastManager broadcast = LocalBroadcastManager.getInstance(me);
-					broadcast.sendBroadcast(new Intent(AppStoreService.APPS_UPDATED));
 					
 					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
 					
 					Editor e = prefs.edit();
 					e.putLong(AppStoreService.LAST_REFRESH, System.currentTimeMillis());
 					e.commit();
+
+					LocalBroadcastManager broadcast = LocalBroadcastManager.getInstance(me);
+					broadcast.sendBroadcast(new Intent(AppStoreService.APPS_UPDATED));
 				}
 			};
 			

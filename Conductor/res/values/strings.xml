@@ -113,5 +113,13 @@
 	<string name="summary_install_slumber_time">Install Slumber Time to access this form.</string>
 	
 	<string name="toast_avatar_in_progress">The avatar view is still under construction&#8230;</string>
+	
+	<string name="settings_group_participation">Participation Details</string>
+	<string name="prefs_review_consent_form">Review Consent Form</string>
+
+	<string name="settings_group_testing">Testing Options (TBR)</string>
+	<string name="prefs_clear_cookies">Clear consent &amp; recruitment cookies</string>
+	<string name="toast_cookies_cleared">Consent &amp; recruitment cookies cleared.</string>
+		
 </resources>
 

@@ -7,8 +7,13 @@
 		    android:summary="@string/desc_forward_notifications"
 		    android:defaultValue="true" />        
 	</PreferenceCategory>
+    <PreferenceCategory android:title="@string/settings_group_participation">
+		<Preference android:title="@string/prefs_review_consent_form" >
+    		<intent android:action="android.intent.action.VIEW" android:data="intellicare://consent?review=true" />
+		</Preference>
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/settings_group_assessments">
-		<Preference android:title="@string/prefs_phq4_form" >
+   		<Preference android:title="@string/prefs_phq4_form">
     		<intent android:action="android.intent.action.VIEW" android:data="intellicare://phq4" />
 		</Preference>
 		<Preference android:title="@string/prefs_consent_form" >
@@ -27,4 +32,7 @@
     		<intent android:action="android.intent.action.VIEW" android:data="intellicare://sleep-diary" />
 		</Preference>
 	</PreferenceCategory>
+    <PreferenceCategory android:title="@string/settings_group_testing">
+		<Preference android:title="@string/prefs_clear_cookies" android:key="clear_cookies" />
+    </PreferenceCategory>
 </PreferenceScreen>

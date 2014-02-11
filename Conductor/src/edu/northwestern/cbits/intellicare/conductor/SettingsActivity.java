@@ -1,13 +1,20 @@
 package edu.northwestern.cbits.intellicare.conductor;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
-import edu.northwestern.cbits.intellicare.logging.LogManager;
+import org.apache.commons.io.FileUtils;
+
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceScreen;
+import android.widget.Toast;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class SettingsActivity extends PreferenceActivity 
 {
@@ -58,4 +65,31 @@ public class SettingsActivity extends PreferenceActivity
         return false;
     }
 
+	@SuppressWarnings("deprecation")
+	public boolean onPreferenceTreeClick (PreferenceScreen screen, Preference preference)
+	{
+		if (preference.getKey().equals("clear_cookies"))
+		{
+			File root = Environment.getExternalStorageDirectory();
+			File intellicare = new File(root, "Intellicare Shared");
+
+			if (intellicare.exists() == true)
+			{
+				try 
+				{
+					FileUtils.deleteDirectory(intellicare);
+					
+					Toast.makeText(this, R.string.toast_cookies_cleared, Toast.LENGTH_LONG).show();
+				} 
+				catch (IOException e) 
+				{
+					LogManager.getInstance(this).logException(e);
+				}
+			}
+
+			return true;
+		}
+		
+		return super.onPreferenceTreeClick(screen, preference);
+	}
 }
