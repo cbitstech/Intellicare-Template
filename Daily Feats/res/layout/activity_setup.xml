@@ -48,26 +48,6 @@
         >
     </Button>
 
-    <Button
-        android:id="@+id/choose_supporters"
-
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="100dp"
-        android:layout_gravity="bottom"
-
-        android:background="#FFFFFF"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        android:text="@string/setup_8_choose_supporters"
-
-        android:onClick="onSupportersButtonClicked"
-        />
-
-
 
     <RadioGroup
         android:id="@+id/depression_level_question"

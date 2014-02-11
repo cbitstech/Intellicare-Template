@@ -3,16 +3,20 @@
  */
 package edu.northwestern.cbits.intellicare.dailyfeats;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 
 public class FeatsProvider extends android.content.ContentProvider
 {
@@ -35,6 +39,9 @@ public class FeatsProvider extends android.content.ContentProvider
     private SQLiteDatabase mDb = null;
 
     private static final int DATABASE_VERSION = 2;
+	private static final long DAY_LENGTH = 1000 * 3600 * 24;
+	protected static final String START_FEATS_DATE = "start_feats_date";
+	private static final long STREAK_LENGTH = 2;
     
     public FeatsProvider()
     {
@@ -357,5 +364,146 @@ public class FeatsProvider extends android.content.ContentProvider
 		c.close();
 		
 		return count;
+	}
+
+	public static void updateLevel(Context context, int level) 
+	{
+		ContentValues values = new ContentValues();
+		values.put("enabled", false);
+		
+		context.getContentResolver().update(FeatsProvider.FEATS_URI, values, null, null);
+
+		String where = "feat_level = ?";
+		String[] args = { "3" };
+		
+		if (level < 3)
+			where = "feat_level < ?";
+		else if (level > 3)
+			where = "feat_level >= ?";
+		
+		values = new ContentValues();
+		values.put("enabled", true);
+		
+		context.getContentResolver().update(FeatsProvider.FEATS_URI, values, where, args);
+	}
+
+	public static int checkLevel(Context context, int level) 
+	{
+		int streak = FeatsProvider.streakForLevel(context, level);
+
+		if (streak >= FeatsProvider.STREAK_LENGTH && level < 4)
+			level += 1;
+		else if (streak <= (0 - FeatsProvider.STREAK_LENGTH) && level > 1)
+		{
+			level -= 1;
+
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+			
+			long startFeats = prefs.getLong(FeatsProvider.START_FEATS_DATE, 0);
+
+			long now = System.currentTimeMillis();
+			
+			if (now - startFeats > FeatsProvider.DAY_LENGTH * FeatsProvider.STREAK_LENGTH)
+			{
+				Editor e = prefs.edit();
+				e.putLong(FeatsProvider.START_FEATS_DATE, System.currentTimeMillis());
+				e.commit();
+			}
+		}
+
+		return level;
+	}
+	
+	public static int streakForLevel(Context context, int level)
+	{
+		Calendar c = Calendar.getInstance();
+		
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.SECOND, 0);
+
+		long end = c.getTimeInMillis() + FeatsProvider.DAY_LENGTH;
+		long start = end - FeatsProvider.DAY_LENGTH;
+		
+		String where = "feat_level = ?";
+		String[] args = { "" + level };
+		
+		ArrayList<String> feats = new ArrayList<String>();
+		
+		Cursor cursor = context.getContentResolver().query(FeatsProvider.FEATS_URI, null, where, args, null);
+		
+		final int minFeatCount = cursor.getCount() / 2;
+		
+		while (cursor.moveToNext())
+			feats.add(cursor.getString(cursor.getColumnIndex("feat_name")));
+		
+		cursor.close();
+		
+		int streak = 0;
+		boolean continueStreak = true;
+		
+		while (continueStreak)
+		{
+			int dayFeats = 0;
+			
+			for (String feat : feats)
+			{
+				where = "feat = ? AND recorded >= ? AND recorded <= ?";
+				String[] featArgs = { feat, "" + start , "" + end }; 
+				
+				Cursor featCursor = context.getContentResolver().query(FeatsProvider.RESPONSES_URI, null, where, featArgs, null);
+				
+				if (featCursor.getCount() > 0)
+					dayFeats += 1;
+				
+				featCursor.close();
+			}
+			
+			if (dayFeats >= minFeatCount)
+				streak += 1;
+			else
+				continueStreak = false;
+			
+			end = start;
+			start -= FeatsProvider.DAY_LENGTH;
+		}
+		
+		if (streak == 0)
+		{
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+			
+			long startFeats = prefs.getLong(FeatsProvider.START_FEATS_DATE, 0);
+			
+			end = c.getTimeInMillis() + FeatsProvider.DAY_LENGTH;
+			start = end - FeatsProvider.DAY_LENGTH;
+	
+			for (int i = 0; i < FeatsProvider.STREAK_LENGTH && end > startFeats; i++)
+			{
+				int dayFeats = 0;
+				
+				for (String feat : feats)
+				{
+					where = "feat = ? AND recorded >= ? AND recorded <= ?";
+					String[] featArgs = { feat, "" + start , "" + end }; 
+					
+					Cursor featCursor = context.getContentResolver().query(FeatsProvider.RESPONSES_URI, null, where, featArgs, null);
+					
+					if (featCursor.getCount() == 0)
+						dayFeats += 1;
+					
+					featCursor.close();
+				}
+				
+				if (dayFeats < minFeatCount)
+					streak -= 1;
+				else
+					break;
+				
+				end = start;
+				start -= FeatsProvider.DAY_LENGTH;
+			}
+		}
+		
+		return streak;
 	}
 }

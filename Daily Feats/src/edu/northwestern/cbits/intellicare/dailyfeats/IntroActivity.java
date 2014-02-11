@@ -1,41 +1,22 @@
 package edu.northwestern.cbits.intellicare.dailyfeats;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
-import org.json.JSONArray;
-
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.CallLog;
-import android.provider.CallLog.Calls;
-import android.provider.ContactsContract.Contacts;
-import android.telephony.PhoneNumberUtils;
 import android.text.format.DateFormat;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import edu.emory.mathcs.backport.java.util.Collections;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 public class IntroActivity extends ConsentedActivity 
@@ -43,9 +24,6 @@ public class IntroActivity extends ConsentedActivity
 	public static final String INTRO_SHOWN = "intro_shown";
 
 	private int mStep = 0;
-	private List<ContactRecord> mContacts = new ArrayList<ContactRecord>();
-	private HashSet<String> mSelectedContacts = new HashSet<String>();
-	private Toast mToast = null;
 
 	protected int _dialogId = 0;
 	
@@ -106,37 +84,6 @@ public class IntroActivity extends ConsentedActivity
 
 					return;
 				}
-				else if (me.mStep == 6)
-				{
-					int size = me.mSelectedContacts.size();
-					
-					String toast = null;
-					
-					if (size == 0)
-						toast = me.getString(R.string.no_supporters_selected);
-					else if (size > 5)
-						toast = me.getString(R.string.too_many_supporters_selected, size);
-						
-					if (toast != null)
-					{
-						if (me.mToast != null)
-							me.mToast.cancel();
-						
-						me.mToast = Toast.makeText(me, toast, Toast.LENGTH_LONG);
-						me.mToast.show();
-
-						return;
-					}
-					
-					JSONArray supporters = new JSONArray();
-					
-					for (String supporter : me.mSelectedContacts)
-						supporters.put(supporter);
-					
-					Editor e = prefs.edit();
-					e.putString(FeatsProvider.SUPPORTERS, supporters.toString());
-					e.commit();
-				}
 				
 				if (me.mStep < (me.getResources().getStringArray(R.array.intro_urls).length - 1))
 				{
@@ -145,7 +92,12 @@ public class IntroActivity extends ConsentedActivity
 				}
 				else
 				{
-					me.startActivity(new Intent(me, HomeActivity.class));
+					Editor e = prefs.edit();
+					e.putBoolean(IntroActivity.INTRO_SHOWN, true);
+					e.putLong(FeatsProvider.START_FEATS_DATE, System.currentTimeMillis());
+					e.commit();
+
+					me.startActivity(new Intent(me, CalendarActivity.class));
 					me.finish();
 				}
 			}
@@ -178,60 +130,6 @@ public class IntroActivity extends ConsentedActivity
 				e.commit();
 			}
         });
-        
-        ListView supportersList = (ListView) this.findViewById(R.id.supporters_list);
-        
-        this.mContacts.addAll(IntroActivity.fetchContactRecords(this));
-        		
-        supportersList.setAdapter(new ArrayAdapter<ContactRecord>(this, R.layout.row_contact, this.mContacts)
-		{
-    		public View getView (int position, View convertView, ViewGroup parent)
-    		{
-    			if (convertView == null)
-    			{
-    				LayoutInflater inflater = LayoutInflater.from(me);
-    				convertView = inflater.inflate(R.layout.row_contact, parent, false);
-    			}
-    			
-    			CheckBox contactName = (CheckBox) convertView.findViewById(R.id.contact_check);
-
-    			final ContactRecord contact = me.mContacts.get(position);
-
-    			contactName.setOnCheckedChangeListener(null);
-
-    			contactName.setChecked(me.mSelectedContacts.contains(contact.name));
-
-    			contactName.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener()
-    			{
-					public void onCheckedChanged(CompoundButton view, boolean checked) 
-					{
-						if (checked)
-							me.mSelectedContacts.add(contact.name);
-						else
-							me.mSelectedContacts.remove(contact.name);
-						
-						int size = me.mSelectedContacts.size();
-						
-						if (me.mToast != null)
-							me.mToast.cancel();
-							
-						String toast = me.getString(R.string.supporters_selected, size);
-						
-						if (size == 1)
-							toast = me.getString(R.string.supporter_selected);
-						else if (size > 5)
-							toast = me.getString(R.string.too_many_supporters_selected, size);
-						
-						me.mToast = Toast.makeText(me, toast, Toast.LENGTH_SHORT);
-						me.mToast.show();
-					}
-    			});
-    			
-   				contactName.setText(contact.name);
-
-    			return convertView;
-    		}
-    	});
     }
     
     protected void onResume()
@@ -245,11 +143,9 @@ public class IntroActivity extends ConsentedActivity
 	{
 		LinearLayout webLayout = (LinearLayout) this.findViewById(R.id.web_layout);
 		LinearLayout moodLayout = (LinearLayout) this.findViewById(R.id.mood_layout);
-		LinearLayout supportersLayout = (LinearLayout) this.findViewById(R.id.supporters_layout);
 		
 		webLayout.setVisibility(View.GONE);
 		moodLayout.setVisibility(View.GONE);
-		supportersLayout.setVisibility(View.GONE);
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 
@@ -279,7 +175,9 @@ public class IntroActivity extends ConsentedActivity
 			case 3:
 				webLayout.setVisibility(View.VISIBLE);
 				
-				switch (prefs.getInt(FeatsProvider.DEPRESSION_LEVEL, 0))
+				int level = prefs.getInt(FeatsProvider.DEPRESSION_LEVEL, 0); 
+
+				switch (level)
 				{
 					case 4:
 						webView.loadUrl("file:///android_asset/help_3_4.html");
@@ -291,10 +189,8 @@ public class IntroActivity extends ConsentedActivity
 						webView.loadUrl("file:///android_asset/help_3_12.html");
 						break;
 				}
-
-				break;
-			case 6:
-				supportersLayout.setVisibility(View.VISIBLE);
+				
+				FeatsProvider.updateLevel(this, level);
 
 				break;
 			default:
@@ -303,109 +199,4 @@ public class IntroActivity extends ConsentedActivity
 				break;
 		}
 	}
-    
-    public static List<ContactRecord> fetchContactRecords(Context context)
-    {
-    	ArrayList<ContactRecord> contacts = new ArrayList<ContactRecord>();
-    	
-		Cursor c = context.getContentResolver().query(CallLog.Calls.CONTENT_URI, null, null, null, null);
-
-		while (c.moveToNext())
-		{
-			String numberName = c.getString(c.getColumnIndex(Calls.CACHED_NAME));
-			String phoneNumber = PhoneNumberUtils.formatNumber(c.getString(c.getColumnIndex(Calls.NUMBER)));
-
-			boolean found = false;
-			
-			if (numberName == null)
-				numberName = "";
-			
-			for (ContactRecord contact : contacts)
-			{
-				if (contact.number.endsWith(phoneNumber) || phoneNumber.endsWith(contact.number))
-				{
-					String largerNumber = contact.number;
-					
-					if (phoneNumber.length() > largerNumber.length())
-						largerNumber = phoneNumber;
-					
-					contact.number = largerNumber;
-					
-					found = true;
-					contact.count += 1;
-				}
-			}
-			
-			if (found == false && "".equalsIgnoreCase(numberName) == false && numberName.contains("@") == false)
-			{
-				ContactRecord contact = new ContactRecord();
-				contact.name = numberName;
-				contact.number = phoneNumber;
-				
-				contacts.add(contact);
-			}
-		}
-		
-		c.close();
-
-		c = context.getContentResolver().query(Contacts.CONTENT_URI, null, null, null, null);
-
-		while (c.moveToNext())
-		{
-			String numberName = c.getString(c.getColumnIndex(Contacts.DISPLAY_NAME));
-
-			boolean found = false;
-			
-			if (numberName == null)
-				numberName = "";
-			
-			for (ContactRecord contact : contacts)
-			{
-				if (contact.name.equals(numberName))
-					found = true;
-			}
-			
-			if (found == false && "".equalsIgnoreCase(numberName) == false && numberName.contains("@") == false)
-			{
-				ContactRecord contact = new ContactRecord();
-				contact.name = numberName;
-				contact.number = "";
-				
-				contacts.add(contact);
-			}
-		}
-		
-		c.close();
-		
-		Collections.sort(contacts);
-
-		ArrayList<ContactRecord> normalizedContacts = new ArrayList<ContactRecord>();
-		
-		for (ContactRecord contact : contacts)
-		{
-			if ("".equals(contact.name) == false)
-			{
-				boolean found = false;
-				
-				for (ContactRecord normalized : normalizedContacts)
-				{
-					if (contact.name.equals(normalized.name))
-					{
-						found = true;
-						
-						normalized.count += contact.count;
-					}
-				}
-				
-				if (found == false)
-					normalizedContacts.add(contact);
-			}
-			else
-				normalizedContacts.add(contact);
-		}
-		
-		Collections.sort(normalizedContacts);
-		
-    	return normalizedContacts;
-    }
 }

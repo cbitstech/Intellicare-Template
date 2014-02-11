@@ -70,12 +70,26 @@ public class ScheduleManager
 			String title = this._context.getString(R.string.note_title);
 			String message = this._context.getString(R.string.note_message);
 			
-			Intent intent = new Intent(this._context, ChecklistActivity.class);
+			Intent intent = new Intent(this._context, CalendarActivity.class);
 
 			PendingIntent pi = PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-			StatusNotificationManager.getInstance(this._context).notifyBigText(97531, R.drawable.ic_notification_feats, title, message, pi, HomeActivity.URI);
+
+			int oldLevel = prefs.getInt(FeatsProvider.DEPRESSION_LEVEL, 2);
+			int newLevel = FeatsProvider.checkLevel(this._context, oldLevel);
 
 			Editor e = prefs.edit();
+			e.putInt(FeatsProvider.DEPRESSION_LEVEL, newLevel);
+			e.commit();
+
+			if (oldLevel > newLevel)
+				title = this._context.getString(R.string.note_title_demoted, newLevel);
+				
+			else if (newLevel > oldLevel)
+				title = this._context.getString(R.string.note_title_promoted, newLevel);
+
+			StatusNotificationManager.getInstance(this._context).notifyBigText(97531, R.drawable.ic_notification_feats, title, message, pi, StartupActivity.URI);
+
+			e = prefs.edit();
 			e.putLong(ScheduleManager.LAST_NOTIFICATION, now);
 			e.commit();
 		}

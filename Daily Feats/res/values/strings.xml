@@ -35,18 +35,6 @@
     <string name="depression_question_3">I don\'t feel depressed right now, and I want to keep it that way.</string>
 
     <string name="depression_toast">Please choose a statement to continue.</string>
-    
-    <string name="supporters_selected" formatted="false">%d supporters selected.</string>
-    <string name="supporter_selected">1 supporter selected.</string>
-    <string name="no_supporters_selected">No supporter selected. Please choose at least 1 to continue.</string>
-    <string name="too_many_supporters_selected" formatted="false">Too many supporters selected (%d). Please select no more than 5.</string>
-
-    <string name="supporters_prompt">An important part of overcoming depression is staying connected to others.\n
-		\nDaily Feats can, whenever you choose to do so, email a group of people with your day\'s successes.\n
-		\nWe recommend you choose a few (at least 1, at most 5) people from your contacts to form your group of supporters. They can be family, significant others, close friends, or anyone else you know.
-    </string>
-
-    <string name="setup_8_choose_supporters">Choose Supporters</string>
 
     <!-- Complete Feats Checklist -->
     <string name="title_activity_complete_feats_checklist">Today\'s Checklist</string>
@@ -74,22 +62,18 @@
         <item></item>
         <item>file:///android_asset/help_2.html</item>
         <item></item>
-        <item>file:///android_asset/help_4.html</item>
         <item>file:///android_asset/help_5.html</item>
         <item></item>
-        <item>file:///android_asset/help_7.html</item>
         <item>file:///android_asset/help_8.html</item>
    	</string-array>
 	<string-array name="intro_titles">
-        <item>Daily Feats Setup (1/9)</item>
-        <item>Daily Feats Setup (2/9)</item>
-        <item>Daily Feats Setup (3/9)</item>
-        <item>Daily Feats Setup (4/9)</item>
-        <item>Daily Feats Setup (5/9)</item>
-        <item>Daily Feats Setup (6/9)</item>
-        <item>Daily Feats Setup (7/9)</item>
-        <item>Daily Feats Setup (8/9)</item>
-        <item>Daily Feats Setup (9/9)</item>
+        <item>Daily Feats Setup (1/6)</item>
+        <item>Daily Feats Setup (2/6)</item>
+        <item>Daily Feats Setup (3/6)</item>
+        <item>Daily Feats Setup (4/6)</item>
+        <item>Daily Feats Setup (5/6)</item>
+        <item>Daily Feats Setup (6/6)</item>
+        <item>Daily Feats Setup (6/6)</item>
     </string-array>
 
 	<string name="label_checkin">Check in now</string>
@@ -153,4 +137,14 @@
 
 	<string name="message_no_feats">No feats recorded for this date.</string>
 	<string name="toast_recommended_feat">Recommended based on your current mood level.</string>
+
+	<string name="title_rules">Daily Feats: Rules</string>
+	<string name="action_rules">Rules of the App</string>
+	<string name="title_level_streak" formatted="false">Level %d, Streak: %d</string>
+		
+	<string name="note_title_demoted" formatted="false">Bummer! You\'ve gone more than 5 days without completing at least half of the feats for your current level. New level: %d.</string>
+	<string name="note_title_promoted" formatted="false">Congratulations! You\'ve completed at least half of the feats for your current level for 5 days. New level: %d.</string>
+	
+	<string name="prefs_reminder_time">Daily Reminder Time</string>
+	<string name="title_settings">Daily Feats Settings</string>
 </resources>

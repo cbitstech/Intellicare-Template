@@ -16,6 +16,7 @@ import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,7 +50,12 @@ public class CalendarActivity extends ConsentedActivity
 			{
 				SimpleDateFormat sdf = new SimpleDateFormat("LLLL yyyy");
 				me.getSupportActionBar().setTitle(sdf.format(date));
-				me.getSupportActionBar().setSubtitle(R.string.app_name);
+
+				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
+				int level = prefs.getInt(FeatsProvider.DEPRESSION_LEVEL, 2);
+				int streak = FeatsProvider.streakForLevel(me, level);
+
+				me.getSupportActionBar().setSubtitle(me.getString(R.string.title_level_streak, level, streak));
 				
 				me._currentDate = date;
 				
@@ -63,6 +69,12 @@ public class CalendarActivity extends ConsentedActivity
 	public void onResume()
 	{
 		super.onResume();
+
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		int level = prefs.getInt(FeatsProvider.DEPRESSION_LEVEL, 2);
+		
+		Log.e("DF", "STREAK: " + FeatsProvider.streakForLevel(this, level));
 		
 		if (this._currentDate == null)
 			this._currentDate = new Date();
@@ -294,6 +306,16 @@ public class CalendarActivity extends ConsentedActivity
 		{
 			Intent editIntent = new Intent(this, EditFeatsChecklistActivity.class);
 			this.startActivity(editIntent);
+		}
+		else if (itemId == R.id.action_rules)
+		{
+			Intent rulesIntent = new Intent(this, RulesActivity.class);
+			this.startActivity(rulesIntent);
+		}
+		else if (itemId == R.id.action_settings)
+		{
+			Intent settingsIntent = new Intent(this, SettingsActivity.class);
+			this.startActivity(settingsIntent);
 		}
 		
 		return true;

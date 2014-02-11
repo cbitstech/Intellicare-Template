@@ -58,25 +58,6 @@
 	            android:text="@string/depression_question_3" />
 	    </RadioGroup>
 	</LinearLayout>
-	<LinearLayout android:id="@+id/supporters_layout"
-	    android:layout_height="0dp"
-	    android:layout_weight="1"
-	    android:layout_width="match_parent"
-	    android:orientation="vertical"
-	    android:visibility="gone">
-        <TextView android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/supporters_prompt"
-            android:layout_margin="16dp"
-            android:textSize="14sp" />
-		<View android:background="@color/bottom_bar_border"
-	        android:layout_width="match_parent"
-	        android:layout_height="1.5dp" />
-		<ListView android:id="@+id/supporters_list"
-		    android:layout_width="match_parent"
-		    android:layout_height="0dp"
-		    android:layout_weight="1" />	    
-	</LinearLayout>
     <View android:background="@color/bottom_bar_border"
         android:layout_width="match_parent"
         android:layout_height="1.5dp" />
