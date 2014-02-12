@@ -11,10 +11,22 @@
 
     <string-array name="sample_mantras">
         <item></item>
-        <item>You are loved - despite your sadness</item>
-        <item>You are strong</item>
-        <item>I think I can</item>
-        <item>Just do it</item>
+		<item>I am resilient</item>
+		<item>I am strong</item>
+		<item>I am needed</item>
+		<item>I am inspired</item>
+		<item>I am generous</item>
+		<item>I am grateful</item>
+		<item>I am appreciated</item>
+		<item>I am loved</item>
+		<item>I am valued</item>
+		<item>I am a winner</item>
+		<item>I am a star</item>
+		<item>I will persevere</item>
+		<item>I will triumph</item>
+		<item>I will create</item>
+		<item>I will succeed</item>
+		<item>I will give it my best</item>
     </string-array>
 
     <string name="empty_mantra_toast">Please write or select a mantra.</string>
