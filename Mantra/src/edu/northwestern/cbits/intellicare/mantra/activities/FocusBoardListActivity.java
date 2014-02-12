@@ -45,12 +45,8 @@ public class FocusBoardListActivity extends ListActivity {
 	
 	private void handleSendText(Intent intent) {
 		Log.d("FocusBoardActivityList.handleSendText", "entered; intent = " + intent);
-
-		//			Set<String> imageSet = ImageExtractor.getImageList(intent.getStringExtra(Intent.EXTRA_TEXT), false);
-//			for(String s : imageSet) {
-//				Log.d("FocusBoardActivityList.handleSendText", "image URL = " + s);
-		new GetImageListTask().execute(intent.getStringExtra(Intent.EXTRA_TEXT));
-//			}
+		String urlFromBrowser = intent.getStringExtra(Intent.EXTRA_TEXT);
+		new GetImageListAndSizesTask().execute(urlFromBrowser);
 	}
 
 	@Override
@@ -69,43 +65,31 @@ public class FocusBoardListActivity extends ListActivity {
  * @author mohrlab
  *
  */
-class GetImageListTask extends AsyncTask<String, Void, Set<String>> {
+class GetImageListAndSizesTask extends AsyncTask<String, Void, Map<String, Integer>> {
 	@Override
-	protected Set<String> doInBackground(String... arg0) {
+	protected Map<String, Integer> doInBackground(String... arg0) {
 		try {
-			return ImageExtractor.getImageList(arg0[0], false);
+			Log.d("GetImageListAndSizesTask.doInBackground", "entered");
+			long startTime = System.currentTimeMillis();
+			Set<String> imageList = ImageExtractor.getImageList(arg0[0], false);
+			long imageListTime = System.currentTimeMillis();
+			Map<String,Integer> m = ImageExtractor.getRemoteContentLength(imageList);
+			long endTime = System.currentTimeMillis();
+			Log.d("GetImageListAndSizesTask.doInBackground", 
+					"exiting; ELAPSED TIME (ms) = " + ((double)endTime - startTime) + 
+					", getImageList (ms) = " + ((double)(imageListTime - startTime)) + 
+					", getRemoteContentLength (ms) = " + ((double)(endTime - imageListTime))
+					);
+			return m;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
 	
-	protected void onPostExecute(Set<String> imageSet) {
-//		for(String s : imageSet) {
-//			Log.d("FocusBoardActivityList.handleSendText", "image URL = " + s);
-//		}
-		new GetRemoteContentLengthTask().execute(imageSet);
+	protected void onPostExecute(Map<String, Integer> imageInfo) {
+		for(String key : imageInfo.keySet()) {
+			Log.d("GetImageListAndSizesTask.onPostExecute", "size = " + imageInfo.get(key) + " for image " + key);
+		}
 	}
 }
-
-/**
- * Fetches the size of images at a specified set of URLs.
- * @author mohrlab
- *
- */
-class GetRemoteContentLengthTask extends AsyncTask<Set<String>, Void, Map<String, Integer>> {
-	
-	protected void onPostExecute(Map<String, Integer> imageSizes) {
-		for(String key : imageSizes.keySet()) {
-			Log.d("FocusBoardActivityList.handleSendText", "size = " + imageSizes.get(key) + " for image " + key);
-		}		
-	}
-
-	@Override
-	protected Map<String, Integer> doInBackground(Set<String>... params) {
-		return ImageExtractor.getRemoteContentLength(params[0]);
-	}
-}
-
-
-
