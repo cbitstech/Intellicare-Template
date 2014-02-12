@@ -1,5 +1,7 @@
 package edu.northwestern.cbits.intellicare.dailyfeats;
 
+import java.util.HashMap;
+
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Intent;
@@ -18,6 +20,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class IntroActivity extends ConsentedActivity 
 {
@@ -74,6 +77,13 @@ public class IntroActivity extends ConsentedActivity
 					        editor.putInt(ScheduleManager.REMINDER_MINUTE, minute);
 					        editor.commit();
 
+							HashMap<String, Object> payload = new HashMap<String, Object>();
+							payload.put("hour", hour);
+							payload.put("minute", minute);
+							payload.put("source", "intro");
+							
+							LogManager.getInstance(me).log("set_reminder_time", payload);
+
 							me.mStep += 1;
 							me.updateLayout();
 						}
@@ -96,6 +106,8 @@ public class IntroActivity extends ConsentedActivity
 					e.putBoolean(IntroActivity.INTRO_SHOWN, true);
 					e.putLong(FeatsProvider.START_FEATS_DATE, System.currentTimeMillis());
 					e.commit();
+					
+					LogManager.getInstance(me).log("completed_intro", null);
 
 					me.startActivity(new Intent(me, CalendarActivity.class));
 					me.finish();

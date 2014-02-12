@@ -1,5 +1,7 @@
 package edu.northwestern.cbits.intellicare.dailyfeats;
 
+import java.util.HashMap;
+
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -24,6 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class EditFeatsChecklistActivity extends ConsentedActivity
 {
@@ -41,6 +44,8 @@ public class EditFeatsChecklistActivity extends ConsentedActivity
 	protected void onResume()
 	{
 		super.onResume();
+
+		LogManager.getInstance(this).log("opened_feats_editor", null);
 
 		final EditFeatsChecklistActivity me = this;
 
@@ -61,7 +66,7 @@ public class EditFeatsChecklistActivity extends ConsentedActivity
 			{
 				final SimpleCursorAdapter meAdapter = this;
 				
-				CheckBox item = (CheckBox) view.findViewById(R.id.feat_checkbox);
+				final CheckBox item = (CheckBox) view.findViewById(R.id.feat_checkbox);
 				
 				final long id = cursor.getLong(cursor.getColumnIndex("_id"));
 				
@@ -87,6 +92,14 @@ public class EditFeatsChecklistActivity extends ConsentedActivity
 						
 						context.getContentResolver().update(FeatsProvider.FEATS_URI, values, where, args);
 
+						HashMap<String, Object> payload = new HashMap<String, Object>();
+						payload.put("feat", button.getText().toString());
+						
+						if (checked)
+							LogManager.getInstance(me).log("enabled_feat", payload);
+						else
+							LogManager.getInstance(me).log("disabled_feat", payload);
+
 						meAdapter.getCursor().requery();
 					}
 				});
@@ -102,7 +115,7 @@ public class EditFeatsChecklistActivity extends ConsentedActivity
 							AlertDialog.Builder builder = new AlertDialog.Builder(me);
 							builder = builder.setTitle(R.string.title_delete_feat);
 							
-							CheckBox item = (CheckBox) view.findViewById(R.id.feat_checkbox);				
+							final CheckBox item = (CheckBox) view.findViewById(R.id.feat_checkbox);				
 							
 							builder = builder.setMessage(me.getString(R.string.message_delete_feat, item.getText()));
 							
@@ -119,6 +132,11 @@ public class EditFeatsChecklistActivity extends ConsentedActivity
 
 									meAdapter.getCursor().requery();
 									meAdapter.notifyDataSetChanged();
+									
+									HashMap<String, Object> payload = new HashMap<String, Object>();
+									payload.put("feat", item.getText().toString());
+
+									LogManager.getInstance(me).log("deleted_feat", payload);
 								}
 							});
 
@@ -173,6 +191,11 @@ public class EditFeatsChecklistActivity extends ConsentedActivity
 				{
 					public void onClick(View v) 
 					{
+						HashMap<String, Object> payload = new HashMap<String, Object>();
+						payload.put("feat", item.getText().toString());
+
+						LogManager.getInstance(me).log("tapped_recommendation", payload);
+
 						Toast.makeText(me, R.string.toast_recommended_feat, Toast.LENGTH_SHORT).show();
 					}
 				});
@@ -193,6 +216,8 @@ public class EditFeatsChecklistActivity extends ConsentedActivity
 	{
 		if (item.getItemId() == R.id.action_add_item)
 		{
+			LogManager.getInstance(this).log("started_add_feat", null);
+
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
 			LayoutInflater inflater = LayoutInflater.from(this);
@@ -218,7 +243,12 @@ public class EditFeatsChecklistActivity extends ConsentedActivity
 					me.getContentResolver().insert(FeatsProvider.FEATS_URI, values);
 					
 					Toast.makeText(me, R.string.toast_feat_added, Toast.LENGTH_SHORT).show();
-					
+
+					HashMap<String, Object> payload = new HashMap<String, Object>();
+					payload.put("feat", newItem);
+
+					LogManager.getInstance(me).log("added_feat", payload);
+
 					me.onResume();
 				}
 			});
@@ -227,7 +257,7 @@ public class EditFeatsChecklistActivity extends ConsentedActivity
 			{
 				public void onClick(DialogInterface arg0, int arg1) 
 				{
-
+					LogManager.getInstance(me).log("cancelled_add", null);
 				}
 			});
 			

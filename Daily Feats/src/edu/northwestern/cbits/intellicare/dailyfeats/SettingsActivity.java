@@ -31,14 +31,12 @@ public class SettingsActivity extends PreferenceActivity
 	{
 		super.onResume();
 		
-		HashMap<String, Object> payload = new HashMap<String, Object>();
-		LogManager.getInstance(this).log("opened_settings", payload);
+		LogManager.getInstance(this).log("opened_settings", null);
 	}
 	
 	public void onPause()
 	{
-		HashMap<String, Object> payload = new HashMap<String, Object>();
-		LogManager.getInstance(this).log("closed_settings", payload);
+		LogManager.getInstance(this).log("closed_settings", null);
 		
 		super.onPause();
 	}
@@ -48,6 +46,8 @@ public class SettingsActivity extends PreferenceActivity
 	{
 		if (preference.getKey().equals("settings_reminder_time"))
 		{
+			final SettingsActivity me = this;
+			
 			final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 			
 			TimePickerDialog dialog = new TimePickerDialog(this, new OnTimeSetListener()
@@ -59,6 +59,13 @@ public class SettingsActivity extends PreferenceActivity
 			        editor.putInt(ScheduleManager.REMINDER_HOUR, hour);
 			        editor.putInt(ScheduleManager.REMINDER_MINUTE, minute);
 			        editor.commit();
+			        
+					HashMap<String, Object> payload = new HashMap<String, Object>();
+					payload.put("hour", hour);
+					payload.put("minute", minute);
+					payload.put("source", "settings");
+					
+					LogManager.getInstance(me).log("set_reminder_time", payload);
 				}
 			}, prefs.getInt(ScheduleManager.REMINDER_HOUR, 18), prefs.getInt(ScheduleManager.REMINDER_MINUTE, 0), DateFormat.is24HourFormat(this));
 			

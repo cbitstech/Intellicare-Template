@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -16,7 +17,6 @@ import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +28,7 @@ import android.widget.TextView;
 import edu.emory.mathcs.backport.java.util.Collections;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.dailyfeats.views.CalendarView;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class CalendarActivity extends ConsentedActivity 
 {
@@ -54,12 +55,16 @@ public class CalendarActivity extends ConsentedActivity
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
 				int level = prefs.getInt(FeatsProvider.DEPRESSION_LEVEL, 2);
 				int streak = FeatsProvider.streakForLevel(me, level);
-
+				
 				me.getSupportActionBar().setSubtitle(me.getString(R.string.title_level_streak, level, streak));
 				
 				me._currentDate = date;
 				
 				me.reloadList();
+
+				HashMap<String, Object> payload = new HashMap<String, Object>();
+				payload.put("date", date.getTime());
+				LogManager.getInstance(me).log("changed_date", payload);
 			}
 		});
 
@@ -70,20 +75,26 @@ public class CalendarActivity extends ConsentedActivity
 	{
 		super.onResume();
 
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		
-		int level = prefs.getInt(FeatsProvider.DEPRESSION_LEVEL, 2);
-		
-		Log.e("DF", "STREAK: " + FeatsProvider.streakForLevel(this, level));
-		
 		if (this._currentDate == null)
 			this._currentDate = new Date();
-		
+
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		payload.put("date", this._currentDate.getTime());
+		LogManager.getInstance(this).log("opened_calendar", payload);
+
         CalendarView calendar = (CalendarView) this.findViewById(R.id.view_calendar);
         calendar.setDate(this._currentDate);
         
         this.reloadList();
 	}
+	
+	public void onPause()
+	{
+		LogManager.getInstance(this).log("closed_calendar", null);
+		
+		super.onPause();
+	}
+
 	
 	@SuppressWarnings("deprecation")
 	protected void reloadList() 
@@ -140,11 +151,27 @@ public class CalendarActivity extends ConsentedActivity
 								int level = prefs.getInt(FeatsProvider.DEPRESSION_LEVEL, 2);
 
 						        FeatsProvider.createFeat(me, featName, level);
+						        
+								HashMap<String, Object> payload = new HashMap<String, Object>();
+								payload.put("feat", featName);
+								LogManager.getInstance(me).log("checked_feat", payload);
 							}
 							else
-						        FeatsProvider.clearFeats(me, featName, me._currentDate);
+							{
+								HashMap<String, Object> payload = new HashMap<String, Object>();
+								payload.put("feat", featName);
+								LogManager.getInstance(me).log("unchecked_feat", payload);
+
+								FeatsProvider.clearFeats(me, featName, me._currentDate);
+							}
 							
 							calendar.setDate(new Date(), false);
+							
+							SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
+							int level = prefs.getInt(FeatsProvider.DEPRESSION_LEVEL, 2);
+							int streak = FeatsProvider.streakForLevel(me, level);
+							
+							me.getSupportActionBar().setSubtitle(me.getString(R.string.title_level_streak, level, streak));
 						}
 					});
 

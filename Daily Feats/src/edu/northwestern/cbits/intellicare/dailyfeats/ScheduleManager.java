@@ -1,15 +1,18 @@
 package edu.northwestern.cbits.intellicare.dailyfeats;
 
 import java.util.Calendar;
+import java.util.HashMap;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import edu.northwestern.cbits.intellicare.StatusNotificationManager;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class ScheduleManager
 {
@@ -82,10 +85,36 @@ public class ScheduleManager
 			e.commit();
 
 			if (oldLevel > newLevel)
-				title = this._context.getString(R.string.note_title_demoted, newLevel);
+			{
+				HashMap<String, Object> payload = new HashMap<String, Object>();
+				payload.put("user_level", newLevel);
 				
+				LogManager.getInstance(this._context).log("feats_demoted", payload);
+
+				message = this._context.getString(R.string.note_title_demoted, newLevel);
+			}
 			else if (newLevel > oldLevel)
-				title = this._context.getString(R.string.note_title_promoted, newLevel);
+			{
+				HashMap<String, Object> payload = new HashMap<String, Object>();
+				payload.put("user_level", newLevel);
+				
+				LogManager.getInstance(this._context).log("feats_promoted", payload);
+				
+				message = this._context.getString(R.string.note_title_promoted, newLevel);
+			}
+			
+			if (oldLevel != newLevel)
+			{
+				ContentValues values = new ContentValues();
+				values.put("enabled", true);
+			
+				String where = "feat_level = ?";
+				String[] args = { "" + newLevel };
+						
+				this._context.getContentResolver().update(FeatsProvider.FEATS_URI, values, where, args);
+			}
+			
+			LogManager.getInstance(this._context).log("feats_checkin_notified", null);
 
 			StatusNotificationManager.getInstance(this._context).notifyBigText(97531, R.drawable.ic_notification_feats, title, message, pi, StartupActivity.URI);
 

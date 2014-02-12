@@ -41,7 +41,7 @@ public class FeatsProvider extends android.content.ContentProvider
     private static final int DATABASE_VERSION = 2;
 	private static final long DAY_LENGTH = 1000 * 3600 * 24;
 	protected static final String START_FEATS_DATE = "start_feats_date";
-	private static final long STREAK_LENGTH = 2;
+	private static final long STREAK_LENGTH = 3;
     
     public FeatsProvider()
     {
@@ -432,7 +432,7 @@ public class FeatsProvider extends android.content.ContentProvider
 		
 		Cursor cursor = context.getContentResolver().query(FeatsProvider.FEATS_URI, null, where, args, null);
 		
-		final int minFeatCount = cursor.getCount() / 2;
+		final int minFeatCount = (cursor.getCount() / 2) + 1;
 		
 		while (cursor.moveToNext())
 			feats.add(cursor.getString(cursor.getColumnIndex("feat_name")));
@@ -479,7 +479,7 @@ public class FeatsProvider extends android.content.ContentProvider
 	
 			for (int i = 0; i < FeatsProvider.STREAK_LENGTH && end > startFeats; i++)
 			{
-				int dayFeats = 0;
+				int dayFeats = feats.size();
 				
 				for (String feat : feats)
 				{
@@ -489,7 +489,7 @@ public class FeatsProvider extends android.content.ContentProvider
 					Cursor featCursor = context.getContentResolver().query(FeatsProvider.RESPONSES_URI, null, where, featArgs, null);
 					
 					if (featCursor.getCount() == 0)
-						dayFeats += 1;
+						dayFeats -= 1;
 					
 					featCursor.close();
 				}
