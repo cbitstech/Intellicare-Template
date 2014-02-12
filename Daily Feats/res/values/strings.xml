@@ -139,7 +139,7 @@
 	<string name="toast_recommended_feat">Recommended based on your current mood level.</string>
 
 	<string name="title_rules">Daily Feats: Rules</string>
-	<string name="action_rules">Rules of the App</string>
+	<string name="action_rules">Help / Rules</string>
 	<string name="title_level_streak" formatted="false">Level %d, Streak: %d</string>
 		
 	<string name="note_title_demoted" formatted="false">Bummer! You\'ve gone more than 5 days without completing at least half of the feats for your current level. New level: %d.</string>
