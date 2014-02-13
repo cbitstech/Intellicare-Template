@@ -1,57 +1,37 @@
 <html>
 	<head>
 		<link rel="stylesheet" type="text/css" href="styles.css" />
-	    <link href="nv.d3.min.css" rel="stylesheet">
+	    <link href="nv.d3.css" rel="stylesheet">
 
 	    <script src="d3.min.js"></script>
-	    <script src="nv.d3.min.js"></script>
-<!--	    <script src="models/legend.js"></script>
+	    <script src="nv.d3.js"></script>
 	    <script src="models/line.js"></script>
-	    <script src="utils.js"></script> -->
+	    <script src="utils.js"></script>
 	    
 		<script type="text/javascript">
-			function sinAndCos()
-			{
-				var sin = [], cos = [];
-
-				for (var i = 0; i < 100; i++) 
-				{
-					sin.push({x: i, y: Math.sin(i/10)});
-					cos.push({x: i, y: .5 * Math.cos(i/10)});
-				}
-
-				return [
-					{
-						values: sin,
-						key: 'Sine Wave',
-						color: '#ff7f0e'
-					},
-					{
-						values: cos,
-						key: 'Cosine Wave',
-						color: '#2ca02c'
-					}
-				];
-			}
+			var values = VALUES_JSON;
 
 			nv.addGraph({
-				generate: function() {
+				generate: function() 
+				{
 					var width = nv.utils.windowSize().width, height = nv.utils.windowSize().height;
-					var chart = nv.models.line().width(width).height(height).margin({top: 8, right: 0, bottom: 8, left: 0});
 
+					var chart = nv.models.lineChart()
+						.height(height)
+						.width(width)
+						.options({
+							margin: {top: 16, right: 8, bottom: 24, left: 8},
+							x: function(d,i) { return d.x},
+							showXAxis: true,
+							showYAxis: false
+						});
 
-					d3.select('#chart').attr('width', width).attr('height', height).datum(sinAndCos()).call(chart);
+					chart.xAxis.tickFormat(function(d) { return d3.time.format('%I:%d %a.')(new Date(d)) });
 
-					return chart;
-				},
-				callback: function(graph) {
-					window.onresize = function() {
-						var width = nv.utils.windowSize().width, height = nv.utils.windowSize().height, margin = graph.margin();
-	
-						graph.width(width).height(height);
-	
-						d3.select('#chart').attr('width', width).attr('height', height).call(graph);
-					};
+					d3.select('#chart')
+						.attr('height', height)
+						.datum(values)
+						.call(chart);
 				}
 			});
 		</script>

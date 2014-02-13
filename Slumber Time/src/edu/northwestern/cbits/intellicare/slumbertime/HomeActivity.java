@@ -1,9 +1,21 @@
 package edu.northwestern.cbits.intellicare.slumbertime;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import edu.northwestern.cbits.intellicare.logging.LogManager;
+
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -108,7 +120,146 @@ public class HomeActivity extends PortraitActivity
 			  }
 		});
 		
-		graphView.loadUrl("file:///android_asset/home_graph.html");
+		graphView.loadDataWithBaseURL("file:///android_asset/", HomeActivity.generateGraph(this), "text/html", null, null);
+	}
+
+	private static String generateGraph(Context context) 
+	{
+	    StringBuilder buffer = new StringBuilder();
+	    
+		try 
+		{
+		    InputStream html = context.getAssets().open("home_graph.html");
+
+		    BufferedReader in = new BufferedReader(new InputStreamReader(html));
+
+		    String str = null;
+
+		    while ((str=in.readLine()) != null) 
+		    {
+		    	buffer.append(str);
+		    }
+
+		    in.close();
+		} 
+		catch (IOException e) 
+		{
+			LogManager.getInstance(context).logException(e);
+		}
+
+		String graphString = buffer.toString();
+		
+		JSONArray graphValues = HomeActivity.graphValues(context);
+		
+		graphString = graphString.replaceAll("VALUES_JSON", graphValues.toString());
+		
+		Log.e("ST", "HTML: " + graphString);
+		
+		return graphString;
+	}
+
+	private static JSONArray graphValues(Context context) 
+	{
+		JSONArray values = new JSONArray();
+
+		/* function sinAndCos()
+		{
+			var sin = [], cos = [];
+
+			for (var i = 0; i < 100; i++) 
+			{
+				sin.push({x: i, y: Math.sin(i/10)});
+				cos.push({x: i, y: .5 * Math.cos(i/10)});
+			}
+
+			return [
+				{
+					values: sin,
+					key: 'Sine Wave',
+					color: '#ff7f0e'
+				},
+				{
+					values: cos,
+					key: 'Cosine Wave',
+					color: '#2ca02c'
+				}
+			];
+		} */
+
+		String[] colors = { "#33B5E5", "#AA66CC", "#99CC00", "#FFBB33", "#FF4444" };
+		int colorIndex = 0;
+		
+		String[] sensors = { SlumberContentProvider.TEMPERATURE, SlumberContentProvider.LIGHT_LEVEL, SlumberContentProvider.AUDIO_MAGNITUDE, SlumberContentProvider.AUDIO_FREQUENCY };
+
+		try 
+		{
+			JSONObject sleep = new JSONObject();
+			sleep.put("key", context.getString(R.string.label_sleep_efficiency));
+			sleep.put("color", colors[colorIndex++ % colors.length]);
+
+			JSONArray sleepValues = new JSONArray();
+			
+			Cursor c = context.getContentResolver().query(SlumberContentProvider.SLEEP_DIARIES_URI, null, null, null, SlumberContentProvider.DIARY_TIMESTAMP);
+			
+			while (c.moveToNext())
+			{
+				JSONObject reading = new JSONObject();
+				
+				reading.put("x", c.getLong(c.getColumnIndex(SlumberContentProvider.DIARY_TIMESTAMP)));
+				reading.put("y", SlumberContentProvider.scoreSleep(c, 1));
+				
+				sleepValues.put(reading);
+			}
+
+			c.close();
+			
+			sleep.put("values", sleepValues);
+			
+			values.put(sleep);
+		} 
+		catch (JSONException e) 
+		{
+			LogManager.getInstance(context).logException(e);
+		}
+		
+		for (String sensor : sensors)
+		{
+			try 
+			{
+				Cursor c = SlumberContentProvider.fetchNormalizedSensorReadings(context, sensor);
+				
+				if (c.getCount() > 0)
+				{
+					JSONObject sensorObj = new JSONObject();
+					sensorObj.put("key", sensor);
+					sensorObj.put("color", colors[colorIndex++ % colors.length]);
+
+					JSONArray sensorValues = new JSONArray();
+
+					while (c.moveToNext())
+					{
+						JSONObject reading = new JSONObject();
+
+						reading.put("x", c.getLong(c.getColumnIndex(SlumberContentProvider.READING_RECORDED)));
+						reading.put("y", c.getLong(c.getColumnIndex(SlumberContentProvider.READING_VALUE)));
+
+						sensorValues.put(reading);
+					}
+
+					sensorObj.put("values", sensorValues);
+
+					values.put(sensorObj);
+				}
+				
+				c.close();
+			} 
+			catch (JSONException e) 
+			{
+				LogManager.getInstance(context).logException(e);
+			}
+		}
+
+		return values;
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) 
