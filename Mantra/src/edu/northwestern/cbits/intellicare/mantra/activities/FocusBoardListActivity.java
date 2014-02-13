@@ -28,26 +28,8 @@ public class FocusBoardListActivity extends ListActivity {
 		mCursor = FocusBoardManager.get(this).queryFocusBoards();
 		FocusBoardCursorAdapter adapter = new FocusBoardCursorAdapter(this, mCursor);
 		setListAdapter(adapter);
-		
-		
-		// handle external intents; src: http://developer.android.com/training/sharing/receive.html
-		Intent intent = getIntent();
-		String action = intent.getAction();
-		String type = intent.getType();
-		
-		Log.d("FocusBoardActivityList.onCreate", "action = " + action + "; type = " + type);
-		if(Intent.ACTION_SEND.equals(action) && type != null) {
-			if("text/plain".equals(type)) {
-				handleSendText(intent);
-			}
-		}
 	}
-	
-	private void handleSendText(Intent intent) {
-		Log.d("FocusBoardActivityList.handleSendText", "entered; intent = " + intent);
-		String urlFromBrowser = intent.getStringExtra(Intent.EXTRA_TEXT);
-		new GetImageListAndSizesTask().execute(urlFromBrowser);
-	}
+
 
 	@Override
 	protected void onDestroy() {
@@ -56,40 +38,3 @@ public class FocusBoardListActivity extends ListActivity {
 	}
 }
 
-
-
-/**** Async tasks *****/
-
-/**
- * Fetches the set of image URLs from webpage at a specified URL.
- * @author mohrlab
- *
- */
-class GetImageListAndSizesTask extends AsyncTask<String, Void, Map<String, Integer>> {
-	@Override
-	protected Map<String, Integer> doInBackground(String... arg0) {
-		try {
-			Log.d("GetImageListAndSizesTask.doInBackground", "entered");
-			long startTime = System.currentTimeMillis();
-			Set<String> imageList = ImageExtractor.getImageList(arg0[0], false);
-			long imageListTime = System.currentTimeMillis();
-			Map<String,Integer> m = ImageExtractor.getRemoteContentLength(imageList);
-			long endTime = System.currentTimeMillis();
-			Log.d("GetImageListAndSizesTask.doInBackground", 
-					"exiting; ELAPSED TIME (ms) = " + ((double)endTime - startTime) + 
-					", getImageList (ms) = " + ((double)(imageListTime - startTime)) + 
-					", getRemoteContentLength (ms) = " + ((double)(endTime - imageListTime))
-					);
-			return m;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
-	protected void onPostExecute(Map<String, Integer> imageInfo) {
-		for(String key : imageInfo.keySet()) {
-			Log.d("GetImageListAndSizesTask.onPostExecute", "size = " + imageInfo.get(key) + " for image " + key);
-		}
-	}
-}

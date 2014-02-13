@@ -181,7 +181,7 @@ public class ImageExtractor
 	 * @param imageUrlList
 	 */
 	public static void downloadAndSaveImages(String outputFolder, Set<String> imageUrlList) {
-		String testMethodName = methodName();
+		String MN = methodName();
 
 		// create the containing folder if it doesn't exist
 		(new File(outputFolder)).mkdirs();
@@ -193,11 +193,35 @@ public class ImageExtractor
 				try{
 					saveImage(ImageExtractor.getImage(u), outputFolder + outputFileName);
 				} catch(Exception e) {
-					log(testMethodName, "ERROR: Couldn't write file to: " + outputFolder + outputFileName + " from URL (" + u + "). Reason: " + e.getMessage());
+					log(MN, "ERROR: Couldn't write file to: " + outputFolder + outputFileName + " from URL (" + u + "). Reason: " + e.getMessage());
 				}
 			} catch (URISyntaxException e1) {
 				e1.printStackTrace();
 			}
+		}
+	}
+	
+	/**
+	 * Like the method says - it downloads and saves images.
+	 * @param outputFolder
+	 * @param imageUrlList
+	 */
+	public static void downloadAndSaveImage(String outputFolder, String imageUrl) {
+		String MN = methodName();
+
+		// create the containing folder if it doesn't exist
+		(new File(outputFolder)).mkdirs();
+
+		// download and write the files
+		try {
+			String outputFileName = extractUrlFileName(imageUrl);
+			try{
+				saveImage(ImageExtractor.getImage(imageUrl), outputFolder + outputFileName);
+			} catch(Exception e) {
+				log(MN, "ERROR: Couldn't write file to: " + outputFolder + outputFileName + " from URL (" + imageUrl + "). Reason: " + e.getMessage());
+			}
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
 		}
 	}
 	
