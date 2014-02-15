@@ -205,8 +205,9 @@ public class ImageExtractor
 	 * Like the method says - it downloads and saves images.
 	 * @param outputFolder
 	 * @param imageUrlList
+	 * @return 
 	 */
-	public static void downloadAndSaveImage(String outputFolder, String imageUrl) {
+	public static String downloadAndSaveImage(String outputFolder, String imageUrl) {
 		String MN = methodName();
 
 		// create the containing folder if it doesn't exist
@@ -217,12 +218,14 @@ public class ImageExtractor
 			String outputFileName = extractUrlFileName(imageUrl);
 			try{
 				saveImage(ImageExtractor.getImage(imageUrl), outputFolder + outputFileName);
+				return outputFileName;
 			} catch(Exception e) {
 				log(MN, "ERROR: Couldn't write file to: " + outputFolder + outputFileName + " from URL (" + imageUrl + "). Reason: " + e.getMessage());
 			}
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
 		}
+		return null;
 	}
 	
 	

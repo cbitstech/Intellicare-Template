@@ -25,6 +25,9 @@ public class FocusBoardListActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.focus_board_list_activity);
+		
+		Log.d("FocusBoardListActivity.onCreate", "entered");
+
 		mCursor = FocusBoardManager.get(this).queryFocusBoards();
 		FocusBoardCursorAdapter adapter = new FocusBoardCursorAdapter(this, mCursor);
 		setListAdapter(adapter);

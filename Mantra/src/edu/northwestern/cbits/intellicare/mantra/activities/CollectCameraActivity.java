@@ -72,6 +72,8 @@ public class CollectCameraActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.collect_from_camera_activity);
 
+		Log.d("CollectCameraActivity.onCreate", "entered");
+
 		this.attachCameraPreview();
 		this.addCaptureButtonListener();
 

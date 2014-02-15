@@ -3,6 +3,7 @@ package edu.northwestern.cbits.intellicare.mantra.activities;
 import edu.northwestern.cbits.intellicare.mantra.R;
 import android.os.Bundle;
 import android.app.Activity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,6 +18,9 @@ public class NewMantraActivity extends Activity implements OnItemSelectedListene
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_mantra_activity);
+
+		Log.d("NewMantraActivity.onCreate", "entered");
+		
 		Spinner spinner = (Spinner) findViewById(R.id.spinner1);
 		spinner.setOnItemSelectedListener(this);
 		// Create an ArrayAdapter using the string array and a default spinner layout
