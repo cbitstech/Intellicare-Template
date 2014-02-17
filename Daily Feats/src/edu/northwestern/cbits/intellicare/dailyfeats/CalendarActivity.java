@@ -8,6 +8,9 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.CrashManagerListener;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -32,6 +35,7 @@ import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class CalendarActivity extends ConsentedActivity 
 {
+	private static final String APP_ID = "b1fd44d7db88602fa8185ac896a153b1";
 	private Date _currentDate = null;
 	
 	@SuppressLint("SimpleDateFormat")
@@ -86,6 +90,14 @@ public class CalendarActivity extends ConsentedActivity
         calendar.setDate(this._currentDate);
         
         this.reloadList();
+        
+		CrashManager.register(this, APP_ID, new CrashManagerListener() 
+		{
+			public boolean shouldAutoUploadCrashes() 
+			{
+				    return true;
+			}
+		});
 	}
 	
 	public void onPause()

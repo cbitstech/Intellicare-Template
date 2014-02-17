@@ -6,6 +6,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.CrashManagerListener;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,6 +50,21 @@ public class HomeActivity extends PortraitActivity
 			this.icon = icon;
 			this.launchIntent = launchIntent;
 		}
+	}
+
+	private static final String APP_ID = "62e48583d6763b21b5ccf7186bd44089";
+	
+	protected void onResume()
+	{
+		super.onResume();
+		
+		CrashManager.register(this, APP_ID, new CrashManagerListener() 
+		{
+			public boolean shouldAutoUploadCrashes() 
+			{
+				    return true;
+			}
+		});
 	}
 
 	@SuppressLint("SetJavaScriptEnabled")

@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.CrashManagerListener;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
@@ -105,7 +106,13 @@ public class MainActivity extends ConsentedActivity
 	{
 		super.onResume();
 		
-		CrashManager.register(this, "1c80d4f6806c74187d8740450e6cfc31");
+		CrashManager.register(this, "1c80d4f6806c74187d8740450e6cfc31", new CrashManagerListener() 
+		{
+			public boolean shouldAutoUploadCrashes() 
+			{
+				    return true;
+			}
+		});
 		
 		HashMap<String, Object> payload = new HashMap<String, Object>();
 		LogManager.getInstance(this).log("opened_main", payload);
