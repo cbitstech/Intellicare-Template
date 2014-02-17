@@ -3,7 +3,10 @@ package edu.northwestern.cbits.intellicare.slumbertime;
 import java.sql.Date;
 import java.text.DecimalFormat;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -12,6 +15,8 @@ import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
@@ -50,7 +55,7 @@ public class SleepDiaryActivity extends ConsentedActivity
 		String[] emptyStrings = {};
 		
 		final DecimalFormat f = new DecimalFormat("#.#");
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.row_sleep_diary, c, emptyStrings, emptyInts, 0)
+		final SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.row_sleep_diary, c, emptyStrings, emptyInts, 0)
 		{
 			public void bindView (View view, Context context, Cursor cursor)
 			{
@@ -73,49 +78,58 @@ public class SleepDiaryActivity extends ConsentedActivity
 		
 		diaryList.setAdapter(adapter);
 		
-/*		final SleepDiaryActivity me = this;
+		final SleepDiaryActivity me = this;
 		
-		logList.setOnItemClickListener(new OnItemClickListener()
+		diaryList.setOnItemLongClickListener(new OnItemLongClickListener()
 		{
-			public void onItemClick(AdapterView<?> parent, View view, int position, final long id) 
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) 
 			{
-				Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+				final String selection = "_id = ?";
+				final String[] selectionArgs = { "" + id };
 				
-				java.text.DateFormat dateFormat = DateFormat.getLongDateFormat(me);
-				java.text.DateFormat timeFormat = DateFormat.getTimeFormat(me);
+				Cursor c = me.getContentResolver().query(SlumberContentProvider.SLEEP_DIARIES_URI, null, selection, selectionArgs, null);
 				
-				Date now = new Date(cursor.getLong(cursor.getColumnIndex(SlumberContentProvider.NOTE_TIMESTAMP)));
-				
-				AlertDialog.Builder builder = new AlertDialog.Builder(me);
-				builder = builder.setTitle(timeFormat.format(now) + " (" + dateFormat.format(now) + ")");
-				builder = builder.setMessage(cursor.getString(cursor.getColumnIndex(SlumberContentProvider.NOTE_TEXT)));
-				
-				builder = builder.setPositiveButton(R.string.button_close, new OnClickListener()
+				if (c.moveToNext())
 				{
-					public void onClick(DialogInterface arg0, int arg1) 
-					{
+					java.text.DateFormat dateFormat = DateFormat.getLongDateFormat(me);
+					java.text.DateFormat timeFormat = DateFormat.getTimeFormat(me);
+	
+					Date now = new Date(c.getLong(c.getColumnIndex(SlumberContentProvider.DIARY_TIMESTAMP)));
 
-					}
-				});
+					AlertDialog.Builder builder = new AlertDialog.Builder(me);
+					
+					builder = builder.setTitle(me.getString(R.string.title_delete_diary));
+					builder = builder.setMessage(me.getString(R.string.message_delete_diary, dateFormat.format(now), timeFormat.format(now)));
+					
+					builder = builder.setPositiveButton(me.getString(R.string.button_delete_diary), new OnClickListener()
+					{
+						public void onClick(DialogInterface dialog, int which) 
+						{
+							me.getContentResolver().delete(SlumberContentProvider.SLEEP_DIARIES_URI, selection, selectionArgs);
+							
+							Cursor c = me.getContentResolver().query(SlumberContentProvider.SLEEP_DIARIES_URI, null, null, null, "timestamp DESC");
+							Cursor old = adapter.swapCursor(c);
+							adapter.notifyDataSetChanged();
+							
+							old.close();
+						}
+					});
+
+					builder = builder.setNegativeButton(me.getString(R.string.button_cancel), new OnClickListener()
+					{
+						public void onClick(DialogInterface dialog, int which) 
+						{
+						}
+					});
+					
+					builder.create().show();
+				}
 				
-				builder = builder.setNegativeButton(R.string.button_delete_entry, new OnClickListener()
-				{
-					public void onClick(DialogInterface arg0, int arg1) 
-					{
-						String selection = "_id = ?";
-						String[] args = { "" + id };
-						
-						me.getContentResolver().delete(SlumberContentProvider.NOTES_URI, selection, args);
-						
-						me.onResume();
-					}
-				});
+				c.close();
 
-				builder.create().show();
+				return false;
 			}
 		});
-		
-		*/
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) 

@@ -13,6 +13,7 @@
 	<string name="button_remove">Remove</string>
 	<string name="button_discard">Discard &amp; Close</string>
 	<string name="button_delete_entry">Delete Entry</string>
+	<string name="button_delete_diary">Delete Diary</string>
 	<string name="label_yes">Yes</string>
 	<string name="label_no">No</string>
 	
@@ -183,4 +184,34 @@
   	</string-array>
   	
 	<string name="tool_sleep_content">Slumber Reference</string>
+	<string name="desc_sleep_content">Learn more about healthy sleeping.</string>
+	<string name="title_delete_diary">Delete Sleep Diary?</string>
+	<string name="message_delete_diary" formatted="false">Are you sure that you want to delete this diary?\n\n%s\n%s\n</string>
+
+	<string name="tool_tip_video">Healthy Sleeping Videos &amp; Audio</string>
+	<string name="desc_tip_video">Find soothing content to help you get to sleep.</string>
+	
+	<string-array name="youtube_ids">
+        <item>OdIJ2x3nxzQ</item>
+        <item>6zqpDVyCB2Y</item>
+        <item>jzN3yJXlWrg</item>
+        <item>9lj1oFE0YB8</item>
+        <item>1pSyYhRYeIM</item>
+        <item>vcJ-o_fh1B4</item>
+        <item>NMmMNyTwePY</item>
+        <item>R-R65Gg0CJ8</item>
+		<item>eXHURaIl7hA</item>
+   	</string-array>
+	
+	<string-array name="youtube_titles">
+        <item>Forest and nature sounds\n(10 hours)</item>
+        <item>Ambient music and calming nature sounds\n(3 hours)</item>
+        <item>Crickets\n(37 minutes)</item>
+        <item>Rain and thunder\n(1 hour)</item>
+        <item>Rain and thunder\n(10 minutes)</item>
+        <item>Celestial white noise\n(10 hours)</item>
+        <item>"Weightless" by Marconi Union\n(8 minutes)</item>
+        <item>Train sounds\n(3 hours)</item>
+		<item>City sounds\n(1 hour)</item>
+   	</string-array>
 </resources>

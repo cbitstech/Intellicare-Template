@@ -17,7 +17,14 @@
             </intent-filter>
         </activity>
         <activity android:theme="@style/Theme.AppCompat" android:name=".ClockActivity" android:label="@string/app_name" />
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".SleepLogActivity" android:label="@string/app_name" />
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".SleepLogActivity" android:label="@string/app_name">
+   			<intent-filter>
+		        <action android:name="android.intent.action.VIEW" />
+        	    <category android:name="android.intent.category.DEFAULT" />
+            	<category android:name="android.intent.category.BROWSABLE" />
+   			    <data android:scheme="intellicare" android:host="slumber" android:pathPrefix="/last-minute-thoughts" />
+			</intent-filter>
+        </activity>
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".SleepDiaryActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".AddSleepDiaryActivity" android:label="@string/app_name">
    			<intent-filter>
@@ -26,7 +33,13 @@
             	<category android:name="android.intent.category.BROWSABLE" />
    			    <data android:scheme="intellicare" android:host="slumber" android:pathPrefix="/sleep-diary" />
 			</intent-filter>
-		</activity>
+   			<intent-filter>
+		        <action android:name="android.intent.action.VIEW" />
+        	    <category android:name="android.intent.category.DEFAULT" />
+            	<category android:name="android.intent.category.BROWSABLE" />
+   			    <data android:scheme="intellicare" android:host="slumber" android:pathPrefix="/diary" />
+			</intent-filter>
+   					</activity>
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".ContentEntryActivity" android:label="@string/app_name">
    			<intent-filter>
 		        <action android:name="android.intent.action.VIEW" />
@@ -44,7 +57,16 @@
    			    <data android:scheme="intellicare" android:host="slumber" android:pathPrefix="/checklist" />
 			</intent-filter>
         </activity>
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".PurpleChillActivity" android:label="@string/app_name">
+   			<intent-filter>
+		        <action android:name="android.intent.action.VIEW" />
+        	    <category android:name="android.intent.category.DEFAULT" />
+            	<category android:name="android.intent.category.BROWSABLE" />
+   			    <data android:scheme="intellicare" android:host="slumber" android:pathPrefix="/purple-chill" />
+			</intent-filter>
+        </activity>
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".EditBedtimeChecklistActivity" android:label="@string/app_name" />
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".TipsActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.ConsentActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.RecruitmentActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.MotivationActivity" android:label="@string/app_name" />

@@ -3,7 +3,6 @@ package edu.northwestern.cbits.intellicare.slumbertime;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -864,16 +863,10 @@ public class ClockActivity extends Activity implements SensorEventListener
 				
 				GridView contentGrid = (GridView) view.findViewById(R.id.root_grid);
 				
-				final ArrayList<String> testTitles = new ArrayList<String>();
-				testTitles.add("A brief talk on sleeping well.");
-				testTitles.add("Joe sings a lullaby.");
-				testTitles.add("The sounds of the restful forest.");
-				testTitles.add("A brief calming breathing exercise.");
-				testTitles.add("Sleep exercises from Purple Chill.");
-				testTitles.add("Mark Twain on sleep.");
-				testTitles.add("How the experts sleep. (CNN)");
+				final String[] titles = me.getResources().getStringArray(R.array.youtube_titles);
+				final String[] ids = me.getResources().getStringArray(R.array.youtube_ids);
 
-				ArrayAdapter<String> adapter = new ArrayAdapter<String>(me, R.layout.cell_tip, testTitles)
+				ArrayAdapter<String> adapter = new ArrayAdapter<String>(me, R.layout.cell_tip, titles)
 				{
 					public View getView (int position, View convertView, ViewGroup parent)
 					{
@@ -883,23 +876,20 @@ public class ClockActivity extends Activity implements SensorEventListener
 		    				convertView = inflater.inflate(R.layout.cell_tip, parent, false);
 						}
 						
-						TextView title = (TextView) convertView.findViewById(R.id.title_tip);
+						String id = ids[position];
+						String title = titles[position];
 						
-						title.setText(this.getItem(position));
+						TextView tipTitle = (TextView) convertView.findViewById(R.id.title_tip);
+						tipTitle.setText(title);
+						
+						UriImageView icon = (UriImageView) convertView.findViewById(R.id.icon_tip);
+						icon.setCachedImageUri(Uri.parse("http://img.youtube.com/vi/" + id + "/1.jpg"));
 						
 						return convertView;
 					}
 				};
 				
 				contentGrid.setAdapter(adapter);
-				
-				contentGrid.setOnItemClickListener(new OnItemClickListener()
-				{
-					public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) 
-					{
-						Toast.makeText(me, "tOdO: " + testTitles.get(arg2), Toast.LENGTH_SHORT).show();
-					}
-				});
 				
 				builder = builder.setView(view);
 				builder.setNegativeButton(R.string.button_close, new DialogInterface.OnClickListener() 
@@ -910,7 +900,7 @@ public class ClockActivity extends Activity implements SensorEventListener
 					}
 				});
 
-				AlertDialog d = builder.create();
+				final AlertDialog d = builder.create();
 				d.show();
 				
 				DisplayMetrics metrics = me.getResources().getDisplayMetrics();
@@ -922,6 +912,20 @@ public class ClockActivity extends Activity implements SensorEventListener
 				lp.height = (int) (320f * metrics.density);
 
 				d.getWindow().setAttributes(lp);
+
+				contentGrid.setOnItemClickListener(new OnItemClickListener()
+				{
+					public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) 
+					{
+						Uri u = Uri.parse("http://www.youtube.com/watch?v=" + ids[arg2]);
+						
+						Intent intent = new Intent(Intent.ACTION_VIEW, u);
+						
+						me.startActivity(intent);
+						
+						d.dismiss();
+					}
+				});
 			}
         });
 

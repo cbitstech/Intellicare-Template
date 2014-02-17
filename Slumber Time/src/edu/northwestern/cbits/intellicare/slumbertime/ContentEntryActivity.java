@@ -3,11 +3,12 @@ import java.util.List;
 
 import org.markdownj.MarkdownProcessor;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 
@@ -18,6 +19,23 @@ public class ContentEntryActivity extends ConsentedActivity
 		super.onCreate(savedInstanceState);
 
 		this.setContentView(R.layout.activity_content);
+
+		final ContentEntryActivity me = this;
+		
+		WebView webView = (WebView) this.findViewById(R.id.web_view);
+		
+		webView.setWebViewClient(new WebViewClient()
+		{
+			public boolean shouldOverrideUrlLoading (WebView view, String url)
+			{
+				Uri u = Uri.parse(url);
+				
+				Intent intent = new Intent(Intent.ACTION_VIEW, u);
+				me.startActivity(intent);
+				
+				return true;
+			}
+		});
 	}
 	
 	protected void onResume()
@@ -46,8 +64,6 @@ public class ContentEntryActivity extends ConsentedActivity
 			MarkdownProcessor markdown = new MarkdownProcessor();
 			
 			String html = markdown.markdown(body);
-			
-			Log.e("ST", "HTML: " + html);
 			
 			webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", null, null);
 		}

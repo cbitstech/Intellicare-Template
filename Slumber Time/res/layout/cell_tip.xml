@@ -6,10 +6,10 @@
     android:padding="8dp"
     android:baselineAligned="false"
     android:layout_gravity="top">
-    <ImageView android:id="@+id/icon_tip" 
+    <edu.northwestern.cbits.intellicare.slumbertime.UriImageView android:id="@+id/icon_tip"
         android:layout_width="match_parent"
         android:background="#101010"
-        android:padding="8dp"
+        android:scaleType="centerCrop"
         android:layout_height="64dp"
         android:src="@drawable/clock_alarms" />
     <TextView android:id="@+id/title_tip"
@@ -17,6 +17,6 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:singleLine="false"
-        android:minLines="2"
-        android:maxLines="2" />
+        android:minLines="3"
+        android:maxLines="3" />
 </LinearLayout>
