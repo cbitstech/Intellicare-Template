@@ -6,6 +6,7 @@ import edu.northwestern.cbits.intellicare.mantra.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,6 +26,9 @@ public class NewFocusBoardActivity extends Activity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_focus_board_activity);
+
+		Log.d("NewFocusBoardActivity.onCreate", "entered");
+		
 		mFocusBoardManager = FocusBoardManager.get(this);
 		populateSpinner();
 		

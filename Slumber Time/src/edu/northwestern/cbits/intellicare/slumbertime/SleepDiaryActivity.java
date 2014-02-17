@@ -1,6 +1,7 @@
 package edu.northwestern.cbits.intellicare.slumbertime;
 
 import java.sql.Date;
+import java.text.DecimalFormat;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +18,8 @@ import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 public class SleepDiaryActivity extends ConsentedActivity
 {
+	protected static final long DAY_LENGTH = (1000 * 3600 * 24);
+
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
@@ -35,10 +38,18 @@ public class SleepDiaryActivity extends ConsentedActivity
 		
 		Cursor c = this.getContentResolver().query(SlumberContentProvider.SLEEP_DIARIES_URI, null, null, null, "timestamp DESC");
 		
+		if (c.getCount() == 0)
+		{
+			Intent intent = new Intent(this, AddSleepDiaryActivity.class);
+
+			this.startActivity(intent);
+		}
+
 		this.startManagingCursor(c);
 		int[] emptyInts = {};
 		String[] emptyStrings = {};
 		
+		final DecimalFormat f = new DecimalFormat("#.#");
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.row_sleep_diary, c, emptyStrings, emptyInts, 0)
 		{
 			public void bindView (View view, Context context, Cursor cursor)
@@ -53,6 +64,10 @@ public class SleepDiaryActivity extends ConsentedActivity
 				
 				TextView dateText = (TextView) view.findViewById(R.id.label_date);
 				dateText.setText(dateFormat.format(now));
+
+				TextView efficiencyText = (TextView) view.findViewById(R.id.label_efficiency);
+
+				efficiencyText.setText(f.format(SlumberContentProvider.scoreSleep(cursor, 100)) + "%");
 			}
 		};
 		

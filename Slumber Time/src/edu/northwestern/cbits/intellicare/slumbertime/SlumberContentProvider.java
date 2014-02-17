@@ -1,10 +1,13 @@
 package edu.northwestern.cbits.intellicare.slumbertime;
 
+import java.util.Calendar;
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
@@ -319,5 +322,95 @@ public class SlumberContentProvider extends ContentProvider
 		dateString += ")";
 		
 		return dateString;
+	}
+
+	public static double scoreSleep(Cursor cursor, int multiplier) 
+	{
+		Calendar c = Calendar.getInstance();
+		c.set(Calendar.HOUR_OF_DAY, cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.DIARY_BED_HOUR)));
+		c.set(Calendar.MINUTE, cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.DIARY_BED_MINUTE)));
+		
+		long bedtime = c.getTimeInMillis();
+
+		c.set(Calendar.HOUR_OF_DAY, cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.DIARY_SLEEP_HOUR)));
+		c.set(Calendar.MINUTE, cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.DIARY_SLEEP_MINUTE)));
+
+		long sleeptime = c.getTimeInMillis();
+
+		c.set(Calendar.HOUR_OF_DAY, cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.DIARY_WAKE_HOUR)));
+		c.set(Calendar.MINUTE, cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.DIARY_WAKE_MINUTE)));
+
+		long waketime = c.getTimeInMillis();
+
+		c.set(Calendar.HOUR_OF_DAY, cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.DIARY_UP_HOUR)));
+		c.set(Calendar.MINUTE, cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.DIARY_UP_MINUTE)));
+		
+		long uptime = c.getTimeInMillis();
+		 
+		if (uptime < bedtime)
+			uptime += SleepDiaryActivity.DAY_LENGTH;
+		
+		double total = uptime - bedtime;
+		
+		if (total == 0)
+			return 0;
+
+		if (sleeptime > waketime)
+			waketime += SleepDiaryActivity.DAY_LENGTH;
+		
+		double sleep = waketime - sleeptime;
+		
+		if (cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.DIARY_EARLIER)) != 0)
+			sleep -= (15 * 60 * 1000);
+
+		sleep -= (cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.DIARY_SLEEP_DELAY)) * 60 * 1000);
+		
+		return (multiplier * sleep) / total;
+	}
+
+	public static Cursor fetchNormalizedSensorReadings(Context context, String sensor) 
+	{
+		String[] columnNames = {SlumberContentProvider.READING_RECORDED, SlumberContentProvider.READING_VALUE };
+		MatrixCursor retCursor = new MatrixCursor(columnNames);
+		
+		String where = SlumberContentProvider.READING_NAME + " = ?";
+		String[] args = { sensor };
+		
+		Cursor c = context.getContentResolver().query(SlumberContentProvider.SENSOR_READINGS_URI, null, where, args, SlumberContentProvider.READING_RECORDED);
+		
+		double minValue = Double.MAX_VALUE;
+		double maxValue = 0 - minValue;
+		
+		while (c.moveToNext())
+		{
+			double reading = c.getDouble(c.getColumnIndex(SlumberContentProvider.READING_VALUE));
+			
+			if (reading > maxValue)
+				maxValue = reading;
+			
+			if (reading < minValue)
+				minValue = reading;
+		}
+		
+		double spread = maxValue - minValue;
+		
+		c.moveToPosition(-1);
+		
+		while (c.moveToNext())
+		{
+			double reading = c.getDouble(c.getColumnIndex(SlumberContentProvider.READING_VALUE));
+			
+			double normalized = (reading - minValue) / spread;
+			
+			Object[] values = {c.getLong(c.getColumnIndex(SlumberContentProvider.READING_RECORDED)), normalized };
+			
+			retCursor.addRow(values);
+		}
+		
+		c.close();
+		
+		retCursor.moveToPosition(-1);
+
+		return retCursor;
 	}
 }

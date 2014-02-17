@@ -355,8 +355,8 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 				return true;
 			}
 
-			values.put(SlumberContentProvider.DIARY_SLEEP_HOUR, this._bedHour);
-			values.put(SlumberContentProvider.DIARY_SLEEP_MINUTE, this._bedMinute);
+			values.put(SlumberContentProvider.DIARY_SLEEP_HOUR, this._sleepHour);
+			values.put(SlumberContentProvider.DIARY_SLEEP_MINUTE, this._sleepMinute);
 
 			
 			if (this._wakeHour == -1 || this._wakeMinute == -1)
@@ -365,8 +365,8 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 				return true;
 			}
 
-			values.put(SlumberContentProvider.DIARY_WAKE_HOUR, this._bedHour);
-			values.put(SlumberContentProvider.DIARY_WAKE_MINUTE, this._bedMinute);
+			values.put(SlumberContentProvider.DIARY_WAKE_HOUR, this._wakeHour);
+			values.put(SlumberContentProvider.DIARY_WAKE_MINUTE, this._wakeMinute);
 
 			
 			if (this._upHour == -1 || this._upMinute == -1)
@@ -375,8 +375,8 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 				return true;
 			}
 
-			values.put(SlumberContentProvider.DIARY_UP_HOUR, this._bedHour);
-			values.put(SlumberContentProvider.DIARY_UP_MINUTE, this._bedMinute);
+			values.put(SlumberContentProvider.DIARY_UP_HOUR, this._upHour);
+			values.put(SlumberContentProvider.DIARY_UP_MINUTE, this._upMinute);
 
 			if (this._sleepDelay == -1)
 			{

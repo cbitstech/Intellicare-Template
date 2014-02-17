@@ -9,6 +9,7 @@ import edu.northwestern.cbits.intellicare.mantra.R;
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -26,6 +27,9 @@ public class BrowsePhotosActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.browse_photos_activity);
+
+		Log.d("BrowsePhotosActivity.onCreate", "entered");
+
 		mAdapter = new PhotoAdapter(this, R.layout.photo_row, mFiles);
 		setListAdapter(mAdapter);
 		if (savedInstanceState != null) {
