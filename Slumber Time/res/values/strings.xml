@@ -181,4 +181,6 @@
         <item>Turn off the appliances. / Some other things&#8230;</item>
         <item>Set your alarm clock. / Some other things&#8230;</item>
   	</string-array>
+  	
+	<string name="tool_sleep_content">Slumber Reference</string>
 </resources>

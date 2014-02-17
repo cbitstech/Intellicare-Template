@@ -24,17 +24,34 @@
 		        <action android:name="android.intent.action.VIEW" />
         	    <category android:name="android.intent.category.DEFAULT" />
             	<category android:name="android.intent.category.BROWSABLE" />
-   			    <data android:scheme="intellicare" android:host="sleep-diary" />
+   			    <data android:scheme="intellicare" android:host="slumber" android:pathPrefix="/sleep-diary" />
 			</intent-filter>
 		</activity>
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".BedtimeChecklistActivity" android:label="@string/app_name" />
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".ContentEntryActivity" android:label="@string/app_name">
+   			<intent-filter>
+		        <action android:name="android.intent.action.VIEW" />
+        	    <category android:name="android.intent.category.DEFAULT" />
+            	<category android:name="android.intent.category.BROWSABLE" />
+   			    <data android:scheme="intellicare" android:host="slumber" android:pathPrefix="/content" />
+			</intent-filter>
+		</activity>
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".SleepContentActivity" android:label="@string/app_name" />
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".BedtimeChecklistActivity" android:label="@string/app_name">
+   			<intent-filter>
+		        <action android:name="android.intent.action.VIEW" />
+        	    <category android:name="android.intent.category.DEFAULT" />
+            	<category android:name="android.intent.category.BROWSABLE" />
+   			    <data android:scheme="intellicare" android:host="slumber" android:pathPrefix="/checklist" />
+			</intent-filter>
+        </activity>
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".EditBedtimeChecklistActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.ConsentActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.RecruitmentActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.MotivationActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.DemographicActivity" android:label="@string/app_name" />
         <provider android:name=".SlumberContentProvider" android:authorities="edu.northwestern.cbits.intellicare.slumbertime" android:exported="false" />
-		<service android:enabled="true" android:name=".AlarmService" android:exported="false">
+        <provider android:name=".EntriesContentProvider" android:authorities="edu.northwestern.cbits.intellicare.slumbertime.content" android:exported="false" />
+   		<service android:enabled="true" android:name=".AlarmService" android:exported="false">
 			<intent-filter>
 				<action android:name="edu.northwestern.cbits.intellicare.slumbertime.START_TIMER" />
 				<action android:name="edu.northwestern.cbits.intellicare.slumbertime.TIMER_TICK" />
