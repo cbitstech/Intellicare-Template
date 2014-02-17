@@ -214,4 +214,6 @@
         <item>Train sounds\n(3 hours)</item>
 		<item>City sounds\n(1 hour)</item>
    	</string-array>
+   	
+	<string name="action_chart">Chart Options</string>
 </resources>

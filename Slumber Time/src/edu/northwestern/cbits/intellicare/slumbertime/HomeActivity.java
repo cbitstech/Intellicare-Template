@@ -13,16 +13,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import edu.northwestern.cbits.intellicare.logging.LogManager;
-
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
@@ -33,6 +39,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class HomeActivity extends PortraitActivity 
 {
@@ -75,7 +82,7 @@ public class HomeActivity extends PortraitActivity
 		tools.add(new Tool(this.getString(R.string.tool_bedtime_checklist), this.getString(R.string.desc_bedtime_checklist), R.drawable.clock_checklist_dark, new Intent(this, BedtimeChecklistActivity.class)));
 		tools.add(new Tool(this.getString(R.string.tool_sleep_diaries), this.getString(R.string.desc_sleep_diaries), R.drawable.clock_diary_dark, new Intent(this, SleepDiaryActivity.class)));
 		tools.add(new Tool(this.getString(R.string.tool_sleep_content), this.getString(R.string.desc_sleep_content), R.drawable.clock_question_dark, new Intent(this, SleepContentActivity.class)));
-		tools.add(new Tool(this.getString(R.string.tool_tip_video), this.getString(R.string.desc_tip_video), R.drawable.clock_question_dark, new Intent(this, TipsActivity.class)));
+		tools.add(new Tool(this.getString(R.string.tool_tip_video), this.getString(R.string.desc_tip_video), R.drawable.clock_youtube_dark, new Intent(this, TipsActivity.class)));
 
 		ListView toolsList = (ListView) this.findViewById(R.id.list_tools);
 		
@@ -170,7 +177,7 @@ public class HomeActivity extends PortraitActivity
 
 		String graphString = buffer.toString();
 		
-		JSONArray graphValues = HomeActivity.graphValues(context);
+		JSONArray graphValues = HomeActivity.graphValues(context, false);
 		
 		graphString = graphString.replaceAll("VALUES_JSON", graphValues.toString());
 		
@@ -179,7 +186,7 @@ public class HomeActivity extends PortraitActivity
 		return graphString;
 	}
 
-	private static JSONArray graphValues(Context context) 
+	private static JSONArray graphValues(Context context, boolean includeAll) 
 	{
 		JSONArray values = new JSONArray();
 
@@ -207,6 +214,8 @@ public class HomeActivity extends PortraitActivity
 			];
 		} */
 
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		
 		String[] colors = { "#33B5E5", "#AA66CC", "#99CC00", "#FFBB33", "#FF4444" };
 		int colorIndex = 0;
 		
@@ -235,8 +244,11 @@ public class HomeActivity extends PortraitActivity
 			c.close();
 			
 			sleep.put("values", sleepValues);
+
+			String key = "graph_" + sleep.getString("key");
 			
-			values.put(sleep);
+			if (includeAll || prefs.getBoolean(key, true) != false)
+				values.put(sleep);
 		} 
 		catch (JSONException e) 
 		{
@@ -269,7 +281,10 @@ public class HomeActivity extends PortraitActivity
 
 					sensorObj.put("values", sensorValues);
 
-					values.put(sensorObj);
+					String key = "graph_" + sensor;
+
+					if (includeAll || prefs.getBoolean(key, true) != false)
+						values.put(sensorObj);
 				}
 				
 				c.close();
@@ -286,6 +301,75 @@ public class HomeActivity extends PortraitActivity
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
 		this.getMenuInflater().inflate(R.menu.home, menu);
+
+		return true;
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		final HomeActivity me = this;
+		
+		if (item.getItemId() == R.id.action_settings)
+		{
+//			Intent nativeIntent = new Intent(this, SettingsActivity.class);
+//			this.startActivity(nativeIntent);
+		}
+		else if (item.getItemId() == R.id.action_feedback)
+			this.sendFeedback(this.getString(R.string.app_name));
+		else if (item.getItemId() == R.id.action_chart)
+		{
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder = builder.setTitle(R.string.action_chart);
+			
+			builder = builder.setPositiveButton(R.string.button_close, new OnClickListener()
+			{
+				public void onClick(DialogInterface arg0, int arg1) 
+				{
+					WebView graphView = (WebView) me.findViewById(R.id.graph_web_view);
+					
+					graphView.loadDataWithBaseURL("file:///android_asset/", HomeActivity.generateGraph(me), "text/html", null, null);
+				}
+			});
+
+			JSONArray graphValues = HomeActivity.graphValues(this, true);
+			
+			final String[] values = new String[graphValues.length()];
+			final boolean[] checked = new boolean[graphValues.length()];
+			
+			final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+			for (int i = 0; i < graphValues.length(); i++)
+			{
+				try 
+				{
+					JSONObject obj = graphValues.getJSONObject(i);
+
+					values[i] = obj.getString("key");
+
+					String key = "graph_" + values[i];
+					
+					checked[i] = prefs.getBoolean(key, true);
+				} 
+				catch (JSONException e) 
+				{
+					LogManager.getInstance(this).logException(e);
+				}
+			}
+					
+			builder = builder.setMultiChoiceItems(values, checked, new OnMultiChoiceClickListener()
+			{
+				public void onClick(DialogInterface arg0, int which, boolean isChecked) 
+				{
+					String key = "graph_" + values[which];
+					
+					Editor e = prefs.edit();
+					e.putBoolean(key, isChecked);
+					e.commit();
+				}
+			});
+
+			builder.create().show();
+		}
 
 		return true;
 	}
