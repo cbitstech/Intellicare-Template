@@ -22,14 +22,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.ConsentActivity;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
-import edu.northwestern.cbits.intellicare.MotivationActivity;
 
 public class LessonsActivity extends ConsentedActivity 
 {
 	public static final String LESSON_LEVEL = "LESSON_LEVEL";
 	public static final String LESSON_READ_PREFIX = "lesson_read_";
-
-	private static final String INITIAL_MOTIVATION_SHOWN = "initial_motivation_shown";
 
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -192,11 +189,6 @@ public class LessonsActivity extends ConsentedActivity
 		
 		if (ConsentActivity.isConsented() == true && prefs.getBoolean(HelpActivity.HELP_COMPLETED, false) == false)
 			this.startActivity(new Intent(this, HelpActivity.class));
-		else if (prefs.getBoolean(LessonsActivity.INITIAL_MOTIVATION_SHOWN, false) == false)
-		{
-			this.startActivity(new Intent(this, MotivationActivity.class));
-			e.putBoolean(LessonsActivity.INITIAL_MOTIVATION_SHOWN, true);
-		}
 		
 		e.commit();
 	}
@@ -235,11 +227,6 @@ public class LessonsActivity extends ConsentedActivity
 		{
 			Intent testIntent = new Intent(this, TestActivity.class);
 			this.startActivity(testIntent);
-		}
-		else if (item.getItemId() == R.id.action_motivation)
-		{
-			Intent motivationIntent = new Intent(this, MotivationActivity.class);
-			this.startActivity(motivationIntent);
 		} */
 		
 		return true;

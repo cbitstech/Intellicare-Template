@@ -48,6 +48,7 @@ public class MainActivity extends ConsentedActivity
 	protected static final String SHOW_ALL = "show_all_notifications";
 	protected static final boolean SHOW_ALL_DEFAULT = true;
 	private String _packageFilter = null;
+	private boolean _appPromptVisible = false;
 	
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -342,30 +343,36 @@ public class MainActivity extends ConsentedActivity
 	{
 		final MainActivity me = this;
 		
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder = builder.setTitle(R.string.dialog_no_apps_title);
-		builder = builder.setMessage(R.string.dialog_no_apps_message);
-		builder = builder.setPositiveButton(R.string.dialog_no_apps_yes, new DialogInterface.OnClickListener() 
+		if (this._appPromptVisible == false)
 		{
-			public void onClick(DialogInterface dialog, int which) 
+			this._appPromptVisible = true;
+			
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder = builder.setTitle(R.string.dialog_no_apps_title);
+			builder = builder.setMessage(R.string.dialog_no_apps_message);
+			builder = builder.setPositiveButton(R.string.dialog_no_apps_yes, new DialogInterface.OnClickListener() 
 			{
-				HashMap<String, Object> payload = new HashMap<String, Object>();
-				LogManager.getInstance(me).log("opened_app_list", payload);
-
-    			Intent nativeIntent = new Intent(me, AppStoreActivity.class);
-    			me.startActivity(nativeIntent);
-			}
-		});
-		
-		builder = builder.setNegativeButton(R.string.dialog_no_apps_no, new DialogInterface.OnClickListener() 
-		{
-			public void onClick(DialogInterface dialog, int which) 
+				public void onClick(DialogInterface dialog, int which) 
+				{
+					HashMap<String, Object> payload = new HashMap<String, Object>();
+					LogManager.getInstance(me).log("opened_app_list", payload);
+	
+	    			Intent nativeIntent = new Intent(me, AppStoreActivity.class);
+	    			me.startActivity(nativeIntent);
+				}
+			});
+			
+			builder = builder.setNegativeButton(R.string.dialog_no_apps_no, new DialogInterface.OnClickListener() 
 			{
+				public void onClick(DialogInterface dialog, int which) 
+				{
+	
+				}
+			});
+			
+			builder.create().show();
 
-			}
-		});
-		
-		builder.create().show();
+		}
 	}
 
 	@SuppressWarnings("deprecation")

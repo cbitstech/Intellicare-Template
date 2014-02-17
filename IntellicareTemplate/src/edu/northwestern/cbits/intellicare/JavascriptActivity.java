@@ -1,7 +1,5 @@
 package edu.northwestern.cbits.intellicare;
 
-import org.apache.cordova.CordovaWebView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,9 +13,9 @@ public class JavascriptActivity extends ConsentedActivity// implements CordovaIn
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_javascript);
 		
-		CordovaWebView cordova = (CordovaWebView) this.findViewById(R.id.cordova_view);
+//		CordovaWebView cordova = (CordovaWebView) this.findViewById(R.id.cordova_view);
 
-		cordova.loadUrl("file:///android_asset/www/index.html", 100); // show splash screen 3 sec before loading app
+//		cordova.loadUrl("file:///android_asset/www/index.html", 100); // show splash screen 3 sec before loading app
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) 

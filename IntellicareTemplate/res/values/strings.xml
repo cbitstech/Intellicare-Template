@@ -40,6 +40,8 @@
 
     <string name="button_continue">Continue</string>
     <string name="button_skip">Skip</string>
+
+    <string name="action_skip">Skip</string>
     
     <string name="message_complete_form">Please answer all the questions to continue&#8230;</string>
     <string name="message_submitted_form">Thank you! Your responses have been successfully recorded.</string>
@@ -141,7 +143,9 @@
     <string name="motivation_question">What are all of the reasons that you are using this app?</string>
     <string name="reason_improve_me">I want to improve the quality of my life.</string>
 	<string name="reason_improve_others">I want to help someone else improve their quality of life.</string>
-    <string name="reason_curious">I\'m just curious to look at the app.</string>
+    <string name="reason_curious">I am just curious to look at the app.</string>
+    <string name="reason_research_study">I am participating in a research study.</string>
+    
 	<string name="reason_other">Please include any other reasons here. (Optional)</string>
 	<string name="label_reason_other">Other reasons</string>
 	<string name="motivation_title">Motivation</string>
@@ -172,4 +176,8 @@
 
 	<string name="action_feedback">Feedback</string>
 	<string name="subtitle_consented_date" formatted="false">Consented: %s</string>
+	
+	<string name="message_research_disclosure">Intellicare apps are part of a research study created by Northwestern University and funded by the US National Institute of Health for US residents 19 years old or older.\n\nIf you meet these criteria, click "OK" to continue.</string>
+	<string name="button_ok">OK</string>
+	<string name="button_cancel">Cancel</string>
 </resources>

@@ -10,8 +10,12 @@ import java.util.TimeZone;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -282,35 +286,40 @@ public class DemographicActivity extends FormQuestionActivity
 	{
 		if (this._payload.size() >= 5)
 		{
-			File root = Environment.getExternalStorageDirectory();
-			
-			File intellicare = new File(root, "Intellicare Shared");
-			
-			if (intellicare.exists() == false)
-				intellicare.mkdirs();
-	
-			File consent = new File(intellicare, "Demographic Record.txt");
-			
-			try 
-			{
-				TimeZone tz = TimeZone.getTimeZone("UTC");
-	
-				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
-				df.setTimeZone(tz);
-				
-				PrintWriter out = new PrintWriter(consent);
-				out.print(df.format(new Date()));
-				out.close();
-			} 
-			catch (FileNotFoundException e) 
-			{
-				e.printStackTrace();
-			}
+			this.writeCookie();
 			
 			return true;
 		}
 		
 		return false;
+	}
+
+	private void writeCookie() 
+	{
+		File root = Environment.getExternalStorageDirectory();
+		
+		File intellicare = new File(root, "Intellicare Shared");
+		
+		if (intellicare.exists() == false)
+			intellicare.mkdirs();
+
+		File consent = new File(intellicare, "Demographic Record.txt");
+		
+		try 
+		{
+			TimeZone tz = TimeZone.getTimeZone("UTC");
+
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+			df.setTimeZone(tz);
+			
+			PrintWriter out = new PrintWriter(consent);
+			out.print(df.format(new Date()));
+			out.close();
+		} 
+		catch (FileNotFoundException e) 
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public static boolean showedQuestionnaire() 
@@ -324,5 +333,31 @@ public class DemographicActivity extends FormQuestionActivity
 		File recruitment = new File(intellicare, "Demographic Record.txt");
 		
 		return recruitment.exists();
+	}
+	
+	public boolean onCreateOptionsMenu(Menu menu) 
+	{
+		this.getMenuInflater().inflate(R.menu.menu_demographic, menu);
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		if (prefs.getBoolean(MotivationActivity.IS_PARTICIPANT, MotivationActivity.IS_PARTICIPANT_DEFAULT))
+			menu.removeItem(R.id.action_skip);
+
+		return true;
+	}
+	
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		if (item.getItemId() ==  R.id.action_skip)
+		{
+			this.writeCookie();
+			
+			this.finish();
+			
+			return true;
+		}
+
+		return super.onOptionsItemSelected(item);
 	}
 }

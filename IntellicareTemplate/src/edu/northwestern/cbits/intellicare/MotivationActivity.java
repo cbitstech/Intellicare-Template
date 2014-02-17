@@ -1,11 +1,21 @@
 package edu.northwestern.cbits.intellicare;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.TimeZone;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
@@ -19,6 +29,9 @@ import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class MotivationActivity extends FormQuestionActivity 
 {
+	public static final String IS_PARTICIPANT = "is_research_participant";
+	public static final boolean IS_PARTICIPANT_DEFAULT = false;
+
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
@@ -33,9 +46,23 @@ public class MotivationActivity extends FormQuestionActivity
 		CheckBox myQuality = (CheckBox) this.findViewById(R.id.reason_improve_me);
 		CheckBox othersQuality = (CheckBox) this.findViewById(R.id.reason_improve_others);
 		CheckBox curious = (CheckBox) this.findViewById(R.id.reason_curious);
+		CheckBox research = (CheckBox) this.findViewById(R.id.reason_research);
 		
 		final MotivationActivity me = this;
-		
+
+		research.setOnCheckedChangeListener(new OnCheckedChangeListener()
+		{
+			public void onCheckedChanged(CompoundButton button, boolean isChecked) 
+			{
+				me._payload.put("research", Boolean.valueOf(isChecked));
+				
+				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
+				Editor e = prefs.edit();
+				e.putBoolean(MotivationActivity.IS_PARTICIPANT, isChecked);
+				e.commit();
+			}
+		});
+
 		myQuality.setOnCheckedChangeListener(new OnCheckedChangeListener()
 		{
 			public void onCheckedChanged(CompoundButton button, boolean isChecked) 
@@ -88,6 +115,31 @@ public class MotivationActivity extends FormQuestionActivity
 
 	protected boolean canSubmit() 
 	{
+		File root = Environment.getExternalStorageDirectory();
+		
+		File intellicare = new File(root, "Intellicare Shared");
+		
+		if (intellicare.exists() == false)
+			intellicare.mkdirs();
+
+		File consent = new File(intellicare, "Motivation Record.txt");
+		
+		try 
+		{
+			TimeZone tz = TimeZone.getTimeZone("UTC");
+
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+			df.setTimeZone(tz);
+			
+			PrintWriter out = new PrintWriter(consent);
+			out.print(df.format(new Date()));
+			out.close();
+		} 
+		catch (FileNotFoundException e) 
+		{
+			e.printStackTrace();
+		}
+		
 		return true;
 	}
 	
@@ -98,11 +150,15 @@ public class MotivationActivity extends FormQuestionActivity
 			CheckBox myQuality = (CheckBox) this.findViewById(R.id.reason_improve_me);
 			CheckBox othersQuality = (CheckBox) this.findViewById(R.id.reason_improve_others);
 			CheckBox curious = (CheckBox) this.findViewById(R.id.reason_curious);
+			CheckBox research = (CheckBox) this.findViewById(R.id.reason_research);
 
 			EditText others = (EditText) this.findViewById(R.id.reason_other);
 			
 			final ArrayList<String> reasons = new ArrayList<String>();
 			
+			if (research.isChecked())
+				reasons.add(this.getString(R.string.reason_research_study));
+
 			if (myQuality.isChecked())
 				reasons.add(this.getString(R.string.reason_improve_me));
 			
@@ -121,7 +177,6 @@ public class MotivationActivity extends FormQuestionActivity
 
 			if (reasons.size() > 1)
 			{
-				
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				
 				builder.setTitle(R.string.title_primary_reason);
@@ -141,7 +196,8 @@ public class MotivationActivity extends FormQuestionActivity
 						
 						LogManager.getInstance(me).log(me.responsesKey(), payload);
 						
-						me.finish();
+						if (me.canSubmit())
+							me.finish();
 					}
 				});
 
@@ -160,16 +216,28 @@ public class MotivationActivity extends FormQuestionActivity
 				
 				LogManager.getInstance(me).log(me.responsesKey(), payload);
 				
-				me.finish();
+				if (me.canSubmit())
+					me.finish();
 			}
 			else
 			{
 				Toast.makeText(this, R.string.message_motivation_select_one, Toast.LENGTH_LONG).show();
-
 			}
 		}
 
 		return true;
 	}
 
+	public static boolean showedQuestionnaire() 
+	{
+		File root = Environment.getExternalStorageDirectory();
+		File intellicare = new File(root, "Intellicare Shared");
+
+		if (intellicare.exists() == false)
+			intellicare.mkdirs();
+		
+		File motivation = new File(intellicare, "Motivation Record.txt");
+		
+		return motivation.exists();
+	}
 }

@@ -130,7 +130,32 @@ public class ConsentActivity extends ActionBarActivity implements ConsentWebView
 			}
 		}
 		else
+		{
 			signature.setVisibility(View.VISIBLE);
+			
+			final ConsentActivity me = this;
+			
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder = builder.setMessage(R.string.message_research_disclosure);
+			
+			builder = builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() 
+			{
+				public void onClick(DialogInterface arg0, int arg1) 
+				{
+
+				}
+			});
+			
+			builder = builder.setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() 
+			{
+				public void onClick(DialogInterface arg0, int arg1) 
+				{
+					me.finish();
+				}
+			});
+			
+			builder.create().show();
+		}
 	}
 	
 	public static boolean isConsented()
