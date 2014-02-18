@@ -220,4 +220,9 @@
 	<string name="label_light">Ambient Light Brightness</string>
 	<string name="label_audio_volume">Ambient Audio Level</string>
 	<string name="label_audio_pitch">Dominant Audio Pitch</string>
+	
+	<string name="title_settings">Settings &amp; Credits</string>
+	<string name="search_title">Search Slumber Time</string>
+	<string name="search_hint">Search Slumber Time</string>
+		
 </resources>

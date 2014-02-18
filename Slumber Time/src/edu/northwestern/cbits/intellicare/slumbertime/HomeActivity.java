@@ -240,7 +240,10 @@ public class HomeActivity extends PortraitActivity
 				reading.put("y", SlumberContentProvider.scoreSleep(c, 1));
 				
 				sleepValues.put(reading);
+				
 			}
+
+			Log.e("ST", "SLEEP: " + sleepValues.length());
 
 			c.close();
 			
@@ -280,6 +283,8 @@ public class HomeActivity extends PortraitActivity
 						sensorValues.put(reading);
 					}
 
+					Log.e("ST", SlumberContentProvider.nameForKey(context, sensor) + ": " + sensorValues.length());
+
 					sensorObj.put("values", sensorValues);
 
 					String key = "graph_" + sensor;
@@ -312,8 +317,8 @@ public class HomeActivity extends PortraitActivity
 		
 		if (item.getItemId() == R.id.action_settings)
 		{
-//			Intent nativeIntent = new Intent(this, SettingsActivity.class);
-//			this.startActivity(nativeIntent);
+			Intent nativeIntent = new Intent(this, SettingsActivity.class);
+			this.startActivity(nativeIntent);
 		}
 		else if (item.getItemId() == R.id.action_feedback)
 			this.sendFeedback(this.getString(R.string.app_name));
