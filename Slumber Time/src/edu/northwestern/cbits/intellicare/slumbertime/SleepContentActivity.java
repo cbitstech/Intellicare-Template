@@ -1,5 +1,7 @@
 package edu.northwestern.cbits.intellicare.slumbertime;
 
+import java.util.HashMap;
+
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +20,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class SleepContentActivity extends ConsentedActivity
 {
@@ -78,6 +81,9 @@ public class SleepContentActivity extends ConsentedActivity
 		    
 		    searchView.setQuery(searchView.getQuery(), true);
 		}
+		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("launched_content_list_activity", payload);
 	}
 	
 	public void onPause()
@@ -86,7 +92,10 @@ public class SleepContentActivity extends ConsentedActivity
 		SimpleCursorAdapter adapter = (SimpleCursorAdapter) entriesList.getAdapter();
 
 		adapter.swapCursor(null).close();
-		
+
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("close_content_list_activity", payload);
+
 		super.onPause();
 	}
 	
@@ -131,6 +140,11 @@ public class SleepContentActivity extends ConsentedActivity
 
 	    		adapter.notifyDataSetChanged();
 	            
+	    		HashMap<String, Object> payload = new HashMap<String, Object>();
+	    		payload.put("query", query);
+	    		
+	    		LogManager.getInstance(me).log("content_search", payload);
+
 				return true;
 			}
 	    });

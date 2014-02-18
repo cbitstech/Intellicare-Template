@@ -1,5 +1,7 @@
 package edu.northwestern.cbits.intellicare.slumbertime;
 
+import java.util.HashMap;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class TipsActivity extends ConsentedActivity 
 {
@@ -71,5 +74,16 @@ public class TipsActivity extends ConsentedActivity
 				me.startActivity(intent);
 			}
 		});
+		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("launched_tips_activity", payload);
+	}
+	
+	protected void onPause()
+	{
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("closed_tips_activity", payload);
+		
+		super.onPause();
 	}
 }

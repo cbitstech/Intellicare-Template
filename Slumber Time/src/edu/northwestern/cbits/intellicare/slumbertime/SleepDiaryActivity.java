@@ -2,6 +2,7 @@ package edu.northwestern.cbits.intellicare.slumbertime;
 
 import java.sql.Date;
 import java.text.DecimalFormat;
+import java.util.HashMap;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -20,6 +21,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class SleepDiaryActivity extends ConsentedActivity
 {
@@ -130,6 +132,15 @@ public class SleepDiaryActivity extends ConsentedActivity
 				return false;
 			}
 		});
+		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("launched_sleep_diaries_activity", payload);
+	}
+	
+	protected void onPause()
+	{
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("closed_sleep_diaries_activity", payload);
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) 

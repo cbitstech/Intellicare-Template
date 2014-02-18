@@ -1,6 +1,7 @@
 package edu.northwestern.cbits.intellicare.slumbertime;
 
 import java.util.Date;
+import java.util.HashMap;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -22,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class SleepLogActivity extends ConsentedActivity
 {
@@ -107,6 +109,17 @@ public class SleepLogActivity extends ConsentedActivity
 				builder.create().show();
 			}
 		});
+		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("launched_sleep_log_activity", payload);
+	}
+	
+	protected void onPause()
+	{
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("closed_sleep_log_activity", payload);
+		
+		super.onPause();
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) 

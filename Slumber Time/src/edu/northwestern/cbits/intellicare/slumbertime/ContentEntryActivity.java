@@ -1,4 +1,5 @@
 package edu.northwestern.cbits.intellicare.slumbertime;
+import java.util.HashMap;
 import java.util.List;
 
 import org.markdownj.MarkdownProcessor;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 
 public class ContentEntryActivity extends ConsentedActivity
@@ -69,5 +71,16 @@ public class ContentEntryActivity extends ConsentedActivity
 		}
 		
 		c.close();
+
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		payload.put("slug", slug);
+		
+		LogManager.getInstance(this).log("launched_content_activity", payload);
+	}
+	
+	protected void onPause()
+	{
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("closed_content_activity", payload);
 	}
 }

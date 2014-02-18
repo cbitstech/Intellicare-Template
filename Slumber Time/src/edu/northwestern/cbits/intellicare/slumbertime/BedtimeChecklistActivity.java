@@ -1,5 +1,7 @@
 package edu.northwestern.cbits.intellicare.slumbertime;
 
+import java.util.HashMap;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +17,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class BedtimeChecklistActivity extends ConsentedActivity
 {
@@ -43,6 +46,8 @@ public class BedtimeChecklistActivity extends ConsentedActivity
 		int[] emptyInts = {};
 		String[] emptyStrings = {};
 
+		final BedtimeChecklistActivity me = this;
+		
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.row_checklist_item, c, emptyStrings, emptyInts, 0)
 		{
 			public void bindView (View view, final Context context, Cursor cursor)
@@ -85,10 +90,20 @@ public class BedtimeChecklistActivity extends ConsentedActivity
 								values.put(SlumberContentProvider.CHECKLIST_EVENT_TIMESTAMP, now);
 								
 								context.getContentResolver().insert(SlumberContentProvider.CHECKLIST_EVENTS_URI, values);
+
+								HashMap<String, Object> payload = new HashMap<String, Object>();
+								payload.put("item", view.getText().toString());
+								LogManager.getInstance(me).log("checked_item", payload);
 							}
 						}
 						else
+						{
 							context.getContentResolver().delete(SlumberContentProvider.CHECKLIST_EVENTS_URI, selection, args);							
+
+							HashMap<String, Object> payload = new HashMap<String, Object>();
+							payload.put("item", view.getText().toString());
+							LogManager.getInstance(me).log("unchecked_item", payload);
+						}
 						
 						eventCursor.close();
 					}
@@ -117,6 +132,18 @@ public class BedtimeChecklistActivity extends ConsentedActivity
 		};
 		
 		checkList.setAdapter(adapter);
+		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("launched_checklist_activity", payload);
+
+	}
+	
+	protected void onPause()
+	{
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("closed_checklist_activity", payload);
+		
+		super.onPause();
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) 

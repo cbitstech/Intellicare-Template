@@ -1,6 +1,7 @@
 package edu.northwestern.cbits.intellicare.slumbertime;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -25,6 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class EditBedtimeChecklistActivity extends ConsentedActivity
 {
@@ -96,7 +98,7 @@ public class EditBedtimeChecklistActivity extends ConsentedActivity
 						AlertDialog.Builder builder = new AlertDialog.Builder(me);
 						builder = builder.setTitle(R.string.title_delete_checklist_item);
 						
-						CheckBox item = (CheckBox) view.findViewById(R.id.check_item);				
+						final CheckBox item = (CheckBox) view.findViewById(R.id.check_item);				
 						
 						builder = builder.setMessage(me.getString(R.string.message_delete_checklist_item, item.getText()));
 						
@@ -111,6 +113,10 @@ public class EditBedtimeChecklistActivity extends ConsentedActivity
 
 								Toast.makeText(me, R.string.toast_checklist_item_removed, Toast.LENGTH_SHORT).show();
 
+								HashMap<String, Object> payload = new HashMap<String, Object>();
+								payload.put("item", item.getText());
+								LogManager.getInstance(me).log("removed_checklist_item", payload);
+								
 								meAdapter.getCursor().requery();
 								meAdapter.notifyDataSetChanged();
 							}
@@ -153,8 +159,19 @@ public class EditBedtimeChecklistActivity extends ConsentedActivity
 		};
 		
 		checkList.setAdapter(adapter);
+
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("launched_checklist_edit_activity", payload);
 	}
 	
+	protected void onPause()
+	{
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("closed_checklist_edit_activity", payload);
+		
+		super.onPause();
+	}
+
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
 		this.getMenuInflater().inflate(R.menu.menu_edit_bedtime_checklist, menu);
@@ -213,7 +230,12 @@ public class EditBedtimeChecklistActivity extends ConsentedActivity
 					me.getContentResolver().insert(SlumberContentProvider.CHECKLIST_ITEMS_URI, values);
 					
 					Toast.makeText(me, R.string.toast_checklist_item_added, Toast.LENGTH_SHORT).show();
-					
+
+					HashMap<String, Object> payload = new HashMap<String, Object>();
+					payload.put("item", newItem);
+					payload.put("category", newCategory);
+					LogManager.getInstance(me).log("added_checklist_item", payload);
+
 					me.onResume();
 				}
 			});

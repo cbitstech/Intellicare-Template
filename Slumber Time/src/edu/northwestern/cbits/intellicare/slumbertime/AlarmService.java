@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
@@ -211,6 +214,9 @@ public class AlarmService extends IntentService
 			
 			NotificationManager notes = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 			notes.notify(AlarmService.ALARM_NOTE_ID, builder.build());
+			
+			HashMap<String, Object> payload = new HashMap<String, Object>();
+			LogManager.getInstance(this).log("fired_alarm", payload);
 		}
 		else if (AlarmService.STOP_ALARM.equals(action))
 		{
@@ -233,6 +239,9 @@ public class AlarmService extends IntentService
 			
 			AlarmService._currentTrackName = null;
 			AlarmService._currentUri = null;
+			
+			HashMap<String, Object> payload = new HashMap<String, Object>();
+			LogManager.getInstance(this).log("cancelled_alarm", payload);
 		}
 		else if (AlarmService.BROADCAST_TRACK_INFO.equals(action))
 		{

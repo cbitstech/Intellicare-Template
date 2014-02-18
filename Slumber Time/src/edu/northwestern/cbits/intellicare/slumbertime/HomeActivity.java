@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.CrashManagerListener;
@@ -139,6 +140,17 @@ public class HomeActivity extends PortraitActivity
 		
 		graphView.loadDataWithBaseURL("file:///android_asset/", HomeActivity.generateGraph(this), "text/html", null, null);
 //		graphView.setClickable(false);
+		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("launched_home_activity", payload);
+	}
+
+	protected void onPause()
+	{
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("closed_home_activity", payload);
+		
+		super.onPause();
 	}
 
 	protected void onCreate(Bundle savedInstanceState) 

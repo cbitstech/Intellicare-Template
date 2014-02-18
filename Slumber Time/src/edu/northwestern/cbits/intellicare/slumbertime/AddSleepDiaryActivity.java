@@ -2,6 +2,7 @@ package edu.northwestern.cbits.intellicare.slumbertime;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class AddSleepDiaryActivity extends ConsentedActivity
 {
@@ -494,6 +496,7 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 		if (item.getItemId() == R.id.action_save)
 		{
 			ContentValues values = new ContentValues();
+			HashMap<String, Object> payload = new HashMap<String, Object>();
 			
 			RadioGroup napRadios = (RadioGroup) this.findViewById(R.id.radios_nap);
 			int napChecked = napRadios.getCheckedRadioButtonId();
@@ -506,6 +509,8 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 			
 			values.put(SlumberContentProvider.DIARY_NAP, (napChecked == R.id.nap_yes));
 
+			payload.put("napped", (napChecked == R.id.nap_yes));
+
 			RadioGroup earlierRadios = (RadioGroup) this.findViewById(R.id.radios_earlier);
 
 			int earlierChecked = earlierRadios.getCheckedRadioButtonId();
@@ -515,9 +520,11 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 				Toast.makeText(this, R.string.message_complete_earlier, Toast.LENGTH_SHORT).show();
 				return true;
 			}
-
-			values.put(SlumberContentProvider.DIARY_EARLIER, (earlierChecked == R.id.nap_yes));
 			
+			values.put(SlumberContentProvider.DIARY_EARLIER, (earlierChecked == R.id.earlier_yes));
+
+			payload.put("earlier", (earlierChecked == R.id.earlier_yes));
+
 			if (this._bedHour == -1 || this._bedMinute == -1)
 			{
 				Toast.makeText(this, R.string.message_complete_bedtime, Toast.LENGTH_SHORT).show();
@@ -526,6 +533,9 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 
 			values.put(SlumberContentProvider.DIARY_BED_HOUR, this._bedHour);
 			values.put(SlumberContentProvider.DIARY_BED_MINUTE, this._bedMinute);
+
+			payload.put("bed_hour", this._bedHour);
+			payload.put("bed_minute", this._bedMinute);
 
 			if (this._sleepHour == -1 || this._sleepMinute == -1)
 			{
@@ -536,6 +546,8 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 			values.put(SlumberContentProvider.DIARY_SLEEP_HOUR, this._sleepHour);
 			values.put(SlumberContentProvider.DIARY_SLEEP_MINUTE, this._sleepMinute);
 
+			payload.put("sleep_hour", this._sleepHour);
+			payload.put("sleep_minute", this._sleepMinute);
 			
 			if (this._wakeHour == -1 || this._wakeMinute == -1)
 			{
@@ -546,6 +558,8 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 			values.put(SlumberContentProvider.DIARY_WAKE_HOUR, this._wakeHour);
 			values.put(SlumberContentProvider.DIARY_WAKE_MINUTE, this._wakeMinute);
 
+			payload.put("wake_hour", this._wakeHour);
+			payload.put("wake_minute", this._wakeMinute);
 			
 			if (this._upHour == -1 || this._upMinute == -1)
 			{
@@ -555,6 +569,9 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 
 			values.put(SlumberContentProvider.DIARY_UP_HOUR, this._upHour);
 			values.put(SlumberContentProvider.DIARY_UP_MINUTE, this._upMinute);
+
+			payload.put("up_hour", this._upHour);
+			payload.put("up_minute", this._upMinute);
 
 			if (this._sleepDelay == -1)
 			{
@@ -572,6 +589,8 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 
 			values.put(SlumberContentProvider.DIARY_WAKE_COUNT, this._wakeCount);
 
+			payload.put("wake_count", this._wakeCount);
+
 			if (this._sleepQuality == -1)
 			{
 				Toast.makeText(this, R.string.message_complete_sleep_quality, Toast.LENGTH_SHORT).show();
@@ -579,14 +598,20 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 			}
 
 			values.put(SlumberContentProvider.DIARY_SLEEP_QUALITY, this._sleepQuality);
-			
+
+			payload.put("sleep_quality", this._sleepQuality);
+
 			EditText comments = (EditText) this.findViewById(R.id.field_comments);
 
 			values.put(SlumberContentProvider.DIARY_COMMENTS, comments.getEditableText().toString());
-			
+
+			payload.put("sleep_comments", comments);
+
 			values.put(SlumberContentProvider.DIARY_TIMESTAMP, System.currentTimeMillis());
 			
 			this.getContentResolver().insert(SlumberContentProvider.SLEEP_DIARIES_URI, values);
+
+			LogManager.getInstance(this).log("logged_diary", payload);
 			
 			Toast.makeText(this, R.string.toast_sleep_diary_recorded, Toast.LENGTH_SHORT).show();
 			
@@ -594,5 +619,21 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 		}
 
 		return true;
+	}
+	
+	protected void onResume()
+	{
+		super.onResume();
+		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("launched_diary_activity", payload);
+	}
+
+	protected void onPause()
+	{
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("closed_diary_activity", payload);
+
+		super.onPause();
 	}
 }

@@ -4,12 +4,15 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.TimeZone;
 
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.transform.DftNormalization;
 import org.apache.commons.math3.transform.FastFourierTransformer;
 import org.apache.commons.math3.transform.TransformType;
+
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -144,6 +147,9 @@ public class ClockActivity extends Activity implements SensorEventListener
         {
 			public void onClick(final View alarmView) 
 			{
+				HashMap<String, Object> payload = new HashMap<String, Object>();
+				LogManager.getInstance(me).log("launched_alarm_view", payload);
+
 				AlertDialog.Builder builder = new AlertDialog.Builder(me);
 
 				LayoutInflater inflater = LayoutInflater.from(me);
@@ -244,6 +250,17 @@ public class ClockActivity extends Activity implements SensorEventListener
 									
 									Cursor old = meAdapter.swapCursor(newMerged);
 									old.close();
+									
+									if (isChecked)
+									{
+										HashMap<String, Object> payload = new HashMap<String, Object>();
+										LogManager.getInstance(me).log("enabled_alarm", payload);
+									}
+									else
+									{
+										HashMap<String, Object> payload = new HashMap<String, Object>();
+										LogManager.getInstance(me).log("disabled_alarm", payload);
+									}
 								}
 							});
 						}
@@ -285,6 +302,9 @@ public class ClockActivity extends Activity implements SensorEventListener
 									
 									Cursor old = adapter.swapCursor(newMerged);
 									old.close();
+									
+									HashMap<String, Object> payload = new HashMap<String, Object>();
+									LogManager.getInstance(me).log("deleted_alarm", payload);
 								}
 							});
 
@@ -331,6 +351,9 @@ public class ClockActivity extends Activity implements SensorEventListener
 						}
 						else
 						{
+							HashMap<String, Object> payload = new HashMap<String, Object>();
+							LogManager.getInstance(me).log("selected_alarm", payload);
+
 							final OnItemClickListener clickListener = this;
 							
 							alarmEditor.setVisibility(View.VISIBLE);
@@ -381,6 +404,17 @@ public class ClockActivity extends Activity implements SensorEventListener
 									old.close();
 	
 									clickListener.onItemClick(parent, view, which, alarmId);
+									
+									if (checked)
+									{
+										HashMap<String, Object> payload = new HashMap<String, Object>();
+										LogManager.getInstance(me).log("selected_sunday", payload);
+									}
+									else
+									{
+										HashMap<String, Object> payload = new HashMap<String, Object>();
+										LogManager.getInstance(me).log("deselected_sunday", payload);
+									}
 								}
 							});
 							
@@ -408,6 +442,18 @@ public class ClockActivity extends Activity implements SensorEventListener
 									old.close();
 	
 									clickListener.onItemClick(parent, view, which, alarmId);
+									
+									if (checked)
+									{
+										HashMap<String, Object> payload = new HashMap<String, Object>();
+										LogManager.getInstance(me).log("selected_monday", payload);
+									}
+									else
+									{
+										HashMap<String, Object> payload = new HashMap<String, Object>();
+										LogManager.getInstance(me).log("deselected_monday", payload);
+									}
+
 								}
 							});
 	
@@ -435,6 +481,17 @@ public class ClockActivity extends Activity implements SensorEventListener
 									old.close();
 
 									clickListener.onItemClick(parent, view, which, alarmId);
+									
+									if (checked)
+									{
+										HashMap<String, Object> payload = new HashMap<String, Object>();
+										LogManager.getInstance(me).log("selected_tuesday", payload);
+									}
+									else
+									{
+										HashMap<String, Object> payload = new HashMap<String, Object>();
+										LogManager.getInstance(me).log("deselected_tuesday", payload);
+									}
 								}
 							});
 	
@@ -462,6 +519,17 @@ public class ClockActivity extends Activity implements SensorEventListener
 									old.close();
 
 									clickListener.onItemClick(parent, view, which, alarmId);
+									
+									if (checked)
+									{
+										HashMap<String, Object> payload = new HashMap<String, Object>();
+										LogManager.getInstance(me).log("selected_wednesday", payload);
+									}
+									else
+									{
+										HashMap<String, Object> payload = new HashMap<String, Object>();
+										LogManager.getInstance(me).log("deselected_wednesday", payload);
+									}
 								}
 							});
 	
@@ -489,6 +557,17 @@ public class ClockActivity extends Activity implements SensorEventListener
 									old.close();
 
 									clickListener.onItemClick(parent, view, which, alarmId);
+									
+									if (checked)
+									{
+										HashMap<String, Object> payload = new HashMap<String, Object>();
+										LogManager.getInstance(me).log("selected_thursday", payload);
+									}
+									else
+									{
+										HashMap<String, Object> payload = new HashMap<String, Object>();
+										LogManager.getInstance(me).log("deselected_thursday", payload);
+									}
 								}
 							});
 	
@@ -516,6 +595,17 @@ public class ClockActivity extends Activity implements SensorEventListener
 									old.close();
 
 									clickListener.onItemClick(parent, view, which, alarmId);
+									
+									if (checked)
+									{
+										HashMap<String, Object> payload = new HashMap<String, Object>();
+										LogManager.getInstance(me).log("selected_friday", payload);
+									}
+									else
+									{
+										HashMap<String, Object> payload = new HashMap<String, Object>();
+										LogManager.getInstance(me).log("deselected_friday", payload);
+									}
 								}
 							});
 	
@@ -543,6 +633,17 @@ public class ClockActivity extends Activity implements SensorEventListener
 									old.close();
 
 									clickListener.onItemClick(parent, view, which, alarmId);
+									
+									if (checked)
+									{
+										HashMap<String, Object> payload = new HashMap<String, Object>();
+										LogManager.getInstance(me).log("selected_saturday", payload);
+									}
+									else
+									{
+										HashMap<String, Object> payload = new HashMap<String, Object>();
+										LogManager.getInstance(me).log("deselected_saturday", payload);
+									}
 								}
 							});
 	
@@ -565,7 +666,12 @@ public class ClockActivity extends Activity implements SensorEventListener
 											ContentValues values = new ContentValues();
 											values.put(SlumberContentProvider.ALARM_HOUR, hour);
 											values.put(SlumberContentProvider.ALARM_MINUTE, minute);
-											
+
+											HashMap<String, Object> payload = new HashMap<String, Object>();
+											payload.put("hour", hour);
+											payload.put("minute", minute);
+											LogManager.getInstance(me).log("set_time", payload);
+
 											String where = "_id = ?";
 											String[] args = { "" + alarmId };
 											
@@ -594,6 +700,9 @@ public class ClockActivity extends Activity implements SensorEventListener
 							{
 								public void onClick(View toneView)
 								{
+									HashMap<String, Object> payload = new HashMap<String, Object>();
+									LogManager.getInstance(me).log("browsed_audio", payload);
+
 									AlertDialog.Builder builder = new AlertDialog.Builder(me);
 	
 									LayoutInflater inflater = LayoutInflater.from(me);
@@ -645,6 +754,8 @@ public class ClockActivity extends Activity implements SensorEventListener
 											{
 												public void onClick(DialogInterface dialog, int which) 
 												{
+													HashMap<String, Object> payload = new HashMap<String, Object>();
+
 													switch (which)
 													{
 														case 0:
@@ -652,6 +763,9 @@ public class ClockActivity extends Activity implements SensorEventListener
 															playIntent.setDataAndType(Uri.fromFile(new File(data)), "audio/*");
 															
 															me.startActivity(playIntent);
+
+															LogManager.getInstance(me).log("previewed_audio", payload);
+
 															break;
 														case 1:
 	
@@ -679,7 +793,9 @@ public class ClockActivity extends Activity implements SensorEventListener
 															
 															dialog.cancel();
 															me._toneListDialog.cancel();
-															
+
+															LogManager.getInstance(me).log("chose_audio", payload);
+
 															break;
 													}
 												}
@@ -727,6 +843,10 @@ public class ClockActivity extends Activity implements SensorEventListener
 														MergeCursor c = new MergeCursor(cursors);
 														
 														toneAdapter.changeCursor(c);
+														
+														HashMap<String, Object> payload = new HashMap<String, Object>();
+														LogManager.getInstance(me).log("searched_audio", payload);
+
 													}
 												}
 											}, 1000);
@@ -792,6 +912,9 @@ public class ClockActivity extends Activity implements SensorEventListener
         {
 			public void onClick(View arg0) 
 			{
+				HashMap<String, Object> payload = new HashMap<String, Object>();
+				LogManager.getInstance(me).log("opened_log_view", payload);
+
 				AlertDialog.Builder builder = new AlertDialog.Builder(me);
 				
 				builder = builder.setTitle(R.string.title_clock_log);
@@ -824,6 +947,9 @@ public class ClockActivity extends Activity implements SensorEventListener
 							values.put(SlumberContentProvider.NOTE_TEXT, logText);
 							values.put(SlumberContentProvider.NOTE_TIMESTAMP, now);
 							
+							HashMap<String, Object> payload = new HashMap<String, Object>();
+							LogManager.getInstance(me).log("created_log", payload);
+							
 							me.getContentResolver().insert(SlumberContentProvider.NOTES_URI, values);
 							
 							dialog.cancel();
@@ -832,6 +958,9 @@ public class ClockActivity extends Activity implements SensorEventListener
 						}
 						else
 							Toast.makeText(me, R.string.toast_provide_note, Toast.LENGTH_SHORT).show();
+						
+						HashMap<String, Object> payload = new HashMap<String, Object>();
+						LogManager.getInstance(me).log("closed_log_view", payload);
 					}
 				});
 
@@ -854,6 +983,9 @@ public class ClockActivity extends Activity implements SensorEventListener
         {
 			public void onClick(View arg0) 
 			{
+				HashMap<String, Object> payload = new HashMap<String, Object>();
+				LogManager.getInstance(me).log("opened_tips_view", payload);
+
 				AlertDialog.Builder builder = new AlertDialog.Builder(me);
 				
 				builder = builder.setTitle(R.string.title_clock_tips);
@@ -896,7 +1028,8 @@ public class ClockActivity extends Activity implements SensorEventListener
 				{
 					public void onClick(DialogInterface dialog, int which) 
 					{
-
+						HashMap<String, Object> payload = new HashMap<String, Object>();
+						LogManager.getInstance(me).log("closed_tips_view", payload);
 					}
 				});
 
@@ -924,6 +1057,9 @@ public class ClockActivity extends Activity implements SensorEventListener
 						me.startActivity(intent);
 						
 						d.dismiss();
+						
+						HashMap<String, Object> payload = new HashMap<String, Object>();
+						LogManager.getInstance(me).log("viewed_tip", payload);
 					}
 				});
 			}
@@ -933,6 +1069,9 @@ public class ClockActivity extends Activity implements SensorEventListener
         {
 			public void onClick(View arg0) 
 			{
+				HashMap<String, Object> payload = new HashMap<String, Object>();
+				LogManager.getInstance(me).log("opened_settings_view", payload);
+
 				AlertDialog.Builder builder = new AlertDialog.Builder(me);
 				
 				builder = builder.setTitle(R.string.title_clock_settings);
@@ -1065,7 +1204,8 @@ public class ClockActivity extends Activity implements SensorEventListener
 				{
 					public void onClick(DialogInterface dialog, int which) 
 					{
-
+						HashMap<String, Object> payload = new HashMap<String, Object>();
+						LogManager.getInstance(me).log("closed_settings_view", payload);
 					}
 				});
 				
@@ -1104,6 +1244,9 @@ public class ClockActivity extends Activity implements SensorEventListener
 	{
 		super.onResume();
 	
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("launched_clock_activity", payload);
+
 		this._lastInteraction = System.currentTimeMillis();
 		this._sampleAudio = true;
 
@@ -1394,6 +1537,9 @@ public class ClockActivity extends Activity implements SensorEventListener
 		sensors.unregisterListener(this);
 		
 		this._sampleAudio = false;
+		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("closed_clock_activity", payload);
 	}
 
 	@SuppressLint({ "SimpleDateFormat", "DefaultLocale" })
