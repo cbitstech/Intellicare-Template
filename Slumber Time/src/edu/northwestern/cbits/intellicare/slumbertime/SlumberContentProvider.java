@@ -24,6 +24,8 @@ import java.util.List;
 
 import javax.net.ssl.SSLException;
 
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
@@ -422,6 +424,8 @@ public class SlumberContentProvider extends ContentProvider
 		
 		c.moveToPosition(-1);
 		
+		DescriptiveStatistics stats = new DescriptiveStatistics();
+		
 		while (c.moveToNext())
 		{
 			double reading = c.getDouble(c.getColumnIndex(SlumberContentProvider.READING_VALUE));
@@ -431,13 +435,40 @@ public class SlumberContentProvider extends ContentProvider
 			Object[] values = {c.getLong(c.getColumnIndex(SlumberContentProvider.READING_RECORDED)), normalized };
 			
 			retCursor.addRow(values);
+			
+			stats.addValue(normalized);
 		}
 		
 		c.close();
 		
 		retCursor.moveToPosition(-1);
+		
+		double stdDev = stats.getStandardDeviation();
 
-		return retCursor;
+		MatrixCursor cleanedCursor = new MatrixCursor(columnNames);
+		double lastValue = 0 - Double.MAX_VALUE;
+
+		while(retCursor.moveToNext())
+		{
+			double value = retCursor.getDouble(1);
+
+			if (Math.abs(value - lastValue) > stdDev)
+			{
+				long timestamp = retCursor.getLong(0);
+
+				Object[] values = { timestamp, value };
+
+				cleanedCursor.addRow(values);
+				
+				lastValue = value;
+			}
+		}
+
+		retCursor.close();
+		
+		cleanedCursor.moveToPosition(-1);
+		
+		return cleanedCursor;
 	}
 
     public static Uri fetchCachedUri(final Context context, final Uri uri, final Runnable next) 

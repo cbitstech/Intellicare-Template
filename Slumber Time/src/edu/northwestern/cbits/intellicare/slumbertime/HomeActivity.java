@@ -138,10 +138,9 @@ public class HomeActivity extends PortraitActivity
 		});
 		
 		graphView.loadDataWithBaseURL("file:///android_asset/", HomeActivity.generateGraph(this), "text/html", null, null);
-		graphView.setClickable(false);
+//		graphView.setClickable(false);
 	}
 
-	@SuppressLint("SetJavaScriptEnabled")
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
@@ -240,7 +239,6 @@ public class HomeActivity extends PortraitActivity
 				reading.put("y", SlumberContentProvider.scoreSleep(c, 1));
 				
 				sleepValues.put(reading);
-				
 			}
 
 			Log.e("ST", "SLEEP: " + sleepValues.length());
