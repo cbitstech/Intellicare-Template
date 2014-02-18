@@ -21,6 +21,21 @@ import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 public class AddSleepDiaryActivity extends ConsentedActivity
 {
+	private static final String SELECTED_RADIO = "selected_radio";
+	private static final String SELECTED_EARLIER = "selected_earlier";
+	private static final String SELECTED_BED_HOUR = "selected_bed_hour";
+	private static final String SELECTED_BED_MINUTE = "selected_bed_minute";
+	private static final String SELECTED_SLEEP_HOUR = "selected_sleep_hour";
+	private static final String SELECTED_SLEEP_MINUTE = "selected_sleep_minute";
+	private static final String SELECTED_WAKE_HOUR = "selected_wake_hour";
+	private static final String SELECTED_UP_HOUR = "selected_up_hour";
+	private static final String SELECTED_WAKE_MINUTE = "selected_wake_minute";
+	private static final String SELECTED_UP_MINUTE = "selected_up_minute";
+	private static final String SELECTED_SLEEP_DELAY = "selected_sleep_delay";
+	private static final String SELECTED_WAKE_COUNT = "selected_wake_count";
+	private static final String SELECTED_SLEEP_QUALITY = "selected_sleep_quality";
+	private static final String SELECTED_COMMENTS = "selected_comments";
+
 	protected int _bedHour = -1;
 	protected int _bedMinute = -1;
 	protected int _sleepHour = -1;
@@ -32,10 +47,71 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 	protected int _sleepDelay = -1;
 	protected int _wakeCount = -1;
 	protected int _sleepQuality = -1;
+	
+	protected void onSaveInstanceState (Bundle outState)
+	{
+		super.onSaveInstanceState(outState);
+		
+		ContentValues values = new ContentValues();
+		
+		RadioGroup napRadios = (RadioGroup) this.findViewById(R.id.radios_nap);
+		int napChecked = napRadios.getCheckedRadioButtonId();
+		
+		if (napChecked != -1)
+			outState.putInt(AddSleepDiaryActivity.SELECTED_RADIO, napChecked);
+		
+		RadioGroup earlierRadios = (RadioGroup) this.findViewById(R.id.radios_earlier);
+		int earlierChecked = earlierRadios.getCheckedRadioButtonId();
+
+		if (earlierChecked != -1)
+			outState.putInt(AddSleepDiaryActivity.SELECTED_EARLIER, napChecked);
+
+		values.put(SlumberContentProvider.DIARY_EARLIER, (earlierChecked == R.id.nap_yes));
+		
+		if (this._bedHour != -1 || this._bedMinute != -1)
+		{
+			outState.putInt(AddSleepDiaryActivity.SELECTED_BED_HOUR, this._bedHour);
+			outState.putInt(AddSleepDiaryActivity.SELECTED_BED_MINUTE, this._bedMinute);
+		}
+
+		if (this._sleepHour != -1 || this._sleepMinute != -1)
+		{
+			outState.putInt(AddSleepDiaryActivity.SELECTED_SLEEP_HOUR, this._sleepHour);
+			outState.putInt(AddSleepDiaryActivity.SELECTED_SLEEP_MINUTE, this._sleepMinute);
+		}
+
+		if (this._wakeHour != -1 || this._wakeMinute != -1)
+		{
+			outState.putInt(AddSleepDiaryActivity.SELECTED_WAKE_HOUR, this._wakeHour);
+			outState.putInt(AddSleepDiaryActivity.SELECTED_WAKE_MINUTE, this._wakeMinute);
+		}
+		
+		if (this._upHour != -1 || this._upMinute != -1)
+		{
+			outState.putInt(AddSleepDiaryActivity.SELECTED_UP_HOUR, this._upHour);
+			outState.putInt(AddSleepDiaryActivity.SELECTED_UP_MINUTE, this._upMinute);
+		}
+
+		if (this._sleepDelay != -1)
+			outState.putInt(AddSleepDiaryActivity.SELECTED_SLEEP_DELAY, this._sleepDelay);
+
+		if (this._wakeCount != -1)
+			outState.putInt(AddSleepDiaryActivity.SELECTED_WAKE_COUNT, this._wakeCount);
+
+		if (this._sleepQuality != -1)
+			outState.putInt(AddSleepDiaryActivity.SELECTED_SLEEP_QUALITY, this._sleepQuality);
+		
+		EditText comments = (EditText) this.findViewById(R.id.field_comments);
+
+		outState.putString(AddSleepDiaryActivity.SELECTED_COMMENTS, comments.getEditableText().toString());
+	}
 
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
+		
+		if (savedInstanceState == null)
+			savedInstanceState = new Bundle();
 
 		this.setContentView(R.layout.activity_add_diary);
 		
@@ -47,6 +123,12 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 		
 		final DateFormat format = android.text.format.DateFormat.getTimeFormat(this);
 		final Calendar calendar = Calendar.getInstance();
+
+		if (savedInstanceState.containsKey(AddSleepDiaryActivity.SELECTED_BED_HOUR))
+			me._bedHour = savedInstanceState.getInt(AddSleepDiaryActivity.SELECTED_BED_HOUR);
+
+		if (savedInstanceState.containsKey(AddSleepDiaryActivity.SELECTED_BED_MINUTE))
+			me._bedMinute = savedInstanceState.getInt(AddSleepDiaryActivity.SELECTED_BED_MINUTE);
 		
 		final TextView bedTime = (TextView) this.findViewById(R.id.field_bed_time);
 		bedTime.setOnClickListener(new OnClickListener()
@@ -67,11 +149,31 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 					}
 				};
 				
-				TimePickerDialog picker = new TimePickerDialog(me, timeSetListener, 12, 00, useAmPm);
+				TimePickerDialog picker = null;
+				
+				if (me._bedHour != -1 && me._bedMinute != -1)
+					picker = new TimePickerDialog(me, timeSetListener, me._bedHour, me._bedMinute, useAmPm);
+				else
+					picker = new TimePickerDialog(me, timeSetListener, 12, 0, useAmPm);
+
 				picker.show();
 			}
 		});
-		
+
+		if (this._bedHour != -1 && this._bedMinute != -1)
+		{
+			calendar.set(Calendar.HOUR_OF_DAY, me._bedHour);
+			calendar.set(Calendar.MINUTE, me._bedMinute);
+			
+			bedTime.setText(format.format(calendar.getTime()));
+		}
+
+		if (savedInstanceState.containsKey(AddSleepDiaryActivity.SELECTED_SLEEP_HOUR))
+			me._sleepHour = savedInstanceState.getInt(AddSleepDiaryActivity.SELECTED_SLEEP_HOUR);
+
+		if (savedInstanceState.containsKey(AddSleepDiaryActivity.SELECTED_SLEEP_MINUTE))
+			me._sleepMinute = savedInstanceState.getInt(AddSleepDiaryActivity.SELECTED_SLEEP_MINUTE);
+
 		final TextView sleepTime = (TextView) this.findViewById(R.id.field_sleep_time);
 		sleepTime.setOnClickListener(new OnClickListener()
 		{
@@ -90,11 +192,31 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 						me._sleepMinute = minute;
 					}
 				};
+
+				TimePickerDialog picker = null;
 				
-				TimePickerDialog picker = new TimePickerDialog(me, timeSetListener, 12, 00, useAmPm);
+				if (me._sleepHour != -1 && me._sleepMinute != -1)
+					picker = new TimePickerDialog(me, timeSetListener, me._sleepHour, me._sleepMinute, useAmPm);
+				else
+					picker = new TimePickerDialog(me, timeSetListener, 12, 0, useAmPm);
+
 				picker.show();
 			}
 		});
+
+		if (this._sleepHour != -1 && this._sleepMinute != -1)
+		{
+			calendar.set(Calendar.HOUR_OF_DAY, me._sleepHour);
+			calendar.set(Calendar.MINUTE, me._sleepMinute);
+			
+			sleepTime.setText(format.format(calendar.getTime()));
+		}
+
+		if (savedInstanceState.containsKey(AddSleepDiaryActivity.SELECTED_WAKE_HOUR))
+			me._wakeHour = savedInstanceState.getInt(AddSleepDiaryActivity.SELECTED_WAKE_HOUR);
+
+		if (savedInstanceState.containsKey(AddSleepDiaryActivity.SELECTED_WAKE_MINUTE))
+			me._wakeMinute = savedInstanceState.getInt(AddSleepDiaryActivity.SELECTED_WAKE_MINUTE);
 
 		final TextView wakeTime = (TextView) this.findViewById(R.id.field_wake_time);
 		wakeTime.setOnClickListener(new OnClickListener()
@@ -114,12 +236,31 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 						me._wakeMinute = minute;
 					}
 				};
-
 				
-				TimePickerDialog picker = new TimePickerDialog(me, timeSetListener, 12, 00, useAmPm);
+				TimePickerDialog picker = null;
+				
+				if (me._wakeHour != -1 && me._wakeMinute != -1)
+					picker = new TimePickerDialog(me, timeSetListener, me._wakeHour, me._wakeMinute, useAmPm);
+				else
+					picker = new TimePickerDialog(me, timeSetListener, 12, 0, useAmPm);
+
 				picker.show();
 			}
 		});
+
+		if (this._wakeHour != -1 && this._wakeMinute != -1)
+		{
+			calendar.set(Calendar.HOUR_OF_DAY, me._wakeHour);
+			calendar.set(Calendar.MINUTE, me._wakeMinute);
+			
+			wakeTime.setText(format.format(calendar.getTime()));
+		}
+
+		if (savedInstanceState.containsKey(AddSleepDiaryActivity.SELECTED_UP_HOUR))
+			me._upHour = savedInstanceState.getInt(AddSleepDiaryActivity.SELECTED_UP_HOUR);
+
+		if (savedInstanceState.containsKey(AddSleepDiaryActivity.SELECTED_UP_MINUTE))
+			me._upMinute = savedInstanceState.getInt(AddSleepDiaryActivity.SELECTED_UP_MINUTE);
 
 		final TextView upTime = (TextView) this.findViewById(R.id.field_up_time);
 		upTime.setOnClickListener(new OnClickListener()
@@ -140,17 +281,33 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 					}
 				};
 
+				TimePickerDialog picker = null;
 				
-				TimePickerDialog picker = new TimePickerDialog(me, timeSetListener, 12, 00, useAmPm);
+				if (me._upHour != -1 && me._upMinute != -1)
+					picker = new TimePickerDialog(me, timeSetListener, me._upHour, me._upMinute, useAmPm);
+				else
+					picker = new TimePickerDialog(me, timeSetListener, 12, 0, useAmPm);
+
 				picker.show();
 			}
 		});
-		
+
+		if (this._upHour != -1 && this._upMinute != -1)
+		{
+			calendar.set(Calendar.HOUR_OF_DAY, me._upHour);
+			calendar.set(Calendar.MINUTE, me._upMinute);
+			
+			upTime.setText(format.format(calendar.getTime()));
+		}
+
 		final TextView sleepLabel = (TextView) this.findViewById(R.id.label_sleep_delay);
-		
+
 		final SeekBar sleepDelay = (SeekBar) this.findViewById(R.id.field_sleep_delay);
 		sleepDelay.setMax(8);
 		
+		if (savedInstanceState.containsKey(AddSleepDiaryActivity.SELECTED_SLEEP_DELAY))
+			sleepDelay.setProgress(savedInstanceState.getInt(AddSleepDiaryActivity.SELECTED_SLEEP_DELAY));
+
 		sleepDelay.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
 		{
 			public void onProgressChanged(SeekBar bar, int position, boolean fromUser) 
@@ -222,6 +379,9 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 		final SeekBar wakeCount = (SeekBar) this.findViewById(R.id.field_wake_count);
 		wakeCount.setMax(11);
 		
+		if (savedInstanceState.containsKey(AddSleepDiaryActivity.SELECTED_WAKE_COUNT))
+			wakeCount.setProgress(savedInstanceState.getInt(AddSleepDiaryActivity.SELECTED_WAKE_COUNT));
+
 		wakeCount.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
 		{
 			public void onProgressChanged(SeekBar bar, int position, boolean fromUser) 
@@ -265,7 +425,10 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 		
 		final SeekBar sleepQuality = (SeekBar) this.findViewById(R.id.field_sleep_quality);
 		sleepQuality.setMax(4);
-		
+
+		if (savedInstanceState.containsKey(AddSleepDiaryActivity.SELECTED_SLEEP_QUALITY))
+			sleepQuality.setProgress(savedInstanceState.getInt(AddSleepDiaryActivity.SELECTED_SLEEP_QUALITY));
+
 		sleepQuality.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
 		{
 			public void onProgressChanged(SeekBar bar, int position, boolean fromUser) 
@@ -302,6 +465,21 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 
 			}
 		});
+
+		RadioGroup nap = (RadioGroup) this.findViewById(R.id.radios_nap);
+
+		if (savedInstanceState.containsKey(AddSleepDiaryActivity.SELECTED_RADIO))
+			nap.check(savedInstanceState.getInt(AddSleepDiaryActivity.SELECTED_RADIO));
+
+		RadioGroup earlier = (RadioGroup) this.findViewById(R.id.radios_earlier);
+
+		if (savedInstanceState.containsKey(AddSleepDiaryActivity.SELECTED_EARLIER))
+			earlier.check(savedInstanceState.getInt(AddSleepDiaryActivity.SELECTED_EARLIER));
+
+		EditText comments = (EditText) this.findViewById(R.id.field_comments);
+		
+		if (savedInstanceState.containsKey(AddSleepDiaryActivity.SELECTED_COMMENTS))
+			comments.setText(savedInstanceState.getString(AddSleepDiaryActivity.SELECTED_COMMENTS));
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) 

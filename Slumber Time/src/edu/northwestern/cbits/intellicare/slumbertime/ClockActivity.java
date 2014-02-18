@@ -83,7 +83,7 @@ public class ClockActivity extends Activity implements SensorEventListener
 	protected static final int DEFAULT_DIM_DELAY = 4;
 	protected static final String DIM_DARK_OPTION = "dim_when_dark";
 	protected static final boolean DIM_DARK_DEFAULT = true;
-	protected static final long SAMPLE_RATE = 300000;
+	protected static final long SAMPLE_RATE = 60000;
 	
 	private long _lastLightReading = 0;
 	private long _lastTemperatureReading = 0;
@@ -1603,7 +1603,7 @@ public class ClockActivity extends Activity implements SensorEventListener
 					}
 				}
 				
-				if (Math.abs(event.values[0] - this._lastBrightness ) > 10)
+				if (Math.abs(event.values[0] - this._lastBrightness ) > 1)
 					this._lastLightReading = 0;
 				
 				this._lastBrightness = event.values[0];

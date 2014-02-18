@@ -138,6 +138,7 @@ public class HomeActivity extends PortraitActivity
 		});
 		
 		graphView.loadDataWithBaseURL("file:///android_asset/", HomeActivity.generateGraph(this), "text/html", null, null);
+		graphView.setClickable(false);
 	}
 
 	@SuppressLint("SetJavaScriptEnabled")
@@ -181,7 +182,7 @@ public class HomeActivity extends PortraitActivity
 		
 		graphString = graphString.replaceAll("VALUES_JSON", graphValues.toString());
 		
-		Log.e("ST", "HTML: " + graphString);
+//		Log.e("ST", "HTML: " + graphString);
 		
 		return graphString;
 	}
@@ -264,7 +265,7 @@ public class HomeActivity extends PortraitActivity
 				if (c.getCount() > 0)
 				{
 					JSONObject sensorObj = new JSONObject();
-					sensorObj.put("key", sensor);
+					sensorObj.put("key", SlumberContentProvider.nameForKey(context, sensor));
 					sensorObj.put("color", colors[colorIndex++ % colors.length]);
 
 					JSONArray sensorValues = new JSONArray();
@@ -346,7 +347,7 @@ public class HomeActivity extends PortraitActivity
 
 					values[i] = obj.getString("key");
 
-					String key = "graph_" + values[i];
+					String key = "graph_" + SlumberContentProvider.keyForName(me, values[i]);
 					
 					checked[i] = prefs.getBoolean(key, true);
 				} 
@@ -360,7 +361,7 @@ public class HomeActivity extends PortraitActivity
 			{
 				public void onClick(DialogInterface arg0, int which, boolean isChecked) 
 				{
-					String key = "graph_" + values[which];
+					String key = "graph_" + SlumberContentProvider.keyForName(me, values[which]);
 					
 					Editor e = prefs.edit();
 					e.putBoolean(key, isChecked);

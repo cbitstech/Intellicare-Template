@@ -661,5 +661,29 @@ public class SlumberContentProvider extends ContentProvider
 
         return hash;
     }
+
+	public static Object nameForKey(Context context, String key) 
+	{
+		if (SlumberContentProvider.LIGHT_LEVEL.equals(key))
+			return context.getString(R.string.label_light);
+		else if (SlumberContentProvider.AUDIO_MAGNITUDE.equals(key))
+			return context.getString(R.string.label_audio_volume);
+		else if (SlumberContentProvider.AUDIO_FREQUENCY.equals(key))
+			return context.getString(R.string.label_audio_pitch);
+
+		return key;
+	}
+
+	public static String keyForName(Context context, String name) 
+	{
+		if (context.getString(R.string.label_light).equals(name))
+			return SlumberContentProvider.LIGHT_LEVEL;
+		else if (context.getString(R.string.label_audio_volume).equals(name))
+			return SlumberContentProvider.AUDIO_MAGNITUDE;
+		else if (context.getString(R.string.label_audio_pitch).equals(name))
+			return SlumberContentProvider.AUDIO_FREQUENCY;
+
+		return name;
+	}
 }
 

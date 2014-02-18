@@ -33,7 +33,7 @@ public class SleepDiaryActivity extends ConsentedActivity
 		
 		this.getSupportActionBar().setTitle(R.string.tool_sleep_diaries);
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public void onResume()
 	{

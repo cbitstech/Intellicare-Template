@@ -216,4 +216,8 @@
    	</string-array>
    	
 	<string name="action_chart">Chart Options</string>
+	
+	<string name="label_light">Ambient Light Brightness</string>
+	<string name="label_audio_volume">Ambient Audio Level</string>
+	<string name="label_audio_pitch">Dominant Audio Pitch</string>
 </resources>
