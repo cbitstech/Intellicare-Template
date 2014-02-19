@@ -19,9 +19,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class FocusBoardActivity extends ActionBarActivity {
 
+	private static final String CN = "FocusBoardActivity";
 	private FocusBoardManager mManager;
 	private long mFocusBoardId;
 
@@ -40,6 +42,8 @@ public class FocusBoardActivity extends ActionBarActivity {
 
 		addMantraText();
 		addImageGridFragment();
+		
+		handleSelectedImageIntent();
 	}
 
 	@Override
@@ -63,6 +67,40 @@ public class FocusBoardActivity extends ActionBarActivity {
 		}
 	}
 
+	
+	private void handleSelectedImageIntent() {
+		Log.d(CN+".handleSelectedImageIntent", "entered");
+		Intent intent = getIntent();
+			
+		if(intent != null) {
+			// get a thumbnail of the image: http://stackoverflow.com/questions/14978566/how-to-get-selected-image-from-gallery-in-android
+			Uri selectedImage = intent.getData();
+			
+			if(selectedImage != null && selectedImage.toString().length() > 0) {
+				String[] filePathColumn = { MediaStore.Images.Media.DATA };
+				Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
+				cursor.moveToFirst();
+				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+				String picturePath = cursor.getString(columnIndex);
+				Log.d(CN+".handleSelectedImageIntent", "picturePath = " + picturePath);
+				cursor.close();
+//				Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
+		
+				// if this activity was opened by a response to the image gallery,
+				// then inform the user they need to tap on a mantra with which they wish to associate an image.
+				Toast.makeText(this, "Attach the image here!", Toast.LENGTH_LONG).show();
+
+				Log.d(CN+".handleSelectedImageIntent", "exiting");
+			}
+			else
+				Log.d(CN+".handleSelectedImageIntent", "one of the conds is untrue: " + (selectedImage != null) + " && " + (selectedImage == null ? "<not evaluable>" : selectedImage.toString().length() > 0) + ")");
+
+		}
+		else
+			Log.d(CN+".handleSelectedImageIntent", "intent is null");
+	}
+	
+	
 	/* display image from gallery: BEGIN (src: http://viralpatel.net/blogs/pick-image-from-galary-android-app/) */
 	private void startBrowsePhotosActivity() {
 		Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
