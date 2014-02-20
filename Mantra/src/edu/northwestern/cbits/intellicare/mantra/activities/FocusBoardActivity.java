@@ -1,10 +1,15 @@
 package edu.northwestern.cbits.intellicare.mantra.activities;
 
+import java.io.File;
+
+import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusBoardCursor;
+import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusImageCursor;
 import edu.northwestern.cbits.intellicare.mantra.FocusBoard;
 import edu.northwestern.cbits.intellicare.mantra.FocusBoardGridFragment;
 import edu.northwestern.cbits.intellicare.mantra.FocusBoardManager;
 import edu.northwestern.cbits.intellicare.mantra.FocusImageGridFragment;
 import edu.northwestern.cbits.intellicare.mantra.R;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -40,10 +45,10 @@ public class FocusBoardActivity extends ActionBarActivity {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
+		handleSelectedImageIntent();
+
 		addMantraText();
 		addImageGridFragment();
-		
-		handleSelectedImageIntent();
 	}
 
 	@Override
@@ -77,28 +82,53 @@ public class FocusBoardActivity extends ActionBarActivity {
 			Uri selectedImage = intent.getData();
 			
 			if(selectedImage != null && selectedImage.toString().length() > 0) {
-				String[] filePathColumn = { MediaStore.Images.Media.DATA };
-				Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
-				cursor.moveToFirst();
-				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-				String picturePath = cursor.getString(columnIndex);
-				Log.d(CN+".handleSelectedImageIntent", "picturePath = " + picturePath);
-				cursor.close();
-//				Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
-		
-				// if this activity was opened by a response to the image gallery,
-				// then inform the user they need to tap on a mantra with which they wish to associate an image.
-				Toast.makeText(this, "Attach the image here!", Toast.LENGTH_LONG).show();
+				mFocusBoardId = intent.getLongExtra(NewFocusBoardActivity.FOCUS_BOARD_ID, -1);
+				mManager = FocusBoardManager.get(this);
+				FocusBoard focusBoard = mManager.getFocusBoard(mFocusBoardId);
 
-				Log.d(CN+".handleSelectedImageIntent", "exiting");
+				String filePathToImage = getRealPathFromURI(this, selectedImage).trim();
+				
+				// search the image set for a particular image path, and if the image isn't already associated with the board,
+				// then associate it. 
+				FocusImageCursor fic = mManager.queryFocusImages(mFocusBoardId);
+				boolean imageAlreadyAssociated = false;
+				while(fic.moveToNext()) {
+					String path = fic.getString(FocusBoardManager.COL_INDEX_FILE_PATH).trim();
+					Log.d(CN+".handleSelectedImageIntent", "path.equals(filePathToImage) = " + (path.equals(filePathToImage)) + "; path = \"" + path + "\"" + "; filePathToImage = \"" + filePathToImage + "\"");
+					if(path.equals(filePathToImage)) {
+						Toast.makeText(this, "Image already applied. Consider choosing a different one!", Toast.LENGTH_LONG).show();
+						imageAlreadyAssociated = true;
+						break;
+					}
+				}
+				if(!imageAlreadyAssociated) {
+					Log.d(CN+".handleSelectedImageIntent","for board " + mFocusBoardId + ", associating image = " + filePathToImage);
+					Toast.makeText(this, "Image applied!", Toast.LENGTH_SHORT).show();
+					mManager.createFocusImage(mFocusBoardId, filePathToImage);					
+				}
 			}
 			else
 				Log.d(CN+".handleSelectedImageIntent", "one of the conds is untrue: " + (selectedImage != null) + " && " + (selectedImage == null ? "<not evaluable>" : selectedImage.toString().length() > 0) + ")");
-
 		}
 		else
 			Log.d(CN+".handleSelectedImageIntent", "intent is null");
 	}
+	
+	// src: http://stackoverflow.com/questions/3401579/get-filename-and-path-from-uri-from-mediastore
+	public String getRealPathFromURI(Context context, Uri contentUri) {
+		  Cursor cursor = null;
+		  try { 
+		    String[] proj = { MediaStore.Images.Media.DATA };
+		    cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+		    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+		    cursor.moveToFirst();
+		    return cursor.getString(column_index);
+		  } finally {
+		    if (cursor != null) {
+		      cursor.close();
+		    }
+		  }
+		}
 	
 	
 	/* display image from gallery: BEGIN (src: http://viralpatel.net/blogs/pick-image-from-galary-android-app/) */
