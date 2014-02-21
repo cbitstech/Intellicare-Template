@@ -1,10 +1,15 @@
 package edu.northwestern.cbits.intellicare.mantra.activities;
 
+import java.io.File;
+
+import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusBoardCursor;
+import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusImageCursor;
 import edu.northwestern.cbits.intellicare.mantra.FocusBoard;
 import edu.northwestern.cbits.intellicare.mantra.FocusBoardGridFragment;
 import edu.northwestern.cbits.intellicare.mantra.FocusBoardManager;
 import edu.northwestern.cbits.intellicare.mantra.FocusImageGridFragment;
 import edu.northwestern.cbits.intellicare.mantra.R;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -19,9 +24,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class FocusBoardActivity extends ActionBarActivity {
 
+	private static final String CN = "FocusBoardActivity";
 	private FocusBoardManager mManager;
 	private long mFocusBoardId;
 
@@ -37,6 +44,8 @@ public class FocusBoardActivity extends ActionBarActivity {
 
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
+
+		handleSelectedImageIntent();
 
 		addMantraText();
 		addImageGridFragment();
@@ -63,6 +72,65 @@ public class FocusBoardActivity extends ActionBarActivity {
 		}
 	}
 
+	
+	private void handleSelectedImageIntent() {
+		Log.d(CN+".handleSelectedImageIntent", "entered");
+		Intent intent = getIntent();
+			
+		if(intent != null) {
+			// get a thumbnail of the image: http://stackoverflow.com/questions/14978566/how-to-get-selected-image-from-gallery-in-android
+			Uri selectedImage = intent.getData();
+			
+			if(selectedImage != null && selectedImage.toString().length() > 0) {
+				mFocusBoardId = intent.getLongExtra(NewFocusBoardActivity.FOCUS_BOARD_ID, -1);
+				mManager = FocusBoardManager.get(this);
+				FocusBoard focusBoard = mManager.getFocusBoard(mFocusBoardId);
+
+				String filePathToImage = getRealPathFromURI(this, selectedImage).trim();
+				
+				// search the image set for a particular image path, and if the image isn't already associated with the board,
+				// then associate it. 
+				FocusImageCursor fic = mManager.queryFocusImages(mFocusBoardId);
+				boolean imageAlreadyAssociated = false;
+				while(fic.moveToNext()) {
+					String path = fic.getString(FocusBoardManager.COL_INDEX_FILE_PATH).trim();
+					Log.d(CN+".handleSelectedImageIntent", "path.equals(filePathToImage) = " + (path.equals(filePathToImage)) + "; path = \"" + path + "\"" + "; filePathToImage = \"" + filePathToImage + "\"");
+					if(path.equals(filePathToImage)) {
+						Toast.makeText(this, "Image already applied. Consider choosing a different one!", Toast.LENGTH_LONG).show();
+						imageAlreadyAssociated = true;
+						break;
+					}
+				}
+				if(!imageAlreadyAssociated) {
+					Log.d(CN+".handleSelectedImageIntent","for board " + mFocusBoardId + ", associating image = " + filePathToImage);
+					Toast.makeText(this, "Image applied!", Toast.LENGTH_SHORT).show();
+					mManager.createFocusImage(mFocusBoardId, filePathToImage);					
+				}
+			}
+			else
+				Log.d(CN+".handleSelectedImageIntent", "one of the conds is untrue: " + (selectedImage != null) + " && " + (selectedImage == null ? "<not evaluable>" : selectedImage.toString().length() > 0) + ")");
+		}
+		else
+			Log.d(CN+".handleSelectedImageIntent", "intent is null");
+	}
+	
+	// src: http://stackoverflow.com/questions/3401579/get-filename-and-path-from-uri-from-mediastore
+	public String getRealPathFromURI(Context context, Uri contentUri) {
+		  Cursor cursor = null;
+		  try { 
+		    String[] proj = { MediaStore.Images.Media.DATA };
+		    cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+		    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+		    cursor.moveToFirst();
+		    return cursor.getString(column_index);
+		  } finally {
+		    if (cursor != null) {
+		      cursor.close();
+		    }
+		  }
+		}
+	
+	
 	/* display image from gallery: BEGIN (src: http://viralpatel.net/blogs/pick-image-from-galary-android-app/) */
 	private void startBrowsePhotosActivity() {
 		Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);

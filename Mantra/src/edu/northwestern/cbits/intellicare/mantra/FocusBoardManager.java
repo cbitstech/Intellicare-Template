@@ -6,6 +6,7 @@ import android.content.Context;
 
 public class FocusBoardManager {
 
+	public static final int COL_INDEX_FILE_PATH = 2;
 	private static FocusBoardManager sFocusBoardManager;
 
 	private Context mAppContext;
