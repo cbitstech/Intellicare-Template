@@ -139,6 +139,8 @@ public class SleepDiaryActivity extends ConsentedActivity
 	
 	protected void onPause()
 	{
+		super.onPause();
+		
 		HashMap<String, Object> payload = new HashMap<String, Object>();
 		LogManager.getInstance(this).log("closed_sleep_diaries_activity", payload);
 	}
