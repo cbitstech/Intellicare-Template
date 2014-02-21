@@ -1,6 +1,7 @@
 package edu.northwestern.cbits.intellicare.slumbertime;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.CrashManagerListener;
 
+import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,6 +27,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -191,7 +194,20 @@ public class HomeActivity extends PortraitActivity
 		
 		JSONArray graphValues = HomeActivity.graphValues(context, false);
 		
-		graphString = graphString.replaceAll("VALUES_JSON", graphValues.toString());
+		try 
+		{
+			graphString = graphString.replaceAll("VALUES_JSON", graphValues.toString(2));
+
+			FileUtils.writeStringToFile(new File(Environment.getExternalStorageDirectory(), "graph.html"), graphString);
+		} 
+		catch (JSONException e) 
+		{
+			LogManager.getInstance(context).logException(e);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 //		Log.e("ST", "HTML: " + graphString);
 		
@@ -288,7 +304,7 @@ public class HomeActivity extends PortraitActivity
 						JSONObject reading = new JSONObject();
 
 						reading.put("x", c.getLong(c.getColumnIndex(SlumberContentProvider.READING_RECORDED)));
-						reading.put("y", c.getLong(c.getColumnIndex(SlumberContentProvider.READING_VALUE)));
+						reading.put("y", c.getDouble(c.getColumnIndex(SlumberContentProvider.READING_VALUE)));
 
 						sensorValues.put(reading);
 					}

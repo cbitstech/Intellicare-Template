@@ -36,6 +36,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.os.StatFs;
+import android.util.Log;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class SlumberContentProvider extends ContentProvider 
@@ -398,7 +399,7 @@ public class SlumberContentProvider extends ContentProvider
 
 	public static Cursor fetchNormalizedSensorReadings(Context context, String sensor) 
 	{
-		String[] columnNames = {SlumberContentProvider.READING_RECORDED, SlumberContentProvider.READING_VALUE };
+		String[] columnNames = { SlumberContentProvider.READING_RECORDED, SlumberContentProvider.READING_VALUE };
 		MatrixCursor retCursor = new MatrixCursor(columnNames);
 		
 		String where = SlumberContentProvider.READING_NAME + " = ?";
@@ -407,7 +408,7 @@ public class SlumberContentProvider extends ContentProvider
 		Cursor c = context.getContentResolver().query(SlumberContentProvider.SENSOR_READINGS_URI, null, where, args, SlumberContentProvider.READING_RECORDED);
 		
 		double minValue = Double.MAX_VALUE;
-		double maxValue = 0 - minValue;
+		double maxValue = 0 - Double.MAX_VALUE;
 		
 		while (c.moveToNext())
 		{
@@ -421,7 +422,9 @@ public class SlumberContentProvider extends ContentProvider
 		}
 		
 		double spread = maxValue - minValue;
-		
+
+		Log.e("ST", "MIN: " + minValue + " MAX: " + maxValue + " SPREAD: " + spread);
+
 		c.moveToPosition(-1);
 		
 		DescriptiveStatistics stats = new DescriptiveStatistics();
@@ -431,6 +434,8 @@ public class SlumberContentProvider extends ContentProvider
 			double reading = c.getDouble(c.getColumnIndex(SlumberContentProvider.READING_VALUE));
 			
 			double normalized = (reading - minValue) / spread;
+			
+			Log.e("ST", "READING: " + reading + " NORMALIZED: " + normalized);
 			
 			Object[] values = {c.getLong(c.getColumnIndex(SlumberContentProvider.READING_RECORDED)), normalized };
 			
@@ -442,8 +447,8 @@ public class SlumberContentProvider extends ContentProvider
 		c.close();
 		
 		retCursor.moveToPosition(-1);
-		
-		double stdDev = stats.getStandardDeviation();
+
+ 		double stdDev = stats.getStandardDeviation();
 
 		MatrixCursor cleanedCursor = new MatrixCursor(columnNames);
 		double lastValue = 0 - Double.MAX_VALUE;
