@@ -115,6 +115,8 @@ public class SlumberContentProvider extends ContentProvider
 	public static final String LIGHT_LEVEL = "light_level";
 	public static final String TEMPERATURE = "temperature";
 
+	private static final double MAX_LIGHT_LEVEL = 500; // SI lux
+
     private UriMatcher _matcher = new UriMatcher(UriMatcher.NO_MATCH);
     private SQLiteDatabase _db = null;
 
@@ -420,10 +422,13 @@ public class SlumberContentProvider extends ContentProvider
 			if (reading < minValue)
 				minValue = reading;
 		}
-		
+
+		if (SlumberContentProvider.LIGHT_LEVEL.equalsIgnoreCase(sensor) && maxValue > SlumberContentProvider.MAX_LIGHT_LEVEL)
+			maxValue = SlumberContentProvider.MAX_LIGHT_LEVEL;
+
 		double spread = maxValue - minValue;
 
-		Log.e("ST", "MIN: " + minValue + " MAX: " + maxValue + " SPREAD: " + spread);
+		Log.e("ST", sensor + " MIN: " + minValue + " MAX: " + maxValue + " SPREAD: " + spread);
 
 		c.moveToPosition(-1);
 		
@@ -433,9 +438,13 @@ public class SlumberContentProvider extends ContentProvider
 		{
 			double reading = c.getDouble(c.getColumnIndex(SlumberContentProvider.READING_VALUE));
 			
-			double normalized = (reading - minValue) / spread;
+			if (reading > maxValue)
+				reading = maxValue;
 			
-			Log.e("ST", "READING: " + reading + " NORMALIZED: " + normalized);
+			if (reading < minValue)
+				reading = minValue;
+			
+			double normalized = (reading - minValue) / spread;
 			
 			Object[] values = {c.getLong(c.getColumnIndex(SlumberContentProvider.READING_RECORDED)), normalized };
 			
