@@ -36,6 +36,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.os.StatFs;
+import android.util.Log;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class SlumberContentProvider extends ContentProvider 
@@ -113,6 +114,8 @@ public class SlumberContentProvider extends ContentProvider
 	public static final String AUDIO_MAGNITUDE = "audio_magnitude";
 	public static final String LIGHT_LEVEL = "light_level";
 	public static final String TEMPERATURE = "temperature";
+
+	private static final double MAX_LIGHT_LEVEL = 500; // SI lux
 
     private UriMatcher _matcher = new UriMatcher(UriMatcher.NO_MATCH);
     private SQLiteDatabase _db = null;
@@ -398,7 +401,7 @@ public class SlumberContentProvider extends ContentProvider
 
 	public static Cursor fetchNormalizedSensorReadings(Context context, String sensor) 
 	{
-		String[] columnNames = {SlumberContentProvider.READING_RECORDED, SlumberContentProvider.READING_VALUE };
+		String[] columnNames = { SlumberContentProvider.READING_RECORDED, SlumberContentProvider.READING_VALUE };
 		MatrixCursor retCursor = new MatrixCursor(columnNames);
 		
 		String where = SlumberContentProvider.READING_NAME + " = ?";
@@ -407,7 +410,7 @@ public class SlumberContentProvider extends ContentProvider
 		Cursor c = context.getContentResolver().query(SlumberContentProvider.SENSOR_READINGS_URI, null, where, args, SlumberContentProvider.READING_RECORDED);
 		
 		double minValue = Double.MAX_VALUE;
-		double maxValue = 0 - minValue;
+		double maxValue = 0 - Double.MAX_VALUE;
 		
 		while (c.moveToNext())
 		{
@@ -419,9 +422,14 @@ public class SlumberContentProvider extends ContentProvider
 			if (reading < minValue)
 				minValue = reading;
 		}
-		
+
+		if (SlumberContentProvider.LIGHT_LEVEL.equalsIgnoreCase(sensor) && maxValue > SlumberContentProvider.MAX_LIGHT_LEVEL)
+			maxValue = SlumberContentProvider.MAX_LIGHT_LEVEL;
+
 		double spread = maxValue - minValue;
-		
+
+		Log.e("ST", sensor + " MIN: " + minValue + " MAX: " + maxValue + " SPREAD: " + spread);
+
 		c.moveToPosition(-1);
 		
 		DescriptiveStatistics stats = new DescriptiveStatistics();
@@ -429,6 +437,12 @@ public class SlumberContentProvider extends ContentProvider
 		while (c.moveToNext())
 		{
 			double reading = c.getDouble(c.getColumnIndex(SlumberContentProvider.READING_VALUE));
+			
+			if (reading > maxValue)
+				reading = maxValue;
+			
+			if (reading < minValue)
+				reading = minValue;
 			
 			double normalized = (reading - minValue) / spread;
 			
@@ -442,8 +456,8 @@ public class SlumberContentProvider extends ContentProvider
 		c.close();
 		
 		retCursor.moveToPosition(-1);
-		
-		double stdDev = stats.getStandardDeviation();
+
+ 		double stdDev = stats.getStandardDeviation();
 
 		MatrixCursor cleanedCursor = new MatrixCursor(columnNames);
 		double lastValue = 0 - Double.MAX_VALUE;

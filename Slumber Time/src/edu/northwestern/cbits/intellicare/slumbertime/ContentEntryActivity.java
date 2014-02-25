@@ -80,6 +80,8 @@ public class ContentEntryActivity extends ConsentedActivity
 	
 	protected void onPause()
 	{
+		super.onPause();
+		
 		HashMap<String, Object> payload = new HashMap<String, Object>();
 		LogManager.getInstance(this).log("closed_content_activity", payload);
 	}
