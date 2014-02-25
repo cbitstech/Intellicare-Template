@@ -1,6 +1,8 @@
 package edu.northwestern.cbits.intellicare.mantra.activities;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -10,6 +12,7 @@ import edu.northwestern.cbits.intellicare.mantra.Constants;
 import edu.northwestern.cbits.intellicare.mantra.GetImagesTask;
 import edu.northwestern.cbits.intellicare.mantra.GetImagesTaskParams;
 import edu.northwestern.cbits.intellicare.mantra.ImageExtractor;
+import edu.northwestern.cbits.intellicare.mantra.MediaScannerService;
 //import edu.northwestern.cbits.intellicare.mantra.MediaScannerServiceResponseReceiver;
 import edu.northwestern.cbits.intellicare.mantra.R;
 import edu.northwestern.cbits.intellicare.mantra.R.layout;
@@ -63,10 +66,12 @@ public class SharedUrlActivity extends Activity {
 				Log.d(CN+".onReceive", "intent not null");
 				Log.d(CN+".onReceive", "message = " + arg1.getStringExtra("message"));
 				
-				// display the Android image gallery for the folder
-				// ATTEMPT 1; displays Gallery or Photos, but only allows picking 1 image
-				Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-				self.startActivityForResult(intent, GetImagesTask.RESULT_LOAD_IMAGE);
+				if(!extras.containsKey(MediaScannerService.INTENT_KEY_TO_RECEIVER_STRINGARRAY)) {
+					// display the Android image gallery for the folder
+					// ATTEMPT 1; displays Gallery or Photos, but only allows picking 1 image
+					Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+					self.startActivityForResult(intent, GetImagesTask.RESULT_LOAD_IMAGE);
+				}
 			}
 			else {
 				Log.d(CN+".onReceive", "intent is null");
@@ -223,22 +228,43 @@ class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageListAndSi
 		try {
 			String url = arg0[0];
 			Log.d(CN + ".doInBackground", "entered for url = " + url);
-			long startTime = System.currentTimeMillis();
-			Set<String> imageList = ImageExtractor.getImageList(url, false);
-			long imageListTime = System.currentTimeMillis();
-			Map<String,Integer> m = ImageExtractor.getRemoteContentLength(imageList);
-			long endTime = System.currentTimeMillis();
-			Log.d(CN + ".doInBackground", 
-					"exiting; ELAPSED TIME (ms) = " + ((double)endTime - startTime) + 
-					", getImageList (ms) = " + ((double)(imageListTime - startTime)) + 
-					", getRemoteContentLength (ms) = " + ((double)(endTime - imageListTime))
-					);
-			GetImageListAndSizesTaskBackgroundReturn ret = new GetImageListAndSizesTaskBackgroundReturn(url, m);
-			return ret;
+			try {
+				long startTime = System.currentTimeMillis();
+				Set<String> imageList = ImageExtractor.getImageList(url, false);
+				long imageListTime = System.currentTimeMillis();
+				Map<String,Integer> m = ImageExtractor.getRemoteContentLength(imageList);
+				long endTime = System.currentTimeMillis();
+				Log.d(CN + ".doInBackground", 
+						"exiting; ELAPSED TIME (ms) = " + ((double)endTime - startTime) + 
+						", getImageList (ms) = " + ((double)(imageListTime - startTime)) + 
+						", getRemoteContentLength (ms) = " + ((double)(endTime - imageListTime))
+						);
+				GetImageListAndSizesTaskBackgroundReturn ret = new GetImageListAndSizesTaskBackgroundReturn(url, m);
+				return ret;
+			}
+			catch(SocketTimeoutException e) { displayNetworkExceptionMessage(url, e); }
+			catch(UnknownHostException e) { displayNetworkExceptionMessage(url, e); }
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
+		return null;
+	}
+
+	/**
+	 * @param url
+	 * @param e 
+	 */
+	private void displayNetworkExceptionMessage(String url, IOException e) {
+		e.printStackTrace();
+		AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this.activity);
+		dlgAlert.setMessage("Network error. Are you connected to the Internet? Error message for URL (" + url + "): " + e.getMessage());
+		dlgAlert.setPositiveButton("OK",
+			    new DialogInterface.OnClickListener() {
+			        public void onClick(DialogInterface dialog, int which) {
+			          //dismiss the dialog  
+			        }
+			    });
 	}
 	
 	protected void onPostExecute(GetImageListAndSizesTaskBackgroundReturn backgroundRet) {

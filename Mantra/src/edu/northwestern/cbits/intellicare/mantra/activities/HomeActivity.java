@@ -1,6 +1,7 @@
 package edu.northwestern.cbits.intellicare.mantra.activities;
 
 import edu.northwestern.cbits.intellicare.mantra.FocusBoardGridFragment;
+import edu.northwestern.cbits.intellicare.mantra.FocusBoardManager;
 import edu.northwestern.cbits.intellicare.mantra.R;
 import android.content.Intent;
 import android.database.Cursor;
@@ -39,28 +40,6 @@ public class HomeActivity extends ActionBarActivity {
 		}
 	}
 	
-//	private void handleSelectedImageIntent() {
-//		Intent intent = getIntent();
-//			
-//		if(intent != null) {
-//			// get a thumbnail of the image: http://stackoverflow.com/questions/14978566/how-to-get-selected-image-from-gallery-in-android
-//			Uri selectedImage = intent.getData();
-//			
-//			if(selectedImage != null && selectedImage.toString().length() > 0) {
-////				String[] filePathColumn = { MediaStore.Images.Media.DATA };
-////				Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
-////				cursor.moveToFirst();
-////				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-////				String picturePath = cursor.getString(columnIndex);
-////				Log.d(CN+"onActivityResult", "picturePath = " + picturePath);
-////				cursor.close();
-////				Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
-//		
-//				Log.d(CN+".handleSelectedImageIntent", "exiting");
-//			}
-//		}
-//	}
-
 	protected Fragment createFragment() {
 		return new FocusBoardGridFragment();
 	}

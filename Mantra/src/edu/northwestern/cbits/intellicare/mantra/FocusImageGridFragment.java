@@ -54,7 +54,7 @@ public class FocusImageGridFragment extends Fragment {
 				String filePath = mCursor.getString(FocusBoardManager.COL_INDEX_FILE_PATH);
 				Log.d(CN+".onItemClick", "filePath = " + filePath);
 				intent.setDataAndType(Uri.fromFile(new File(filePath)), "image/*");
-				startActivity(intent);		
+				startActivity(intent);
 			}
 		});
 		

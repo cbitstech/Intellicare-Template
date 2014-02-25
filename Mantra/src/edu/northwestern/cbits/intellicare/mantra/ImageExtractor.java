@@ -139,6 +139,7 @@ public class ImageExtractor
 		System.out.println("[" + fn + "] " + msg);
 	}
 	
+	
 	/**
 	 * Gets the host name of a URL.
 	 * @param url
@@ -150,6 +151,7 @@ public class ImageExtractor
 		return (new URI(url)).getHost();
 	}
 
+	
 	/**
 	 * Gets the file or route leaf-name from a URL. 
 	 * @param u
@@ -159,6 +161,19 @@ public class ImageExtractor
 	public static String extractUrlFileName(String u) throws URISyntaxException {
 		// src: http://stackoverflow.com/questions/6250200/how-to-get-the-size-of-an-image-in-java
 		return ((new URI(u)).getPath()).replaceAll("^.*/(.*)$", "$1");
+	}
+
+	
+	/**
+	 * @param fileName
+	 * @return
+	 */
+	private static String getImageFileExtension(String fileName) {
+		return fileName.matches(".*\\.(JPG|jpg).*") ? ".jpg" :
+			fileName.matches(".*\\.(PNG|png).*") ? ".png" :
+				fileName.matches(".*\\.(GIF|gif).*") ? ".gif" :
+					fileName.matches(".*\\.(TIF|tif).*") ? ".tif" :
+						"";
 	}
 	
 	
@@ -189,7 +204,8 @@ public class ImageExtractor
 		// download and write the files
 		for(String u : imageUrlList) {
 			try {
-				String outputFileName = extractUrlFileName(u);
+				String fileName = extractUrlFileName(u);
+				String outputFileName = java.util.UUID.randomUUID().toString() + getImageFileExtension(fileName);
 				try{
 					saveImage(ImageExtractor.getImage(u), outputFolder + outputFileName);
 				} catch(Exception e) {
@@ -200,7 +216,8 @@ public class ImageExtractor
 			}
 		}
 	}
-	
+
+
 	/**
 	 * Like the method says - it downloads and saves images.
 	 * @param outputFolder
@@ -215,7 +232,8 @@ public class ImageExtractor
 
 		// download and write the files
 		try {
-			String outputFileName = extractUrlFileName(imageUrl);
+			String fileName = extractUrlFileName(imageUrl);
+			String outputFileName = java.util.UUID.randomUUID().toString() + getImageFileExtension(fileName);
 			try{
 				saveImage(ImageExtractor.getImage(imageUrl), outputFolder + outputFileName);
 				return outputFileName;
