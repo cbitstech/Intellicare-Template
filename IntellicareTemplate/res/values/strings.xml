@@ -12,10 +12,13 @@
     
     <string name="title_drawables_activity">Available Icons</string>
 
-    <string name="title_consent">Patient Consent Form</string>
+    <string name="title_consent">Consent Form (STU00074405)</string>
+    <string name="subtitle_consent">NU IRB Approved Until 2021</string>
     <string name="action_consent">Consent Activity</string>
     <string name="button_consent">I consent. Continue&#8230;</string>
     <string name="button_quit">Exit</string>
+    <string name="button_yes">Yes</string>
+    <string name="button_no">No</string>
     <string name="hint_enter_name">Enter your name&#8230;</string>
     
     <string name="title_rating">Rate your experience</string>
@@ -101,16 +104,11 @@
     <string name="education_label">What was the highest level of education that you completed?</string>
     <string name="education_title">Education</string>
     <string-array name="labels_education">
-        <item>No schooling completed, or less than 1 year</item>
-        <item>Nursery, kindergarten, and elementary (grades 1-8)</item>
-        <item>High school (grades 9-12, no degree)</item>
-        <item>High school graduate (or equivalent)</item>
-        <item>Some college (1-4 years, no degree)</item>
-        <item>Associate\'s degree (including occupational or academic degrees)</item>
-        <item>Bachelor\'s degree (BA, BS, AB, etc.)</item>
-        <item>Master\'s degree (MA, MS, MENG, MSW, etc.)</item>
-        <item>Professional school degree (MD, DDC, JD, etc.)</item>
-        <item>Doctorate degree (PhD, EdD, etc.)</item>
+        <item>Did not complete high school</item>
+        <item>Completed high school</item>
+        <item>Some college</item>
+        <item>Bachelor\'s degree</item>
+        <item>Graduate degree (Master\'s, Ph.D., J.D., M.D., etc.)</item>
 	</string-array>
     
     <string name="motivation_label">What is the main reason you are using this app?</string>
@@ -188,9 +186,19 @@
 	<string name="creator_dcm">David C. Mohr</string>
 	<string name="creator_sms">Stephen S. Schueller</string>
 	<string name="creator_cjk">Chris J. Karr</string>
-					
+	<string name="creator_lxs">Laurie Stark</string>
+						
 	<string name="role_clinical_lead">Clincal Designer</string>
 	<string name="role_tech_lead">Technology Designer</string>
 	<string name="role_clinical_consultant">Clincal Consultant</string>
 	<string name="role_project_manager">Project Manager</string>
+	<string name="testing_lead">Quality Assurance &amp; Testing Lead</string>
+	
+	<string name="copy_disclaimer">Copyright &amp; Disclaimer</string>
+	<string name="copy_title">Copyright &amp; Disclaimer</string>
+	<string name="copy_message">Intellicare is &#169; 2014 by Northwestern University\n\nAll rights reserved.\n\nIntellicare is not intended to diagnose, treat, prevent, or cure any medical condition.</string>
+	
+	<string name="confirm_title">Are you sure?</string>
+	<string name="confirm_message">Your answers to these questions are very important and are used improve Intellicare apps.\n\nAre you sure that you want to skip them?</string>
+				
 </resources>

@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -58,8 +57,6 @@ public class LaunchActivity extends ConsentedActivity
 			calendar.set(Calendar.HOUR_OF_DAY, startHour);
 			
 			startToday = calendar.getTimeInMillis();
-			
-			Log.e("D2D", "START: " + (new Date(startToday)));
 		}
 		
 		long end = startToday + (72 * 60 * 60 * 1000);
@@ -89,7 +86,7 @@ public class LaunchActivity extends ConsentedActivity
 		
 		TextView scheduledText = (TextView) this.findViewById(R.id.next_schedule_time);
 
-		if (scheduled != null)
+		if (scheduled != null && nextScheduled != null)
 		{
 			if (scheduled.getTime() < now)
 				scheduled = new Date(scheduled.getTime() + (1000 * 60 * 60 * 24));

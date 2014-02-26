@@ -9,12 +9,6 @@
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:layout_marginBottom="16dp" />
-    <CheckBox android:id="@+id/reason_research"
-        android:text="@string/reason_research_study"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:textStyle="bold"
-        android:layout_marginBottom="16dp" />
     <CheckBox android:id="@+id/reason_improve_me"
         android:text="@string/reason_improve_me"
         android:layout_width="match_parent"
