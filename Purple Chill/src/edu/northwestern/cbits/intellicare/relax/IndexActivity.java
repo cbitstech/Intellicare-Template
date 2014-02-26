@@ -121,6 +121,12 @@ public class IndexActivity extends ConsentedActivity
 						playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.mindfulness_media_url_times);
 						playerIntent.putExtra(GroupActivity.GROUP_DESCRIPTIONS, R.array.mindfulness_descs);
 						break;
+					case 5:
+						playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.sleep_media_urls);
+						playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.sleep_media_url_titles);
+						playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.sleep_media_url_times);
+						playerIntent.putExtra(GroupActivity.GROUP_DESCRIPTIONS, R.array.sleep_descs);
+						break;
 				}
 				
 				me.startActivity(playerIntent);

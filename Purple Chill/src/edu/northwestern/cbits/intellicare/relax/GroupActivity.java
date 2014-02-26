@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -178,6 +179,8 @@ public class GroupActivity extends ConsentedActivity
 							Uri u = Uri.parse(recordings.get(i));
 							String title = titles.get(i);
 							String description = descriptions.get(i);
+
+							Log.e("PC", "U: " + u + " -- T: " + title + " D: " + description);
 							
 							me.startActivity(AudioFileManager.getInstance(me).launchIntentForUri(u, title, description));
 						}
@@ -260,6 +263,8 @@ public class GroupActivity extends ConsentedActivity
 			return R.array.autogenic_urls;
 		else if (this._groupName.equals(this.getString(R.string.visualization_title)))
 			return R.array.visualization_urls;
+		else if (this._groupName.equals(this.getString(R.string.sleep_title)))
+			return R.array.sleep_urls;
 
 		return R.array.mindful_urls;
 	}
@@ -274,6 +279,8 @@ public class GroupActivity extends ConsentedActivity
 			return R.array.autogenic_titles;
 		else if (this._groupName.equals(this.getString(R.string.visualization_title)))
 			return R.array.visualization_titles;
+		else if (this._groupName.equals(this.getString(R.string.sleep_title)))
+			return R.array.sleep_titles;
 
 		return R.array.mindful_titles;
 	}
