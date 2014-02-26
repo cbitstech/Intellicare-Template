@@ -47,7 +47,11 @@ public class SettingsActivity extends PreferenceActivity
 	{
 		String key = preference.getKey();
 		
-		if (key.equals("settings_reminder_time"))
+		if (key == null)
+		{
+			
+		}
+		else if (key.equals("settings_reminder_time"))
 		{
 			final SettingsActivity me = this;
 			

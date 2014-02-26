@@ -71,7 +71,11 @@ public class SettingsActivity extends PreferenceActivity
 	{
 		String key = preference.getKey();
 		
-		if (key.equals("clear_cookies"))
+		if (key == null)
+		{
+			
+		}
+		else if (key.equals("clear_cookies"))
 		{
 			File root = Environment.getExternalStorageDirectory();
 			File intellicare = new File(root, "Intellicare Shared");

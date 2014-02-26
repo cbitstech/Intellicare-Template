@@ -23,7 +23,11 @@ public class SettingsActivity extends PreferenceActivity
 	{
 		String key = preference.getKey();
 		
-		if (key.equals("copyright_statement"))
+		if (key == null)
+		{
+			
+		}
+		else if (key.equals("copyright_statement"))
 			ConsentedActivity.showCopyrightDialog(this);
 		
 		return super.onPreferenceTreeClick(screen, preference);
