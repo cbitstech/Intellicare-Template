@@ -38,7 +38,7 @@ public class FeatsProvider extends android.content.ContentProvider
     private UriMatcher mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     private SQLiteDatabase mDb = null;
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 	private static final long DAY_LENGTH = 1000 * 3600 * 24;
 	protected static final String START_FEATS_DATE = "start_feats_date";
 	private static final long STREAK_LENGTH = 3;
@@ -147,10 +147,10 @@ public class FeatsProvider extends android.content.ContentProvider
 		        feat.put("feat_level", 4);
 		        db.insert(FEATS_TABLE, null, feat);
 		        
-		        feat = new ContentValues();
-		        feat.put("feat_name", context.getString(R.string.feat_4_3));
-		        feat.put("feat_level", 4);
-		        db.insert(FEATS_TABLE, null, feat);
+//		        feat = new ContentValues();
+//		        feat.put("feat_name", context.getString(R.string.feat_4_3));
+//		        feat.put("feat_level", 4);
+//		        db.insert(FEATS_TABLE, null, feat);
 
 		        this.onUpgrade(db, 0, FeatsProvider.DATABASE_VERSION);
 			}
@@ -163,6 +163,78 @@ public class FeatsProvider extends android.content.ContentProvider
                     	
                     case 1: 
 	                	db.execSQL(context.getString(R.string.db_alter_feats_table_add_enabled));
+                    case 2: 
+	                	db.execSQL(context.getString(R.string.db_clear_system_feats));
+	                	
+	    		        ContentValues feat = new ContentValues();
+	    		        feat.put("feat_name", context.getString(R.string.feat_1_0));
+	    		        feat.put("feat_level", 1);
+	    		        db.insert(FEATS_TABLE, null, feat);
+	    		        
+	    		        feat = new ContentValues();
+	    		        feat.put("feat_name", context.getString(R.string.feat_1_1));
+	    		        feat.put("feat_level", 1);
+	    		        db.insert(FEATS_TABLE, null, feat);
+
+	    		        feat = new ContentValues();
+	    		        feat.put("feat_name", context.getString(R.string.feat_1_2));
+	    		        feat.put("feat_level", 1);
+	    		        db.insert(FEATS_TABLE, null, feat);
+
+	    		        feat = new ContentValues();
+	    		        feat.put("feat_name", context.getString(R.string.feat_1_3));
+	    		        feat.put("feat_level", 1);
+	    		        db.insert(FEATS_TABLE, null, feat);
+
+	    		        feat = new ContentValues();
+	    		        feat.put("feat_name", context.getString(R.string.feat_2_0));
+	    		        feat.put("feat_level", 2);
+	    		        db.insert(FEATS_TABLE, null, feat);
+
+	    		        feat = new ContentValues();
+	    		        feat.put("feat_name", context.getString(R.string.feat_2_1));
+	    		        feat.put("feat_level", 2);
+	    		        db.insert(FEATS_TABLE, null, feat);
+
+	    		        feat = new ContentValues();
+	    		        feat.put("feat_name", context.getString(R.string.feat_2_2));
+	    		        feat.put("feat_level", 2);
+	    		        db.insert(FEATS_TABLE, null, feat);
+
+	    		        feat = new ContentValues();
+	    		        feat.put("feat_name", context.getString(R.string.feat_3_0));
+	    		        feat.put("feat_level", 3);
+	    		        db.insert(FEATS_TABLE, null, feat);
+	    		        
+	    		        feat = new ContentValues();
+	    		        feat.put("feat_name", context.getString(R.string.feat_3_1));
+	    		        feat.put("feat_level", 3);
+	    		        db.insert(FEATS_TABLE, null, feat);
+	    		        
+	    		        feat = new ContentValues();
+	    		        feat.put("feat_name", context.getString(R.string.feat_3_2));
+	    		        feat.put("feat_level", 3);
+	    		        db.insert(FEATS_TABLE, null, feat);
+	    		        
+	    		        feat = new ContentValues();
+	    		        feat.put("feat_name", context.getString(R.string.feat_3_3));
+	    		        feat.put("feat_level", 3);
+	    		        db.insert(FEATS_TABLE, null, feat);
+	    		        
+	    		        feat = new ContentValues();
+	    		        feat.put("feat_name", context.getString(R.string.feat_4_0));
+	    		        feat.put("feat_level", 4);
+	    		        db.insert(FEATS_TABLE, null, feat);
+	    		        
+	    		        feat = new ContentValues();
+	    		        feat.put("feat_name", context.getString(R.string.feat_4_1));
+	    		        feat.put("feat_level", 4);
+	    		        db.insert(FEATS_TABLE, null, feat);
+	    		        
+	    		        feat = new ContentValues();
+	    		        feat.put("feat_name", context.getString(R.string.feat_4_2));
+	    		        feat.put("feat_level", 4);
+	    		        db.insert(FEATS_TABLE, null, feat);
                     default:
                     	break;
                 }

@@ -72,6 +72,7 @@ public class SettingsActivity extends PreferenceActivity
 					payload.put("minute", minute);
 					payload.put("source", "settings");
 					
+					payload.put("full_mode", prefs.getBoolean("settings_full_mode", true));
 					LogManager.getInstance(me).log("set_reminder_time", payload);
 				}
 			}, prefs.getInt(ScheduleManager.REMINDER_HOUR, 18), prefs.getInt(ScheduleManager.REMINDER_MINUTE, 0), DateFormat.is24HourFormat(this));

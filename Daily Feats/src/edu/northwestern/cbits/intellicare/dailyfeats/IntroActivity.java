@@ -1,5 +1,6 @@
 package edu.northwestern.cbits.intellicare.dailyfeats;
 
+import java.security.SecureRandom;
 import java.util.HashMap;
 
 import android.app.TimePickerDialog;
@@ -142,6 +143,25 @@ public class IntroActivity extends ConsentedActivity
 				e.commit();
 			}
         });
+        
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        
+        if (prefs.contains("settings_full_mode") == false)
+        {
+        	Editor e = prefs.edit();
+        	
+        	SecureRandom random = new SecureRandom();
+        	random.setSeed(System.currentTimeMillis());
+        	
+        	boolean isFull = random.nextBoolean(); 
+        	e.putBoolean("settings_full_mode", isFull);
+        	e.commit();
+
+			HashMap<String, Object> payload = new HashMap<String, Object>();
+			payload.put("full_mode", isFull);
+        	
+        	LogManager.getInstance(this).log("set_mode", payload);
+        }
     }
     
     protected void onResume()

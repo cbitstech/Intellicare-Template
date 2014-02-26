@@ -88,6 +88,7 @@ public class ScheduleManager
 			{
 				HashMap<String, Object> payload = new HashMap<String, Object>();
 				payload.put("user_level", newLevel);
+				payload.put("full_mode", prefs.getBoolean("settings_full_mode", true));
 				
 				LogManager.getInstance(this._context).log("feats_demoted", payload);
 
@@ -97,6 +98,7 @@ public class ScheduleManager
 			{
 				HashMap<String, Object> payload = new HashMap<String, Object>();
 				payload.put("user_level", newLevel);
+				payload.put("full_mode", prefs.getBoolean("settings_full_mode", true));
 				
 				LogManager.getInstance(this._context).log("feats_promoted", payload);
 				
