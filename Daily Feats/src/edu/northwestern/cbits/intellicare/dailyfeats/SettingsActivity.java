@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.text.format.DateFormat;
 import android.widget.TimePicker;
+import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class SettingsActivity extends PreferenceActivity 
@@ -44,7 +45,9 @@ public class SettingsActivity extends PreferenceActivity
 	@SuppressWarnings("deprecation")
 	public boolean onPreferenceTreeClick (PreferenceScreen screen, Preference preference)
 	{
-		if (preference.getKey().equals("settings_reminder_time"))
+		String key = preference.getKey();
+		
+		if (key.equals("settings_reminder_time"))
 		{
 			final SettingsActivity me = this;
 			
@@ -73,7 +76,11 @@ public class SettingsActivity extends PreferenceActivity
 
 			return true;
 		}
+		else if (key.equals("copyright_statement"))
+			ConsentedActivity.showCopyrightDialog(this);
 		
 		return super.onPreferenceTreeClick(screen, preference);
 	}
+
 }
+

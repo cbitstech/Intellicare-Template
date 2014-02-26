@@ -3,7 +3,10 @@ package edu.northwestern.cbits.intellicare.slumbertime;
 import java.util.HashMap;
 
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceScreen;
+import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class SettingsActivity extends PreferenceActivity 
@@ -33,4 +36,17 @@ public class SettingsActivity extends PreferenceActivity
 		
 		super.onPause();
 	}
+
+	@SuppressWarnings("deprecation")
+	public boolean onPreferenceTreeClick (PreferenceScreen screen, Preference preference)
+	{
+		String key = preference.getKey();
+		
+		if (key.equals("copyright_statement"))
+			ConsentedActivity.showCopyrightDialog(this);
+		
+		return super.onPreferenceTreeClick(screen, preference);
+	}
 }
+
+

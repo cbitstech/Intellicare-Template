@@ -187,13 +187,16 @@
 	<string name="creator_sms">Stephen S. Schueller</string>
 	<string name="creator_cjk">Chris J. Karr</string>
 	<string name="creator_lxs">Laurie Stark</string>
-						
+	<string name="creator_gab">Gabriel A. Saravia</string>
+	<string name="creator_jxd">Jenna Duffecy</string>
+							
 	<string name="role_clinical_lead">Clincal Designer</string>
 	<string name="role_tech_lead">Technology Designer</string>
 	<string name="role_clinical_consultant">Clincal Consultant</string>
 	<string name="role_project_manager">Project Manager</string>
 	<string name="testing_lead">Quality Assurance &amp; Testing Lead</string>
-	
+	<string name="role_tech_consultant">Technology Consultant</string>
+		
 	<string name="copy_disclaimer">Copyright &amp; Disclaimer</string>
 	<string name="copy_title">Copyright &amp; Disclaimer</string>
 	<string name="copy_message">Intellicare is &#169; 2014 by Northwestern University\n\nAll rights reserved.\n\nIntellicare is not intended to diagnose, treat, prevent, or cure any medical condition.</string>

@@ -6,6 +6,8 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
+import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 public class SettingsActivity extends PreferenceActivity 
 {
@@ -78,5 +80,16 @@ public class SettingsActivity extends PreferenceActivity
 		enabled.setOnPreferenceChangeListener(listener);
 		
 		listener.onPreferenceChange(null, null);
+	}
+
+	@SuppressWarnings("deprecation")
+	public boolean onPreferenceTreeClick (PreferenceScreen screen, Preference preference)
+	{
+		String key = preference.getKey();
+		
+		if (key.equals("copyright_statement"))
+			ConsentedActivity.showCopyrightDialog(this);
+		
+		return super.onPreferenceTreeClick(screen, preference);
 	}
 }
