@@ -81,7 +81,16 @@ public class CalendarView extends LinearLayout
 			int featsCount = FeatsProvider.featCountForDate(this.getContext(), calendar.getTime());
 
 			if (featsCount > 0)
-				dayView.setDay("" + featsCount, dateDay);
+			{
+				boolean metGoal = FeatsProvider.metGoalForDate(this.getContext(), calendar.getTime());
+
+				int color = 0xffcc0000;
+				
+				if (metGoal)
+					color = 0xff669900;
+				
+				dayView.setDay("" + featsCount, dateDay, color);
+			}
 			else
 				dayView.setDay("", dateDay);
 				

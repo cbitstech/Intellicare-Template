@@ -38,6 +38,14 @@ public class DayView extends LinearLayout
 		dayLabel.setText("");
 	}
 
+	public void setDay(String value, int dateDay, int color) 
+	{
+		this.setDay(value, dateDay);
+
+		TextView valueLabel = (TextView) this.findViewById(R.id.label_value);
+		valueLabel.setTextColor(color);
+	}
+
 	public void setDay(String value, int dateDay) 
 	{
 		TextView dayLabel = (TextView) this.findViewById(R.id.label_day);

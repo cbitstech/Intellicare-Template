@@ -506,4 +506,59 @@ public class FeatsProvider extends android.content.ContentProvider
 		
 		return streak;
 	}
+
+	public static boolean metGoalForDate(Context context, Date time) 
+	{
+		Calendar c = Calendar.getInstance();
+		c.setTime(time);
+		
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.SECOND, 0);
+
+		long start = c.getTimeInMillis();
+		long end = start + FeatsProvider.DAY_LENGTH;
+
+		String where = "recorded >= ? AND recorded <= ?";
+		String[] args = { "" + start, "" + end };
+		
+		Cursor cursor = context.getContentResolver().query(FeatsProvider.RESPONSES_URI, null, where, args, null);
+		
+		int level = -1;
+		int count = 0;
+		
+		while (cursor.moveToNext())
+		{
+			int recordLevel = cursor.getInt(cursor.getColumnIndex("depression_level"));
+			
+			if (level == -1)
+				level = recordLevel;
+
+			String featsWhere = "feat_name = ?";
+			String[] featsArgs = { "" + cursor.getString(cursor.getColumnIndex("feat")) };
+			
+			Cursor featCursor = context.getContentResolver().query(FeatsProvider.FEATS_URI, null, featsWhere, featsArgs, null);
+			
+			while (featCursor.moveToNext())
+			{
+				if (level == featCursor.getInt(featCursor.getColumnIndex("feat_level")))
+					count += 1;
+			}
+			
+			featCursor.close();
+		}
+		
+		cursor.close();
+		
+		String featsWhere = "feat_level = ?";
+		String[] featsArgs = { "" + level };
+		
+		cursor = context.getContentResolver().query(FeatsProvider.FEATS_URI, null, featsWhere, featsArgs, null);
+		
+		final int minFeatCount = (cursor.getCount() / 2) + 1;
+		
+		cursor.close();
+		
+		return (count >= minFeatCount);
+	}
 }

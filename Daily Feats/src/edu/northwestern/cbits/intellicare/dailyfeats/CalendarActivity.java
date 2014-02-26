@@ -26,6 +26,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import edu.emory.mathcs.backport.java.util.Collections;
@@ -187,25 +188,35 @@ public class CalendarActivity extends ConsentedActivity
 						}
 					});
 
+					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
+					int level = prefs.getInt(FeatsProvider.DEPRESSION_LEVEL, 2);
+
 					int featLevel = cursor.getInt(cursor.getColumnIndex("feat_level"));
 					
+					LinearLayout categoryRow = (LinearLayout) view.findViewById(R.id.label_category_row);
 					TextView categoryLabel = (TextView) view.findViewById(R.id.label_category_name);
+					TextView levelLabel = (TextView) view.findViewById(R.id.label_category_level);
+					
+					if (level == featLevel)
+						levelLabel.setVisibility(View.VISIBLE);
+					else
+						levelLabel.setVisibility(View.GONE);
 
 					if (featLevel != 0)
 						categoryLabel.setText(context.getString(R.string.label_category, featLevel));
 					else
 						categoryLabel.setText(R.string.label_category_my_feats);
 
-					categoryLabel.setVisibility(View.GONE);
+					categoryRow.setVisibility(View.GONE);
 
 					if (cursor.moveToPrevious() == false)
-						categoryLabel.setVisibility(View.VISIBLE);
+						categoryRow.setVisibility(View.VISIBLE);
 					else
 					{
 						int nextLevel = cursor.getInt(cursor.getColumnIndex("feat_level"));
 						
 						if (featLevel != nextLevel)
-							categoryLabel.setVisibility(View.VISIBLE);
+							categoryRow.setVisibility(View.VISIBLE);
 						
 						cursor.moveToNext();
 					}

@@ -141,7 +141,9 @@
 	<string name="title_rules">Daily Feats: Rules</string>
 	<string name="action_rules">Help / Rules</string>
 	<string name="title_level_streak" formatted="false">Level %d, Streak: %d</string>
-		
+
+	<string name="label_current_level">Current Level</string>
+			
 	<string name="note_title_demoted" formatted="false">Bummer! You\'ve gone more than 5 days without completing at least half of the feats for your current level. New level: %d.</string>
 	<string name="note_title_promoted" formatted="false">Congratulations! You\'ve completed at least half of the feats for your current level for 5 days. New level: %d.</string>
 	
