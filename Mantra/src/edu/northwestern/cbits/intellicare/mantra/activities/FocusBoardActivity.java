@@ -14,6 +14,7 @@ import edu.northwestern.cbits.intellicare.mantra.MediaScannerService;
 import edu.northwestern.cbits.intellicare.mantra.Paths;
 import edu.northwestern.cbits.intellicare.mantra.R;
 import edu.northwestern.cbits.intellicare.mantra.SingleMediaScanner;
+import edu.northwestern.cbits.intellicare.mantra.Util;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -92,7 +93,7 @@ public class FocusBoardActivity extends ActionBarActivity {
 	private void handleSelectedImageIntent() throws Exception {
 		Log.d(CN+".handleSelectedImageIntent", "entered");
 		Intent intent = getIntent();
-			
+		
 		if(intent != null) {
 			// get a thumbnail of the image: http://stackoverflow.com/questions/14978566/how-to-get-selected-image-from-gallery-in-android
 			Uri selectedImage = intent.getData();
@@ -102,7 +103,7 @@ public class FocusBoardActivity extends ActionBarActivity {
 				mManager = FocusBoardManager.get(this);
 				FocusBoard focusBoard = mManager.getFocusBoard(mFocusBoardId);
 
-				String filePathToImageInTmpFolder = getRealPathFromURI(this, selectedImage).trim();
+				String filePathToImageInTmpFolder = Paths.getRealPathFromURI(this, selectedImage).trim();
 				File imageFileTmp = new File(filePathToImageInTmpFolder);
 				String fileName = imageFileTmp.getName();
 				String newFilePath = Paths.MANTRA_IMAGES + "/" + fileName;
@@ -144,21 +145,21 @@ public class FocusBoardActivity extends ActionBarActivity {
 			Log.d(CN+".handleSelectedImageIntent", "intent is null");
 	}
 	
-	// src: http://stackoverflow.com/questions/3401579/get-filename-and-path-from-uri-from-mediastore
-	public String getRealPathFromURI(Context context, Uri contentUri) {
-	  Cursor cursor = null;
-	  try { 
-	    String[] proj = { MediaStore.Images.Media.DATA };
-	    cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
-	    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-	    cursor.moveToFirst();
-	    return cursor.getString(column_index);
-	  } finally {
-	    if (cursor != null) {
-	      cursor.close();
-	    }
-	  }
-	}
+//	// src: http://stackoverflow.com/questions/3401579/get-filename-and-path-from-uri-from-mediastore
+//	public String getRealPathFromURI(Context context, Uri contentUri) {
+//	  Cursor cursor = null;
+//	  try { 
+//	    String[] proj = { MediaStore.Images.Media.DATA };
+//	    cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+//	    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+//	    cursor.moveToFirst();
+//	    return cursor.getString(column_index);
+//	  } finally {
+//	    if (cursor != null) {
+//	      cursor.close();
+//	    }
+//	  }
+//	}
 	
 	
 	/**
@@ -171,12 +172,12 @@ public class FocusBoardActivity extends ActionBarActivity {
 		// ATTEMPT 4: query the content provider and log the contents of the thumbnail and media images sets.
 		Log.d(CN+".deleteAllFilesInImageFolder", "logging content provider contents for MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI = " + MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI);
 		Cursor imagesThumbsCursor = managedQuery(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, null, null, null, null);
-		logCursor(imagesThumbsCursor);
-		imagesThumbsCursor.moveToPosition(-1);
+		Util.logCursor(imagesThumbsCursor);
+//		imagesThumbsCursor.moveToPosition(-1);
 		Log.d(CN+".deleteAllFilesInImageFolder", "logging content provider contents for MediaStore.Images.Media.EXTERNAL_CONTENT_URI = " + MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		Cursor imagesMediaCursor = managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, null);
-		logCursor(imagesMediaCursor);
-		imagesMediaCursor.moveToPosition(-1);
+		Util.logCursor(imagesMediaCursor);
+//		imagesMediaCursor.moveToPosition(-1);
 
 		// get the set of images to delete
 		ArrayList<Integer> imageIdsToDelete = getImageFilePaths(folderPath, imagesMediaCursor);
@@ -201,7 +202,7 @@ public class FocusBoardActivity extends ActionBarActivity {
 		// Delete the images from the Media and Thumbnails media stores.
 		// Note that this deletes both the row in the media database and the file on the filesystem!
 		Log.d(CN+".deleteImages", "imageIdsToDelete = " + imageIdsToDelete);
-		for(Integer id : imageIdsToDelete) {
+		for(Integer  id :imageIdsToDelete) {
 			Log.d(CN+".deleteImages", "For (MediaStore.Images.Media.EXTERNAL_CONTENT_URI): deleting image ID = " + id);
 			getContentResolver().delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "_id=?", new String[]{ id.toString() });
 			Log.d(CN+".deleteImages", "For (MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI): deleting image ID = " + id);
@@ -245,25 +246,6 @@ public class FocusBoardActivity extends ActionBarActivity {
 		startService(mediaScannerIntent);
 	}
 
-	
-	/**
-	 * Logs the contents of a table referenced by a Cursor.
-	 * @param cursor
-	 */
-	private void logCursor(Cursor cursor) {
-		StringBuilder sb = new StringBuilder();
-		for(String cn : cursor.getColumnNames()) { sb.append("; " + cn); }
-		Log.d(CN+".logCursor", "col names = " + sb.toString());
-		while(cursor.moveToNext()) {
-			sb.delete(0, sb.length());
-			for(int j = 0; j < cursor.getColumnCount(); j++) {
-				sb.append("; " + cursor.getString(j));
-			}
-			Log.d(CN+".logCursor", "row values = " + sb.toString());
-		}
-		Log.d(CN+".logCursor", "row count = " + cursor.getCount() + "; col count = " + cursor.getColumnCount());
-	}
-	
 	
 	/* display image from gallery: BEGIN (src: http://viralpatel.net/blogs/pick-image-from-galary-android-app/) */
 	private void startBrowsePhotosActivity() {

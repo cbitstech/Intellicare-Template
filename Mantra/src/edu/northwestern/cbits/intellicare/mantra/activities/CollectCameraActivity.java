@@ -85,9 +85,9 @@ public class CollectCameraActivity extends Activity {
 	}
 
 	@Override
-	protected void onPause() {
-		super.onPause();
+	protected void onDestroy() {
 		releaseCamera(); // release the camera immediately on pause event
+		super.onDestroy();
 	}
 
 	private void attachCameraPreview() {

@@ -131,7 +131,9 @@ public class SharedUrlActivity extends Activity {
 		
 		if(requestCode == GetImagesTask.RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
 			Intent intent = new Intent(this, HomeActivity.class);
-			intent.setData(data.getData());
+			Uri uriFromImageBrowser = data.getData();
+			Log.d(CN+".onActivityResult", "uriFromImageBrowser = " + uriFromImageBrowser.toString());
+			intent.setData(uriFromImageBrowser);
 			this.startActivity(intent);
 		}
 	}

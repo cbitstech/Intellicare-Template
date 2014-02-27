@@ -22,26 +22,19 @@ public class FocusImageGridFragment extends Fragment {
 	private FocusImageCursor mCursor;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		Log.d(CN+".onCreateView", "entered");
 		View view = inflater.inflate(R.layout.focus_images_grid, container,
 				false);
 		Intent intent = getActivity().getIntent();
 		long focusBoardId = intent.getLongExtra(
 				NewFocusBoardActivity.FOCUS_BOARD_ID, -1);
 		mCursor = FocusBoardManager.get(getActivity()).queryFocusImages(focusBoardId);
+		Util.logCursor(mCursor);
 		FocusImageCursorAdapter adapter = new FocusImageCursorAdapter(
 				getActivity(), mCursor);
 		GridView gv = (GridView) view.findViewById(R.id.gridview);
 		gv.setAdapter(adapter);
-		
-		// DBG: let's inspect the contents of the image set for the selected Focus board
-		mCursor.moveToPosition(-1);
-		for(int i = 0; mCursor.moveToNext(); i++) {
-			for(int j=0; j < mCursor.getColumnCount(); j++) {
-				Log.d(CN+".onCreateView", "row[" + i + "][\"" + mCursor.getColumnName(j) + "\"] = \"" + mCursor.getString(j) + "\"");
-			}
-		}
 		
 		// when the user taps an image, display it
 		gv.setOnItemClickListener(new OnItemClickListener() {

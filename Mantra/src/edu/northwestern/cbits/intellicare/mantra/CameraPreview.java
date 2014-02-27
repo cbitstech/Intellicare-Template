@@ -40,6 +40,8 @@ public class CameraPreview extends SurfaceView implements
 			previewCamera();
 		} catch (IOException e) {
 			Log.d(TAG, "Error setting camera preview: " + e.getMessage());
+		} catch (RuntimeException e) {
+			Log.d(TAG, "Error setting camera preview: " + e.getMessage());
 		}
 	}
 

@@ -22,13 +22,12 @@ public class FocusBoardGridFragment extends Fragment {
 	private FocusBoardCursor mCursor;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.focus_boards_grid, container,
-				false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		Log.d(CN+".onCreateView", "entered");
+		View view = inflater.inflate(R.layout.focus_boards_grid, container,false);
 		mCursor = FocusBoardManager.get(getActivity()).queryFocusBoards();
-		FocusBoardCursorAdapter adapter = new FocusBoardCursorAdapter(
-				getActivity(), mCursor);
+		Util.logCursor(mCursor);
+		FocusBoardCursorAdapter adapter = new FocusBoardCursorAdapter(getActivity(), mCursor);
 		GridView gv = (GridView) view.findViewById(R.id.gridview);
 		gv.setAdapter(adapter);
 		
