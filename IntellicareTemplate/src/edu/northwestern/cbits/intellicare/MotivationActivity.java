@@ -11,13 +11,11 @@ import java.util.TimeZone;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -29,9 +27,6 @@ import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class MotivationActivity extends FormQuestionActivity 
 {
-	public static final String IS_PARTICIPANT = "is_research_participant";
-	public static final boolean IS_PARTICIPANT_DEFAULT = false;
-
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
@@ -46,22 +41,8 @@ public class MotivationActivity extends FormQuestionActivity
 		CheckBox myQuality = (CheckBox) this.findViewById(R.id.reason_improve_me);
 		CheckBox othersQuality = (CheckBox) this.findViewById(R.id.reason_improve_others);
 		CheckBox curious = (CheckBox) this.findViewById(R.id.reason_curious);
-		CheckBox research = (CheckBox) this.findViewById(R.id.reason_research);
 		
 		final MotivationActivity me = this;
-
-		research.setOnCheckedChangeListener(new OnCheckedChangeListener()
-		{
-			public void onCheckedChanged(CompoundButton button, boolean isChecked) 
-			{
-				me._payload.put("research", Boolean.valueOf(isChecked));
-				
-				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
-				Editor e = prefs.edit();
-				e.putBoolean(MotivationActivity.IS_PARTICIPANT, isChecked);
-				e.commit();
-			}
-		});
 
 		myQuality.setOnCheckedChangeListener(new OnCheckedChangeListener()
 		{
@@ -142,23 +123,28 @@ public class MotivationActivity extends FormQuestionActivity
 		
 		return true;
 	}
-	
+
+	public boolean onCreateOptionsMenu(Menu menu) 
+	{
+		this.getMenuInflater().inflate(R.menu.menu_motivation, menu);
+
+		return true;
+	}
+
 	public boolean onOptionsItemSelected(final MenuItem item)
 	{
+		final MotivationActivity me = this;
+
 		if (item.getItemId() ==  R.id.action_done)
 		{
 			CheckBox myQuality = (CheckBox) this.findViewById(R.id.reason_improve_me);
 			CheckBox othersQuality = (CheckBox) this.findViewById(R.id.reason_improve_others);
 			CheckBox curious = (CheckBox) this.findViewById(R.id.reason_curious);
-			CheckBox research = (CheckBox) this.findViewById(R.id.reason_research);
 
 			EditText others = (EditText) this.findViewById(R.id.reason_other);
 			
 			final ArrayList<String> reasons = new ArrayList<String>();
 			
-			if (research.isChecked())
-				reasons.add(this.getString(R.string.reason_research_study));
-
 			if (myQuality.isChecked())
 				reasons.add(this.getString(R.string.reason_improve_me));
 			
@@ -172,8 +158,6 @@ public class MotivationActivity extends FormQuestionActivity
 			
 			if (otherText != null && otherText.length() > 0)
 				reasons.add(otherText);
-
-			final MotivationActivity me = this;
 
 			if (reasons.size() > 1)
 			{
@@ -223,6 +207,35 @@ public class MotivationActivity extends FormQuestionActivity
 			{
 				Toast.makeText(this, R.string.message_motivation_select_one, Toast.LENGTH_LONG).show();
 			}
+		}
+		else if (item.getItemId() == R.id.action_skip)
+		{
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder = builder.setTitle(R.string.confirm_title);
+			builder = builder.setMessage(R.string.confirm_message);
+			
+			builder = builder.setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() 
+			{
+				public void onClick(DialogInterface dialog, int which) 
+				{
+
+				}
+			});
+
+			builder = builder.setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() 
+			{
+				public void onClick(DialogInterface dialog, int which) 
+				{
+					HashMap<String, Object> payload = new HashMap<String, Object>();
+					
+					LogManager.getInstance(me).log("skipped_motivation_questions", payload);
+					
+					if (me.canSubmit())
+						me.finish();
+				}
+			});
+			
+			builder.create().show();
 		}
 
 		return true;

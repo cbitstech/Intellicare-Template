@@ -20,12 +20,14 @@ import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import edu.emory.mathcs.backport.java.util.Collections;
@@ -65,9 +67,12 @@ public class CalendarActivity extends ConsentedActivity
 				me._currentDate = date;
 				
 				me.reloadList();
+				
 
 				HashMap<String, Object> payload = new HashMap<String, Object>();
 				payload.put("date", date.getTime());
+				payload.put("full_mode", prefs.getBoolean("settings_full_mode", true));
+				
 				LogManager.getInstance(me).log("changed_date", payload);
 			}
 		});
@@ -82,8 +87,11 @@ public class CalendarActivity extends ConsentedActivity
 		if (this._currentDate == null)
 			this._currentDate = new Date();
 
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
 		HashMap<String, Object> payload = new HashMap<String, Object>();
 		payload.put("date", this._currentDate.getTime());
+		payload.put("full_mode", prefs.getBoolean("settings_full_mode", true));
 		LogManager.getInstance(this).log("opened_calendar", payload);
 
         CalendarView calendar = (CalendarView) this.findViewById(R.id.view_calendar);
@@ -102,7 +110,11 @@ public class CalendarActivity extends ConsentedActivity
 	
 	public void onPause()
 	{
-		LogManager.getInstance(this).log("closed_calendar", null);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		payload.put("full_mode", prefs.getBoolean("settings_full_mode", true));
+		LogManager.getInstance(this).log("closed_calendar", payload);
 		
 		super.onPause();
 	}
@@ -124,9 +136,27 @@ public class CalendarActivity extends ConsentedActivity
 		
 		if (isToday)
 		{
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
 			String where = "enabled = ?";
 			String[] args = { "1" };
 			
+			if (prefs.getBoolean("settings_full_mode", true) == false)
+			{
+				Log.e("DF", "IN TEST MODE");
+
+				int level = prefs.getInt(FeatsProvider.DEPRESSION_LEVEL, 2);
+
+				args[0] = "3";
+
+				if (level < 3)
+					where = "feat_level < ?";
+				else if (level == 3)
+					where = "feat_level = ?";
+				else
+					where = "feat_level >= ?";
+			}
+						
 			Cursor featsCursor = this.getContentResolver().query(FeatsProvider.FEATS_URI, null, where, args, "feat_level, feat_name");
 			this.startManagingCursor(featsCursor);
 			
@@ -156,22 +186,24 @@ public class CalendarActivity extends ConsentedActivity
 					{
 						public void onCheckedChanged(CompoundButton arg0, boolean checked) 
 						{
+							SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
+							
 							if (checked)
 							{
-								SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
-
 								int level = prefs.getInt(FeatsProvider.DEPRESSION_LEVEL, 2);
 
 						        FeatsProvider.createFeat(me, featName, level);
 						        
 								HashMap<String, Object> payload = new HashMap<String, Object>();
 								payload.put("feat", featName);
+								payload.put("full_mode", prefs.getBoolean("settings_full_mode", true));
 								LogManager.getInstance(me).log("checked_feat", payload);
 							}
 							else
 							{
 								HashMap<String, Object> payload = new HashMap<String, Object>();
 								payload.put("feat", featName);
+								payload.put("full_mode", prefs.getBoolean("settings_full_mode", true));
 								LogManager.getInstance(me).log("unchecked_feat", payload);
 
 								FeatsProvider.clearFeats(me, featName, me._currentDate);
@@ -179,7 +211,6 @@ public class CalendarActivity extends ConsentedActivity
 							
 							calendar.setDate(new Date(), false);
 							
-							SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
 							int level = prefs.getInt(FeatsProvider.DEPRESSION_LEVEL, 2);
 							int streak = FeatsProvider.streakForLevel(me, level);
 							
@@ -187,25 +218,35 @@ public class CalendarActivity extends ConsentedActivity
 						}
 					});
 
+					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
+					int level = prefs.getInt(FeatsProvider.DEPRESSION_LEVEL, 2);
+
 					int featLevel = cursor.getInt(cursor.getColumnIndex("feat_level"));
 					
+					LinearLayout categoryRow = (LinearLayout) view.findViewById(R.id.label_category_row);
 					TextView categoryLabel = (TextView) view.findViewById(R.id.label_category_name);
+					TextView levelLabel = (TextView) view.findViewById(R.id.label_category_level);
+					
+					if (level == featLevel)
+						levelLabel.setVisibility(View.VISIBLE);
+					else
+						levelLabel.setVisibility(View.GONE);
 
 					if (featLevel != 0)
 						categoryLabel.setText(context.getString(R.string.label_category, featLevel));
 					else
 						categoryLabel.setText(R.string.label_category_my_feats);
 
-					categoryLabel.setVisibility(View.GONE);
+					categoryRow.setVisibility(View.GONE);
 
 					if (cursor.moveToPrevious() == false)
-						categoryLabel.setVisibility(View.VISIBLE);
+						categoryRow.setVisibility(View.VISIBLE);
 					else
 					{
 						int nextLevel = cursor.getInt(cursor.getColumnIndex("feat_level"));
 						
 						if (featLevel != nextLevel)
-							categoryLabel.setVisibility(View.VISIBLE);
+							categoryRow.setVisibility(View.VISIBLE);
 						
 						cursor.moveToNext();
 					}
@@ -328,6 +369,11 @@ public class CalendarActivity extends ConsentedActivity
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
 		this.getMenuInflater().inflate(R.menu.menu_calendar, menu);
+
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		if (prefs.getBoolean("settings_full_mode", true) == false)
+			menu.removeItem(R.id.action_edit_feats);
 
 		return true;
 	}

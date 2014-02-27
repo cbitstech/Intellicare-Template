@@ -50,6 +50,7 @@ public class ConsentActivity extends ActionBarActivity implements ConsentWebView
 		this.setContentView(R.layout.activity_consent);
 		
 		this.getSupportActionBar().setTitle(R.string.title_consent);
+		this.getSupportActionBar().setSubtitle(R.string.subtitle_consent);
 		
 		ConsentWebView consentView = (ConsentWebView) this.findViewById(R.id.consent_web_view);
 		

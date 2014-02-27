@@ -12,6 +12,15 @@
     		<intent android:action="android.intent.action.VIEW" android:data="intellicare://consent?review=true" />
 		</Preference>
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/settings_group_credits">
+   		<Preference android:title="@string/creator_cjk" android:summary="@string/role_tech_lead" />
+		<Preference android:title="@string/creator_smk" android:summary="@string/role_project_manager" />
+		<Preference android:title="@string/creator_lxs" android:summary="@string/testing_lead" />
+   		<Preference android:title="@string/creator_dcm" android:summary="@string/role_clinical_consultant" />
+   		<Preference android:title="@string/creator_sms" android:summary="@string/role_clinical_consultant" />
+   		<Preference android:title="@string/copy_disclaimer" android:key="copyright_statement" />
+	</PreferenceCategory>
+    
     <PreferenceCategory android:title="@string/settings_group_assessments">
    		<Preference android:title="@string/prefs_phq4_form">
     		<intent android:action="android.intent.action.VIEW" android:data="intellicare://phq4" />

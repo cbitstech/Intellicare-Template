@@ -6,18 +6,15 @@ import java.util.HashMap;
 
 import org.apache.commons.io.FileUtils;
 
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.widget.Toast;
-import edu.northwestern.cbits.intellicare.MotivationActivity;
+import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class SettingsActivity extends PreferenceActivity 
@@ -72,7 +69,13 @@ public class SettingsActivity extends PreferenceActivity
 	@SuppressWarnings("deprecation")
 	public boolean onPreferenceTreeClick (PreferenceScreen screen, Preference preference)
 	{
-		if (preference.getKey().equals("clear_cookies"))
+		String key = preference.getKey();
+		
+		if (key == null)
+		{
+			
+		}
+		else if (key.equals("clear_cookies"))
 		{
 			File root = Environment.getExternalStorageDirectory();
 			File intellicare = new File(root, "Intellicare Shared");
@@ -90,14 +93,11 @@ public class SettingsActivity extends PreferenceActivity
 					LogManager.getInstance(this).logException(e);
 				}
 			}
-			
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-			Editor e = prefs.edit();
-			e.remove(MotivationActivity.IS_PARTICIPANT);
-			e.commit();
 
 			return true;
 		}
+		else if (key.equals("copyright_statement"))
+			ConsentedActivity.showCopyrightDialog(this);
 		
 		return super.onPreferenceTreeClick(screen, preference);
 	}

@@ -6,20 +6,20 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.TimeZone;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 import edu.northwestern.cbits.ic_template.R;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class DemographicActivity extends FormQuestionActivity 
 {
@@ -338,24 +338,43 @@ public class DemographicActivity extends FormQuestionActivity
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
 		this.getMenuInflater().inflate(R.menu.menu_demographic, menu);
-		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		
-		if (prefs.getBoolean(MotivationActivity.IS_PARTICIPANT, MotivationActivity.IS_PARTICIPANT_DEFAULT))
-			menu.removeItem(R.id.action_skip);
 
 		return true;
 	}
 	
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-		if (item.getItemId() ==  R.id.action_skip)
+		if (item.getItemId() == R.id.action_skip)
 		{
-			this.writeCookie();
+			final DemographicActivity me = this;
 			
-			this.finish();
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder = builder.setTitle(R.string.confirm_title);
+			builder = builder.setMessage(R.string.confirm_message);
 			
-			return true;
+			builder = builder.setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() 
+			{
+				public void onClick(DialogInterface dialog, int which) 
+				{
+					// TODO Auto-generated method stub
+				}
+			});
+
+			builder = builder.setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() 
+			{
+				public void onClick(DialogInterface dialog, int which) 
+				{
+					HashMap<String, Object> payload = new HashMap<String, Object>();
+					
+					LogManager.getInstance(me).log("skipped_demographic_questions", payload);
+					
+					me.writeCookie();
+
+					me.finish();
+				}
+			});
+			
+			builder.create().show();
 		}
 
 		return super.onOptionsItemSelected(item);

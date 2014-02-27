@@ -1,5 +1,6 @@
 package edu.northwestern.cbits.intellicare;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -154,5 +155,22 @@ public class ConsentedActivity extends ActionBarActivity
 		{
 		    Toast.makeText(this, R.string.email_toast_no_client, Toast.LENGTH_LONG).show();
 		}
+	}
+
+	public static void showCopyrightDialog(Activity activity)
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+		builder = builder.setTitle(R.string.copy_title);
+		builder = builder.setMessage(R.string.copy_message);
+
+		builder = builder.setPositiveButton(R.string.button_close, new DialogInterface.OnClickListener()
+		{
+			public void onClick(DialogInterface dialog, int which) 
+			{
+
+			}
+		});
+		
+		builder.create().show();
 	}
 }
