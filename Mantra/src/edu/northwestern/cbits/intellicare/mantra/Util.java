@@ -1,5 +1,8 @@
 package edu.northwestern.cbits.intellicare.mantra;
+import android.app.Activity;
 import android.database.Cursor;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 
 
@@ -26,4 +29,21 @@ public class Util {
 		cursor.moveToPosition(-1);
 	}
 	
+	
+
+	/**
+	 * Gets an image file path via a content:// URI.
+	 * @param imageContentUri
+	 * @return
+	 */
+	public static String getImageFilePathViaContentUri(Activity activity, Uri imageContentUri) {
+		// get the file path from the media store database
+		String[] filePathColumn = { MediaStore.Images.Media.DATA };
+		Cursor cursor = activity.getContentResolver().query(imageContentUri, filePathColumn, null, null, null);
+		cursor.moveToFirst();
+		int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+		String picturePath = cursor.getString(columnIndex);
+		cursor.close();
+		return picturePath;
+	}
 }

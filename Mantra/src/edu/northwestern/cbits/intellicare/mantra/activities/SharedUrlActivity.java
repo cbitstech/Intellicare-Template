@@ -139,7 +139,6 @@ public class SharedUrlActivity extends Activity {
 	}
 
 	
-	
 	/**
 	 * Handle external intents; src: http://developer.android.com/training/sharing/receive.html
 	 */

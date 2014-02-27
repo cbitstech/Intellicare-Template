@@ -8,6 +8,7 @@ import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusImageCursor
 import edu.northwestern.cbits.intellicare.mantra.FocusBoard;
 import edu.northwestern.cbits.intellicare.mantra.FocusBoardGridFragment;
 import edu.northwestern.cbits.intellicare.mantra.FocusBoardManager;
+import edu.northwestern.cbits.intellicare.mantra.FocusImage;
 import edu.northwestern.cbits.intellicare.mantra.FocusImageGridFragment;
 import edu.northwestern.cbits.intellicare.mantra.GetImagesTask;
 import edu.northwestern.cbits.intellicare.mantra.MediaScannerService;
@@ -46,9 +47,16 @@ public class FocusBoardActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.focus_board_activity);
-		
 		Log.d("FocusBoardActivity.onCreate", "entered");
+
+		refreshDisplay();
+	}
+
+	/**
+	 * 
+	 */
+	private void refreshDisplay() {
+		setContentView(R.layout.focus_board_activity);
 
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
@@ -63,9 +71,17 @@ public class FocusBoardActivity extends ActionBarActivity {
 		addMantraText();
 		addImageGridFragment();
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.d(CN+".onResume", "entered");
+//		refreshDisplay();
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		Log.d(CN+".onCreateOptionsMenu", "entered");
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.focus_board_activity_actions, menu);
 		return super.onCreateOptionsMenu(menu);
@@ -73,6 +89,7 @@ public class FocusBoardActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Log.d(CN+".onOptionsItemSelected", "entered");
 		switch (item.getItemId()) {
 		case R.id.new_image_action:
 			startCollectCameraActivity();
@@ -116,24 +133,7 @@ public class FocusBoardActivity extends ActionBarActivity {
 						Log.d(CN+".handleSelectedImageIntent", "Renamed file from \"" + filePathToImageInTmpFolder + "\" to \"" + newFilePath + "\"");
 				}
 				
-				// search the image set for a particular image path, and if the image isn't already associated with the board,
-				// then associate it. 
-				FocusImageCursor fic = mManager.queryFocusImages(mFocusBoardId);
-				boolean imageAlreadyAssociated = false;
-				while(fic.moveToNext()) {
-					String path = fic.getString(FocusBoardManager.COL_INDEX_FILE_PATH).trim();
-					Log.d(CN+".handleSelectedImageIntent", "path.equals(filePathToImage) = " + (path.equals(imageFile.getAbsolutePath())) + "; path = \"" + path + "\"" + "; imageFile.getAbsolutePath() = \"" + imageFile.getAbsolutePath() + "\"");
-					if(path.equals(imageFile.getAbsolutePath())) {
-						Toast.makeText(this, "Image already applied. Consider choosing a different one!", Toast.LENGTH_LONG).show();
-						imageAlreadyAssociated = true;
-						break;
-					}
-				}
-				if(!imageAlreadyAssociated) {
-					Log.d(CN+".handleSelectedImageIntent","for board " + mFocusBoardId + ", associating image = " + imageFile.getAbsolutePath());
-					Toast.makeText(this, "Image applied!", Toast.LENGTH_SHORT).show();
-					mManager.createFocusImage(mFocusBoardId, imageFile.getAbsolutePath());
-				}
+				applyNewImageToMantra(imageFile);
 				
 				// clean-up the temp folder
 				deleteAllFilesInImageFolder(Paths.MANTRA_IMAGES_TMP);
@@ -144,22 +144,33 @@ public class FocusBoardActivity extends ActionBarActivity {
 		else
 			Log.d(CN+".handleSelectedImageIntent", "intent is null");
 	}
-	
-//	// src: http://stackoverflow.com/questions/3401579/get-filename-and-path-from-uri-from-mediastore
-//	public String getRealPathFromURI(Context context, Uri contentUri) {
-//	  Cursor cursor = null;
-//	  try { 
-//	    String[] proj = { MediaStore.Images.Media.DATA };
-//	    cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
-//	    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-//	    cursor.moveToFirst();
-//	    return cursor.getString(column_index);
-//	  } finally {
-//	    if (cursor != null) {
-//	      cursor.close();
-//	    }
-//	  }
-//	}
+
+	/**
+	 * Applies an image to a mantra, if the image has not already been associated. 
+	 * @param imageFile
+	 */
+	private void applyNewImageToMantra(File imageFile) {
+		Log.d(CN+".applyNewImageToMantra", "entered");
+		// search the image set for a particular image path, and if the image isn't already associated with the board,
+		// then associate it. 
+		FocusImageCursor fic = mManager.queryFocusImages(mFocusBoardId);
+		boolean imageAlreadyAssociated = false;
+		Util.logCursor(fic);
+		while(fic.moveToNext()) {
+			String path = fic.getString(FocusBoardManager.COL_INDEX_FILE_PATH).trim();
+			Log.d(CN+".applyNewImageToMantra", "path.equals(filePathToImage) = " + (path.equals(imageFile.getAbsolutePath())) + "; path = \"" + path + "\"" + "; imageFile.getAbsolutePath() = \"" + imageFile.getAbsolutePath() + "\"");
+			if(path.equals(imageFile.getAbsolutePath())) {
+				Toast.makeText(this, "Image already applied. Consider choosing a different one!", Toast.LENGTH_LONG).show();
+				imageAlreadyAssociated = true;
+				break;
+			}
+		}
+		if(!imageAlreadyAssociated) {
+			Log.d(CN+".applyNewImageToMantra","for board " + mFocusBoardId + ", associating image = " + imageFile.getAbsolutePath());
+			Toast.makeText(this, "Image applied!", Toast.LENGTH_SHORT).show();
+			mManager.createFocusImage(mFocusBoardId, imageFile.getAbsolutePath());
+		}
+	}
 	
 	
 	/**
@@ -217,6 +228,7 @@ public class FocusBoardActivity extends ActionBarActivity {
 	 * @return
 	 */
 	private ArrayList<Integer> getImageFilePaths(String folderPath, Cursor imagesMediaCursor) {
+		Log.d(CN+".getImageFilePaths", "entered");
 		ArrayList<Integer> imageIdsToDelete = new ArrayList<Integer>();
 		while(imagesMediaCursor.moveToNext()) {
 			String filePath = imagesMediaCursor.getString(imagesMediaCursor.getColumnIndex("_data"));
@@ -249,6 +261,7 @@ public class FocusBoardActivity extends ActionBarActivity {
 	
 	/* display image from gallery: BEGIN (src: http://viralpatel.net/blogs/pick-image-from-galary-android-app/) */
 	private void startBrowsePhotosActivity() {
+		Log.d(CN+".startBrowsePhotosActivity", "entered");
 		Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		startActivityForResult(i, RESULT_LOAD_IMAGE);
 	}
@@ -257,38 +270,31 @@ public class FocusBoardActivity extends ActionBarActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    super.onActivityResult(requestCode, resultCode, data);
-        Log.d("onActivityResult", "entered; requestCode = " + requestCode + "; resultCode = " + resultCode + "; data = " + data);
+        Log.d(CN+"onActivityResult", "entered; requestCode = " + requestCode + "; resultCode = " + resultCode + "; data = " + data);
 
         // if: existing image
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
 	         Uri selectedImage = data.getData();
-	         String[] filePathColumn = { MediaStore.Images.Media.DATA };
-	 
-	         Cursor cursor = getContentResolver().query(selectedImage,
-	                 filePathColumn, null, null, null);
-	         cursor.moveToFirst();
-	 
-	         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-	         String picturePath = cursor.getString(columnIndex);
-	         
-	         cursor.close();
+
+	         String picturePath = Util.getImageFilePathViaContentUri(this, selectedImage);
 	                      
-	         // String picturePath contains the path of selected Image
-	         Log.d("onActivityResult", "picturePath = " + picturePath);
+	         Log.d(CN+"onActivityResult", "picturePath = " + picturePath);
+	         applyNewImageToMantra(new File(picturePath));
 	     }
 	}
-	/* display image from gallery: END (src: http://viralpatel.net/blogs/pick-image-from-galary-android-app/) */
+
 
 	private void startCollectCameraActivity() {
+		Log.d(CN+".startCollectCameraActivity", "entered");
 		Intent intent = new Intent(this, CollectCameraActivity.class);
 		intent.putExtra(NewFocusBoardActivity.FOCUS_BOARD_ID, mFocusBoardId);
 		startActivity(intent);
 	}
 
 	private void addMantraText() {
+		Log.d(CN+".addMantraText", "entered");
 		Intent intent = getIntent();
-		mFocusBoardId = intent.getLongExtra(
-				NewFocusBoardActivity.FOCUS_BOARD_ID, -1);
+		mFocusBoardId = intent.getLongExtra(NewFocusBoardActivity.FOCUS_BOARD_ID, -1);
 		mManager = FocusBoardManager.get(this);
 		FocusBoard focusBoard = mManager.getFocusBoard(mFocusBoardId);
 		TextView mantraText = (TextView) findViewById(R.id.focus_board_mantra);
@@ -296,6 +302,7 @@ public class FocusBoardActivity extends ActionBarActivity {
 	}
 	
 	private void addImageGridFragment() {
+		Log.d(CN+".addImageGridFragment", "entered");
 		FragmentManager fm = getSupportFragmentManager();
 		Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
 		

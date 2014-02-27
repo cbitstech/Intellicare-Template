@@ -20,19 +20,28 @@ public class FocusImageGridFragment extends Fragment {
 
 	private static final String CN = "FocusImageGridFragment";
 	private FocusImageCursor mCursor;
+	
+	LayoutInflater inflater; ViewGroup container;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater li, ViewGroup vg, Bundle savedInstanceState) {
 		Log.d(CN+".onCreateView", "entered");
-		View view = inflater.inflate(R.layout.focus_images_grid, container,
-				false);
+		inflater = li; container = vg;
+		return renderSetup(inflater, container);
+	}
+
+	/**
+	 * @param inflater
+	 * @param container
+	 * @return
+	 */
+	private View renderSetup(LayoutInflater inflater, ViewGroup container) {
+		View view = inflater.inflate(R.layout.focus_images_grid, container,false);
 		Intent intent = getActivity().getIntent();
-		long focusBoardId = intent.getLongExtra(
-				NewFocusBoardActivity.FOCUS_BOARD_ID, -1);
+		long focusBoardId = intent.getLongExtra(NewFocusBoardActivity.FOCUS_BOARD_ID, -1);
 		mCursor = FocusBoardManager.get(getActivity()).queryFocusImages(focusBoardId);
 		Util.logCursor(mCursor);
-		FocusImageCursorAdapter adapter = new FocusImageCursorAdapter(
-				getActivity(), mCursor);
+		FocusImageCursorAdapter adapter = new FocusImageCursorAdapter(getActivity(), mCursor);
 		GridView gv = (GridView) view.findViewById(R.id.gridview);
 		gv.setAdapter(adapter);
 		
@@ -52,6 +61,13 @@ public class FocusImageGridFragment extends Fragment {
 		});
 		
 		return view;
+	}
+	
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		renderSetup(inflater, container);
 	}
 
 	@Override
