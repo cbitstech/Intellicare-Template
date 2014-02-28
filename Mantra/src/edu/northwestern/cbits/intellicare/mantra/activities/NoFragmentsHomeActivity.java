@@ -12,6 +12,7 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -141,9 +142,7 @@ public class NoFragmentsHomeActivity extends ActionBarActivity {
 				// create dialog for list of options
 				AlertDialog.Builder dlg = new Builder(self);
 				dlg.setTitle("Modify Mantra");
-				dlg.setAdapter(
-						new ArrayAdapter<String>(getApplicationContext(), R.layout.longpress_list_row, R.id.title, optionItems), 
-						new DialogInterface.OnClickListener() {
+				dlg.setItems(optionItems, new OnClickListener() {
 					
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -157,31 +156,10 @@ public class NoFragmentsHomeActivity extends ActionBarActivity {
 								break;
 						}
 					}
-					
-					class ViewHolder {
-						TextView title;
-					}
-					
-					private View getView(int position, View convertView, ViewGroup parent) {
-						Log.d(CN+".onResume.setOnItemLongClickListener.onItemLongClick.setAdapter.onClick", "entered");
-						final LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-						ViewHolder holder = new ViewHolder();
-						if(convertView == null) {
-							convertView = inflater.inflate(R.layout.longpress_list_row, null);
-							holder.title = (TextView) convertView.findViewById(R.id.title);
-							convertView.setTag(holder);
-						}
-						else {
-							holder = (ViewHolder) convertView.getTag();
-						}
-						holder.title.setText(optionItems[position]);
-						return convertView;
-					}
 				});
-				AlertDialog alert = dlg.create();
-				alert.show();
+				dlg.create().show();
 				
-				return false;
+				return true;
 			}
 		});
 		
