@@ -8,7 +8,10 @@ import edu.northwestern.cbits.intellicare.mantra.FocusImage;
 import edu.northwestern.cbits.intellicare.mantra.PictureUtils;
 import edu.northwestern.cbits.intellicare.mantra.R;
 import edu.northwestern.cbits.intellicare.mantra.Util;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -22,14 +25,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -70,7 +78,7 @@ public class NoFragmentsHomeActivity extends ActionBarActivity {
 
 			@Override
 			public void bindView(View mantraItemView, Context homeActivity, Cursor focusBoardCursor) {
-//				focusBoardCursor.moveToFirst();
+				// set the image
 				final int imageId = focusBoardCursor.getInt(focusBoardCursor.getColumnIndex("_id")); 
 				Log.d(CN+".CursorAdapter.bindView", "imageId = " + imageId);
 				final FocusImageCursor imageCursor = FocusBoardManager.get(homeActivity).queryFocusImages(imageId);
@@ -85,6 +93,11 @@ public class NoFragmentsHomeActivity extends ActionBarActivity {
 					Drawable d = PictureUtils.getScaledDrawable(self, image.getPath());
 					iv.setImageDrawable(d);
 				}
+				
+				// set the mantra
+				TextView tv = (TextView) mantraItemView.findViewById(R.id.imageCaption);
+				String mantraItemText = focusBoardCursor.getString(focusBoardCursor.getColumnIndex("mantra"));
+				tv.setText(mantraItemText);
 			}
 
 			@Override
@@ -120,11 +133,58 @@ public class NoFragmentsHomeActivity extends ActionBarActivity {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
-				Toast.makeText(self, "TODO: delete this mantra board", Toast.LENGTH_SHORT).show();
+//				Toast.makeText(self, "TODO: delete this mantra board", Toast.LENGTH_SHORT).show();
+				
+				// options
+				final String[] optionItems = new String[] { "Edit", "Delete" };
+				
+				// create dialog for list of options
+				AlertDialog.Builder dlg = new Builder(self);
+				dlg.setTitle("Modify Mantra");
+				dlg.setAdapter(
+						new ArrayAdapter<String>(getApplicationContext(), R.layout.longpress_list_row, R.id.title, optionItems), 
+						new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Toast.makeText(self, "You chose " + optionItems[which] + "; which = " + which, Toast.LENGTH_SHORT).show();
+						switch(which) {
+							case 0:
+								Log.d(CN+".onResume.setOnItemLongClickListener.onItemLongClick.setAdapter.onClick", "You chose " + optionItems[which]);
+								break;
+							case 1:
+								Log.d(CN+".onResume.setOnItemLongClickListener.onItemLongClick.setAdapter.onClick", "You chose " + optionItems[which]);
+								break;
+						}
+					}
+					
+					class ViewHolder {
+						TextView title;
+					}
+					
+					private View getView(int position, View convertView, ViewGroup parent) {
+						Log.d(CN+".onResume.setOnItemLongClickListener.onItemLongClick.setAdapter.onClick", "entered");
+						final LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+						ViewHolder holder = new ViewHolder();
+						if(convertView == null) {
+							convertView = inflater.inflate(R.layout.longpress_list_row, null);
+							holder.title = (TextView) convertView.findViewById(R.id.title);
+							convertView.setTag(holder);
+						}
+						else {
+							holder = (ViewHolder) convertView.getTag();
+						}
+						holder.title.setText(optionItems[position]);
+						return convertView;
+					}
+				});
+				AlertDialog alert = dlg.create();
+				alert.show();
+				
 				return false;
 			}
 		});
-
+		
 
 		// if this activity was opened by a response to the image gallery,
 		// then inform the user they need to tap on a mantra with which they wish to associate an image.
