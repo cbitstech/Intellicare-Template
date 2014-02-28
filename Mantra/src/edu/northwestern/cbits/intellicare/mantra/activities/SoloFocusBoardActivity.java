@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -147,6 +148,18 @@ public class SoloFocusBoardActivity extends ActionBarActivity {
 				startActivity(intent);
 			}
 		});
+		
+		// DELETE action.
+		gv.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				// TODO Auto-generated method stub
+				Toast.makeText(me, "TODO: delete this mantra board", Toast.LENGTH_SHORT).show();
+				return false;
+			}
+		});
+
 	}
 
 	@Override

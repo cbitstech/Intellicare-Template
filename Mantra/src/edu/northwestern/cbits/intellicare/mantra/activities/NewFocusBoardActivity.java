@@ -75,7 +75,8 @@ public class NewFocusBoardActivity extends Activity implements OnItemSelectedLis
 
 	private void addSubmitListener() {
 		Button submitButton = (Button) findViewById(R.id.new_focus_board_submit);
-		final Intent intent = new Intent(this, FocusBoardActivity.class);
+//		final Intent intent = new Intent(this, FocusBoardActivity.class);
+		final Intent intent = new Intent(this, SoloFocusBoardActivity.class);
 		submitButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -83,12 +84,9 @@ public class NewFocusBoardActivity extends Activity implements OnItemSelectedLis
 				String mantra = mMantraText.getText().toString().trim();
 
 				if (mantra.equals("")) {
-					Toast.makeText(NewFocusBoardActivity.this,
-							R.string.empty_mantra_toast, Toast.LENGTH_SHORT)
-							.show();
+					Toast.makeText(NewFocusBoardActivity.this, R.string.empty_mantra_toast, Toast.LENGTH_SHORT) .show();
 				} else {
-					FocusBoard focusBoard = mFocusBoardManager
-							.createFocusBoard(mantra);
+					FocusBoard focusBoard = mFocusBoardManager.createFocusBoard(mantra);
 					intent.putExtra(FOCUS_BOARD_ID, focusBoard.getId());
 
 					// handle image-URI-passing intent from HomeActivity
