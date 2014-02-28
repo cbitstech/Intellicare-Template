@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="12"
+        android:minSdkVersion="16"
         android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.CAMERA" />
@@ -66,8 +66,20 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-        <activity
+        <!-- <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.FocusBoardActivity"
+            android:label="@string/focus_board_label"
+            android:parentActivityName=".activities.HomeActivity"
+            android:uiOptions="splitActionBarWhenNarrow" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.HomeActivity" />
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity> -->
+        <activity
+            android:name="edu.northwestern.cbits.intellicare.mantra.activities.SoloFocusBoardActivity"
             android:label="@string/focus_board_label"
             android:parentActivityName=".activities.HomeActivity"
             android:uiOptions="splitActionBarWhenNarrow" >

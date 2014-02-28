@@ -155,8 +155,9 @@ public class CollectCameraActivity extends Activity {
 	}
 
 	private void startFocusBoardActivity() {
-		Intent intent = new Intent(CollectCameraActivity.this,
-				FocusBoardActivity.class);
+// CJK		Intent intent = new Intent(CollectCameraActivity.this,
+//		FocusBoardActivity.class);
+		Intent intent = new Intent(CollectCameraActivity.this, SoloFocusBoardActivity.class);
 		intent.putExtra(NewFocusBoardActivity.FOCUS_BOARD_ID, mFocusBoardId);
 		startActivity(intent);
 	}
