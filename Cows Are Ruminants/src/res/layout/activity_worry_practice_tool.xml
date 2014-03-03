@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/worry_tool_title"
+        android:id="@+id/textView"
+        android:minHeight="48dp"
+        android:textSize="36sp"
+        android:gravity="center"
+        android:layout_marginLeft="24dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/timer_title"
+        android:id="@+id/textView2"
+        android:gravity="left"
+        android:layout_marginLeft="18dp"
+        android:layout_marginBottom="6dp" />
+
+    <Chronometer
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/chronometer"
+        android:minWidth="288dp"
+        android:minHeight="192dp"
+        android:background="#fffccc"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="6dp"
+        android:textSize="140dp"
+        android:layout_marginBottom="6dp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reset_wpt"
+        android:id="@+id/button"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="12dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/start_stop_wpt"
+        android:id="@+id/button2" />
+    </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/show_help"
+        android:id="@+id/button3"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="18dp" />
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp">
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/previous"
+            android:id="@+id/button3"
+            android:layout_gravity="left"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="218dp" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/next"
+            android:id="@+id/button4"
+            android:layout_margin="12dp"
+            android:layout_gravity="right" />
+    </LinearLayout>
+
+</LinearLayout>
