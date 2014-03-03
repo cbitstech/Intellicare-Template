@@ -48,6 +48,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		cv.put(COLUMN_FOCUS_BOARD_MANTRA, focusBoard.getMantra());
 		return getWritableDatabase().insert(TABLE_FOCUS_BOARDS, null, cv);
 	}
+	
+	public long updateFocusBoard(FocusBoard focusBoard) {
+		ContentValues cv = new ContentValues();
+		cv.put(COLUMN_FOCUS_BOARD_MANTRA, focusBoard.getMantra());
+		return getWritableDatabase()
+			.update(
+				TABLE_FOCUS_BOARDS, cv, "_id=?", 
+				new String[] { ((Long) focusBoard.getId()).toString() }
+			);
+	}
+
+	public int deleteFocusBoard(Long id) {
+		return getWritableDatabase().delete(
+				TABLE_FOCUS_BOARDS, "_id=?", 
+				new String[] { id.toString() }
+		);
+	}
+
 
 	public long insertFocusImage(FocusImage focusImage) {
 		ContentValues cv = new ContentValues();

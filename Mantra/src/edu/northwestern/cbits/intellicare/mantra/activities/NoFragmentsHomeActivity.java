@@ -2,6 +2,7 @@ package edu.northwestern.cbits.intellicare.mantra.activities;
 
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusBoardCursor;
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusImageCursor;
+import edu.northwestern.cbits.intellicare.mantra.FocusBoard;
 import edu.northwestern.cbits.intellicare.mantra.FocusBoardGridFragment;
 import edu.northwestern.cbits.intellicare.mantra.FocusBoardManager;
 import edu.northwestern.cbits.intellicare.mantra.FocusImage;
@@ -37,6 +38,7 @@ import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,21 +58,31 @@ public class NoFragmentsHomeActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.no_fragments_home_activity);
 		Log.d(CN+".onCreate", "entered");
-//		findAndApplyFragment();
-		
-		
 	}
 	
 	@Override
 	protected void onResume() {
-//		super.onCreate(savedInstanceState);
 		super.onResume();
-		setContentView(R.layout.no_fragments_home_activity);
 		Log.d(CN+".onResume", "entered");
-//		findAndApplyFragment();
 		
-		
+		// create, bind, and fill the main view for this activity
+		attachGridView();
+
+		// if this activity was opened by a response to the image gallery,
+		// then inform the user they need to tap on a mantra with which they wish to associate an image.
+		if(getIntent().getData() != null) {
+			Toast.makeText(this, "Now tap on a mantra to attach your selected image to it!", Toast.LENGTH_LONG).show();
+		}
+
+	}
+
+	/**
+	 * Creates, binds to data, and fills the main view for this activity.
+	 */
+	private void attachGridView() {
+		setContentView(R.layout.no_fragments_home_activity);
 		final GridView gv = (GridView) this.findViewById(R.id.gridview);
+
 		FocusBoardCursor mantraItemCursor = FocusBoardManager.get(this).queryFocusBoards();
 		Util.logCursor(mantraItemCursor);
 		
@@ -128,14 +140,11 @@ public class NoFragmentsHomeActivity extends ActionBarActivity {
 			}
 		});
 		
-		// DELETE action.
+		// EDIT OR DELETE action.
 		gv.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				// TODO Auto-generated method stub
-//				Toast.makeText(self, "TODO: delete this mantra board", Toast.LENGTH_SHORT).show();
-				
+			public boolean onItemLongClick(AdapterView<?> parent, final View view, int position, final long id) {
 				// options
 				final String[] optionItems = new String[] { "Edit", "Delete" };
 				
@@ -144,15 +153,69 @@ public class NoFragmentsHomeActivity extends ActionBarActivity {
 				dlg.setTitle("Modify Mantra");
 				dlg.setItems(optionItems, new OnClickListener() {
 					
+					// on user clicking the Edit or Delete option...
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						Toast.makeText(self, "You chose " + optionItems[which] + "; which = " + which, Toast.LENGTH_SHORT).show();
+						
+						// which option from the dialog menu did the user select?
 						switch(which) {
 							case 0:
-								Log.d(CN+".onResume.setOnItemLongClickListener.onItemLongClick.setAdapter.onClick", "You chose " + optionItems[which]);
+								Log.d(CN+".onItemLongClick....onClick", "You chose " + optionItems[which]);
+								
+								// get the current caption
+								// v2: via database
+								final View v = self.getLayoutInflater().inflate(R.layout.edit_text_field, null);
+								FocusBoard fb = FocusBoardManager.get(self).getFocusBoard(id);
+								((EditText) v.findViewById(R.id.text_dialog)).setText(fb.getMantra());
+
+								AlertDialog.Builder editTextDlg = new AlertDialog.Builder(self);
+								editTextDlg.setMessage("Edit the text");
+								editTextDlg.setPositiveButton("OK", new OnClickListener() {
+									
+									@Override
+									public void onClick(DialogInterface dialog, int which) {
+										// update the selected mantra's text
+										Toast.makeText(self, "Mantra text should change.", Toast.LENGTH_SHORT).show();
+										String newMantra = ((EditText) v.findViewById(R.id.text_dialog)).getText().toString();
+										FocusBoard fb = FocusBoardManager.get(self).getFocusBoard(id);
+										fb.setMantra(newMantra);
+										long updateRet = FocusBoardManager.get(self).setFocusBoard(fb);
+										Log.d(CN+".onItemLongClick....onClick", "updateRet = " + updateRet);
+										attachGridView();
+									}
+								});
+
+								editTextDlg.setView(v);
+								AlertDialog dlg = editTextDlg.create();
+								dlg.show();
+								
 								break;
 							case 1:
-								Log.d(CN+".onResume.setOnItemLongClickListener.onItemLongClick.setAdapter.onClick", "You chose " + optionItems[which]);
+								Log.d(CN+".onItemLongClick....onClick", "You chose " + optionItems[which]);
+								
+								AlertDialog.Builder dlg1 = new AlertDialog.Builder(self);
+								dlg1.setTitle("Confirm deletion");
+								dlg1.setMessage("Are you sure you want to delete this mantra?");
+								dlg1.setPositiveButton("Yes", new OnClickListener() {
+									
+									@Override
+									public void onClick(DialogInterface dialog, int which) {
+										int rowsDeleted = FocusBoardManager.get(self).deleteFocusBoard(id);
+										attachGridView();
+										Log.d(CN+".onItemLongClick....onClick", "deleted row = " + id + "; deleted row count = " + rowsDeleted);
+									}
+								});
+								dlg1.setNegativeButton("No", new OnClickListener() {
+									
+									@Override
+									public void onClick(DialogInterface dialog, int which) {
+										Log.d(CN+".onItemLongClick....onClick", "not deleting " + id);
+									}
+								});
+								dlg1.show();
+								
+								
 								break;
 						}
 					}
@@ -162,37 +225,7 @@ public class NoFragmentsHomeActivity extends ActionBarActivity {
 				return true;
 			}
 		});
-		
-
-		// if this activity was opened by a response to the image gallery,
-		// then inform the user they need to tap on a mantra with which they wish to associate an image.
-		if(getIntent().getData() != null) {
-			Toast.makeText(this, "Now tap on a mantra to attach your selected image to it!", Toast.LENGTH_LONG).show();
-		}
-
 	}
-
-//	/**
-//	 * 
-//	 */
-//	private void findAndApplyFragment() {
-//		FragmentManager fm = getSupportFragmentManager();
-//		Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
-//		
-//		if (fragment == null) {
-//			Log.d(CN+".findAndApplyFragment", "fragment != null");
-//			fragment = new FocusBoardGridFragment();
-//			fm.beginTransaction()
-//				.add(R.id.fragmentContainer, fragment)
-//				.commit();
-//		}
-//		else
-//			Log.d(CN+".findAndApplyFragment", "fragment != null");
-//	}
-	
-//	protected Fragment createFragment() {
-//		return new FocusBoardGridFragment();
-//	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

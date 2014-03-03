@@ -45,10 +45,6 @@ public class FocusBoardManager {
 		return mDatabaseHelper.queryFocusBoards();
 	}
 	
-	public FocusImageCursor queryFocusImages(long focusBoardId) {
-		return mDatabaseHelper.queryFocusImages(focusBoardId);
-	}
-	
 	public FocusBoard getFocusBoard(long id) {
 		FocusBoard focusBoard = null;
 		FocusBoardCursor cursor = mDatabaseHelper.queryFocusBoard(id);
@@ -58,6 +54,33 @@ public class FocusBoardManager {
 		}
 		cursor.close();
 		return focusBoard;
+	}
+	
+	public long setFocusBoard(FocusBoard focusBoard) {
+		FocusBoardCursor cursor = mDatabaseHelper.queryFocusBoard(focusBoard.getId());
+		cursor.moveToFirst();
+		long ret = -1;
+		if(!cursor.isAfterLast()) {
+			ret = mDatabaseHelper.updateFocusBoard(focusBoard);
+		}
+		cursor.close();
+		return ret;
+	}
+	
+	public int deleteFocusBoard(long id) {
+		FocusBoardCursor cursor = mDatabaseHelper.queryFocusBoard(id);
+		cursor.moveToFirst();
+		int ret = -1;
+		if(!cursor.isAfterLast()) {
+			ret = mDatabaseHelper.deleteFocusBoard(id);
+		}
+		cursor.close();
+		return ret;
+	}
+	
+	
+	public FocusImageCursor queryFocusImages(long focusBoardId) {
+		return mDatabaseHelper.queryFocusImages(focusBoardId);
 	}
 	
 	public FocusImage getFocusImage(long id) {
