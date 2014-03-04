@@ -3,7 +3,11 @@ package edu.northwestern.cbits.intellicare.mantra.activities;
 import java.io.File;
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
@@ -23,8 +27,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusImageCursor;
 import edu.northwestern.cbits.intellicare.mantra.FocusBoard;
@@ -39,6 +45,8 @@ import edu.northwestern.cbits.intellicare.mantra.Util;
 public class SoloFocusBoardActivity extends ActionBarActivity {
 
 	private static final String CN = "FocusBoardActivity";
+	private final SoloFocusBoardActivity self = this;
+	
 	private FocusBoardManager mManager;
 	private long mFocusBoardId = -1;
 
@@ -78,49 +86,41 @@ public class SoloFocusBoardActivity extends ActionBarActivity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		// -- 
 
+		
+		attachGridView();
+
+	}
+	
+	/**
+	 * Creates, binds to data, and fills the main view for this activity.
+	 */
+	private void attachGridView() {
+		setContentView(R.layout.no_fragments_home_activity);
 		final GridView gv = (GridView) this.findViewById(R.id.gridview);
 
 		final FocusImageCursor cursor = FocusBoardManager.get(this).queryFocusImages(this.mFocusBoardId);
-
 		Util.logCursor(cursor);
 		
-		final SoloFocusBoardActivity me = this;
-		
-		CursorAdapter adapter = new CursorAdapter(this, cursor)
-		{
+		@SuppressWarnings("deprecation")
+		CursorAdapter adapter = new CursorAdapter(this, cursor) {
+
 			public void bindView(View view, Context context, Cursor c) 
 			{
 				if (c instanceof FocusImageCursor)
 				{
 					FocusImageCursor mFocusImageCursor = (FocusImageCursor) c;
-					
 					FocusImage focusImage = mFocusImageCursor.getFocusImage();
-	
 					ImageView imageView = (ImageView) view.findViewById(R.id.imageThumb);
-					
-					Drawable d = PictureUtils.getScaledDrawable(me, focusImage.getPath());
-	
-/*					double width = d.getIntrinsicWidth();
-					double height = d.getIntrinsicHeight();
-					
-					double cellWidth = gv.getColumnWidth();
-
-					double cellHeight = (height / width) * cellWidth;
-					
-					LinearLayout.LayoutParams params = (LayoutParams) imageView.getLayoutParams();
-					
-					params.height = (int) cellHeight;
-					
-					imageView.setLayoutParams(params);
-
-*/					
-
+					Drawable d = PictureUtils.getScaledDrawable(self, focusImage.getPath());
 					imageView.setImageDrawable(d);
 
 					// view.setBackgroundColor(0x80ff0000);
+
+					// set the caption
+					TextView tv = (TextView) view.findViewById(R.id.imageCaption);
+					String captionText = focusImage.getCaption();
+					tv.setText(captionText);
 				}
 			}
 
@@ -128,14 +128,14 @@ public class SoloFocusBoardActivity extends ActionBarActivity {
 			public View newView(Context context, Cursor cursor, ViewGroup parent) 
 			{
 				LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
 				return inflater.inflate(R.layout.cell_image_item, parent, false);
 			}
+			
 		};
-		
 		gv.setAdapter(adapter);
 		
-		// when the user taps an image, display it
+		
+		// OPEN action.
 		gv.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int positionInView, long rowId) {
@@ -149,17 +149,91 @@ public class SoloFocusBoardActivity extends ActionBarActivity {
 			}
 		});
 		
-		// DELETE action.
+		
+		// EDIT OR REMOVE action.
 		gv.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				// TODO Auto-generated method stub
-				Toast.makeText(me, "TODO: delete this mantra board", Toast.LENGTH_SHORT).show();
-				return false;
+			public boolean onItemLongClick(AdapterView<?> parent, final View view, int position, final long id) {
+				// options
+				final String[] optionItems = new String[] { "Edit", "Remove" };
+				
+				// create dialog for list of options
+				AlertDialog.Builder dlg = new Builder(self);
+				dlg.setTitle("Modify Mantra");
+				dlg.setItems(optionItems, new OnClickListener() {
+					
+					// on user clicking the Edit or Delete option...
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Toast.makeText(self, "You chose " + optionItems[which] + "; which = " + which, Toast.LENGTH_SHORT).show();
+						
+						// which option from the dialog menu did the user select?
+						switch(which) {
+						
+							case 0:
+								Log.d(CN+".onItemLongClick....onClick", "You chose " + optionItems[which]);
+								
+								// get the current caption
+								// v2: via database
+								final View v = self.getLayoutInflater().inflate(R.layout.edit_text_field, null);
+								FocusImage fi = FocusBoardManager.get(self).getFocusImage(id);
+								((EditText) v.findViewById(R.id.text_dialog)).setText(fi.getCaption());
+
+								AlertDialog.Builder editTextDlg = new AlertDialog.Builder(self);
+								editTextDlg.setMessage("Edit the text");
+								editTextDlg.setPositiveButton("OK", new OnClickListener() {
+									
+									@Override
+									public void onClick(DialogInterface dialog, int which) {
+										// update the selected mantra's text
+										Toast.makeText(self, "Mantra text should change.", Toast.LENGTH_SHORT).show();
+										String newCaption = ((EditText) v.findViewById(R.id.text_dialog)).getText().toString();
+										FocusImage fi = FocusBoardManager.get(self).getFocusImage(id);
+										fi.setCaption(newCaption);
+										long updateRet = FocusBoardManager.get(self).setFocusImage(fi);
+										Log.d(CN+".onItemLongClick....onClick", "updateRet = " + updateRet);
+										attachGridView();
+									}
+								});
+
+								editTextDlg.setView(v);
+								AlertDialog dlg = editTextDlg.create();
+								dlg.show();
+								break;
+
+							case 1:
+								Log.d(CN+".onItemLongClick....onClick", "You chose " + optionItems[which]);
+								
+								AlertDialog.Builder dlg1 = new AlertDialog.Builder(self);
+								dlg1.setTitle("Confirm deletion");
+								dlg1.setMessage("The image and caption will be removed from this mantra, but will not be permanently deleted from your device. Proceed?");
+								dlg1.setPositiveButton("Yes", new OnClickListener() {
+									
+									@Override
+									public void onClick(DialogInterface dialog, int which) {
+										int rowsDeleted = FocusBoardManager.get(self).deleteFocusImage(id);
+										attachGridView();
+										Log.d(CN+".onItemLongClick....onClick", "deleted row = " + id + "; deleted row count = " + rowsDeleted);
+									}
+								});
+								dlg1.setNegativeButton("No", new OnClickListener() {
+									
+									@Override
+									public void onClick(DialogInterface dialog, int which) {
+										Log.d(CN+".onItemLongClick....onClick", "not deleting " + id);
+									}
+								});
+								dlg1.show();
+								break;
+						}
+					}
+				});
+				dlg.create().show();
+				
+				return true;
 			}
 		});
-
 	}
 
 	@Override
@@ -251,7 +325,7 @@ public class SoloFocusBoardActivity extends ActionBarActivity {
 		if(!imageAlreadyAssociated) {
 			Log.d(CN+".applyNewImageToMantra","for board " + mFocusBoardId + ", associating image = " + imageFile.getAbsolutePath());
 			Toast.makeText(this, "Image applied!", Toast.LENGTH_SHORT).show();
-			mManager.createFocusImage(mFocusBoardId, imageFile.getAbsolutePath());
+			mManager.createFocusImage(mFocusBoardId, imageFile.getAbsolutePath(), "SOME IMAGE CAPTION");
 		}
 	}
 	

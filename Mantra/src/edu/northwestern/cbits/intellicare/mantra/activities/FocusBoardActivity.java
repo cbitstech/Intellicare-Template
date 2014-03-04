@@ -168,7 +168,7 @@ public class FocusBoardActivity extends ActionBarActivity {
 		if(!imageAlreadyAssociated) {
 			Log.d(CN+".applyNewImageToMantra","for board " + mFocusBoardId + ", associating image = " + imageFile.getAbsolutePath());
 			Toast.makeText(this, "Image applied!", Toast.LENGTH_SHORT).show();
-			mManager.createFocusImage(mFocusBoardId, imageFile.getAbsolutePath());
+			mManager.createFocusImage(mFocusBoardId, imageFile.getAbsolutePath(), "SOME IMAGE CAPTION");
 		}
 	}
 	

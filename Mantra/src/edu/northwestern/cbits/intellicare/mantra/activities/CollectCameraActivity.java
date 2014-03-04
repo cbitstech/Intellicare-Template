@@ -118,8 +118,7 @@ public class CollectCameraActivity extends Activity {
 		// using Environment.getExternalStorageState() before doing this.
 
 		File mediaStorageDir = new File(
-				Environment
-						.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+				Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
 				PICTURE_SUBDIRECTORY);
 		// This location works best if you want the created images to be shared
 		// between applications and persist after your app has been uninstalled.
@@ -150,8 +149,9 @@ public class CollectCameraActivity extends Activity {
 	}
 
 	private void createFocusImage(File pictureFile) {
-		FocusImage image = mFocusBoardManager.createFocusImage(mFocusBoardId,
-				pictureFile.getAbsolutePath());
+		FocusImage image = mFocusBoardManager.createFocusImage(
+				mFocusBoardId, pictureFile.getAbsolutePath(), "SOME IMAGE CAPTION"
+			);
 	}
 
 	private void startFocusBoardActivity() {

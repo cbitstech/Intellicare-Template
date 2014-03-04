@@ -189,8 +189,8 @@ public class NoFragmentsHomeActivity extends ActionBarActivity {
 								editTextDlg.setView(v);
 								AlertDialog dlg = editTextDlg.create();
 								dlg.show();
-								
 								break;
+
 							case 1:
 								Log.d(CN+".onItemLongClick....onClick", "You chose " + optionItems[which]);
 								
@@ -214,8 +214,6 @@ public class NoFragmentsHomeActivity extends ActionBarActivity {
 									}
 								});
 								dlg1.show();
-								
-								
 								break;
 						}
 					}

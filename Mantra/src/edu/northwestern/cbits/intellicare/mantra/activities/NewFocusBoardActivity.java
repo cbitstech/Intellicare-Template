@@ -64,7 +64,8 @@ public class NewFocusBoardActivity extends Activity implements OnItemSelectedLis
 
 	private void addCancelListener() {
 		Button cancelButton = (Button) findViewById(R.id.new_focus_board_cancel);
-		final Intent intent = new Intent(this, HomeActivity.class);
+//		final Intent intent = new Intent(this, HomeActivity.class);
+		final Intent intent = new Intent(this, NoFragmentsHomeActivity.class);
 		cancelButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
