@@ -5,6 +5,7 @@
 		<link rel="stylesheet" type="text/css" href="styles.css" />	    
 		<link rel="stylesheet" type="text/css" href="rickshaw.min.css" />	    
 		<script src="vendor/d3.v3.js" charset="utf-8"></script>   
+		<script src="vendor/jquery-1.11.0.min.js" charset="utf-8"></script>   
 		<script src="rickshaw.js"></script>	 
 		<style>
 			#legend 
@@ -17,6 +18,10 @@
 			#legend .line 
 			{ 
 				color: #333; 
+			}
+			
+			body
+			{
 			}
 
 			div#chart 
@@ -1300,42 +1305,98 @@ var values = [
 // 1393001353926
 // 1393948325 
 
-			var graph = new Rickshaw.Graph({
-				element: document.getElementById("chart"),
-				renderer: 'multi',
-				dotSize: 4,
-				series: [
-					{
-						name: values[0].key,
-						data: values[0].values,
-						color: values[0].color,
-						renderer: 'bar'
-					}, {
-						name: values[1].key,
-						data: values[1].values.map(function(d) { return { x: d.x / 1000, y: d.y / 2 } }),
-						color: values[1].color,
-						renderer: 'scatterplot'
-					}, {
-						name: values[2].key,
-						data: values[2].values.map(function(d) { return { x: d.x / 1000, y: d.y / 2 } }),
-						color: values[2].color,
-						renderer: 'scatterplot'
-					}, {
-						name: values[3].key,
-						data: values[3].values.map(function(d) { return { x: d.x / 1000, y: d.y / 2 } }),
-						color: values[3].color,
-						renderer: 'scatterplot'
-					}
-				]
+			var mapper = function(d) 
+			{
+				return { x: d.x / 1000, y: d.y};
+			}
+
+			Rickshaw.Graph.Renderer.CustomBars = Rickshaw.Class.create( Rickshaw.Graph.Renderer.Bar, {
+				name: 'custom-bars',
+				stack: false,
+				barWidth: function(series) {
+					return 4;
+				},
+				defaults: function($super) 
+				{
+					var defaults = Rickshaw.extend( $super(), {
+						gapSize: 0.05,
+						unstack: true
+					});
+
+					delete defaults.tension;
+					return defaults;
+				}
 			});
+			
+			$(document).ready(function()
+			{
+				var graph = new Rickshaw.Graph({
+					renderer: "multi",
+					element: document.getElementById("chart"),
+					height: $(window).height(),
+					dotSize: 7,
+					series: [
+						{
+							name: values[1].key,
+							color: values[1].color,
+							data: values[1].values.map(mapper),
+							renderer: 'custom-bars'
+						},
+						{
+							name: values[2].key,
+							color: values[2].color,
+							data: values[2].values.map(mapper),
+							renderer: 'custom-bars'
+						},   
+						{
+							name: values[3].key,
+							color: values[3].color,
+							data: values[3].values.map(mapper),
+							renderer: 'custom-bars'
+						},
+						{
+							name: values[0].key,
+							data: values[0].values.map(mapper),
+							color: values[0].color,
+							renderer: 'scatterplot'
+						}
+					]
+				});
+				
+/*				graph.discoverRange = function() 
+				{
+					var domain = this.renderer.domain();
 
-			graph.render();
+					this.x = (this.xScale || d3.scale.linear()).domain(domain.x).range([-10000, this.width + 10000]);
+					this.y = (this.yScale || d3.scale.linear()).domain(domain.y).range([this.height, 0]);
 
-			var xAxis = new Rickshaw.Graph.Axis.Time( { graph: graph } );
-			xAxis.render();
+					console.log(this.x);
 
-			var detail = new Rickshaw.Graph.HoverDetail({
-				graph: graph
+					this.y.magnitude = d3.scale.linear()
+						.domain([domain.y[0] - domain.y[0], domain.y[1] - domain.y[0]])
+						.range([0, this.height]);
+				};
+*/
+
+				
+				graph.render();
+
+				var time = new Rickshaw.Fixtures.Time();
+				var timeUnit = time.unit("day");
+				timeUnit.formatter = function(d) 
+				{
+					return time.formatDate(d);
+				};
+				
+				var xAxis = new Rickshaw.Graph.Axis.Time({ 
+					graph: graph,
+					timeUnit: timeUnit
+				});
+				xAxis.render();
+
+				var detail = new Rickshaw.Graph.HoverDetail({
+					graph: graph
+				});
 			});
 		</script>
 	</body>
