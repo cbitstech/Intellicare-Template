@@ -4,4 +4,7 @@
           android:icon="@drawable/content_new"
           android:title="@string/action_new_focus_board"
           mantra:showAsAction="always" />
+    <item android:id="@+id/action_settings"
+          android:title="@string/action_settings"
+          mantra:showAsAction="always" />
 </menu>

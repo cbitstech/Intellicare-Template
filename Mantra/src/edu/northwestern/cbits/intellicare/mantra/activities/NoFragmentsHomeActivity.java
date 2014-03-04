@@ -1,5 +1,6 @@
 package edu.northwestern.cbits.intellicare.mantra.activities;
 
+import edu.northwestern.cbits.intellicare.mantra.SettingsActivity;
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusBoardCursor;
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusImageCursor;
 import edu.northwestern.cbits.intellicare.mantra.FocusBoard;
@@ -240,6 +241,11 @@ public class NoFragmentsHomeActivity extends ActionBarActivity {
 	        case R.id.action_new_focus_board:
 	            openNewFocusBoardActivity();
 	            return true;
+	        
+	        case R.id.action_settings:
+	        	Intent settingsIntent = new Intent(this, SettingsActivity.class);
+				this.startActivity(settingsIntent);
+				
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
