@@ -1,18 +1,10 @@
 package edu.northwestern.cbits.intellicare;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
-
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;

@@ -12,7 +12,7 @@ public class DayView extends LinearLayout
 {
 	private static final int EMPTY_COLOR = 0xffc0c0c0;
 	private static final int DAY_COLOR = 0xffffffff;
-	protected static final int SELECTED_COLOR = 0xff33B5E5;
+	protected static final int SELECTED_COLOR = 0xffc5eaf8; // 0xff33B5E5;
 
 	public DayView(Context context, AttributeSet attrs) 
 	{
@@ -36,6 +36,14 @@ public class DayView extends LinearLayout
 
 		TextView dayLabel = (TextView) this.findViewById(R.id.label_day);
 		dayLabel.setText("");
+	}
+
+	public void setDay(String value, int dateDay, int color) 
+	{
+		this.setDay(value, dateDay);
+
+		TextView valueLabel = (TextView) this.findViewById(R.id.label_value);
+		valueLabel.setTextColor(color);
 	}
 
 	public void setDay(String value, int dateDay) 

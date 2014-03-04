@@ -5,6 +5,7 @@ import edu.northwestern.cbits.intellicare.mantra.FocusBoardManager;
 import edu.northwestern.cbits.intellicare.mantra.R;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,9 +17,9 @@ import android.widget.Spinner;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Toast;
 
-public class NewFocusBoardActivity extends Activity implements
-		OnItemSelectedListener {
+public class NewFocusBoardActivity extends Activity implements OnItemSelectedListener {
 
+	public final static String CN = "NewFocusBoardActivity";
 	public final static String FOCUS_BOARD_ID = "edu.northwestern.cbits.intellicare.mantra.FOCUS_BOARD_ID";
 	private FocusBoardManager mFocusBoardManager;
 
@@ -27,7 +28,7 @@ public class NewFocusBoardActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_focus_board_activity);
 
-		Log.d("NewFocusBoardActivity.onCreate", "entered");
+		Log.d(CN+".onCreate", "entered");
 		
 		mFocusBoardManager = FocusBoardManager.get(this);
 		populateSpinner();
@@ -63,7 +64,8 @@ public class NewFocusBoardActivity extends Activity implements
 
 	private void addCancelListener() {
 		Button cancelButton = (Button) findViewById(R.id.new_focus_board_cancel);
-		final Intent intent = new Intent(this, HomeActivity.class);
+//		final Intent intent = new Intent(this, HomeActivity.class);
+		final Intent intent = new Intent(this, NoFragmentsHomeActivity.class);
 		cancelButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -74,7 +76,8 @@ public class NewFocusBoardActivity extends Activity implements
 
 	private void addSubmitListener() {
 		Button submitButton = (Button) findViewById(R.id.new_focus_board_submit);
-		final Intent intent = new Intent(this, FocusBoardActivity.class);
+//		final Intent intent = new Intent(this, FocusBoardActivity.class);
+		final Intent intent = new Intent(this, SoloFocusBoardActivity.class);
 		submitButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -82,13 +85,22 @@ public class NewFocusBoardActivity extends Activity implements
 				String mantra = mMantraText.getText().toString().trim();
 
 				if (mantra.equals("")) {
-					Toast.makeText(NewFocusBoardActivity.this,
-							R.string.empty_mantra_toast, Toast.LENGTH_SHORT)
-							.show();
+					Toast.makeText(NewFocusBoardActivity.this, R.string.empty_mantra_toast, Toast.LENGTH_SHORT) .show();
 				} else {
-					FocusBoard focusBoard = mFocusBoardManager
-							.createFocusBoard(mantra);
+					FocusBoard focusBoard = mFocusBoardManager.createFocusBoard(mantra);
 					intent.putExtra(FOCUS_BOARD_ID, focusBoard.getId());
+
+					// handle image-URI-passing intent from HomeActivity
+					Intent intentFromHomeActivity = getIntent();
+					if(intentFromHomeActivity != null) {
+						Uri uriFromImageBrowser = intentFromHomeActivity.getData();
+						if(uriFromImageBrowser != null) {
+							// get the URL returned by the image browser
+							Log.d(CN+".addSubmitListener", "uriFromImageBrowser = " + uriFromImageBrowser.toString());
+							intent.setData(intentFromHomeActivity.getData());
+						}
+					}
+					
 					startActivity(intent);
 				}
 			}

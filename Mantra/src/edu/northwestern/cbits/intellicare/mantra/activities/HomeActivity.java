@@ -1,6 +1,7 @@
 package edu.northwestern.cbits.intellicare.mantra.activities;
 
 import edu.northwestern.cbits.intellicare.mantra.FocusBoardGridFragment;
+import edu.northwestern.cbits.intellicare.mantra.FocusBoardManager;
 import edu.northwestern.cbits.intellicare.mantra.R;
 import android.content.Intent;
 import android.database.Cursor;
@@ -26,41 +27,36 @@ public class HomeActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_fragment);
 
-		Log.d("HomeActivity.onCreate", "entered");
+		Log.d(CN+".onCreate", "entered");
+		findAndApplyFragment();
+	}
+	
+	protected void onResume(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_fragment);
 
+		Log.d(CN+".onResume", "entered");
+		findAndApplyFragment();
+	}
+
+	/**
+	 * 
+	 */
+	private void findAndApplyFragment() {
 		FragmentManager fm = getSupportFragmentManager();
 		Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
 		
 		if (fragment == null) {
+			Log.d(CN+".findAndApplyFragment", "fragment != null");
 			fragment = new FocusBoardGridFragment();
 			fm.beginTransaction()
 				.add(R.id.fragmentContainer, fragment)
 				.commit();
 		}
+		else
+			Log.d(CN+".findAndApplyFragment", "fragment != null");
 	}
 	
-//	private void handleSelectedImageIntent() {
-//		Intent intent = getIntent();
-//			
-//		if(intent != null) {
-//			// get a thumbnail of the image: http://stackoverflow.com/questions/14978566/how-to-get-selected-image-from-gallery-in-android
-//			Uri selectedImage = intent.getData();
-//			
-//			if(selectedImage != null && selectedImage.toString().length() > 0) {
-////				String[] filePathColumn = { MediaStore.Images.Media.DATA };
-////				Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
-////				cursor.moveToFirst();
-////				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-////				String picturePath = cursor.getString(columnIndex);
-////				Log.d(CN+"onActivityResult", "picturePath = " + picturePath);
-////				cursor.close();
-////				Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
-//		
-//				Log.d(CN+".handleSelectedImageIntent", "exiting");
-//			}
-//		}
-//	}
-
 	protected Fragment createFragment() {
 		return new FocusBoardGridFragment();
 	}
@@ -87,6 +83,15 @@ public class HomeActivity extends ActionBarActivity {
 	
 	private void openNewFocusBoardActivity() {
 		Intent intent = new Intent(this, NewFocusBoardActivity.class);
+		Intent intentFromSharedUrlActivity = getIntent();
+		if(intentFromSharedUrlActivity != null) {
+			Uri uriFromImageBrowser = intentFromSharedUrlActivity.getData();
+			if(uriFromImageBrowser != null) {
+				// get the URL returned by the image browser
+				Log.d(CN+".openNewFocusBoardActivity", "uriFromImageBrowser = " + uriFromImageBrowser.toString());
+				intent.setData(intentFromSharedUrlActivity.getData());
+			}
+		}
 		startActivity(intent);
 	}
 }

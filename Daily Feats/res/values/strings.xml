@@ -87,14 +87,15 @@
 	<string name="db_create_responses_table">CREATE TABLE IF NOT EXISTS responses (_id INTEGER PRIMARY KEY NOT NULL, depression_level INTEGER NOT NULL, recorded INTEGER NOT NULL, feat TEXT NOT NULL);</string>
 	<string name="db_create_feats_table">CREATE TABLE IF NOT EXISTS feats (_id INTEGER PRIMARY KEY NOT NULL, feat_name VARCHAR(255) NOT NULL, feat_level INTEGER NOT NULL);</string>
 	<string name="db_alter_feats_table_add_enabled">ALTER TABLE feats ADD COLUMN enabled INTEGER DEFAULT 1;</string>
-	
+	<string name="db_clear_system_feats">DELETE FROM feats WHERE feat_level >= 1;</string>
+		
 	<string name="feat_1_0">I got out of bed.</string>	
 	<string name="feat_1_1">I groomed myself.</string>	
-	<string name="feat_1_2">I am satisfied with how I ate.</string>	
+	<string name="feat_1_2">I made good food choices today.</string>	
 	<string name="feat_1_3">I went outside.</string>	
 	<string name="feat_2_0">I interacted with people.</string>	
 	<string name="feat_2_1">I took care of my living space.</string>	
-	<string name="feat_2_2">I felt rested.</string>	
+	<string name="feat_2_2">I went to bed on time last night.</string>	
 	<string name="feat_3_0">I accomplished something today.</string>	
 	<string name="feat_3_1">I enjoyed an activity today.</string>	
 	<string name="feat_3_2">I took care of myself.</string>	
@@ -102,7 +103,7 @@
 	<string name="feat_4_0">I overcame a bad habit.</string>
 	<string name="feat_4_1">I strengthened a good habit.</string>
 	<string name="feat_4_2">I faced something I wanted to avoid.</string>
-	<string name="feat_4_3">I avoided something I wish I had faced.</string>
+	<!-- <string name="feat_4_3">I avoided something I wish I had faced.</string> -->
 
 	<string name="no_feats_yet">No feats completed yet.</string>
 	<string name="recent_feat" formatted="false">%s\n%s</string>
@@ -141,10 +142,13 @@
 	<string name="title_rules">Daily Feats: Rules</string>
 	<string name="action_rules">Help / Rules</string>
 	<string name="title_level_streak" formatted="false">Level %d, Streak: %d</string>
-		
+
+	<string name="label_current_level">Current Level</string>
+			
 	<string name="note_title_demoted" formatted="false">Bummer! You\'ve gone more than 5 days without completing at least half of the feats for your current level. New level: %d.</string>
 	<string name="note_title_promoted" formatted="false">Congratulations! You\'ve completed at least half of the feats for your current level for 5 days. New level: %d.</string>
 	
 	<string name="prefs_reminder_time">Daily Reminder Time</string>
+	<string name="prefs_full_mode">Mode A</string>
 	<string name="title_settings">Daily Feats Settings</string>
 </resources>

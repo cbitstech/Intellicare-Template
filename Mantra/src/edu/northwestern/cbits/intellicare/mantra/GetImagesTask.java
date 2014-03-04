@@ -33,8 +33,7 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 	public static final String CN = "GetImagesTask";
 	
 	public static final int RESULT_LOAD_IMAGE = 1;
-	public static final String INTENT_KEY_FILE_PATHS_TO_SCAN = "fullFilePathsToScan";
-	public static final String INTENT_KEY_ORIGINATING_ACTIVITY = "originatingActivity";
+//	public static final String INTENT_KEY_ORIGINATING_ACTIVITY = "originatingActivity";
 
 	
 	@Override
@@ -47,7 +46,7 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 		// create the temp folder if it doesn't exist
 		// http://developer.android.com/reference/android/os/Environment.html#getExternalStoragePublicDirectory(java.lang.String)
 		// and: http://stackoverflow.com/questions/7592800/android-how-to-use-and-create-temporary-folder
-		final File mantraTempFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/MantraTmp");
+		final File mantraTempFolder = new File(Paths.MANTRA_IMAGES_TMP);
 		Log.d(CN+".GetImagesTask.doInBackground", "folder must exist: " + mantraTempFolder);
 		if(!mantraTempFolder.exists()) {
 			Log.d(CN+".GetImagesTask.doInBackground", "folder doesn't exist; creating: " + mantraTempFolder);
@@ -80,8 +79,7 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 		
 		// ATTEMPT 3: run the image-scanning in a service called via an intent.
 		Intent mediaScannerIntent = new Intent(activity, MediaScannerService.class);
-		mediaScannerIntent.putExtra(INTENT_KEY_FILE_PATHS_TO_SCAN, fullFilePathsToScan);
-//		mediaScannerIntent.putExtra(INTENT_KEY_ORIGINATING_ACTIVITY, activity);
+		mediaScannerIntent.putExtra(MediaScannerService.INTENT_KEY_FILE_PATHS_TO_SCAN, fullFilePathsToScan);
 		activity.startService(mediaScannerIntent);
 		
 		long endTime = System.currentTimeMillis();

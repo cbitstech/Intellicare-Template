@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.text.format.DateFormat;
 import android.widget.TimePicker;
+import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class SettingsActivity extends PreferenceActivity 
@@ -44,7 +45,13 @@ public class SettingsActivity extends PreferenceActivity
 	@SuppressWarnings("deprecation")
 	public boolean onPreferenceTreeClick (PreferenceScreen screen, Preference preference)
 	{
-		if (preference.getKey().equals("settings_reminder_time"))
+		String key = preference.getKey();
+		
+		if (key == null)
+		{
+			
+		}
+		else if (key.equals("settings_reminder_time"))
 		{
 			final SettingsActivity me = this;
 			
@@ -65,6 +72,7 @@ public class SettingsActivity extends PreferenceActivity
 					payload.put("minute", minute);
 					payload.put("source", "settings");
 					
+					payload.put("full_mode", prefs.getBoolean("settings_full_mode", true));
 					LogManager.getInstance(me).log("set_reminder_time", payload);
 				}
 			}, prefs.getInt(ScheduleManager.REMINDER_HOUR, 18), prefs.getInt(ScheduleManager.REMINDER_MINUTE, 0), DateFormat.is24HourFormat(this));
@@ -73,7 +81,11 @@ public class SettingsActivity extends PreferenceActivity
 
 			return true;
 		}
+		else if (key.equals("copyright_statement"))
+			ConsentedActivity.showCopyrightDialog(this);
 		
 		return super.onPreferenceTreeClick(screen, preference);
 	}
+
 }
+

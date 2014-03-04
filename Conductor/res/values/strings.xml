@@ -102,7 +102,7 @@
 							
 	<string name="msg_update_available" formatted="false">%s %s is now available. Tap here to download and install the update&#8230;</string>
 	
-	<string name="settings_group_assessments">Assessments</string>
+	<string name="settings_group_assessments">Assessments (TBR)</string>
 	<string name="prefs_phq4_form">Patient Health Questionnaire (PHQ-4)</string>
 	<string name="prefs_consent_form">Consent Form</string>
 	<string name="prefs_motivation_form">Motivation Questionnaire</string>

@@ -6,10 +6,10 @@ import java.util.Collections;
 
 import android.app.IntentService;
 import android.app.Service;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaScannerConnection;
-import android.media.MediaScannerConnection.MediaScannerConnectionClient;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -26,6 +26,9 @@ import android.util.Log;
 public class MediaScannerService extends IntentService {
 	public static final String CN = "MediaScannerService";
 	
+	public static final String INTENT_KEY_FILE_PATHS_TO_SCAN = "fullFilePathsToScan";
+	public static final String INTENT_KEY_TO_RECEIVER_STRINGARRAY = "toReceiverStrings";
+
 	public MediaScannerService() { super(null); }
 	
 	public MediaScannerService(String name) {
@@ -39,7 +42,7 @@ public class MediaScannerService extends IntentService {
 		Log.d(CN+".onHandleIntent", "entered; intent = " + intent);
 		
 		Bundle intentExtras = intent.getExtras();
-		String[] fullFilePathsToScan = intentExtras.getStringArray(GetImagesTask.INTENT_KEY_FILE_PATHS_TO_SCAN);
+		String[] fullFilePathsToScan = intentExtras.getStringArray(INTENT_KEY_FILE_PATHS_TO_SCAN);
 		Log.d(CN+".onHandleIntent", "fullFilePathsToScan = " + fullFilePathsToScan);
 
 		// begin all the image scans (will be async under-the-hood of MediaScannerConnectionClient)
@@ -61,11 +64,50 @@ public class MediaScannerService extends IntentService {
 		Log.d(CN+".onHandleIntent", "sending broadcast: " + Constants.BROADCAST_ACTION);
 		Intent localIntent = new Intent(Constants.BROADCAST_ACTION);
 		localIntent.putExtra("message", "Scanned all " + fullFilePathsToScan.length + " files.");
+		if(intentExtras.containsKey(INTENT_KEY_TO_RECEIVER_STRINGARRAY)) { localIntent.putStringArrayListExtra(INTENT_KEY_TO_RECEIVER_STRINGARRAY, intentExtras.getStringArrayList(INTENT_KEY_TO_RECEIVER_STRINGARRAY)); }
 		LocalBroadcastManager
 			.getInstance(this)
 			.sendBroadcast(localIntent);
 		
 		Log.d(CN+".onHandleIntent", "exiting...");
+	}
+	
+	
+	/**
+	 * Removes a set of paths from the media database.
+	 * Src: http://stackoverflow.com/questions/8379690/androids-media-scanner-how-do-i-remove-files
+	 * @param paths
+	 * @param context
+	 */
+	public static void removeAllForPaths(String[] paths, Context context)
+	{
+		StringBuilder sb = new StringBuilder(); for(int i = 0; i < paths.length; i++) { sb.append(paths[i]); }
+		Log.d(CN+".removeAllForPaths", "entered; paths = " + sb.toString());
+	    int whereDoesThisMethodFail = 0;
+		final String[] FIELDS = { MediaStore.MediaColumns._ID, MediaStore.MediaColumns.DATA, MediaStore.MediaColumns.TITLE };
+	    if(paths == null || paths.length == 0) return;
+	    String select = "";
+	    for(String path : paths)
+	    {
+	        if(!select.equals("")) select += " OR ";
+	        select += MediaStore.MediaColumns.DATA + "=?";
+	    }
+
+	    Uri uri;
+	    Cursor ca;
+
+	    uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+	    ca = context.getContentResolver().query(uri, FIELDS, select, paths, null);
+	    for(ca.moveToFirst(); !ca.isAfterLast(); ca.moveToNext()){
+	        int id = ca.getInt(ca.getColumnIndex(MediaStore.MediaColumns._ID));
+	        uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+	        Log.d(CN+".removeAllForPaths:for2", "deleting URI = " + uri);
+	        int deletedRowsCount = context.getContentResolver().delete(uri, null, null);
+	    }
+	    Log.d(CN+".removeAllForPaths", "exiting");
+	    ca.close();
+
+	    // More of the same just setting the URI to Video and Images
 	}
 	
 	
@@ -115,48 +157,5 @@ public class MediaScannerService extends IntentService {
 				}
 			}
 		}
-	}
-}
-
-
-
-/**
- * Forces a MediaScanner scan operation for an image.
- * Src: http://stackoverflow.com/questions/4646913/android-how-to-use-mediascannerconnection-scanfile
- * @author mohrlab
- *
- */
-class SingleMediaScanner implements MediaScannerConnectionClient {
-	public static final String CN = "SingleMediaScanner";
-	
-	private MediaScannerConnection mMs;
-	private File mFile;
-	public Boolean isDone = false;
-
-	/**
-	 * Ctor. isCompleted enables a wait-and-rejoin pattern in the caller, so galloping asynchronicity doesn't blow-up the caller on method-exit. 
-	 * @param context
-	 * @param f
-	 * @param isCompleted
-	 */
-	public SingleMediaScanner(Context context, File f, Boolean isCompleted) {
-		mFile = f;
-		isDone = isCompleted;
-		mMs = new MediaScannerConnection(context, this);
-		Log.d(CN+".ctor", "connecting for file: " + f.getAbsolutePath());
-		mMs.connect();
-	}
-
-	@Override
-	public void onMediaScannerConnected() {
-		mMs.scanFile(mFile.getAbsolutePath(), null);
-	}
-
-	@Override
-	public void onScanCompleted(String path, Uri uri) {
-		Log.d(CN+".onScanCompleted", "disconnecting for path: " + path + " and uri = " + uri);
-		mMs.disconnect();
-		isDone = true;
-		Log.d(CN+".onScanCompleted", "scanning file (end): " + path + "; isDone = " + isDone);
 	}
 }

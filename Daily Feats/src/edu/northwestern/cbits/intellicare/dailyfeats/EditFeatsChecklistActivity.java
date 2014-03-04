@@ -22,6 +22,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -159,6 +160,8 @@ public class EditFeatsChecklistActivity extends ConsentedActivity
 
 				item.setText(cursor.getString(cursor.getColumnIndex("feat_name")));
 				
+				LinearLayout categoryRow = (LinearLayout) view.findViewById(R.id.label_category_row);
+
 				TextView categoryLabel = (TextView) view.findViewById(R.id.label_category_name);
 				
 				if (featLevel != 0)
@@ -166,16 +169,16 @@ public class EditFeatsChecklistActivity extends ConsentedActivity
 				else
 					categoryLabel.setText(R.string.label_category_my_feats);
 
-				categoryLabel.setVisibility(View.GONE);
+				categoryRow.setVisibility(View.GONE);
 
 				if (cursor.moveToPrevious() == false)
-					categoryLabel.setVisibility(View.VISIBLE);
+					categoryRow.setVisibility(View.VISIBLE);
 				else
 				{
 					int nextLevel = cursor.getInt(cursor.getColumnIndex("feat_level"));
 					
 					if (featLevel != nextLevel)
-						categoryLabel.setVisibility(View.VISIBLE);
+						categoryRow.setVisibility(View.VISIBLE);
 					
 					cursor.moveToNext();
 				}

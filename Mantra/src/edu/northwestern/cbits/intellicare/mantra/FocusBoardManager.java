@@ -33,20 +33,17 @@ public class FocusBoardManager {
 		return focusBoard;
 	}
 	
-	public FocusImage createFocusImage(long focusBoardId, String imagePath) {
+	public FocusImage createFocusImage(long focusBoardId, String imagePath, String imageCaption) {
 		FocusImage focusImage = new FocusImage();
 		focusImage.setFocusBoardId(focusBoardId);
 		focusImage.setPath(imagePath);
+		focusImage.setCaption(imageCaption);
 		focusImage.setId(mDatabaseHelper.insertFocusImage(focusImage));
 		return focusImage;
 	}
 	
 	public FocusBoardCursor queryFocusBoards() {
 		return mDatabaseHelper.queryFocusBoards();
-	}
-	
-	public FocusImageCursor queryFocusImages(long focusBoardId) {
-		return mDatabaseHelper.queryFocusImages(focusBoardId);
 	}
 	
 	public FocusBoard getFocusBoard(long id) {
@@ -60,6 +57,33 @@ public class FocusBoardManager {
 		return focusBoard;
 	}
 	
+	public long setFocusBoard(FocusBoard focusBoard) {
+		FocusBoardCursor cursor = mDatabaseHelper.queryFocusBoard(focusBoard.getId());
+		cursor.moveToFirst();
+		long ret = -1;
+		if(!cursor.isAfterLast()) {
+			ret = mDatabaseHelper.updateFocusBoard(focusBoard);
+		}
+		cursor.close();
+		return ret;
+	}
+	
+	public int deleteFocusBoard(long id) {
+		FocusBoardCursor cursor = mDatabaseHelper.queryFocusBoard(id);
+		cursor.moveToFirst();
+		int ret = -1;
+		if(!cursor.isAfterLast()) {
+			ret = mDatabaseHelper.deleteFocusBoard(id);
+		}
+		cursor.close();
+		return ret;
+	}
+	
+	
+	public FocusImageCursor queryFocusImages(long focusBoardId) {
+		return mDatabaseHelper.queryFocusImages(focusBoardId);
+	}
+	
 	public FocusImage getFocusImage(long id) {
 		FocusImage focusImage = null;
 		FocusImageCursor cursor = mDatabaseHelper.queryFocusImage(id);
@@ -69,5 +93,27 @@ public class FocusBoardManager {
 		}
 		cursor.close();
 		return focusImage;
+	}
+	
+	public long setFocusImage(FocusImage focusImage) {
+		FocusImageCursor cursor = mDatabaseHelper.queryFocusImage(focusImage.getId());
+		cursor.moveToFirst();
+		long ret = -1;
+		if(!cursor.isAfterLast()) {
+			ret = mDatabaseHelper.updateFocusImage(focusImage);
+		}
+		cursor.close();
+		return ret;
+	}
+	
+	public int deleteFocusImage(long id) {
+		FocusImageCursor cursor = mDatabaseHelper.queryFocusImage(id);
+		cursor.moveToFirst();
+		int ret = -1;
+		if(!cursor.isAfterLast()) {
+			ret = mDatabaseHelper.deleteFocusImage(id);
+		}
+		cursor.close();
+		return ret;
 	}
 }
