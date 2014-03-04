@@ -22,19 +22,14 @@
 			div#chart 
 			{ 
 				width: 100%;
-				height: 100px;
-
+				height: 100%;
 				background: #80000;
 			}
 		</style>
 	</head>
-<body>
-	<div class="column">
+	<body>
 		<div id="chart"></div>
-		<div id="legend"></div>
-	</div>
-
-<script type="text/javascript">
+		<script type="text/javascript">
 var values = [
   {
     "color": "rgba(51, 181, 229, 1)",
@@ -1301,117 +1296,47 @@ var values = [
     ]
   }
 ];
-/*
-var graph = new Rickshaw.Graph( {
-	element: document.getElementById("chart"),
-	renderer: 'multi',
-	stroke: true,
-	series: [
-		{	
-			name: values[0].key,
-			data: values[0].values,
-			color: values[0].color,
-			renderer: 'scatterplot'
-		},{		
-			name: values[1].key,
-			data: values[1].values,
-			color: values[1].color,
-			renderer: 'bar'
-		}, {
-			name: values[2].key,
-			data: values[2].values,
-			color: values[2].color,
-			renderer: 'bar'
-		}, {
-			name: values[3].key,
-			data: values[3].values,
-			color: values[3].color,
-			renderer: 'bar'
-			}
-		]
-		});
 
-var slider = new Rickshaw.Graph.RangeSlider({
-	graph: graph,
-	element: $('#slider')
-});
+// 1393001353926
+// 1393948325 
 
-graph.render();
+			var graph = new Rickshaw.Graph({
+				element: document.getElementById("chart"),
+				renderer: 'multi',
+				dotSize: 4,
+				series: [
+					{
+						name: values[0].key,
+						data: values[0].values,
+						color: values[0].color,
+						renderer: 'bar'
+					}, {
+						name: values[1].key,
+						data: values[1].values.map(function(d) { return { x: d.x / 1000, y: d.y / 2 } }),
+						color: values[1].color,
+						renderer: 'scatterplot'
+					}, {
+						name: values[2].key,
+						data: values[2].values.map(function(d) { return { x: d.x / 1000, y: d.y / 2 } }),
+						color: values[2].color,
+						renderer: 'scatterplot'
+					}, {
+						name: values[3].key,
+						data: values[3].values.map(function(d) { return { x: d.x / 1000, y: d.y / 2 } }),
+						color: values[3].color,
+						renderer: 'scatterplot'
+					}
+				]
+			});
 
-var detail = new Rickshaw.Graph.HoverDetail({
-	graph: graph
-});
+			graph.render();
 
-var legend = new Rickshaw.Graph.Legend({
-	graph: graph,
-	element: document.querySelector('#legend')
-});
+			var xAxis = new Rickshaw.Graph.Axis.Time( { graph: graph } );
+			xAxis.render();
 
-var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight({
-    graph: graph,
-    legend: legend,
-    disabledColor: function() { return 'rgba(0, 0, 0, 0.2)' }
-});
-
-var highlighter = new Rickshaw.Graph.Behavior.Series.Toggle({
-    graph: graph,
-    legend: legend
-}); */
-
-			
-
-var graph = new Rickshaw.Graph({
-	element: document.getElementById("chart"),
-	renderer: 'multi',
-	dotSize: 4,
-	series: [
-		{
-			name: values[0].key,
-			data: values[0].values,
-			color: values[0].color,
-			renderer: 'bar'
-		}, {
-			name: values[1].key,
-			data: values[1].values.map(function(d) { return { x: d.x, y: d.y / 2 } }),
-			color: values[1].color,
-			renderer: 'scatterplot'
-		}, {
-			name: values[2].key,
-			data: values[2].values.map(function(d) { return { x: d.x, y: d.y / 2 } }),
-			color: values[2].color,
-			renderer: 'scatterplot'
-		}, {
-			name: values[3].key,
-			data: values[3].values.map(function(d) { return { x: d.x, y: d.y / 2 } }),
-			color: values[3].color,
-			renderer: 'scatterplot'
-		}
-	]
-} );
-
-var xAxis = new Rickshaw.Graph.Axis.Time( { graph: graph } );
-
-graph.render();
-xAxis.render();
-
-var detail = new Rickshaw.Graph.HoverDetail({
-	graph: graph
-});
-
-var legend = new Rickshaw.Graph.Legend({
-	graph: graph,
-	element: document.querySelector('#legend')
-});
-
-var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight({
-    graph: graph,
-    legend: legend,
-    disabledColor: function() { return 'rgba(0, 0, 0, 0.2)' }
-});
-
-var highlighter = new Rickshaw.Graph.Behavior.Series.Toggle({
-    graph: graph,
-    legend: legend
-});
-</script>
-</body>
+			var detail = new Rickshaw.Graph.HoverDetail({
+				graph: graph
+			});
+		</script>
+	</body>
+</html>
