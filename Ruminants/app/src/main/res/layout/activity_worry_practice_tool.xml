@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/timer_title"
+        android:id="@+id/textView2"
+        android:gravity="left"
+        android:layout_marginLeft="24dp"
+        android:layout_marginBottom="6dp"
+        android:textColor="#0099cc"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_marginTop="12dp" />
+
+    <TextView
+        android:id="@+id/timer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:paddingRight="10dip"
+        android:textSize="50dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"
+        android:minHeight="144dp"
+        android:background="#669900" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/reset_wpt"
+        android:id="@+id/reset_button"
+        android:layout_marginLeft="48dp"
+        android:layout_marginRight="48dp" />
+    </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/show_help"
+        android:id="@+id/button3"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_gravity="center_horizontal" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/bessie_placeholder" />
+
+</LinearLayout>

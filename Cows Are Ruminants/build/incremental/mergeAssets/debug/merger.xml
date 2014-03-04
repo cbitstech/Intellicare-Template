@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger>
+
+    <dataSet config="main" >
+        <source path="C:\Users\Gwen\Documents\GitHub\Intellicare-Template\Cows Are Ruminants\app\src\main\assets" >
+            <file
+                name="www/cordova.android.js"
+                path="C:\Users\Gwen\Documents\GitHub\Intellicare-Template\Cows Are Ruminants\app\src\main\assets\www\cordova.android.js" />
+            <file
+                name="www/cordova.js"
+                path="C:\Users\Gwen\Documents\GitHub\Intellicare-Template\Cows Are Ruminants\app\src\main\assets\www\cordova.js" />
+            <file
+                name="www/css/index.css"
+                path="C:\Users\Gwen\Documents\GitHub\Intellicare-Template\Cows Are Ruminants\app\src\main\assets\www\css\index.css" />
+            <file
+                name="www/default_consent_form.html"
+                path="C:\Users\Gwen\Documents\GitHub\Intellicare-Template\Cows Are Ruminants\app\src\main\assets\www\default_consent_form.html" />
+            <file
+                name="www/index.html"
+                path="C:\Users\Gwen\Documents\GitHub\Intellicare-Template\Cows Are Ruminants\app\src\main\assets\www\index.html" />
+            <file
+                name="www/js/index.js"
+                path="C:\Users\Gwen\Documents\GitHub\Intellicare-Template\Cows Are Ruminants\app\src\main\assets\www\js\index.js" />
+            <file
+                name="www/js/intellicare.js"
+                path="C:\Users\Gwen\Documents\GitHub\Intellicare-Template\Cows Are Ruminants\app\src\main\assets\www\js\intellicare.js" />
+        </source>
+    </dataSet>
+    <dataSet config="debug" >
+        <source path="C:\Users\Gwen\Documents\GitHub\Intellicare-Template\Cows Are Ruminants\app\src\debug\assets" />
+    </dataSet>
+
+</merger>
