@@ -175,7 +175,7 @@
 	<string name="action_feedback">Feedback</string>
 	<string name="subtitle_consented_date" formatted="false">Consented: %s</string>
 	
-	<string name="message_research_disclosure">Intellicare apps are part of a research study created by Northwestern University and funded by the US National Institute of Health for US residents 19 years old or older.\n\nIf you meet these criteria, click "OK" to continue.</string>
+	<string name="message_research_disclosure">Thank you for your interest in Intellicare.\n\nThis application is part of a research study funded by the National Institute of Health and is intended for legal residents of the United States who are 19 years or older.\n\nPlease click OK to certify that you meet these requirements.</string>
 	<string name="button_ok">OK</string>
 	<string name="button_cancel">Cancel</string>
 	

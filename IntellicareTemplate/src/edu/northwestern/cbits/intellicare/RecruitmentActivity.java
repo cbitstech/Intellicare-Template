@@ -8,10 +8,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -90,6 +95,11 @@ public class RecruitmentActivity extends ActionBarActivity
 
 			}
 		});
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		if (prefs.contains(ConsentActivity.NAME))
+			nameField.setText(prefs.getString(ConsentActivity.NAME, null));
 
 		EditText emailField = (EditText) this.findViewById(R.id.recruitment_email_field);
 
@@ -110,6 +120,22 @@ public class RecruitmentActivity extends ActionBarActivity
 
 			}
 		});
+		
+		String userId = null;
+		
+		AccountManager manager = (AccountManager) this.getSystemService(Context.ACCOUNT_SERVICE);
+		Account[] list = manager.getAccountsByType("com.google");
+
+		if (list.length == 0)
+			list = manager.getAccounts();
+
+		if (list.length > 0)
+			userId = list[0].name;
+
+		if (userId != null)
+		{
+			emailField.setText(userId);
+		}
 
 		EditText phoneField = (EditText) this.findViewById(R.id.recruitment_phone_field);
 
