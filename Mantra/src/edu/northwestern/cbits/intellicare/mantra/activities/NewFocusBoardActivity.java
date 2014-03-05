@@ -22,12 +22,14 @@ public class NewFocusBoardActivity extends Activity implements OnItemSelectedLis
 	public final static String CN = "NewFocusBoardActivity";
 	public final static String FOCUS_BOARD_ID = "edu.northwestern.cbits.intellicare.mantra.FOCUS_BOARD_ID";
 	private FocusBoardManager mFocusBoardManager;
-
+	private static NewFocusBoardActivity self = null;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_focus_board_activity);
-
+		self = this;
+		
 		Log.d(CN+".onCreate", "entered");
 		
 		mFocusBoardManager = FocusBoardManager.get(this);
@@ -102,6 +104,7 @@ public class NewFocusBoardActivity extends Activity implements OnItemSelectedLis
 					}
 					
 					startActivity(intent);
+					self.finish();
 				}
 			}
 		});

@@ -1,11 +1,14 @@
 package edu.northwestern.cbits.intellicare.mantra.activities;
 
+import edu.northwestern.cbits.intellicare.mantra.NotificationAlarm;
+import edu.northwestern.cbits.intellicare.mantra.SettingsActivity;
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusBoardCursor;
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusImageCursor;
 import edu.northwestern.cbits.intellicare.mantra.FocusBoard;
 import edu.northwestern.cbits.intellicare.mantra.FocusBoardGridFragment;
 import edu.northwestern.cbits.intellicare.mantra.FocusBoardManager;
 import edu.northwestern.cbits.intellicare.mantra.FocusImage;
+import edu.northwestern.cbits.intellicare.mantra.NotificationService;
 import edu.northwestern.cbits.intellicare.mantra.PictureUtils;
 import edu.northwestern.cbits.intellicare.mantra.R;
 import edu.northwestern.cbits.intellicare.mantra.Util;
@@ -74,6 +77,12 @@ public class NoFragmentsHomeActivity extends ActionBarActivity {
 			Toast.makeText(this, "Now tap on a mantra to attach your selected image to it!", Toast.LENGTH_LONG).show();
 		}
 
+		
+		// schedule the notifications, if not already done
+		// src: http://stackoverflow.com/questions/4459058/alarm-manager-example
+		Log.d(CN+".onResume","setting an alarm");
+		NotificationAlarm na = new NotificationAlarm();
+		na.SetAlarm(this);
 	}
 
 	/**
@@ -240,6 +249,11 @@ public class NoFragmentsHomeActivity extends ActionBarActivity {
 	        case R.id.action_new_focus_board:
 	            openNewFocusBoardActivity();
 	            return true;
+	        
+	        case R.id.action_settings:
+	        	Intent settingsIntent = new Intent(this, SettingsActivity.class);
+				this.startActivity(settingsIntent);
+				
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
