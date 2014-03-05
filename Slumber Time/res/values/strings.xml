@@ -247,4 +247,8 @@
         <item>2592000000</item>
         <item>0</item>
    	</string-array>
+   	
+	<string name="note_title">Record your sleep diary</string>
+	<string name="note_message">Don\'t forget to fill our your sleep diary today!</string>
+	<string name="prefs_reminder_time">Sleep diary reminder time</string>
 </resources>
