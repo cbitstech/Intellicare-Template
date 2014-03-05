@@ -1,7 +1,6 @@
 package edu.northwestern.cbits.intellicare.slumbertime;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -11,7 +10,6 @@ import java.util.HashMap;
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.CrashManagerListener;
 
-import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,25 +19,25 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -64,6 +62,7 @@ public class HomeActivity extends PortraitActivity
 	}
 
 	private static final String APP_ID = "62e48583d6763b21b5ccf7186bd44089";
+	protected static final String SELECTED_TIME_RANGE = "setting_selected_time_range";
 	
 	@SuppressLint("SetJavaScriptEnabled")
 	protected void onResume()
@@ -133,19 +132,21 @@ public class HomeActivity extends PortraitActivity
 		WebView graphView = (WebView) this.findViewById(R.id.graph_web_view);
 		graphView.getSettings().setJavaScriptEnabled(true);
 		
-		graphView.setWebChromeClient(new WebChromeClient() 
-		{
-			  public void onConsoleMessage(String message, int lineNumber, String sourceID) 
-			  {
-				  Log.d("ST", message + " -- From line " + lineNumber + " of " + sourceID);
-			  }
-		});
-		
 		graphView.loadDataWithBaseURL("file:///android_asset/", HomeActivity.generateGraph(this), "text/html", null, null);
-//		graphView.setClickable(false);
 		
 		HashMap<String, Object> payload = new HashMap<String, Object>();
 		LogManager.getInstance(this).log("launched_home_activity", payload);
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		int durationIndex = prefs.getInt(HomeActivity.SELECTED_TIME_RANGE, -1);
+		
+		if (durationIndex != -1)
+		{
+			String duration = this.getResources().getStringArray(R.array.graph_time_intervals)[durationIndex];
+			
+			this.getSupportActionBar().setSubtitle(this.getString(R.string.home_subtitle, duration));
+		}
 	}
 
 	protected void onPause()
@@ -178,9 +179,10 @@ public class HomeActivity extends PortraitActivity
 
 		    String str = null;
 
-		    while ((str=in.readLine()) != null) 
+		    while ((str = in.readLine()) != null) 
 		    {
 		    	buffer.append(str);
+		    	buffer.append(System.getProperty("line.separator"));
 		    }
 
 		    in.close();
@@ -193,23 +195,24 @@ public class HomeActivity extends PortraitActivity
 		String graphString = buffer.toString();
 		
 		JSONArray graphValues = HomeActivity.graphValues(context, false);
-		
-		try 
+
+		graphString = graphString.replaceAll("VALUES_JSON", graphValues.toString());
+
+/*		try 
 		{
-			graphString = graphString.replaceAll("VALUES_JSON", graphValues.toString(2));
+			graphString = graphString.replaceAll("VALUES_JSON", graphValues.toString());
 
 			FileUtils.writeStringToFile(new File(Environment.getExternalStorageDirectory(), "graph.html"), graphString);
+		} 
+		catch (IOException e) 
+		{
+			LogManager.getInstance(context).logException(e);
 		} 
 		catch (JSONException e) 
 		{
 			LogManager.getInstance(context).logException(e);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-		
-		
-//		Log.e("ST", "HTML: " + graphString);
+*/
 		
 		return graphString;
 	}
@@ -218,84 +221,43 @@ public class HomeActivity extends PortraitActivity
 	{
 		JSONArray values = new JSONArray();
 
-		/* function sinAndCos()
-		{
-			var sin = [], cos = [];
-
-			for (var i = 0; i < 100; i++) 
-			{
-				sin.push({x: i, y: Math.sin(i/10)});
-				cos.push({x: i, y: .5 * Math.cos(i/10)});
-			}
-
-			return [
-				{
-					values: sin,
-					key: 'Sine Wave',
-					color: '#ff7f0e'
-				},
-				{
-					values: cos,
-					key: 'Cosine Wave',
-					color: '#2ca02c'
-				}
-			];
-		} */
-
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		
-		String[] colors = { "#33B5E5", "#AA66CC", "#99CC00", "#FFBB33", "#FF4444" };
-		int colorIndex = 0;
+		long startTime = 0;
 		
-		String[] sensors = { SlumberContentProvider.TEMPERATURE, SlumberContentProvider.LIGHT_LEVEL, SlumberContentProvider.AUDIO_MAGNITUDE, SlumberContentProvider.AUDIO_FREQUENCY };
-
-		try 
+		int durationIndex = prefs.getInt(HomeActivity.SELECTED_TIME_RANGE, -1);
+		
+		if (durationIndex != -1)
 		{
-			JSONObject sleep = new JSONObject();
-			sleep.put("key", context.getString(R.string.label_sleep_efficiency));
-			sleep.put("color", colors[colorIndex++ % colors.length]);
-
-			JSONArray sleepValues = new JSONArray();
+			long duration = Long.parseLong(context.getResources().getStringArray(R.array.graph_time_values)[durationIndex]);
 			
-			Cursor c = context.getContentResolver().query(SlumberContentProvider.SLEEP_DIARIES_URI, null, null, null, SlumberContentProvider.DIARY_TIMESTAMP);
-			
-			while (c.moveToNext())
+			if (duration > 0)
 			{
-				JSONObject reading = new JSONObject();
-				
-				reading.put("x", c.getLong(c.getColumnIndex(SlumberContentProvider.DIARY_TIMESTAMP)));
-				reading.put("y", SlumberContentProvider.scoreSleep(c, 1));
-				
-				sleepValues.put(reading);
+				long now = System.currentTimeMillis();
+				startTime = now - duration;
 			}
-
-			Log.e("ST", "SLEEP: " + sleepValues.length());
-
-			c.close();
-			
-			sleep.put("values", sleepValues);
-
-			String key = "graph_" + sleep.getString("key");
-			
-			if (includeAll || prefs.getBoolean(key, true) != false)
-				values.put(sleep);
-		} 
-		catch (JSONException e) 
-		{
-			LogManager.getInstance(context).logException(e);
 		}
+
+		String[] sensors = { SlumberContentProvider.TEMPERATURE, SlumberContentProvider.LIGHT_LEVEL, SlumberContentProvider.AUDIO_MAGNITUDE, SlumberContentProvider.AUDIO_FREQUENCY };
+		String[] units = { " °C", " SI lux", " ?", " Hz" };
 		
-		for (String sensor : sensors)
+		for (int index = 0; index < sensors.length; index ++)
 		{
+			String sensor = sensors[index];
+			
 			try 
 			{
-				Cursor c = SlumberContentProvider.fetchNormalizedSensorReadings(context, sensor);
+				Cursor c = SlumberContentProvider.fetchNormalizedSensorReadings(context, sensor, startTime);
 				
-				if (c.getCount() > 0)
+				if (c.moveToNext())
 				{
 					JSONObject sensorObj = new JSONObject();
 					sensorObj.put("key", SlumberContentProvider.nameForKey(context, sensor));
-					sensorObj.put("color", colors[colorIndex++ % colors.length]);
+					sensorObj.put("color", HomeActivity.colorForKey(context, sensor));
+					sensorObj.put("renderer", "custom-bars");
+					sensorObj.put("base", c.getDouble(c.getColumnIndex(SlumberContentProvider.READING_MINIMUM)));
+					sensorObj.put("multiplier", c.getDouble(c.getColumnIndex(SlumberContentProvider.READING_MULTIPLIER)));
+					sensorObj.put("unit", units[index]);
 
 					JSONArray sensorValues = new JSONArray();
 
@@ -308,8 +270,6 @@ public class HomeActivity extends PortraitActivity
 
 						sensorValues.put(reading);
 					}
-
-					Log.e("ST", SlumberContentProvider.nameForKey(context, sensor) + ": " + sensorValues.length());
 
 					sensorObj.put("values", sensorValues);
 
@@ -327,7 +287,64 @@ public class HomeActivity extends PortraitActivity
 			}
 		}
 
+		try 
+		{
+			JSONObject sleep = new JSONObject();
+			sleep.put("key", context.getString(R.string.label_sleep_efficiency));
+			sleep.put("color", HomeActivity.colorForKey(context, sleep.getString("key")));
+			sleep.put("renderer", "scatterplot");
+			JSONArray sleepValues = new JSONArray();
+			
+			String where = SlumberContentProvider.DIARY_TIMESTAMP + " > ?";
+			String[] whereArgs = { "" + startTime }; 
+			
+			Cursor c = context.getContentResolver().query(SlumberContentProvider.SLEEP_DIARIES_URI, null, where, whereArgs, SlumberContentProvider.DIARY_TIMESTAMP);
+			
+			while (c.moveToNext())
+			{
+				JSONObject reading = new JSONObject();
+				
+				reading.put("x", c.getLong(c.getColumnIndex(SlumberContentProvider.DIARY_TIMESTAMP)));
+				reading.put("y", SlumberContentProvider.scoreSleep(c, 1));
+				
+				sleepValues.put(reading);
+			}
+
+			c.close();
+
+			sleep.put("base", 0);
+			sleep.put("multiplier", 100);
+			sleep.put("unit", "%");
+
+			sleep.put("values", sleepValues);
+
+			String key = "graph_" + sleep.getString("key");
+			
+			if (includeAll || prefs.getBoolean(key, true) != false)
+				values.put(sleep);
+		} 
+		catch (JSONException e) 
+		{
+			LogManager.getInstance(context).logException(e);
+		}
+
 		return values;
+	}
+
+	private static String colorForKey(Context context, String sensor) 
+	{
+		if (context.getString(R.string.label_sleep_efficiency).equals(sensor))
+			return "#33B5E5";
+		else if (SlumberContentProvider.TEMPERATURE.equals(sensor))
+			return "#AA66CC";
+		else if (SlumberContentProvider.LIGHT_LEVEL.equals(sensor))
+			return "#99CC00";
+		else if (SlumberContentProvider.AUDIO_MAGNITUDE.equals(sensor))
+			return "#FFBB33";
+		else if (SlumberContentProvider.AUDIO_FREQUENCY.equals(sensor))
+			return "#FF4444";
+
+		return "#808080";
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) 
@@ -337,9 +354,10 @@ public class HomeActivity extends PortraitActivity
 		return true;
 	}
 
-	public boolean onOptionsItemSelected(MenuItem item)
+	public boolean onOptionsItemSelected(final MenuItem item)
 	{
 		final HomeActivity me = this;
+		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
 		
 		if (item.getItemId() == R.id.action_settings)
 		{
@@ -351,7 +369,7 @@ public class HomeActivity extends PortraitActivity
 		else if (item.getItemId() == R.id.action_chart)
 		{
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder = builder.setTitle(R.string.action_chart);
+			builder = builder.setTitle(R.string.action_chart_fields);
 			
 			builder = builder.setPositiveButton(R.string.button_close, new OnClickListener()
 			{
@@ -363,13 +381,56 @@ public class HomeActivity extends PortraitActivity
 				}
 			});
 
+			builder = builder.setNegativeButton(R.string.button_select_time, new OnClickListener()
+			{
+				public void onClick(DialogInterface arg0, int arg1) 
+				{
+					AlertDialog.Builder builder = new AlertDialog.Builder(me);
+					builder = builder.setTitle(R.string.action_chart_time);
+					
+					int selected = prefs.getInt(HomeActivity.SELECTED_TIME_RANGE, -1);
+					
+					builder.setSingleChoiceItems(R.array.graph_time_intervals, selected, new DialogInterface.OnClickListener() 
+					{
+						public void onClick(DialogInterface dialog, int which) 
+						{
+							Editor e = prefs.edit();
+							e.putInt(HomeActivity.SELECTED_TIME_RANGE, which);
+							e.commit();
+
+							String duration = me.getResources().getStringArray(R.array.graph_time_intervals)[which];
+								
+							me.getSupportActionBar().setSubtitle(me.getString(R.string.home_subtitle, duration));
+						}
+					});
+					
+					builder = builder.setPositiveButton(R.string.button_close, new OnClickListener()
+					{
+						public void onClick(DialogInterface arg0, int arg1) 
+						{
+							WebView graphView = (WebView) me.findViewById(R.id.graph_web_view);
+							
+							graphView.loadDataWithBaseURL("file:///android_asset/", HomeActivity.generateGraph(me), "text/html", null, null);
+						}
+					});
+
+					builder = builder.setNegativeButton(R.string.action_chart_fields, new OnClickListener()
+					{
+						public void onClick(DialogInterface arg0, int arg1) 
+						{
+							me.onOptionsItemSelected(item);
+						}
+					});
+
+					builder.create().show();
+				}
+			});
+
 			JSONArray graphValues = HomeActivity.graphValues(this, true);
 			
 			final String[] values = new String[graphValues.length()];
 			final boolean[] checked = new boolean[graphValues.length()];
 			
-			final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
 			for (int i = 0; i < graphValues.length(); i++)
 			{
 				try 
@@ -387,19 +448,61 @@ public class HomeActivity extends PortraitActivity
 					LogManager.getInstance(this).logException(e);
 				}
 			}
-					
-			builder = builder.setMultiChoiceItems(values, checked, new OnMultiChoiceClickListener()
-			{
-				public void onClick(DialogInterface arg0, int which, boolean isChecked) 
-				{
-					String key = "graph_" + SlumberContentProvider.keyForName(me, values[which]);
-					
-					Editor e = prefs.edit();
-					e.putBoolean(key, isChecked);
-					e.commit();
-				}
-			});
 
+			ListView lv = new ListView(this);
+			
+			ArrayAdapter<String> valuesAdapter = new ArrayAdapter<String>(this, R.layout.row_data_field, values)
+			{
+				public View getView (int position, View convertView, ViewGroup parent)
+				{
+					if (convertView == null)
+					{
+						LayoutInflater inflater = (LayoutInflater) me.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+						convertView = inflater.inflate(R.layout.row_data_field, null);
+
+						final String key = "graph_" + SlumberContentProvider.keyForName(me, values[position]);
+						
+						CheckedTextView check = (CheckedTextView) convertView.findViewById(R.id.check_text);
+						
+						check.setChecked(checked[position]);
+						
+						check.setOnClickListener(new View.OnClickListener()
+						{
+							public void onClick(View v) 
+							{
+								CheckedTextView check = (CheckedTextView) v;
+
+								check.setChecked(check.isChecked() == false);
+								
+								Editor e = prefs.edit();
+								e.putBoolean(key, check.isChecked());
+								e.commit();
+							}
+						});
+					}
+
+					CheckedTextView check = (CheckedTextView) convertView.findViewById(R.id.check_text);
+					check.setText(values[position]);
+					
+					OvalShape oval = new OvalShape();
+					
+					ShapeDrawable circle = new ShapeDrawable(oval);
+					circle.setIntrinsicHeight(32);
+					circle.setIntrinsicWidth(32);
+					circle.setBounds(0, 0, 32, 32);
+					circle.getPaint().setColor(Color.parseColor(HomeActivity.colorForKey(me, SlumberContentProvider.keyForName(me, values[position]))));
+					
+					ImageView color = (ImageView) convertView.findViewById(R.id.check_color);
+					color.setImageDrawable(circle);
+				
+					return convertView;
+				}
+			};
+			
+			lv.setAdapter(valuesAdapter);
+	
+			builder = builder.setView(lv);
+			
 			builder.create().show();
 		}
 

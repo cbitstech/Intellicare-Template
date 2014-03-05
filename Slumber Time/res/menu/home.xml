@@ -3,7 +3,7 @@
         android:id="@+id/action_chart"
         android:icon="@drawable/ic_action_line_chart"
         robot:showAsAction="always"
-        android:title="@string/action_chart"/>
+        android:title="@string/action_chart_fields"/>
     <item
         android:id="@+id/action_settings"
         robot:showAsAction="never"

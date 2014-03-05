@@ -18,7 +18,9 @@
 	<string name="label_no">No</string>
 	
 	<string name="time_select_placeholder">(Tap to select the time.)</string>
-		
+
+	<string name="button_select_time">Select Time</string>
+			
 	<string name="tool_sleep_diaries">Sleep Diaries</string>
 	<string name="action_add_diary">New Diary</string>
 	<string name="desc_sleep_diaries">Record how well you slept last night.</string>
@@ -215,8 +217,9 @@
 		<item>City sounds\n(1 hour)</item>
    	</string-array>
    	
-	<string name="action_chart">Chart Options</string>
-	
+	<string name="action_chart_fields">Select Data</string>
+	<string name="action_chart_time">Select Time Range</string>
+		
 	<string name="label_light">Ambient Light Brightness</string>
 	<string name="label_audio_volume">Ambient Audio Level</string>
 	<string name="label_audio_pitch">Dominant Audio Pitch</string>
@@ -224,5 +227,24 @@
 	<string name="title_settings">Settings &amp; Credits</string>
 	<string name="search_title">Search Slumber Time</string>
 	<string name="search_hint">Search Slumber Time</string>
-		
+	
+	<string name="home_subtitle" formatted="false">Time Range: %s</string>
+	
+	<string-array name="graph_time_intervals">
+        <item>Last 24 hours</item>
+        <item>Last 3 days</item>
+        <item>Last week</item>
+        <item>Last 2 weeks</item>
+        <item>Last month</item>
+        <item>All</item>
+   	</string-array>
+
+	<string-array name="graph_time_values">
+        <item>86400000</item>
+        <item>259200000</item>
+        <item>604800000</item>
+        <item>1209600000</item>
+        <item>2592000000</item>
+        <item>0</item>
+   	</string-array>
 </resources>
