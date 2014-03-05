@@ -34,11 +34,10 @@ public class ScheduleManager
 		
 		AlarmManager alarm = (AlarmManager) this._context.getSystemService(Context.ALARM_SERVICE);
 		
-		Intent broadcast = new Intent(this._context, ScheduleHelper.class);
+//		Intent broadcast = new Intent(this._context, NotificationHelper.class);
 //		PendingIntent pi = PendingIntent.getBroadcast(this._context, 0, broadcast, PendingIntent.FLAG_UPDATE_CURRENT);
 		
-		// change to getService()...
-		
+	
 		
 //		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, 60000, pi);
 	}

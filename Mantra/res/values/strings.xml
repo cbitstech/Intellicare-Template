@@ -46,5 +46,7 @@
     <string name="existing_image_action">Existing Image</string>
     <string name="title_activity_shared_url">Mantra Shared URL Activity</string>
     <string name="title_activity_settings">SettingsActivity</string>
-
+    <string name="notification_start_day">This is your mantra, live it.</string>
+    <string name="notification_end_day">This is your mantra, live it.</string>
+    
 </resources>
