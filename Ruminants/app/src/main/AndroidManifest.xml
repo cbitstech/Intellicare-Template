@@ -1,67 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="edu.northwestern.cbits.intellicate.ruminants" >
+    package="edu.northwestern.cbits.intellicare.ruminants"
+    android:versionCode="10000"
+    android:versionName="1.0.0">
+    <uses-sdk android:minSdkVersion="19" android:targetSdkVersion="19" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <activity
-            android:name="edu.northwestern.cbits.intellicate.ruminants.MainActivity"
-            android:label="@string/app_name" >
+
+        <activity android:theme="@android:style/Theme.Holo.Light" android:name=".IntroActivity" android:label="@string/app_name">
+ <!--           <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="intellicare" android:host="ruminants" android:pathPrefix="/intro" />
+            </intent-filter> -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".RecallWizardActivity" android:label="@string/app_name" />
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".SurveyWizardActivity" android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="intellicare" android:host="ruminants" android:pathPrefix="/recall_wizard" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="intellicare" android:host="ruminants" android:pathPrefix="/survey_wizard" />
-            </intent-filter>
-        </activity>
 
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".ContentEntryActivity" android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="intellicare" android:host="ruminants" android:pathPrefix="/content" />
-            </intent-filter>
-        </activity>
 
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".SettingsActivity" android:label="@string/app_name" />
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".TipsActivity" android:label="@string/app_name" />
+    <!-- <activity
+        android:name="edu.northwestern.cbits.intellicate.ruminants.MainActivity"
+        android:label="@string/app_name" >
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
 
-        <provider android:name=".RuminantsContentProvider" android:authorities="edu.northwestern.cbits.intellicare.slumbertime" android:exported="false" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
 
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.ConsentActivity" android:label="@string/app_name" />
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.RecruitmentActivity" android:label="@string/app_name" />
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.MotivationActivity" android:label="@string/app_name" />
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.DemographicActivity" android:label="@string/app_name" />
 
-        <service android:enabled="true" android:name=".AlarmService" android:exported="false">
-            <intent-filter>
-                <action android:name="edu.northwestern.cbits.intellicare.slumbertime.START_TIMER" />
-                <action android:name="edu.northwestern.cbits.intellicare.slumbertime.TIMER_TICK" />
-                <action android:name="edu.northwestern.cbits.intellicare.slumbertime.START_ALARM" />
-                <action android:name="edu.northwestern.cbits.intellicare.slumbertime.STOP_ALARM" />
-                <action android:name="edu.northwestern.cbits.intellicare.slumbertime.BROADCAST_TRACK_INFO" />
-            </intent-filter>
-        </service>
+<activity android:theme="@style/Theme.AppCompat.Light" android:name=".SurveyWizardActivity" android:label="@string/app_name">
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="intellicare" android:host="ruminants" android:pathPrefix="/survey_wizard" />
+        </intent-filter>
+    </activity>
 
+    <activity android:theme="@style/Theme.AppCompat.Light" android:name=".SettingsActivity" android:label="@string/app_name" />
+    <activity android:theme="@style/Theme.AppCompat.Light" android:name=".TipsActivity" android:label="@string/app_name" />
+
+    <provider android:name=".RuminantsContentProvider" android:authorities="edu.northwestern.cbits.intellicare.ruminants" android:exported="false" />
+
+    <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.ConsentActivity" android:label="@string/app_name" />
+    <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.RecruitmentActivity" android:label="@string/app_name" />
+    <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.MotivationActivity" android:label="@string/app_name" />
+    <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.DemographicActivity" android:label="@string/app_name" />
+-->
     </application>
 
 </manifest>
