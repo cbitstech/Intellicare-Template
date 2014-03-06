@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
+import edu.northwestern.cbits.intellicare.StatusNotificationManager;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 import android.app.IntentService;
@@ -13,11 +14,13 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -31,6 +34,8 @@ public class AlarmService extends IntentService
 	public static final String BROADCAST_TRACK_INFO = "edu.northwestern.cbits.intellicare.slumbertime.BROADCAST_TRACK_INFO";
 
 	private static final int ALARM_NOTE_ID = 82772387;
+	protected static final String REMINDER_HOUR = "reminder_hour";
+	protected static final String REMINDER_MINUTE = "reminder_minute";
 	
 	private static Handler _handler = null;
 	private static Runnable _tickRunnable = null;
@@ -39,6 +44,8 @@ public class AlarmService extends IntentService
 	private static String _lastDateCheck = null;
 	private static String _currentTrackName = null;
 	private static Uri _currentUri = null;
+	
+	private static long _lastReminder = 0;
 
 	public AlarmService()
 	{
@@ -141,6 +148,29 @@ public class AlarmService extends IntentService
 						context.startService(tickIntent);
 					}
 				};
+			}
+			
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+			
+			int remindHour = prefs.getInt(AlarmService.REMINDER_HOUR, 9);
+			int remindMinute = prefs.getInt(AlarmService.REMINDER_MINUTE, 0);
+			
+			Calendar calendar = Calendar.getInstance();
+			long now = System.currentTimeMillis();
+			
+			if (now - AlarmService._lastReminder > 60000 && calendar.get(Calendar.HOUR_OF_DAY) == remindHour && calendar.get(Calendar.MINUTE) == remindMinute)
+			{
+				AlarmService._lastReminder = now;
+				
+				Log.e("ST", "DIARY REMINDER");
+
+				String title = this.getString(R.string.note_title);
+				String message = this.getString(R.string.note_message);
+				
+				Intent launchIntent = new Intent(this, AddSleepDiaryActivity.class);
+				PendingIntent pi = PendingIntent.getActivity(this, 0, launchIntent, PendingIntent.FLAG_ONE_SHOT);
+
+				StatusNotificationManager.getInstance(this).notifyBigText(97531, R.drawable.ic_note, title, message, pi, AddSleepDiaryActivity.URI);
 			}
 			
  			AlarmService._handler.removeCallbacks(AlarmService._tickRunnable);
