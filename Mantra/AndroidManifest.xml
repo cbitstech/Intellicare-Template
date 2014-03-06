@@ -13,32 +13,30 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"></uses-permission>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" >
+    </uses-permission>
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light" >
-        
         <service
             android:name="edu.northwestern.cbits.intellicare.mantra.MediaScannerService"
             android:exported="false" />
-        
-        <receiver 
-            android:process=":remote" 
-            android:name="NotificationHelper" />
-        <receiver 
-            android:name=".AutoStart">
+
+        <receiver
+            android:name="edu.northwestern.cbits.intellicare.mantra.NotificationHelper"
+            android:process=":remote" />
+        <receiver android:name="edu.northwestern.cbits.intellicare.mantra.AutoStart" >
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+                <action android:name="android.intent.action.BOOT_COMPLETED" >
+                </action>
             </intent-filter>
         </receiver>
-        <receiver
-            android:name="edu.northwestern.cbits.intellicare.mantra.NotificationAlarm"
-            >
+        <receiver android:name="edu.northwestern.cbits.intellicare.mantra.NotificationAlarm" >
         </receiver>
-        
+
         <!--
         <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.HomeActivity"
@@ -53,14 +51,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity>
         -->
 
         <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.NoFragmentsHomeActivity"
             android:label="@string/app_name" >
-            
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -107,7 +103,7 @@
             <meta-data
                 android:name="android.support.UI_OPTIONS"
                 android:value="splitActionBarWhenNarrow" />
-        </activity>
+        </activity>
         -->
         <!--
         <activity
@@ -121,7 +117,7 @@
             <meta-data
                 android:name="android.support.UI_OPTIONS"
                 android:value="splitActionBarWhenNarrow" />
-        </activity>
+        </activity>
         -->
         <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.SoloFocusBoardActivity"
@@ -133,7 +129,7 @@
             <!--
                  <meta-data
                 android:name="android.support.UI_OPTIONS"
-                android:value="false" />
+                android:value="false" />
             -->
         </activity>
         <activity
@@ -143,6 +139,10 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="android.preference.PreferenceActivity" />
+        </activity>
+        <activity
+            android:name="edu.northwestern.cbits.intellicare.mantra.activities.ReviewActivity"
+            android:label="@string/title_activity_review" >
         </activity>
     </application>
 

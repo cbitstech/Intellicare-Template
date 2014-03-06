@@ -8,7 +8,6 @@ import edu.northwestern.cbits.intellicare.mantra.FocusBoard;
 import edu.northwestern.cbits.intellicare.mantra.FocusBoardGridFragment;
 import edu.northwestern.cbits.intellicare.mantra.FocusBoardManager;
 import edu.northwestern.cbits.intellicare.mantra.FocusImage;
-import edu.northwestern.cbits.intellicare.mantra.NotificationService;
 import edu.northwestern.cbits.intellicare.mantra.PictureUtils;
 import edu.northwestern.cbits.intellicare.mantra.R;
 import edu.northwestern.cbits.intellicare.mantra.Util;
@@ -49,6 +48,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.GridView;
 
+/**
+ * Home/Main activity. The entry-point from a user's perspective.
+ * @author mohrlab
+ *
+ */
 public class NoFragmentsHomeActivity extends ActionBarActivity {
 	
 	private static final String CN = "NoFragmentsHomeActivity";

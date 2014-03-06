@@ -10,6 +10,7 @@ public class Paths {
 
 	public static final String MANTRA_IMAGES_TMP = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/MantraTmp";
 	public static final String MANTRA_IMAGES = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/Mantra";
+	public static final String CAMERA_IMAGES = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/Camera";
 	
 	// src: http://stackoverflow.com/questions/3401579/get-filename-and-path-from-uri-from-mediastore
 	public static String getRealPathFromURI(Context context, Uri contentUri) {
