@@ -36,7 +36,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.os.StatFs;
-import android.util.Log;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class SlumberContentProvider extends ContentProvider 
@@ -116,6 +115,9 @@ public class SlumberContentProvider extends ContentProvider
 	public static final String TEMPERATURE = "temperature";
 
 	private static final double MAX_LIGHT_LEVEL = 500; // SI lux
+
+	public static final String READING_MINIMUM = "reading_minimum";
+	public static final String READING_MULTIPLIER = "reading_multiplier";
 
     private UriMatcher _matcher = new UriMatcher(UriMatcher.NO_MATCH);
     private SQLiteDatabase _db = null;
@@ -399,13 +401,13 @@ public class SlumberContentProvider extends ContentProvider
 		return (multiplier * sleep) / total;
 	}
 
-	public static Cursor fetchNormalizedSensorReadings(Context context, String sensor) 
+	public static Cursor fetchNormalizedSensorReadings(Context context, String sensor, long startTime) 
 	{
-		String[] columnNames = { SlumberContentProvider.READING_RECORDED, SlumberContentProvider.READING_VALUE };
+		String[] columnNames = { SlumberContentProvider.READING_RECORDED, SlumberContentProvider.READING_VALUE, SlumberContentProvider.READING_MINIMUM, SlumberContentProvider.READING_MULTIPLIER };
 		MatrixCursor retCursor = new MatrixCursor(columnNames);
 		
-		String where = SlumberContentProvider.READING_NAME + " = ?";
-		String[] args = { sensor };
+		String where = SlumberContentProvider.READING_NAME + " = ? AND " + SlumberContentProvider.READING_RECORDED + " > ?";
+		String[] args = { sensor, "" + startTime };
 		
 		Cursor c = context.getContentResolver().query(SlumberContentProvider.SENSOR_READINGS_URI, null, where, args, SlumberContentProvider.READING_RECORDED);
 		
@@ -428,8 +430,6 @@ public class SlumberContentProvider extends ContentProvider
 
 		double spread = maxValue - minValue;
 
-		Log.e("ST", sensor + " MIN: " + minValue + " MAX: " + maxValue + " SPREAD: " + spread);
-
 		c.moveToPosition(-1);
 		
 		DescriptiveStatistics stats = new DescriptiveStatistics();
@@ -446,7 +446,7 @@ public class SlumberContentProvider extends ContentProvider
 			
 			double normalized = (reading - minValue) / spread;
 			
-			Object[] values = {c.getLong(c.getColumnIndex(SlumberContentProvider.READING_RECORDED)), normalized };
+			Object[] values = {c.getLong(c.getColumnIndex(SlumberContentProvider.READING_RECORDED)), normalized, minValue, spread };
 			
 			retCursor.addRow(values);
 			
@@ -470,7 +470,7 @@ public class SlumberContentProvider extends ContentProvider
 			{
 				long timestamp = retCursor.getLong(0);
 
-				Object[] values = { timestamp, value };
+				Object[] values = { timestamp, value, minValue, spread };
 
 				cleanedCursor.addRow(values);
 				

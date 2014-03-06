@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -49,7 +50,9 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 	protected int _sleepDelay = -1;
 	protected int _wakeCount = -1;
 	protected int _sleepQuality = -1;
-	
+
+	public static final Uri URI = Uri.parse("intellicare://slumber/sleep-diary");
+
 	protected void onSaveInstanceState (Bundle outState)
 	{
 		super.onSaveInstanceState(outState);

@@ -16,11 +16,14 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
+import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -42,6 +45,7 @@ public class ConsentActivity extends ActionBarActivity implements ConsentWebView
 	public static final String DEFAULT_FORM_URL = "file:///android_asset/www/default_consent_form.html";
 	protected static final String CONSENTED = "CONSENTED";
 	protected static final String REASON = "REASON";
+	protected static final String NAME = "consent_form_name";
 	private boolean _isReview = false;
 	
 	protected void onCreate(Bundle savedInstanceState) 
@@ -240,6 +244,12 @@ public class ConsentActivity extends ActionBarActivity implements ConsentWebView
 					payload.put("consent_name", nameField.getText().toString());
 					
 					LogManager.getInstance(me).log("consent_given", payload);
+					
+					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
+
+					Editor e = prefs.edit();
+					e.putString(ConsentActivity.NAME, payload.get("consent_name").toString());
+					e.commit();
 
 					me.finish();
 				} 

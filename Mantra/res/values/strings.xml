@@ -45,5 +45,9 @@
     <string name="hello_world">Hello world!</string>
     <string name="existing_image_action">Existing Image</string>
     <string name="title_activity_shared_url">Mantra Shared URL Activity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="notification_start_day">These are your mantras, live them.</string>
+    <string name="notification_end_day">Tap here to review your day, mantras, and the Mantra app!</string>
+    <string name="title_activity_review">ReviewActivity</string>
 
 </resources>

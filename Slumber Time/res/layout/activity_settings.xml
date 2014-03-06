@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<Preference android:title="@string/prefs_reminder_time" android:key="settings_reminder_time" />
     <PreferenceCategory android:title="@string/settings_group_credits">
   		<Preference android:title="@string/creator_kmf" android:summary="@string/role_clinical_lead" />
    		<Preference android:title="@string/creator_lkt" android:summary="@string/role_clinical_lead" />

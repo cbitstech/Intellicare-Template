@@ -12,19 +12,33 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" >
+    </uses-permission>
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light" >
-        
         <service
-            android:name=".MediaScannerService"
-            android:exported="false"
-            />
-        
-        <!-- <activity
+            android:name="edu.northwestern.cbits.intellicare.mantra.MediaScannerService"
+            android:exported="false" />
+
+        <receiver
+            android:name="edu.northwestern.cbits.intellicare.mantra.NotificationHelper"
+            android:process=":remote" />
+        <receiver android:name="edu.northwestern.cbits.intellicare.mantra.AutoStart" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" >
+                </action>
+            </intent-filter>
+        </receiver>
+        <receiver android:name="edu.northwestern.cbits.intellicare.mantra.NotificationAlarm" >
+        </receiver>
+
+        <!--
+        <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.HomeActivity"
             android:label="@string/app_name"
             android:uiOptions="splitActionBarWhenNarrow" >
@@ -37,15 +51,15 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> -->
+        </activity>
+        -->
+
         <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.NoFragmentsHomeActivity"
             android:label="@string/app_name" >
-            <meta-data
-                android:name="android.support.UI_OPTIONS"
-                android:value="splitActionBarWhenNarrow" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -77,7 +91,8 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-        <!-- <activity
+        <!--
+        <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.FocusBoardActivity"
             android:label="@string/focus_board_label"
             android:parentActivityName=".activities.HomeActivity"
@@ -88,8 +103,10 @@
             <meta-data
                 android:name="android.support.UI_OPTIONS"
                 android:value="splitActionBarWhenNarrow" />
-        </activity> -->
-        <!-- <activity
+        </activity>
+        -->
+        <!--
+        <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.SoloFocusBoardActivity"
             android:label="@string/focus_board_label"
             android:parentActivityName=".activities.HomeActivity"
@@ -100,7 +117,8 @@
             <meta-data
                 android:name="android.support.UI_OPTIONS"
                 android:value="splitActionBarWhenNarrow" />
-        </activity>-->
+        </activity>
+        -->
         <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.SoloFocusBoardActivity"
             android:label="@string/focus_board_label"
@@ -108,11 +126,24 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.NoFragmentsHomeActivity" />
-            <!-- <meta-data
+            <!--
+                 <meta-data
                 android:name="android.support.UI_OPTIONS"
-                android:value="false" /> -->
+                android:value="false" />
+            -->
         </activity>
-        
+        <activity
+            android:name="edu.northwestern.cbits.intellicare.mantra.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName="android.preference.PreferenceActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="android.preference.PreferenceActivity" />
+        </activity>
+        <activity
+            android:name="edu.northwestern.cbits.intellicare.mantra.activities.ReviewActivity"
+            android:label="@string/title_activity_review" >
+        </activity>
     </application>
 
 </manifest>

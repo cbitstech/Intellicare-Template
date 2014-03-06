@@ -1,0 +1,49 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".ReviewActivity" >
+
+    <Button
+        android:id="@+id/btnGoHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="22dp"
+        android:text="Tap here to review your mantras!" />
+
+    <TextView
+        android:id="@+id/lblRateApp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btnGoHome"
+        android:layout_alignParentTop="true"
+        android:text="Please rate the Mantra experience."
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <RatingBar
+        android:id="@+id/mantraAppRatingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/lblRateApp"
+        android:layout_below="@+id/lblRateApp"
+        android:numStars="5"
+        android:rating="3"
+        android:stepSize="1" />
+
+    <TextView
+        android:id="@+id/txtPhotosCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/mantraAppRatingBar"
+        android:layout_below="@+id/mantraAppRatingBar"
+        android:layout_marginTop="34dp"
+        android:text="You snapped %NPHOTOS% photos today."
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</RelativeLayout>
