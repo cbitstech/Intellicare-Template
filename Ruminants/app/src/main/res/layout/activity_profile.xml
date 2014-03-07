@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/bessie_placeholder"
+        android:minHeight="236dp" />
+
+    <TextView android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="@string/question_ruminating_lately"
+        android:textColor="#0099cc"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="6dp"
+        android:maxHeight="24dp" />
+    <RadioGroup android:id="@+id/radios_ruminating_lately"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp">
+        <RadioButton android:id="@+id/lately_yes"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/label_yes"
+            android:textSize="18sp" />
+        <RadioButton android:id="@+id/lately_no"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/label_no"
+            android:textSize="18sp" />
+    </RadioGroup>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/question_rumination_content"
+        android:textColor="#0099cc"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="8dp" />
+    <EditText android:id="@+id/field_rumination_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:inputType="text"
+        android:singleLine="false"
+        android:hint="@string/hint_comments"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/question_help_frequency"
+        android:textColor="#0099cc"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="8dp" />
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal" android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp">
+    <EditText
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/editText_help_number"
+        android:maxWidth="48dp"
+        android:maxHeight="60dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginBottom="8dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/times_per_day"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="8dp" />
+            </LinearLayout>
+</LinearLayout>
