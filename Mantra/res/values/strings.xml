@@ -49,5 +49,6 @@
     <string name="notification_start_day">These are your mantras, live them.</string>
     <string name="notification_end_day">Tap here to review your day, mantras, and the Mantra app!</string>
     <string name="title_activity_review">ReviewActivity</string>
+    <string name="title_activity_transparent">TransparentActivity</string>
 
 </resources>

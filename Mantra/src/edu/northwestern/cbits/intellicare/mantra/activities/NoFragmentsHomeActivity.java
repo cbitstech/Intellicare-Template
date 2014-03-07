@@ -1,5 +1,7 @@
 package edu.northwestern.cbits.intellicare.mantra.activities;
 
+import java.util.Date;
+
 import edu.northwestern.cbits.intellicare.mantra.NotificationAlarm;
 import edu.northwestern.cbits.intellicare.mantra.SettingsActivity;
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusBoardCursor;
@@ -87,6 +89,9 @@ public class NoFragmentsHomeActivity extends ActionBarActivity {
 		Log.d(CN+".onResume","setting an alarm");
 		NotificationAlarm na = new NotificationAlarm();
 		na.SetAlarm(this);
+		
+		// DBG/TEST remove...
+//		NotificationAlarm.dialogOnNewPhotos(this, NotificationAlarm.getCameraImagesSinceDate(this, new Date(System.currentTimeMillis() - 300 * 1000)));
 	}
 
 	/**
@@ -97,7 +102,7 @@ public class NoFragmentsHomeActivity extends ActionBarActivity {
 		final GridView gv = (GridView) this.findViewById(R.id.gridview);
 
 		FocusBoardCursor mantraItemCursor = FocusBoardManager.get(this).queryFocusBoards();
-		Util.logCursor(mantraItemCursor);
+//		Util.logCursor(mantraItemCursor);
 		
 		@SuppressWarnings("deprecation")
 		CursorAdapter adapter = new CursorAdapter(this, mantraItemCursor) {
@@ -108,7 +113,7 @@ public class NoFragmentsHomeActivity extends ActionBarActivity {
 				final int imageId = focusBoardCursor.getInt(focusBoardCursor.getColumnIndex("_id")); 
 				Log.d(CN+".CursorAdapter.bindView", "imageId = " + imageId);
 				final FocusImageCursor imageCursor = FocusBoardManager.get(homeActivity).queryFocusImages(imageId);
-				Util.logCursor(imageCursor);
+//				Util.logCursor(imageCursor);
 				// if the mantra item has an image, then display the first one
 				if(imageCursor.getCount() > 0) {
 					imageCursor.moveToFirst();

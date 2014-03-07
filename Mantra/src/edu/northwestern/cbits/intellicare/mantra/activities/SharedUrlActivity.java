@@ -144,15 +144,20 @@ public class SharedUrlActivity extends Activity {
 	 */
 	private void handleExternalIntents() {
 		Intent intent = getIntent();
+		Bundle extras = intent.getExtras();
 		String action = intent.getAction();
 		String type = intent.getType();
 		
-		Log.d("FocusBoardActivityList.onCreate", "action = " + action + "; type = " + type);
+		Log.d(CN+".handleExternalIntents", "action = " + action + "; type = " + type);
 		if(Intent.ACTION_SEND.equals(action) && type != null) {
 			if("text/plain".equals(type)) {
 				String urlFromBrowser = intent.getStringExtra(Intent.EXTRA_TEXT);
 				promptConfirmDownloadPageImages(urlFromBrowser);
 			}
+		}
+		else if(extras.getBoolean(MediaScannerService.INTENT_KEY_TO_RECEIVER_STRINGARRAY)) {
+			Log.d(CN+".handleExternalIntents", "intent from new-images notification alarm");
+			SoloFocusBoardActivity.startBrowsePhotosActivity(this);
 		}
 	}
 

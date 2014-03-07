@@ -8,14 +8,21 @@ import java.util.Date;
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusBoardCursor;
 import edu.northwestern.cbits.intellicare.mantra.activities.ReviewActivity;
 import edu.northwestern.cbits.intellicare.mantra.activities.SharedUrlActivity;
+import edu.northwestern.cbits.intellicare.mantra.activities.TransparentActivity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.DialogInterface.OnClickListener;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -34,9 +41,10 @@ import android.widget.Toast;
 public class NotificationAlarm extends BroadcastReceiver 
 {	
 	private static final String CN = "NotificationAlarm";
-	final int POLLING_RATE = 1000 * 60 * 1; 				// Millisec * Second * Minute
-	final int IMAGE_SCAN_RATE_MINUTES = 5;
+	private final static int ALARM_POLLING_RATE_MILLIS = 1000 * 60 * 1; 				// Millisec * Second * Minute
+	public final static int IMAGE_SCAN_RATE_MINUTES = 5;
 	private static boolean isAlreadyCalled = false;
+	private Context self = null;
 	
      @Override
      public void onReceive(Context context, Intent intent) 
@@ -47,7 +55,8 @@ public class NotificationAlarm extends BroadcastReceiver
          PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
          wl.acquire();
 
-         // Put here YOUR code.
+         // Put here YOUR code.ll,
+         self = context;
          Log.d(CN+".onReceive","alarm firing!");
 //         Toast.makeText(context, "Alarm !!!!!!!!!!", Toast.LENGTH_LONG).show(); // For example
 
@@ -58,7 +67,9 @@ public class NotificationAlarm extends BroadcastReceiver
          int endHour = sp.getInt(ScheduleManager.REMINDER_END_HOUR, ScheduleManager.DEFAULT_HOUR);
          int endMinute = sp.getInt(ScheduleManager.REMINDER_END_MINUTE, ScheduleManager.DEFAULT_MINUTE);
          Calendar currentCalendarInstance = Calendar.getInstance();
-         Date currentTime = currentCalendarInstance.getTime();
+         Calendar currentCalendarInstanceMinusPollingRate = (Calendar) currentCalendarInstance.clone();
+         currentCalendarInstanceMinusPollingRate.add(Calendar.MINUTE, -(IMAGE_SCAN_RATE_MINUTES));
+         Log.d(CN+".onReceive", "currentCalendarInstance.getTime() = " + currentCalendarInstance.getTime() + "; currentCalendarInstanceMinusPollingRate.getTime() = " + currentCalendarInstanceMinusPollingRate.getTime());
          int h = currentCalendarInstance.get(Calendar.HOUR_OF_DAY);
          int m = currentCalendarInstance.get(Calendar.MINUTE);
          Log.d(CN+".onReceive", "h = " + h + "; m = " + m + "; startHour = " + startHour + "; startMinute = " + startMinute + "; endHour = " + endHour + "; endMinute = " + endMinute);
@@ -106,27 +117,61 @@ public class NotificationAlarm extends BroadcastReceiver
         	 Log.d(CN+".onReceive", "at h = " + h + ", m = " + m + ", SCAN FOR IMAGES");
         	 Toast.makeText(context, "Mantra is scanning for new images...", Toast.LENGTH_SHORT).show();
         	 
-        	 // list files in the camera folder
-        	 File d = new File(Paths.CAMERA_IMAGES);
-        	 File[] cameraImages = d.listFiles();
-        	 ArrayList<File> filesAddedSinceLastCheck = new ArrayList<File>();
-        	 for(File f : cameraImages) {
-        		 if(f.lastModified() >= currentTime.getTime()) {
-        			 filesAddedSinceLastCheck.add(f);
-        		 }
-        	 }
-        	 
-        	 // if any files have modification date after 5 minutes ago, then prompt the user to select one and apply it to a mantra
-        	 if(filesAddedSinceLastCheck.size() > 0) {
-        		 Intent sua = new Intent(context, SharedUrlActivity.class);
-        		 sua.putExtra(MediaScannerService.INTENT_KEY_TO_RECEIVER_STRINGARRAY, true);
-        		 context.startActivity(sua);
-        	 }
+        	 ArrayList<String> newImageIds = getCameraImagesSinceDate(context, currentCalendarInstanceMinusPollingRate.getTime());
+        	 dialogOnNewPhotos(context, newImageIds);
          }
          
          wl.release();
          Log.d(CN+".onReceive","exiting");
      }
+
+	/**
+	 * @param context
+	 * @param newImageIds
+	 */
+	public void dialogOnNewPhotos(final Context context, ArrayList<String> newImageIds) {
+		// if any files have modification date after 5 minutes ago, then prompt the user to select one and apply it to a mantra
+		 if(newImageIds.size() > 0) {
+			 Intent intent = new Intent(context, TransparentActivity.class);
+			 intent.putExtra(TransparentActivity.INTENT_IMAGES_FOUND, true);
+			 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			 context.startActivity(intent);
+		 }
+	}
+
+	/**
+	 * Gets the set of camera image references from the local Android media store where the photo was taken within some period of most-recent time.
+	 * DB contents sample:
+	 * 		03-06 12:48:34.840: D/Util.logCursor(2862): col names = ; _id; bucket_id; bucket_display_name; datetaken
+	 * 		03-06 12:48:34.840: D/Util.logCursor(2862): row values = ; 323; -1739773001; Camera; 1393364927927
+	 * 		03-06 12:48:34.840: D/Util.logCursor(2862): row values = ; 333; -933110263; Mantra; 1248381767000
+      
+	 * @param context
+	 * @return 
+	 */
+	public static ArrayList<String> getCameraImagesSinceDate(Context context, Date sinceDate) {
+		Log.d(CN+".getCameraImagesSinceDate", "sinceDate = " + sinceDate);
+		Uri mediaImagesUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+		 String[] imagesMediaProjection = { 
+				   MediaStore.Images.Media._ID
+				 , MediaStore.Images.Media.BUCKET_ID
+				 , MediaStore.Images.Media.BUCKET_DISPLAY_NAME
+				 , MediaStore.Images.Media.DATE_TAKEN
+				 };
+		 Cursor imagesMediaCursor = context.getContentResolver().query(mediaImagesUri, imagesMediaProjection, null, null, null);
+		 ArrayList<String> ids = new ArrayList<String>();
+		 Util.logCursor(imagesMediaCursor);
+		 
+		 while(imagesMediaCursor.moveToNext()) {
+			 long imageDateTaken = imagesMediaCursor.getLong(imagesMediaCursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));
+			 
+			 if(sinceDate.getTime() <= imageDateTaken) {
+				 ids.add(imagesMediaCursor.getString(imagesMediaCursor.getColumnIndex(MediaStore.Images.Media._ID)));
+			 }
+		 }
+		 Log.d(CN+".getCameraImagesSinceDate", "returning ids = " + ids.toString());
+		 return ids;
+	}
 
     /**
      * Creates and displays a notification in the notification menu.
@@ -186,7 +231,7 @@ public class NotificationAlarm extends BroadcastReceiver
 	         AlarmManager am=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 	         Intent i = new Intent(context, NotificationAlarm.class);
 	         PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
-	         am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), POLLING_RATE, pi); 
+	         am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), ALARM_POLLING_RATE_MILLIS, pi); 
 	    	 Log.d(CN+".SetAlarm","exiting; am = " + am.toString());
 		 }
 	 }
