@@ -1,0 +1,57 @@
+/*For 384dp / mdpi phones*/
+/* need to finish obviously */
+
+h1 	{text-align: center;
+	font-size: 24px;
+	text-transform: lowercase;
+	}
+		
+h2 {text-align: center;
+	font-family: Roboto Light, sans-serif;
+	vertical-align: bottom;}
+	
+#container {position: absolute;
+            top: 0px;
+            left: 0px;
+            padding: 0px;
+			margin: 0px;
+			background-image: url("sun.svg");
+			background-repeat: no-repeat;
+			background-position:right top;
+            width: 384px;
+            height: 100%;
+			}
+	
+#bessie {
+		margin-left: 96px;
+		position: absolute;
+        bottom: 0px;
+		width: 192px;
+		height: 192px;
+		}
+
+#content {position: relative;
+		height: 308px;
+		}
+		
+#content p { display: block;
+		margin-left: auto;
+		margin-right: auto;
+		width: 308px;
+		font-family: Roboto Light, sans-serif;
+		}
+		
+#field { height: 192px;
+		padding: 5px;
+		background-color: #669900;
+    }
+		
+.pun { font-weight: bold;
+    text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+    padding: 2px;
+	width: 230px;
+    margin-top: 5px;
+	background-color: #fff;
+	}		
