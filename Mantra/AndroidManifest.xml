@@ -51,7 +51,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity>
         -->
 
         <activity
@@ -103,7 +103,7 @@
             <meta-data
                 android:name="android.support.UI_OPTIONS"
                 android:value="splitActionBarWhenNarrow" />
-        </activity>
+        </activity>
         -->
         <!--
         <activity
@@ -117,7 +117,7 @@
             <meta-data
                 android:name="android.support.UI_OPTIONS"
                 android:value="splitActionBarWhenNarrow" />
-        </activity>
+        </activity>
         -->
         <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.SoloFocusBoardActivity"
@@ -129,7 +129,7 @@
             <!--
                  <meta-data
                 android:name="android.support.UI_OPTIONS"
-                android:value="false" />
+                android:value="false" />
             -->
         </activity>
         <activity
@@ -143,6 +143,10 @@
         <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.ReviewActivity"
             android:label="@string/title_activity_review" >
+        </activity>
+        <activity
+            android:name="edu.northwestern.cbits.intellicare.mantra.activities.TransparentActivity"
+            android:label="@string/title_activity_transparent" >
         </activity>
     </application>
 

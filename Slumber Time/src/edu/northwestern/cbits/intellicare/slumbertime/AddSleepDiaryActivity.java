@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -37,7 +36,7 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 	private static final String SELECTED_SLEEP_DELAY = "selected_sleep_delay";
 	private static final String SELECTED_WAKE_COUNT = "selected_wake_count";
 	private static final String SELECTED_SLEEP_QUALITY = "selected_sleep_quality";
-	private static final String SELECTED_COMMENTS = "selected_comments";
+	private static final String SELECTED_RESTED = "selected_rested";
 
 	protected int _bedHour = -1;
 	protected int _bedMinute = -1;
@@ -50,6 +49,7 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 	protected int _sleepDelay = -1;
 	protected int _wakeCount = -1;
 	protected int _sleepQuality = -1;
+	protected int _sleepRested = -1;
 
 	public static final Uri URI = Uri.parse("intellicare://slumber/sleep-diary");
 
@@ -105,10 +105,9 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 
 		if (this._sleepQuality != -1)
 			outState.putInt(AddSleepDiaryActivity.SELECTED_SLEEP_QUALITY, this._sleepQuality);
-		
-		EditText comments = (EditText) this.findViewById(R.id.field_comments);
 
-		outState.putString(AddSleepDiaryActivity.SELECTED_COMMENTS, comments.getEditableText().toString());
+		if (this._sleepRested  != -1)
+			outState.putInt(AddSleepDiaryActivity.SELECTED_RESTED, this._sleepRested);
 	}
 
 	protected void onCreate(Bundle savedInstanceState) 
@@ -471,6 +470,56 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 			}
 		});
 
+		
+		
+		
+		
+		
+		final TextView restedLabel = (TextView) this.findViewById(R.id.label_rested);
+		
+		final SeekBar rested = (SeekBar) this.findViewById(R.id.field_rested);
+		rested.setMax(4);
+
+		if (savedInstanceState.containsKey(AddSleepDiaryActivity.SELECTED_RESTED))
+			rested.setProgress(savedInstanceState.getInt(AddSleepDiaryActivity.SELECTED_RESTED));
+
+		rested.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
+		{
+			public void onProgressChanged(SeekBar bar, int position, boolean fromUser) 
+			{
+				me._sleepRested  = position;
+
+				switch (position)
+				{
+					case 0:
+						restedLabel.setText(R.string.label_not_rested);
+						break;
+					case 1:
+						restedLabel.setText(R.string.label_slightly_rested);
+						break;
+					case 2:
+						restedLabel.setText(R.string.label_somewhat_rested);
+						break;
+					case 3:
+						restedLabel.setText(R.string.label_well_rested);
+						break;
+					case 4:
+						restedLabel.setText(R.string.label_very_rested);
+						break;
+				}
+			}
+
+			public void onStartTrackingTouch(SeekBar arg0) 
+			{
+
+			}
+
+			public void onStopTrackingTouch(SeekBar arg0) 
+			{
+
+			}
+		});
+
 		RadioGroup nap = (RadioGroup) this.findViewById(R.id.radios_nap);
 
 		if (savedInstanceState.containsKey(AddSleepDiaryActivity.SELECTED_RADIO))
@@ -480,11 +529,6 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 
 		if (savedInstanceState.containsKey(AddSleepDiaryActivity.SELECTED_EARLIER))
 			earlier.check(savedInstanceState.getInt(AddSleepDiaryActivity.SELECTED_EARLIER));
-
-		EditText comments = (EditText) this.findViewById(R.id.field_comments);
-		
-		if (savedInstanceState.containsKey(AddSleepDiaryActivity.SELECTED_COMMENTS))
-			comments.setText(savedInstanceState.getString(AddSleepDiaryActivity.SELECTED_COMMENTS));
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) 
@@ -604,11 +648,9 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 
 			payload.put("sleep_quality", this._sleepQuality);
 
-			EditText comments = (EditText) this.findViewById(R.id.field_comments);
+			values.put(SlumberContentProvider.DIARY_RESTED, this._sleepRested);
 
-			values.put(SlumberContentProvider.DIARY_COMMENTS, comments.getEditableText().toString());
-
-			payload.put("sleep_comments", comments);
+			payload.put("sleep_rested", this._sleepRested);
 
 			values.put(SlumberContentProvider.DIARY_TIMESTAMP, System.currentTimeMillis());
 			

@@ -43,7 +43,7 @@ public class SleepContentActivity extends ConsentedActivity
 		
 		ListView entriesList = (ListView) this.findViewById(R.id.list_entries);
 		
-		Cursor c = this.getContentResolver().query(EntriesContentProvider.CONTENT_URI, null, null, null, EntriesContentProvider.TITLE);
+		Cursor c = this.getContentResolver().query(EntriesContentProvider.CONTENT_URI, null, null, null, EntriesContentProvider.WEIGHT);
 
 		// this.startManagingCursor(c);
 		int[] emptyInts = {};
@@ -53,8 +53,25 @@ public class SleepContentActivity extends ConsentedActivity
 		{
 			public void bindView (View view, Context context, Cursor cursor)
 			{
+				TextView entrySection = (TextView) view.findViewById(R.id.entry_section);
+				entrySection.setText(cursor.getString(cursor.getColumnIndex(EntriesContentProvider.SECTION)));
+
 				TextView entryName = (TextView) view.findViewById(R.id.entry_name);
 				entryName.setText(cursor.getString(cursor.getColumnIndex(EntriesContentProvider.TITLE)));
+				
+				entrySection.setVisibility(View.GONE);
+				
+				if (cursor.moveToPrevious() == false)
+					entrySection.setVisibility(View.VISIBLE);
+				else
+				{
+					String category = cursor.getString(cursor.getColumnIndex(EntriesContentProvider.SECTION));
+					
+					if (category.equals(entrySection.getText().toString()) == false)
+						entrySection.setVisibility(View.VISIBLE);
+					
+					cursor.moveToNext();
+				}
 			}
 		};
 		

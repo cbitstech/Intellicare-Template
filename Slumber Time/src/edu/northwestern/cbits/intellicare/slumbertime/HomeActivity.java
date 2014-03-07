@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import net.hockeyapp.android.CrashManager;
@@ -297,14 +298,56 @@ public class HomeActivity extends PortraitActivity
 			
 			String where = SlumberContentProvider.DIARY_TIMESTAMP + " > ?";
 			String[] whereArgs = { "" + startTime }; 
-			
+
+			Calendar calendar = Calendar.getInstance();
+
 			Cursor c = context.getContentResolver().query(SlumberContentProvider.SLEEP_DIARIES_URI, null, where, whereArgs, SlumberContentProvider.DIARY_TIMESTAMP);
 			
 			while (c.moveToNext())
 			{
 				JSONObject reading = new JSONObject();
 				
-				reading.put("x", c.getLong(c.getColumnIndex(SlumberContentProvider.DIARY_TIMESTAMP)));
+				long timestamp = c.getLong(c.getColumnIndex(SlumberContentProvider.DIARY_TIMESTAMP));
+				
+				calendar.setTimeInMillis(timestamp);
+				
+				calendar.set(Calendar.HOUR_OF_DAY, c.getInt(c.getColumnIndex(SlumberContentProvider.DIARY_BED_HOUR)));
+				calendar.set(Calendar.MINUTE, c.getInt(c.getColumnIndex(SlumberContentProvider.DIARY_BED_MINUTE)));
+
+				long bedtime = calendar.getTimeInMillis();
+				
+				calendar.set(Calendar.HOUR_OF_DAY, c.getInt(c.getColumnIndex(SlumberContentProvider.DIARY_SLEEP_HOUR)));
+				calendar.set(Calendar.MINUTE, c.getInt(c.getColumnIndex(SlumberContentProvider.DIARY_SLEEP_MINUTE)));
+
+				long sleeptime = calendar.getTimeInMillis();
+
+				calendar.set(Calendar.HOUR_OF_DAY, c.getInt(c.getColumnIndex(SlumberContentProvider.DIARY_WAKE_HOUR)));
+				calendar.set(Calendar.MINUTE, c.getInt(c.getColumnIndex(SlumberContentProvider.DIARY_WAKE_MINUTE)));
+
+				long waketime = calendar.getTimeInMillis();
+
+				calendar.set(Calendar.HOUR_OF_DAY, c.getInt(c.getColumnIndex(SlumberContentProvider.DIARY_UP_HOUR)));
+				calendar.set(Calendar.MINUTE, c.getInt(c.getColumnIndex(SlumberContentProvider.DIARY_UP_MINUTE)));
+				
+				long uptime = calendar.getTimeInMillis();
+				
+				while (uptime > timestamp)
+					uptime -= SleepDiaryActivity.DAY_LENGTH;
+
+				while (waketime > uptime)
+					waketime -= SleepDiaryActivity.DAY_LENGTH;
+
+				while (sleeptime > waketime)
+					sleeptime -= SleepDiaryActivity.DAY_LENGTH;
+
+				while (bedtime > sleeptime)
+					bedtime -= SleepDiaryActivity.DAY_LENGTH;
+				
+				reading.put("x", sleeptime + ((waketime - sleeptime) / 2));
+				reading.put("bed", bedtime);
+				reading.put("sleep", sleeptime);
+				reading.put("wake", waketime);
+				reading.put("up", uptime);
 				reading.put("y", SlumberContentProvider.scoreSleep(c, 1));
 				
 				sleepValues.put(reading);

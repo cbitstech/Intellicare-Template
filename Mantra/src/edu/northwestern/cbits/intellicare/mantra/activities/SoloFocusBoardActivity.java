@@ -3,6 +3,7 @@ package edu.northwestern.cbits.intellicare.mantra.activities;
 import java.io.File;
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
@@ -252,7 +253,7 @@ public class SoloFocusBoardActivity extends ActionBarActivity {
 			startCollectCameraActivity();
 			return true;
 		case R.id.existing_image_action:
-			startBrowsePhotosActivity();
+			startBrowsePhotosActivity(this);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -417,10 +418,10 @@ public class SoloFocusBoardActivity extends ActionBarActivity {
 
 	
 	/* display image from gallery: BEGIN (src: http://viralpatel.net/blogs/pick-image-from-galary-android-app/) */
-	private void startBrowsePhotosActivity() {
+	public static void startBrowsePhotosActivity(Activity activity) {
 		Log.d(CN+".startBrowsePhotosActivity", "entered");
 		Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-		startActivityForResult(i, RESULT_LOAD_IMAGE);
+		activity.startActivityForResult(i, RESULT_LOAD_IMAGE);
 	}
 
 	

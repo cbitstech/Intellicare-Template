@@ -1,7 +1,24 @@
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/entry_name"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:singleLine="true"
-    android:textSize="18sp"
-    android:padding="8dp" />
+    android:layout_height="wrap_content">
+    <TextView android:id="@+id/entry_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="#ffffff"
+        android:textStyle="bold" 
+        android:background="#323335"
+        android:padding="8dp"/>
+	<TextView android:id="@+id/entry_name"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:singleLine="true"
+	    android:textSize="18sp"
+	    android:padding="8dp" />
+</LinearLayout>
+    
+
+
+

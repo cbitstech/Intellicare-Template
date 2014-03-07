@@ -18,7 +18,7 @@
         <item>Mental repetition of words and phrases to promote relaxation.</item>
         <item>Use your imagination to visualize a relaxing scene.</item>
         <item>Focus your attention more fully on the present moment.</item>
-        <item>Audio to help you relax and sleep better.</item>
+        <item>Can\'t sleep? Try listening to these relaxation exercises when you\'re lying in bed.</item>
    	</string-array>
 
     <!-- Help Resources -->
@@ -120,9 +120,9 @@
    	</string-array>
 
 	<string-array name="sleep_descs">
-        <item>(TODO: Audio description for "Rest" [MIT].)</item>
-        <item>(TODO: Audio description for "Bedtime Relaxation" [MIT].)</item>
-        <item>(TODO: Audio description for "Body Scan for Sleep" [UCLA].)</item>
+        <item>A breathing exercise that can help you unwind and let go of your day.</item>
+        <item>An exercise to help you think differently about sleep and guide your body into a relaxed state.</item>
+        <item>An exercise that prepares you for sleep by relaxing each part of your body and your mind.</item>
    	</string-array>
 		
 	<string-array name="autogenic_descs">
