@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,6 +37,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.os.StatFs;
+import android.text.format.DateFormat;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class SlumberContentProvider extends ContentProvider 
@@ -66,7 +68,7 @@ public class SlumberContentProvider extends ContentProvider
     public static final Uri SLEEP_DIARIES_URI = Uri.parse("content://" + AUTHORITY + "/" + SLEEP_DIARIES_TABLE);
     public static final Uri SENSOR_READINGS_URI = Uri.parse("content://" + AUTHORITY + "/" + SENSOR_READINGS_TABLE);
 
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
 
     public static final String ALARM_NAME = "name";
     public static final String ALARM_HOUR = "hour";
@@ -104,6 +106,7 @@ public class SlumberContentProvider extends ContentProvider
 	public static final String DIARY_SLEEP_QUALITY = "sleep_quality";
 	public static final String DIARY_TIMESTAMP = "timestamp";
 	public static final String DIARY_COMMENTS = "comments";
+	public static final String DIARY_RESTED = "rested";
 
 	public static final String READING_NAME = "name";
 	public static final String READING_VALUE = "value";
@@ -184,6 +187,8 @@ public class SlumberContentProvider extends ContentProvider
 	                	db.execSQL(context.getString(R.string.db_update_sleep_diary_add_comments));
 	                case 6:
 	                	db.execSQL(context.getString(R.string.db_create_sensor_readings_table));
+	                case 7:
+	                	db.execSQL(context.getString(R.string.db_update_sleep_diary_add_rested));
 	                default:
                         break;
             	}
@@ -729,6 +734,169 @@ public class SlumberContentProvider extends ContentProvider
 			return SlumberContentProvider.AUDIO_FREQUENCY;
 
 		return name;
+	}
+
+	public static String summarize(Context context, Cursor cursor) 
+	{
+		StringBuffer sb = new StringBuffer();
+
+		Calendar c = Calendar.getInstance();
+		c.set(Calendar.HOUR_OF_DAY, cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.DIARY_BED_HOUR)));
+		c.set(Calendar.MINUTE, cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.DIARY_BED_MINUTE)));
+
+		long bedtime = c.getTimeInMillis();
+
+		c.set(Calendar.HOUR_OF_DAY, cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.DIARY_SLEEP_HOUR)));
+		c.set(Calendar.MINUTE, cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.DIARY_SLEEP_MINUTE)));
+
+		long sleeptime = c.getTimeInMillis();
+
+		if (sleeptime < bedtime)
+			sleeptime += SleepDiaryActivity.DAY_LENGTH;
+
+		c.set(Calendar.HOUR_OF_DAY, cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.DIARY_WAKE_HOUR)));
+		c.set(Calendar.MINUTE, cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.DIARY_WAKE_MINUTE)));
+
+		long waketime = c.getTimeInMillis();
+
+		if (waketime < sleeptime)
+			waketime += SleepDiaryActivity.DAY_LENGTH;
+
+		c.set(Calendar.HOUR_OF_DAY, cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.DIARY_UP_HOUR)));
+		c.set(Calendar.MINUTE, cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.DIARY_UP_MINUTE)));
+		
+		long uptime = c.getTimeInMillis();
+		
+		if (uptime < waketime)
+			uptime += SleepDiaryActivity.DAY_LENGTH;
+
+		double total = uptime - bedtime;
+		double sleep = waketime - sleeptime;
+		
+		java.text.DateFormat timeFormat = DateFormat.getTimeFormat(context);
+		
+		sb.append(context.getString(R.string.summary_bedtime, (total / 3600000), timeFormat.format(new Date(bedtime)), timeFormat.format(new Date(uptime))));
+		sb.append(System.getProperty("line.separator"));
+
+		sb.append(context.getString(R.string.summary_sleeptime, (sleep / 3600000), timeFormat.format(new Date(sleeptime)), timeFormat.format(new Date(waketime))));
+		sb.append(System.getProperty("line.separator"));
+		sb.append(System.getProperty("line.separator"));
+		
+		String delay = context.getString(R.string.value_immediately);
+		
+		switch(cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.DIARY_SLEEP_DELAY)))
+		{
+			case 1:
+				delay = context.getString(R.string.value_five_min);
+				break;
+			case 2:
+				delay = context.getString(R.string.value_fifteen_min);
+				break;
+			case 3:
+				delay = context.getString(R.string.value_thirty_min);
+				break;
+			case 4:
+				delay = context.getString(R.string.value_one_hour);
+				break;
+			case 5:
+				delay = context.getString(R.string.value_two_hour);
+				break;
+			case 6:
+				delay = context.getString(R.string.value_four_hour);
+				break;
+			case 7:
+				delay = context.getString(R.string.value_eight_hour);
+				break;
+			case 8:
+				delay = context.getString(R.string.value_never);
+				break;
+		}
+
+		sb.append(context.getString(R.string.summary_delay, delay));
+		sb.append(System.getProperty("line.separator"));
+
+		int wakeCount = cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.DIARY_WAKE_COUNT));
+		String wake = context.getString(R.string.value_multiple_times, wakeCount);
+		
+		switch(wakeCount)
+		{
+			case 0:
+				wake = context.getString(R.string.label_never);
+				break;
+			case 1:
+				wake = context.getString(R.string.value_once);
+				break;
+			case 11:
+				wake = context.getString(R.string.value_greater_ten);
+				break;
+		}
+
+		sb.append(context.getString(R.string.summary_wake_count, wake));
+		sb.append(System.getProperty("line.separator"));
+
+		int quality = cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.DIARY_SLEEP_QUALITY));
+		String qualityString = context.getString(R.string.value_terrible);
+		
+		switch(quality)
+		{
+			case 1:
+				qualityString = context.getString(R.string.value_poor);
+				break;
+			case 2:
+				qualityString = context.getString(R.string.value_adequate);
+				break;
+			case 3:
+				qualityString = context.getString(R.string.value_good);
+				break;
+			case 4:
+				qualityString = context.getString(R.string.value_excellent);
+				break;
+		}
+
+		sb.append(context.getString(R.string.summary_quality, qualityString));
+		sb.append(System.getProperty("line.separator"));
+		
+		int rested = cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.DIARY_RESTED));
+		String restedString = context.getString(R.string.label_not_rested);
+		
+		switch(rested)
+		{
+			case 1:
+				restedString = context.getString(R.string.label_slightly_rested);
+				break;
+			case 2:
+				restedString = context.getString(R.string.label_somewhat_rested);
+				break;
+			case 3:
+				restedString = context.getString(R.string.label_well_rested);
+				break;
+			case 4:
+				restedString = context.getString(R.string.label_very_rested);
+				break;
+		}
+
+		sb.append(context.getString(R.string.summary_rested, restedString));
+		
+		if (cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.DIARY_NAP)) != 0)
+		{
+			sb.append(System.getProperty("line.separator"));
+			sb.append(System.getProperty("line.separator"));
+
+			sb.append(context.getString(R.string.summary_napped));
+		}
+		
+		if (cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.DIARY_EARLIER)) != 0)
+		{
+			sb.append(System.getProperty("line.separator"));
+			sb.append(System.getProperty("line.separator"));
+
+			sb.append(context.getString(R.string.summary_earlier));
+		}
+		return sb.toString();
+		
+		/*
+	public static final String DIARY_RESTED = "rested";
+*/
 	}
 }
 

@@ -13,10 +13,12 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.format.DateFormat;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -121,6 +123,7 @@ public class SleepDiaryActivity extends ConsentedActivity
 					{
 						public void onClick(DialogInterface dialog, int which) 
 						{
+
 						}
 					});
 					
@@ -130,6 +133,56 @@ public class SleepDiaryActivity extends ConsentedActivity
 				c.close();
 
 				return false;
+			}
+		});
+		
+		diaryList.setOnItemClickListener(new OnItemClickListener()
+		{
+			public void onItemClick(AdapterView<?> parent, View view, int which, long id) 
+			{
+				final String selection = "_id = ?";
+				final String[] selectionArgs = { "" + id };
+				
+				Cursor c = me.getContentResolver().query(SlumberContentProvider.SLEEP_DIARIES_URI, null, selection, selectionArgs, null);
+				
+				if (c.moveToNext())
+				{
+					AlertDialog.Builder builder = new AlertDialog.Builder(me);
+					
+					java.text.DateFormat dateFormat = DateFormat.getLongDateFormat(me);
+					java.text.DateFormat timeFormat = DateFormat.getTimeFormat(me);
+
+					Date now = new Date(c.getLong(c.getColumnIndex(SlumberContentProvider.DIARY_TIMESTAMP)));
+
+					builder.setTitle(dateFormat.format(now));
+
+					LayoutInflater inflater = LayoutInflater.from(me);
+					View diaryView = inflater.inflate(R.layout.view_diary, null, false);
+					
+					TextView timeView = (TextView) diaryView.findViewById(R.id.label_time);
+					timeView.setText(timeFormat.format(now));
+
+					TextView efficiencyView = (TextView) diaryView.findViewById(R.id.label_efficiency);
+					efficiencyView.setText(me.getString(R.string.detail_efficiency, SlumberContentProvider.scoreSleep(c, 100)));
+
+					TextView summaryView = (TextView) diaryView.findViewById(R.id.label_summary);
+
+					summaryView.setText(SlumberContentProvider.summarize(me, c));
+					
+					builder.setView(diaryView);
+
+					builder = builder.setNegativeButton(me.getString(R.string.button_close), new OnClickListener()
+					{
+						public void onClick(DialogInterface dialog, int which) 
+						{
+
+						}
+					});
+					
+					builder.create().show();
+				}
+				
+				c.close();
 			}
 		});
 		

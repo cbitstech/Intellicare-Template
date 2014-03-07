@@ -37,7 +37,15 @@
 	<string name="question_sleep_quality">How would you rate the quality of your sleep?</string>					
 	<string name="question_comments">Do you have any additional notes or comments?</string>					
 	<string name="hint_comments">Enter comments here. (Optional)</string>					
+
+	<string name="question_refreshed">How rested or refreshed did you feel when you woke up for the day?</string>					
 	
+	<string name="label_not_rested">Not at all rested</string>
+	<string name="label_slightly_rested">Slightly rested</string>
+	<string name="label_somewhat_rested">Somewhat rested</string>
+	<string name="label_well_rested">Well-rested</string>
+	<string name="label_very_rested">Very well-rested</string>					
+			
 	<string name="bullet_one">1.</string>
 	<string name="bullet_two">2.</string>
 	<string name="bullet_three">3.</string>
@@ -160,7 +168,8 @@
 
     <string name="db_create_sleep_diary_table">CREATE TABLE IF NOT EXISTS sleep_diaries(_id INTEGER PRIMARY KEY, did_nap INTEGER DEFAULT 0, woke_earlier INTEGER DEFAULT 0, bed_hour INTEGER DEFAULT 12, bed_minute INTEGER DEFAULT 0, sleep_hour INTEGER DEFAULT 12, sleep_minute INTEGER DEFAULT 0, wake_hour INTEGER DEFAULT 12, wake_minute INTEGER DEFAULT 0, up_hour INTEGER DEFAULT 12, up_minute INTEGER DEFAULT 0, sleep_delay INTEGER DEFAULT 0,wake_count INTEGER DEFAULT 0, sleep_quality INTEGER DEFAULT 0, timestamp INTEGER);</string>
     <string name="db_update_sleep_diary_add_comments">ALTER TABLE sleep_diaries ADD COLUMN comments TEXT;</string>
-
+    <string name="db_update_sleep_diary_add_rested">ALTER TABLE sleep_diaries ADD COLUMN rested INTEGER DEFAULT 0;</string>
+    
     <string name="db_create_sensor_readings_table">CREATE TABLE IF NOT EXISTS sensor_readings(_id INTEGER PRIMARY KEY, name TEXT, value REAL, recorded INTEGER);</string>
     
 	<string-array name="initial_checklist_items">
@@ -251,4 +260,19 @@
 	<string name="note_title">Record your sleep diary</string>
 	<string name="note_message">Don\'t forget to fill our your sleep diary today!</string>
 	<string name="prefs_reminder_time">Sleep diary reminder time</string>
+	
+	<string name="detail_efficiency" formatted="false">%.0f%% Sleep Efficiency</string>
+	<string name="summary_bedtime" formatted="false">Time in bed: %.1f hours, %s to %s</string>
+	<string name="summary_sleeptime" formatted="false">Time asleep: %.1f hours, %s to %s</string>
+	<string name="summary_delay" formatted="false">Sleep delay: %s</string>
+	<string name="summary_wake_count" formatted="false">Interrupted: %s</string>
+	<string name="summary_quality" formatted="false">Sleep Quality: %s</string>
+	<string name="summary_rested" formatted="false">Restfulness: %s</string>
+
+	<string name="summary_napped">Did nap the day before.</string>
+	<string name="summary_earlier">Woke up earlier than desired.</string>
+
+	<string name="message_no_logs">No sleep logs have been created.</string>
+			
 </resources>
+

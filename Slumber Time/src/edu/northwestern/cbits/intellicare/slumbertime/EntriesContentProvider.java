@@ -24,6 +24,8 @@ public class EntriesContentProvider extends ContentProvider
 	public static final String SLUG = "slug";;
 	public static final String TITLE = "title";
 	public static final String TEXT = "text";
+	public static final String WEIGHT = "weight";
+	protected static final String SECTION = "section";
 
 	private SQLiteDatabase _db = null;
 
