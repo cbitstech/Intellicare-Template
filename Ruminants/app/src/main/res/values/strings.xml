@@ -89,11 +89,11 @@
     </string-array>
 
     <string-array name="intro_puns">
-        <item>ru-MOO-nation is udderly unfun</item>
-        <item>MOOOOOO-ve on!</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
+        <item>ru-MOO-nation is udderly unpleasant</item>
+        <item>MOO-ve your thoughts along</item>
+        <item>improve your MOO-od</item>
+        <item>lasso some good thoughts</item>
+        <item>stampede over your rumination</item>
         <item>6</item>
         <item>7</item>
         <item>8</item>
@@ -116,24 +116,80 @@
         <item>Now… let’s begin.</item>
     </string-array>
 
-    <string-array name="didactic">
+    <string-array name="didactic_content1">
         <item>Distract with books, movies, magazines, museums, a busy street or bustling park. Force yourself to take these aspects of life or culture in even if you don’t feel like it. Once you are involved your mind has a chance to take another path.</item>
         <item>Repeat the saying: “Grant me the serenity to accept the things I cannot change; change the things I can and wisdom to know the difference.”</item>
         <item>Repeat a comforting phrase, an affirmation, a prayer, a poem or a song to yourself. </item>
         <item>Exercise or walk. Moving your body can move the content in your head. Notice aspects of nature or humanity that are larger than your conundrum. Try to focus on what is outside of you rather than inside of you.</item>
         <item>If you are “catastrophizing” or “awfulizing,” think of all the times you were sure a horror would happen and it didn’t. Turning a hysterical assumption into an objective assessment can take away pain and calm you. Write down what you fear, the worst thing that can happen, and then write down three more positive outcomes. Try to figure out what is most realistic. Try to be measured.        </item>
+    </string-array>
+
+
+    <string-array name="didactic_content2">
         <item>Count your blessings instead of sheep, in the words of composer Irving Berlin. Research shows that a grateful person is a happy person.</item>
         <item>Listen to music that has meaning for you or provides comfort, from your childhood or current times. Get swept up. Sing, dance or clean the car with the radio blasting Rolling Stones. Whatever.        </item>
         <item>Listen to radio programs that tells compelling stories about people who have undergone unusual struggles and triumphs. Watch a comedy channel.</item>
         <item>Make arrangements to meet a good friend who can be relied upon to have a sensitive response or to make you laugh.</item>
         <item>Trade heaviness for lightness even if that somehow feels wrong or unnatural or strange.</item>
+    </string-array>
+
+    <string-array name="didactic_content3">
         <item>Re-write the narrative. Sometimes if we can find a way to soften the story, minimize the blows, tell ourselves that the injury is really not going to damage us, it restores a sense of empowerment and equilibrium. It also removes power from the perpetrator.</item>
         <item>Say, “Don’t think, don’t think, don’t think…” and then DO something: cook, scrub, fix, run, go somewhere and be around other people. Do a small project.</item>
         <item>Gear up into high action: Accomplish more that you think you can, want to, or than you need. Get five things done instead of three. It might give you a rush. Get a little manic, in a good way.        </item>
         <item>Think about someone you know who is suffering and feel compassion. Call them or send them a message.</item>
+    </string-array>
+
+
+    <string-array name="didactic_content4">
         <item>Take a boxing class if meditation does not work for you. Some people need to punch it out. My friend Betty wears pink boxing gloves to support breast cancer research.</item>
         <item>Don’t hang out with a demon filled head.</item>
+        <item>1</item>
+        <item>3</item>
+        <item>5</item>
     </string-array>
+
+    <string-array name="didactic_content5">
+        <item>Take a boxing class if meditation does not work for you. Some people need to punch it out. My friend Betty wears pink boxing gloves to support breast cancer research.</item>
+        <item>Don’t hang out with a demon filled head.</item>
+        <item>1</item>
+        <item>3</item>
+        <item>5</item>
+    </string-array>
+
+    <string-array name="didactic_content6">
+        <item>Take a boxing class if meditation does not work for you. Some people need to punch it out. My friend Betty wears pink boxing gloves to support breast cancer research.</item>
+        <item>Don’t hang out with a demon filled head.</item>
+        <item>1</item>
+        <item>3</item>
+        <item>5</item>
+    </string-array>
+
+    <string-array name="didactic_content7">
+        <item>Take a boxing class if meditation does not work for you. Some people need to punch it out. My friend Betty wears pink boxing gloves to support breast cancer research.</item>
+        <item>Don’t hang out with a demon filled head.</item>
+        <item>1</item>
+        <item>3</item>
+        <item>5</item>
+    </string-array>
+
+    <string-array name="didactic_content8">
+        <item>Take a boxing class if meditation does not work for you. Some people need to punch it out. My friend Betty wears pink boxing gloves to support breast cancer research.</item>
+        <item>Don’t hang out with a demon filled head.</item>
+        <item>1</item>
+        <item>3</item>
+        <item>5</item>
+    </string-array>
+
+    <string-array name="didactic_content9">
+        <item>Take a boxing class if meditation does not work for you. Some people need to punch it out. My friend Betty wears pink boxing gloves to support breast cancer research.</item>
+        <item>Don’t hang out with a demon filled head.</item>
+        <item>1</item>
+        <item>3</item>
+        <item>5</item>
+    </string-array>
+
+
 
     <string name="db_create_survey_table">CREATE TABLE ruminants.survey_results (
 	id PRIMARY KEY ASC ON CONFLICT REPLACE AUTOINCREMENT,
@@ -146,6 +202,11 @@
 	trigger VARCHAR)</string>
 
     <string name="nope">Talk to bessie more.</string>
+    <string name="question_ruminating_lately">Have you been ruminating lately?</string>
+    <string name="question_rumination_content">What have you been ruminating about?</string>
+    <string name="question_help_frequency">How often would you like help?</string>
+    <string name="times_per_day">time(s) per day</string>
+    <string name="reset">RESET</string>
 
 
 </resources>

@@ -1,0 +1,57 @@
+/*For 320dp / hdpi phones */
+/* 100% width = 480px */
+
+h1 	{text-align: center;
+	font-size: 24px;
+	text-transform: lowercase;
+	}
+		
+h2 {text-align: center;
+	font-family: Roboto Light, sans-serif;
+	vertical-align: bottom;}
+	
+#container {position: absolute;
+            top: 0px;
+            left: 0px;
+            padding: 0px;
+			margin: 0px;
+			background-image: url("sun.svg");
+			background-repeat: no-repeat;
+			background-position:right top;
+            width: 480px;
+            height: 100%;
+			}
+	
+#bessie {
+		margin-left: 120px; /* 25% */
+		position: absolute;
+        bottom: 0px;
+		width: 240px;
+		height: 240px;
+		}
+
+#content {position: relative;
+		height: 384px; /* 80% */
+		}
+		
+#content p { display: block;
+		margin-left: auto;
+		margin-right: auto;
+		width: 384px;
+		font-family: Roboto Light, sans-serif;
+		}
+		
+#field { height: 144px; /* 30% of 480 */
+		padding: 5px;
+		background-color: #669900;
+    }
+		
+.pun { font-weight: bold;
+    text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+    padding: 2px;
+	width: 240px;
+    margin-top: 5px;
+	background-color: #fff;
+	}		
