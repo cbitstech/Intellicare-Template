@@ -3,4 +3,7 @@
     <string name="app_name">Avast Ye Hearties!</string>
     <string name="action_settings">Settings</string>
     <string name="coming_soon">App coming soon. Stay tuned!</string>
+    <string name="coming_soon">App coming soon. Stay tuned!</string>
+    <string name="fs_client_id">E1ELOBJ2KCTNYWU4RYPFQMMGGRHRVAC5S1RGP1VD1WO4Q5ZU</string>
+    <string name="fs_client_secret">KA230JV5UB35VSP4DZDLCX5MRNQUUPJC23JYAVAAH3XRHCCX</string>
 </resources>
