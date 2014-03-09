@@ -5,10 +5,13 @@
 	<fragment android:id="@+id/map"
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
-		android:layout_weight="1"
+		android:layout_weight="4"
 		android:name="com.google.android.gms.maps.MapFragment"/>
-    <ListView android:id="@+id/list_view"
+    <View android:background="#808080"
+   	    android:layout_width="match_parent"
+       	android:layout_height="1dp" />
+	<ListView android:id="@+id/categories_list"
         android:layout_height="0dp"
-        android:layout_weight="1" 
+        android:layout_weight="5" 
         android:layout_width="match_parent" />
 </LinearLayout>
