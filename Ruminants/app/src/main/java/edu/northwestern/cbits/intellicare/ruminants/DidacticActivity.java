@@ -187,12 +187,15 @@ public class DidacticActivity extends Activity {
     {
         String[] punValues = new String[5];
 
+        String[] punBank = context.getResources().getStringArray(R.array.pun_bank);
+
         /* want to pick a subset of puns */
+        int max = punBank.length;
         Random random = new Random();
-        int randomNum = random.nextInt(6); //11 - 5 = 6, pun array size is 11
+        int randomNum = random.nextInt(max - 5); // ensures that the range won't exceed the max index of the pun bank
 
         // Arguments are: sourceArray, sourceStartIndex, destinationArray, destinationStartIndex, numElementsToCopy
-        System.arraycopy( context.getResources().getStringArray(R.array.intro_puns), randomNum, punValues, 0, 5 );
+        System.arraycopy( punBank, randomNum, punValues, 0, 5 );
 
         return punValues;
     }

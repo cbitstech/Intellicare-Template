@@ -88,18 +88,22 @@
         <item>11</item>
     </string-array>
 
-    <string-array name="intro_puns">
-        <item>ru-MOO-nation is udderly unpleasant</item>
-        <item>MOO-ve your thoughts along</item>
+    <string-array name="pun_bank">
+        <item>ru-MOO-nation? udderly unfun!</item>
+        <item>MOO-ve worries along</item>
         <item>improve your MOO-od</item>
         <item>lasso some good thoughts</item>
-        <item>stampede over your rumination</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>9</item>
-        <item>10</item>
-        <item>11</item>
+        <item>stampede over rumination</item>
+        <item>re-MOO-ve worries</item>
+        <item>hay-nt time for ru-MOO-nation</item>
+        <item>chew on this idea</item>
+        <item>my beef is with worrying</item>
+        <item>greener grass grows with sunny thoughts</item>
+        <item>fence in rumination</item>
+        <item>let bessie figure it out</item>
+        <item>ok to say "no MOO-ore"</item>
+        <item>do yr part to stop global warming</item>
+        <item>herd about worry practice?</item>
     </string-array>
 
     <string-array name="intro_content">

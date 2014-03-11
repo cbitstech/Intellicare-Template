@@ -28,7 +28,7 @@ public class WorryPracticeActivity extends Activity  {
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
         {
             public void onClick(DialogInterface dialog, int id)
-            {
+            {   //send user to next dialog
                 me.showTimePicker();
             }
         });
@@ -42,11 +42,13 @@ public class WorryPracticeActivity extends Activity  {
 
         builder.setTitle(R.string.time_picker_title);
 
+        //sets timer to last time selected by user
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         final WorryPracticeActivity me = this;
 
         int selectedDuration = prefs.getInt(WorryPracticeActivity.LAST_SELECTED_DURATION, -1);
 
+        // time choices are 8, 5 and 3 min expressed as seconds
         builder.setSingleChoiceItems(R.array.time_choices_wpt, selectedDuration, new DialogInterface.OnClickListener()
         {
             public void onClick (DialogInterface dialog, int which)
@@ -57,6 +59,7 @@ public class WorryPracticeActivity extends Activity  {
             }
         });
 
+        // dismiss dialog, pass time choice to initialize timer start value
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
         {
             public void onClick(DialogInterface dialog, int id)
@@ -65,21 +68,40 @@ public class WorryPracticeActivity extends Activity  {
 
                 me.startTime = Integer.parseInt(me.getResources().getStringArray(R.array.time_choices_wpt)[index]) * 1000;
 
-                final TextView text = (TextView) me.findViewById(R.id.timer);
+                final TextView minute = (TextView) me.findViewById(R.id.timer_minute);
+                final TextView second = (TextView) me.findViewById(R.id.timer_second);
+
                 me.countDownTimer = new CountDownTimer(me.startTime, interval)
                 {
                     @Override
                     public void onFinish() {
-                        text.setText(R.string.timeup);
+                        minute.setText(R.string.timeup);
                     }
-
                     @Override
                     public void onTick(long millisUntilFinished) {
-                        text.setText("" + millisUntilFinished / 1000);
+                        // convert seconds to display as m:ss
+
+                        long seconds = millisUntilFinished / 1000;
+
+                        long minutes = seconds / 60;
+                        seconds = seconds % 60;
+
+                        /*
+                        if (minutes < 10)
+                            minute.setText("0" + minutes);
+                        else
+                            minute.setText("" + minutes);
+                            */
+
+                        if (seconds < 10)
+                            second.setText("0" + seconds);
+                        else
+                            second.setText("" + seconds);
+
+                        minute.setText( minutes + ":");
                     }
                 };
 
-                text.setText(text.getText() + String.valueOf(startTime / 1000));
             }
         });
 

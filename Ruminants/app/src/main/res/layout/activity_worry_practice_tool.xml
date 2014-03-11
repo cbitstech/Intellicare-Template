@@ -18,20 +18,43 @@
         android:textSize="18sp"
         android:layout_marginTop="12dp" />
 
-    <TextView
-        android:id="@+id/timer"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingRight="10dip"
-        android:textSize="96sp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        android:layout_marginBottom="12dp"
-        android:layout_marginTop="12dp"
-        android:minHeight="144dp"
-        android:background="#669900"
-        android:layout_gravity="center"
-        android:gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/timer_minute"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="10dip"
+            android:textSize="96sp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp"
+            android:minHeight="144dp"
+            android:background="#669900"
+            android:layout_gravity="center|right"
+            android:gravity="center_horizontal|right"
+            android:minWidth="96dp" />
+        <TextView
+            android:id="@+id/timer_second"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="10dip"
+            android:textSize="96sp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp"
+            android:minHeight="144dp"
+            android:background="#669900"
+            android:layout_gravity="center|left"
+            android:gravity="center_horizontal|left"
+            android:minWidth="144dp" />
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"

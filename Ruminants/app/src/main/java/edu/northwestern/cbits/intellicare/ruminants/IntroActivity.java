@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Random;
 
 /**
  * Created by Gwen on 2/26/14.
@@ -172,10 +173,10 @@ public class IntroActivity extends Activity {
         String htmlString = buffer.toString();
 
         String[] titleValues = IntroActivity.titleValues(context, false);
-        String[] punValues = IntroActivity.punValues(context, false);
+        String[] punValues = IntroActivity.punValues(context);
         String[] contentValues = IntroActivity.contentValues(context, false);
 
-        int max = titleValues.length;
+        int max = contentValues.length;
 
         htmlString = htmlString.replace("{{title}}", titleValues[index]);
         htmlString = htmlString.replace("{{pun}}", punValues[index]);
@@ -189,14 +190,26 @@ public class IntroActivity extends Activity {
         return htmlString;
     }
 
-    private static String[] titleValues(Context context, boolean includeAll)
+    public static String[] titleValues(Context context, boolean includeAll)
     {
         return context.getResources().getStringArray(R.array.intro_titles);
     }
-
-    private static String[] punValues(Context context, boolean includeAll)
+    private static String[] punValues(Context context)
     {
-        return context.getResources().getStringArray(R.array.intro_puns);
+        // select the size of the pun sub-array to show based on the number of slides with content
+        int punNumber = IntroActivity.titleValues(context, false).length;
+        String[] punValues = new String[punNumber];
+        String[] punBank = context.getResources().getStringArray(R.array.pun_bank);
+
+        /* want to pick a subset of puns */
+        int max = punBank.length;
+        Random random = new Random();
+        int randomNum = random.nextInt(max - punNumber); // ensures that the range won't exceed the max index of the pun bank
+
+        // Arguments are: sourceArray, sourceStartIndex, destinationArray, destinationStartIndex, numElementsToCopy
+        System.arraycopy( punBank, randomNum, punValues, 0, punNumber );
+
+        return punValues;
     }
 
     private static String[] contentValues(Context context, boolean includeAll)
