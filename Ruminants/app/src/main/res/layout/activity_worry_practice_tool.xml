@@ -22,29 +22,39 @@
         android:id="@+id/timer"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         android:paddingRight="10dip"
-        android:textSize="50dp"
+        android:textSize="96sp"
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
         android:layout_marginBottom="12dp"
         android:layout_marginTop="12dp"
         android:minHeight="144dp"
-        android:background="#669900" />
+        android:background="#669900"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/reset_wpt"
-        android:id="@+id/reset_button"
-        android:layout_marginLeft="48dp"
-        android:layout_marginRight="48dp" />
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/start_wpt"
+            android:id="@+id/start_button"
+            android:minWidth="48dp"
+            android:minHeight="48dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reset_wpt"
+            android:id="@+id/reset_button"
+            android:minWidth="48dp"
+            android:minHeight="48dp"/>
     </LinearLayout>
 
     <Button

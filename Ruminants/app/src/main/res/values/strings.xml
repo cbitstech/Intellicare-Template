@@ -189,6 +189,12 @@
         <item>5</item>
     </string-array>
 
+    <string-array name="time_choices_wpt">
+        <item>480</item> // 8 minutes
+        <item>300</item> // 5 minutes
+        <item>180</item> // 3 minutes
+    </string-array>
+
 
 
     <string name="db_create_survey_table">CREATE TABLE ruminants.survey_results (
@@ -207,6 +213,10 @@
     <string name="question_help_frequency">How often would you like help?</string>
     <string name="times_per_day">time(s) per day</string>
     <string name="reset">RESET</string>
+    <string name="Stop">New Button</string>
+    <string name="wpt_instructions_title">Using the Worry Practice Tool</string>
+    <string name="ok">OK</string>
+    <string name="time_picker_title">Choose how long you wish to ruminate</string>
 
 
 </resources>
