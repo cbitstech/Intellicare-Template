@@ -3,4 +3,10 @@
     <string name="app_name">Avast Ye Hearties!</string>
     <string name="action_settings">Settings</string>
     <string name="coming_soon">App coming soon. Stay tuned!</string>
+    <string name="coming_soon">App coming soon. Stay tuned!</string>
+    <string name="fs_client_id">E1ELOBJ2KCTNYWU4RYPFQMMGGRHRVAC5S1RGP1VD1WO4Q5ZU</string>
+    <string name="fs_client_secret">KA230JV5UB35VSP4DZDLCX5MRNQUUPJC23JYAVAAH3XRHCCX</string>
+    
+    <string name="query_venue" formatted="false">https://api.foursquare.com/v2/venues/search?client_id=%s&amp;client_secret=%s&amp;v=20130815&amp;ll=%f,%f&amp;categoryId=%s&amp;limit=10</string>
+    <string name="query_categories" formatted="false">https://api.foursquare.com/v2/venues/categories?client_id=%s&amp;client_secret=%s&amp;v=20130815</string>
 </resources>

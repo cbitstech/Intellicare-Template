@@ -58,8 +58,8 @@ public class SettingsActivity extends PreferenceActivity
 		}
 		else if (key.equals("start_of_day_time") || key.equals("end_of_day_time"))
 		{
-			final String hourKey = key.equals("end_of_day_time") ? ScheduleManager.REMINDER_END_HOUR : ScheduleManager.REMINDER_START_HOUR;
-			final String minuteKey = key.equals("end_of_day_time") ? ScheduleManager.REMINDER_END_MINUTE : ScheduleManager.REMINDER_START_MINUTE;
+			final String hourKey = key.equals("end_of_day_time") ? Constants.REMINDER_END_HOUR : Constants.REMINDER_START_HOUR;
+			final String minuteKey = key.equals("end_of_day_time") ? Constants.REMINDER_END_MINUTE : Constants.REMINDER_START_MINUTE;
 			
 			final SettingsActivity me = this;
 			

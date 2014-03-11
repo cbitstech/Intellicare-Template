@@ -62,10 +62,10 @@ public class NotificationAlarm extends BroadcastReceiver
 
          // get time bounds for notification
          SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-         int startHour = sp.getInt(ScheduleManager.REMINDER_START_HOUR, ScheduleManager.DEFAULT_HOUR);
-         int startMinute = sp.getInt(ScheduleManager.REMINDER_START_MINUTE, ScheduleManager.DEFAULT_MINUTE);
-         int endHour = sp.getInt(ScheduleManager.REMINDER_END_HOUR, ScheduleManager.DEFAULT_HOUR);
-         int endMinute = sp.getInt(ScheduleManager.REMINDER_END_MINUTE, ScheduleManager.DEFAULT_MINUTE);
+         int startHour = sp.getInt(Constants.REMINDER_START_HOUR, Constants.DEFAULT_HOUR);
+         int startMinute = sp.getInt(Constants.REMINDER_START_MINUTE, Constants.DEFAULT_MINUTE);
+         int endHour = sp.getInt(Constants.REMINDER_END_HOUR, Constants.DEFAULT_HOUR);
+         int endMinute = sp.getInt(Constants.REMINDER_END_MINUTE, Constants.DEFAULT_MINUTE);
          Calendar currentCalendarInstance = Calendar.getInstance();
          Calendar currentCalendarInstanceMinusPollingRate = (Calendar) currentCalendarInstance.clone();
          currentCalendarInstanceMinusPollingRate.add(Calendar.MINUTE, -(IMAGE_SCAN_RATE_MINUTES));
