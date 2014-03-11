@@ -50,5 +50,6 @@
     <string name="notification_end_day">Tap here to review your day, mantras, and the Mantra app!</string>
     <string name="title_activity_review">ReviewActivity</string>
     <string name="title_activity_transparent">TransparentActivity</string>
+    <string name="title_activity_progress">ProgressActivity</string>
 
 </resources>

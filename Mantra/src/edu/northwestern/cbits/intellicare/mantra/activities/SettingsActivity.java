@@ -1,6 +1,11 @@
-package edu.northwestern.cbits.intellicare.mantra;
+package edu.northwestern.cbits.intellicare.mantra.activities;
 
 import java.util.HashMap;
+
+import edu.northwestern.cbits.intellicare.mantra.Constants;
+import edu.northwestern.cbits.intellicare.mantra.R;
+import edu.northwestern.cbits.intellicare.mantra.R.string;
+import edu.northwestern.cbits.intellicare.mantra.R.xml;
 
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
