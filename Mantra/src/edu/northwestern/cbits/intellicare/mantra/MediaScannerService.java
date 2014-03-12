@@ -58,13 +58,15 @@ public class MediaScannerService extends IntentService {
 		// loop to wait for all scanning to complete... 
 		sleepLoop(100, fullFilePathsToScan, scanners);
 		
-		// * when stuff is is done *
+		// * when image scanning is is done *
 		// send a broadcast intent to the MediaScannerServiceResponseReceiver 
 		// and proceed from the fact that all images are now available for the user to select-from.
 		Log.d(CN+".onHandleIntent", "sending broadcast: " + Constants.BROADCAST_ACTION);
 		Intent localIntent = new Intent(Constants.BROADCAST_ACTION);
 		localIntent.putExtra("message", "Scanned all " + fullFilePathsToScan.length + " files.");
-		if(intentExtras.containsKey(INTENT_KEY_TO_RECEIVER_STRINGARRAY)) { localIntent.putStringArrayListExtra(INTENT_KEY_TO_RECEIVER_STRINGARRAY, intentExtras.getStringArrayList(INTENT_KEY_TO_RECEIVER_STRINGARRAY)); }
+		if(intentExtras.containsKey(INTENT_KEY_TO_RECEIVER_STRINGARRAY)) { 
+			localIntent.putStringArrayListExtra(INTENT_KEY_TO_RECEIVER_STRINGARRAY, intentExtras.getStringArrayList(INTENT_KEY_TO_RECEIVER_STRINGARRAY));
+		}
 		LocalBroadcastManager
 			.getInstance(this)
 			.sendBroadcast(localIntent);

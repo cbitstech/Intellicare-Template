@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -13,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.ProgressBar;
 import edu.northwestern.cbits.intellicare.mantra.activities.SharedUrlActivity;
 
 
@@ -34,12 +36,18 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 	
 	public static final int RESULT_LOAD_IMAGE = 1;
 //	public static final String INTENT_KEY_ORIGINATING_ACTIVITY = "originatingActivity";
+	private ProgressBar progress;
+	private int maxProgressBarValue = -1;
+//	private int currentProgressBarValue = 0;
 
 	
 	@Override
 	protected Object doInBackground(GetImagesTaskParams... arg0) {
-		final SharedUrlActivity activity = arg0[0].activity;
+		final Activity activity = arg0[0].activity;
 		Map<String, Integer> imagesToDownload = arg0[0].imagesToDownload;
+		progress = arg0[0].progress;
+//		progress = new ProgressBar(activity);
+		
 		int count = imagesToDownload.keySet().size();
 		int totalSize = 0;
 
@@ -56,6 +64,11 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 		// fetch and save each image, updating progress and scanning the image (for gallery-viewability) along the way.
 		long startTime = System.currentTimeMillis();
 		int i = 0, imageCount = imagesToDownload.keySet().size();
+		Log.d(CN+".doInBackground", "imageCount = " + imageCount);
+
+		// set the max progress bar value
+		maxProgressBarValue = imageCount;
+		progress.setMax(maxProgressBarValue);
 
 		String[] fullFilePathsToScan = new String[imageCount];
 		Thread thread = null;
@@ -64,7 +77,8 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 	        
 			int imageSize = imagesToDownload.get(url);
 			totalSize += imageSize;
-	        publishProgress((int) ((imageSize / (float) count) * 100));
+//	        publishProgress((int) ((imageSize / (float) count) * 100));
+	        publishProgress();
 	        // Escape early if cancel() is called
 	        if (isCancelled()) break;
 			
@@ -82,15 +96,31 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 		mediaScannerIntent.putExtra(MediaScannerService.INTENT_KEY_FILE_PATHS_TO_SCAN, fullFilePathsToScan);
 		activity.startService(mediaScannerIntent);
 		
+		activity.finish();
+		
 		long endTime = System.currentTimeMillis();
 		Log.d(CN+".GetImagesTask.doInBackground", "exiting; ELAPSED TIME (ms) = " + ((double)endTime - startTime));
 
 		return null;
 	}
 	
+	@Override
+	protected void onProgressUpdate(Void... values) {
+		super.onProgressUpdate(values);
+		Log.d(CN+".onProgressUpdate", "entered");
+//		for(int i=0;i<values.length;i++) {
+//			Log.d(CN+".onProgressUpdate", values[i].toString());
+//		}
+//		progress.incrementProgressBy(values);
 
-	private void publishProgress(int i) {
-		Log.d(CN+".publishProgress", "progress: i = " + i);
+		progress.incrementProgressBy(1);
+//		currentProgressBarValue++;
 	}
+
+	
+
+//	private void publishProgress(int i) {
+//		Log.d(CN+".publishProgress", "progress: i = " + i);
+//	}
 //
 }

@@ -1,19 +1,24 @@
 package edu.northwestern.cbits.intellicare.mantra.activities;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 
+import edu.northwestern.cbits.intellicare.mantra.NotificationAlarm;
 import edu.northwestern.cbits.intellicare.mantra.R;
 import edu.northwestern.cbits.intellicare.mantra.R.layout;
 import edu.northwestern.cbits.intellicare.mantra.R.menu;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -24,6 +29,7 @@ import android.widget.Toast;
  *
  */
 public class ReviewActivity extends Activity {
+	private String CN = "ReviewActivity";
 
 	private final UUID reviewInstanceId = UUID.randomUUID();
 	private final ReviewActivity self = this;
@@ -53,6 +59,21 @@ public class ReviewActivity extends Activity {
 				self.finish();
 			}
 		});
+		
+		// set the photo count
+		TextView tvPhotosCount = (TextView) this.findViewById(R.id.txtPhotosCount);
+		Calendar c = Calendar.getInstance();
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		Date todayAtMidnight = c.getTime();
+		
+		String photosCountDisplayText = tvPhotosCount.getText().toString().replaceAll(
+				"^(.*)%NPHOTOS%(.*)$",
+				"$1" + NotificationAlarm.getCameraImagesSinceDate(this, todayAtMidnight) + "$2"
+			);
+		Log.d(CN+".onCreate", "photosCountDisplayText = " + photosCountDisplayText);
+		tvPhotosCount.setText(photosCountDisplayText);
 	}
 
 	@Override

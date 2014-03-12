@@ -1,24 +1,16 @@
 package edu.northwestern.cbits.intellicare.mantra.activities;
 
-import java.io.IOException;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import edu.northwestern.cbits.intellicare.mantra.Constants;
 import edu.northwestern.cbits.intellicare.mantra.GetImagesTask;
-import edu.northwestern.cbits.intellicare.mantra.GetImagesTaskParams;
-import edu.northwestern.cbits.intellicare.mantra.ImageExtractor;
 import edu.northwestern.cbits.intellicare.mantra.MediaScannerService;
 //import edu.northwestern.cbits.intellicare.mantra.MediaScannerServiceResponseReceiver;
 import edu.northwestern.cbits.intellicare.mantra.R;
 import edu.northwestern.cbits.intellicare.mantra.R.layout;
 import edu.northwestern.cbits.intellicare.mantra.R.menu;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.app.Activity;
@@ -107,9 +99,6 @@ public class SharedUrlActivity extends Activity {
 		Log.d("SharedUrlActivity.onCreate", "entered");
 		self = this;
 
-		// setup external intent-handler
-		handleExternalIntents();
-
 		// set-up the image-scanner service + response.
 		mediaScannerServiceResponseReceiver = new MediaScannerServiceResponseReceiver();
 		LocalBroadcastManager
@@ -118,6 +107,9 @@ public class SharedUrlActivity extends Activity {
 					mediaScannerServiceResponseReceiver, 
 					new IntentFilter(Constants.BROADCAST_ACTION)
 			);
+
+		// setup external intent-handler
+		handleExternalIntents();
 	}
 
 	
@@ -135,6 +127,7 @@ public class SharedUrlActivity extends Activity {
 			Log.d(CN+".onActivityResult", "uriFromImageBrowser = " + uriFromImageBrowser.toString());
 			intent.setData(uriFromImageBrowser);
 			this.startActivity(intent);
+        	self.finish();
 		}
 	}
 
@@ -173,8 +166,13 @@ public class SharedUrlActivity extends Activity {
 		        case DialogInterface.BUTTON_POSITIVE:
 		            //Yes button clicked
 		        	Log.d(CN + ".promptConfirmDownloadPageImages", "Yes path");
-		        	new GetImageListAndSizesTask(self)
-		        		.execute(url);
+//		        	new GetImageListAndSizesTask(self)
+//		        		.execute(url);
+
+		        	Intent intent = new Intent(self, ProgressActivity.class);
+		        	intent.putExtra(ProgressActivity.INTENT_KEY_TYPE_GETIMAGESANDSIZES, ProgressActivity.INTENT_VAL_TYPE_GETIMAGESANDSIZES);
+		        	intent.putExtra("url", url);
+		        	startActivity(intent);
 		            break;
 
 		        case DialogInterface.BUTTON_NEGATIVE:
@@ -199,92 +197,5 @@ public class SharedUrlActivity extends Activity {
 	 */
 	public static boolean shouldDownloadImage(int imageByteSize) {
 		return imageByteSize >= 15000;		// if at least 15kBytes, then true. simplest heuristic ever. 
-	}
-}
-
-
-
-
-
-
-/**** Async tasks *****/
-
-
-class GetImageListAndSizesTaskBackgroundReturn {
-	protected String url;
-	protected Map<String, Integer> imageUrlsAndSizes;
-	public GetImageListAndSizesTaskBackgroundReturn(String u, Map<String, Integer> m) { url = u; imageUrlsAndSizes = m; }
-}
-
-/**
- * Fetches the set of image URLs from webpage at a specified URL.
- * @author mohrlab
- *
- */
-class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageListAndSizesTaskBackgroundReturn> {
-	private static final String CN = "GetImageListAndSizesTask";
-	public SharedUrlActivity activity;
-		
-	public GetImageListAndSizesTask(SharedUrlActivity sua) {
-		activity = sua;
-	}
-	
-	@Override
-	protected GetImageListAndSizesTaskBackgroundReturn doInBackground(String... arg0) {
-		try {
-			String url = arg0[0];
-			Log.d(CN + ".doInBackground", "entered for url = " + url);
-			try {
-				long startTime = System.currentTimeMillis();
-				Set<String> imageList = ImageExtractor.getImageList(url, false);
-				long imageListTime = System.currentTimeMillis();
-				Map<String,Integer> m = ImageExtractor.getRemoteContentLength(imageList);
-				long endTime = System.currentTimeMillis();
-				Log.d(CN + ".doInBackground", 
-						"exiting; ELAPSED TIME (ms) = " + ((double)endTime - startTime) + 
-						", getImageList (ms) = " + ((double)(imageListTime - startTime)) + 
-						", getRemoteContentLength (ms) = " + ((double)(endTime - imageListTime))
-						);
-				GetImageListAndSizesTaskBackgroundReturn ret = new GetImageListAndSizesTaskBackgroundReturn(url, m);
-				return ret;
-			}
-			catch(SocketTimeoutException e) { displayNetworkExceptionMessage(url, e); }
-			catch(UnknownHostException e) { displayNetworkExceptionMessage(url, e); }
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-		return null;
-	}
-
-	/**
-	 * @param url
-	 * @param e 
-	 */
-	private void displayNetworkExceptionMessage(String url, IOException e) {
-		e.printStackTrace();
-		AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this.activity);
-		dlgAlert.setMessage("Network error. Are you connected to the Internet? Error message for URL (" + url + "): " + e.getMessage());
-		dlgAlert.setPositiveButton("OK",
-			    new DialogInterface.OnClickListener() {
-			        public void onClick(DialogInterface dialog, int which) {
-			          //dismiss the dialog  
-			        }
-			    });
-	}
-	
-	protected void onPostExecute(GetImageListAndSizesTaskBackgroundReturn backgroundRet) {
-		// select the set of images to download, using some heuristic function
-		Map<String, Integer> imagesToDownload = new HashMap<String, Integer>();
-		for(String key : backgroundRet.imageUrlsAndSizes.keySet()) {
-			int sz = backgroundRet.imageUrlsAndSizes.get(key);
-			Log.d(CN + ".onPostExecute", "size = " + sz + " for image " + key);
-			if(SharedUrlActivity.shouldDownloadImage(sz)) {
-				imagesToDownload.put(key, sz);
-			}
-		}
-
-		// fetch the selected images from their URLs and save to the temp folder
-		new GetImagesTask().execute(new GetImagesTaskParams(imagesToDownload, activity));
 	}
 }

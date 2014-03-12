@@ -2,10 +2,24 @@ package edu.northwestern.cbits.intellicare.mantra;
 
 import java.util.Map;
 
+import android.app.Activity;
+import android.widget.ProgressBar;
+
 import edu.northwestern.cbits.intellicare.mantra.activities.SharedUrlActivity;
 
+/**
+ * DTO containing image-fetching async task params.
+ * @author mohrlab
+ *
+ */
 public class GetImagesTaskParams {
 	Map<String,Integer> imagesToDownload;
-	SharedUrlActivity activity;
-	public GetImagesTaskParams(Map<String, Integer> d, SharedUrlActivity a) { imagesToDownload = d; activity = a; }
+	Activity activity;
+	ProgressBar progress;
+
+	public GetImagesTaskParams(Map<String, Integer> d, Activity activity2, ProgressBar p) {
+		imagesToDownload = d;
+		activity = activity2;
+		progress = p;
+	}
 }

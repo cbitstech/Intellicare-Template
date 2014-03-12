@@ -17,6 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -105,7 +106,12 @@ public class ImageExtractor
 	 * @throws IOException
 	 */
 	public static int getRemoteContentLength(String url) throws MalformedURLException, IOException {
-		return (new URL(url)).openConnection().getContentLength();
+		log("getRemoteContentLength", "entered; url = " + url);
+		URLConnection conn = (new URL(url)).openConnection();
+//		return conn.getContentLength();
+		String len = conn.getHeaderField("Content-Length");
+		log("getRemoteContentLength", "exiting; len = " + len);
+		return len != null ? Integer.parseInt(len) : -1;
 	}
 	
 	/**

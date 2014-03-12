@@ -3,7 +3,6 @@ package edu.northwestern.cbits.intellicare.mantra.activities;
 import java.util.Date;
 
 import edu.northwestern.cbits.intellicare.mantra.NotificationAlarm;
-import edu.northwestern.cbits.intellicare.mantra.SettingsActivity;
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusBoardCursor;
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusImageCursor;
 import edu.northwestern.cbits.intellicare.mantra.FocusBoard;
