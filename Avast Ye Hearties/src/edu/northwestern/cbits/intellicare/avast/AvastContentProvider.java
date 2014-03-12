@@ -22,8 +22,11 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.UriMatcher;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -49,44 +52,186 @@ public class AvastContentProvider extends ContentProvider
 	protected static ArrayList<Venue> _lastVenues;
 	protected static ArrayList<Category> _lastCategories;
 
-	@Override
-	public int delete(Uri arg0, String arg1, String[] arg2) {
-		// TODO Auto-generated method stub
+    private static final int VENUE_TYPES = 1;
+    private static final int LOCATIONS = 2;
+    private static final int VENUES = 3;
+    private static final int CHECKINS = 4;
+
+    private static final String AUTHORITY = "edu.northwestern.cbits.intellicare.avast";
+
+    private static final String VENUE_TYPE_TABLE = "venue_types";
+    private static final String LOCATION_TABLE = "locations";
+    private static final String VENUE_TABLE = "venues";
+    private static final String CHECKIN_TABLE = "checkins";
+
+    public static final Uri VENUE_TYPE_URI = Uri.parse("content://" + AUTHORITY + "/" + VENUE_TYPE_TABLE);
+    public static final Uri LOCATION_URI = Uri.parse("content://" + AUTHORITY + "/" + LOCATION_TABLE);
+    public static final Uri VENUE_URI = Uri.parse("content://" + AUTHORITY + "/" + VENUE_TABLE);
+    public static final Uri CHECKIN_URI = Uri.parse("content://" + AUTHORITY + "/" + CHECKIN_TABLE);
+
+    private static final int DATABASE_VERSION = 1;
+
+    public static final String LOCATION_NAME = "name";
+    public static final String LOCATION_LATITUDE = "latitude";
+    public static final String LOCATION_LONGITUDE = "longitude";
+    public static final String LOCATION_RADIUS = "radius";
+    public static final String LOCATION_DURATION = "duration";
+    public static final String LOCATION_ENABLED = "enabled";
+
+	protected static final String VENUE_TYPE_FOURSQUARE_ID = "foursquare_id";
+	protected static final String VENUE_TYPE_ENABLED = "enabled";
+	protected static final String VENUE_TYPE_NAME = "name";
+	protected static final String VENUE_TYPE_FOURSQUARE_PARENT_ID = "parent_id";
+
+    private UriMatcher _matcher = new UriMatcher(UriMatcher.NO_MATCH);
+	private SQLiteDatabase _db = null;
+    
+    public AvastContentProvider()
+    {
+    	super();
+    	
+        this._matcher.addURI(AUTHORITY, VENUE_TYPE_TABLE, VENUE_TYPES);
+        this._matcher.addURI(AUTHORITY, LOCATION_TABLE, LOCATIONS);
+        this._matcher.addURI(AUTHORITY, VENUE_TABLE, VENUES);
+        this._matcher.addURI(AUTHORITY, CHECKIN_TABLE, CHECKINS);
+    }
+    
+    public boolean onCreate() 
+	{
+        final Context context = this.getContext().getApplicationContext();
+
+        SQLiteOpenHelper helper = new SQLiteOpenHelper(context, "avast.db", null, AvastContentProvider.DATABASE_VERSION)
+        {
+            public void onCreate(SQLiteDatabase db) 
+            {
+	            db.execSQL(context.getString(R.string.db_create_venue_types_table));
+	            db.execSQL(context.getString(R.string.db_create_locations_table));
+	            db.execSQL(context.getString(R.string.db_create_venues_table));
+	            db.execSQL(context.getString(R.string.db_create_checkins_table));
+
+	            this.onUpgrade(db, 0, AvastContentProvider.DATABASE_VERSION);
+            }
+
+            public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) 
+            {
+            	switch (oldVersion)
+            	{
+	                case 0:
+
+	                default:
+                        break;
+            	}
+            }
+        };
+        
+        this._db  = helper.getWritableDatabase();
+
+        return true;
+	}
+    
+	public int delete(Uri uri, String where, String[] whereArgs) 
+	{
+        switch(this._matcher.match(uri))
+        {
+	        case AvastContentProvider.VENUE_TYPES:
+	            return this._db.delete(AvastContentProvider.VENUE_TYPE_TABLE, where, whereArgs);
+	        case AvastContentProvider.LOCATIONS:
+	            return this._db.delete(AvastContentProvider.LOCATION_TABLE, where, whereArgs);
+	        case AvastContentProvider.CHECKINS:
+	            return this._db.delete(AvastContentProvider.CHECKIN_TABLE, where, whereArgs);
+	        case AvastContentProvider.VENUES:
+	            return this._db.delete(AvastContentProvider.VENUE_TABLE, where, whereArgs);
+        }
+		
 		return 0;
 	}
 
 	@Override
-	public String getType(Uri uri) {
-		// TODO Auto-generated method stub
+	public String getType(Uri uri) 
+	{
+        switch(this._matcher.match(uri))
+        {
+	        case AvastContentProvider.VENUE_TYPES:
+	        	return "vnd.android.cursor.dir/" + AUTHORITY + ".venue_type";
+	        case AvastContentProvider.LOCATIONS:
+	        	return "vnd.android.cursor.dir/" + AUTHORITY + ".location";
+	        case AvastContentProvider.CHECKINS:
+	        	return "vnd.android.cursor.dir/" + AUTHORITY + ".checkin";
+	        case AvastContentProvider.VENUES:
+	        	return "vnd.android.cursor.dir/" + AUTHORITY + ".venue";
+        }
+        
+        return null;
+	}
+
+	@Override
+	public Uri insert(Uri uri, ContentValues values) 
+	{
+		long newId = -1;
+		
+        switch(this._matcher.match(uri))
+        {
+	        case AvastContentProvider.VENUE_TYPES:
+	            newId = this._db.insert(AvastContentProvider.VENUE_TYPE_TABLE, null, values);
+
+	            break;
+	        case AvastContentProvider.LOCATIONS:
+	            newId = this._db.insert(AvastContentProvider.LOCATION_TABLE, null, values);
+
+	            break;
+	        case AvastContentProvider.CHECKINS:
+	            newId = this._db.insert(AvastContentProvider.CHECKIN_TABLE, null, values);
+
+	            break;
+	        case AvastContentProvider.VENUES:
+	            newId = this._db.insert(AvastContentProvider.VENUE_TABLE, null, values);
+
+	            break;
+        }
+        
+        if (newId != -1)
+            return Uri.withAppendedPath(uri, "" + newId);
+		
 		return null;
 	}
 
 	@Override
-	public Uri insert(Uri uri, ContentValues values) {
-		// TODO Auto-generated method stub
+	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) 
+	{
+        switch(this._matcher.match(uri))
+        {
+	        case AvastContentProvider.VENUE_TYPES:
+	            return this._db.query(AvastContentProvider.VENUE_TYPE_TABLE, projection, selection, selectionArgs, null, null, sortOrder);
+	        case AvastContentProvider.LOCATIONS:
+	            return this._db.query(AvastContentProvider.LOCATION_TABLE, projection, selection, selectionArgs, null, null, sortOrder);
+	        case AvastContentProvider.CHECKINS:
+	            return this._db.query(AvastContentProvider.CHECKIN_TABLE, projection, selection, selectionArgs, null, null, sortOrder);
+	        case AvastContentProvider.VENUES:
+	            return this._db.query(AvastContentProvider.VENUE_TABLE, projection, selection, selectionArgs, null, null, sortOrder);
+        }
+		
 		return null;
 	}
 
 	@Override
-	public boolean onCreate() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public Cursor query(Uri uri, String[] projection, String selection,
-			String[] selectionArgs, String sortOrder) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int update(Uri uri, ContentValues values, String selection,
-			String[] selectionArgs) {
-		// TODO Auto-generated method stub
+	public int update(Uri uri, ContentValues values, String where, String[] whereArgs) 
+	{
+        switch(this._matcher.match(uri))
+        {
+	        case AvastContentProvider.VENUE_TYPES:
+	            return this._db.update(AvastContentProvider.VENUE_TYPE_TABLE, values, where, whereArgs);
+	        case AvastContentProvider.LOCATIONS:
+	            return this._db.update(AvastContentProvider.LOCATION_TABLE, values, where, whereArgs);
+	        case AvastContentProvider.CHECKINS:
+	            return this._db.update(AvastContentProvider.CHECKIN_TABLE, values, where, whereArgs);
+	        case AvastContentProvider.VENUES:
+	            return this._db.update(AvastContentProvider.VENUE_TABLE, values, where, whereArgs);
+        }
+		
 		return 0;
 	}
 
+	
 	public static void fetchLocations(final Context context, final LatLng target, final String category, final Runnable callback) 
 	{
 		Runnable r = new Runnable()
