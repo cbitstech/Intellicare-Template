@@ -1,0 +1,45 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+	<LinearLayout android:id="@+id/web_layout"
+	    android:layout_height="0dp"
+	    android:layout_weight="1"
+	    android:layout_width="match_parent"
+	    android:orientation="vertical"
+	    android:visibility="visible">
+   	    <WebView android:id="@+id/web_view"
+	        android:layout_width="match_parent"
+	        android:layout_height="0dp"
+	        android:layout_weight="1" />
+	</LinearLayout>
+	<LinearLayout android:id="@+id/places_layout"
+	    android:layout_height="0dp"
+	    android:layout_weight="1"
+	    android:layout_width="match_parent"
+	    android:orientation="vertical"
+	    android:visibility="gone">
+	</LinearLayout>
+    <View android:background="@color/bottom_bar_border"
+        android:layout_width="match_parent"
+        android:layout_height="1.5dp" />
+    <LinearLayout android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bottom_bar_gray"
+        android:padding="4dp">
+        <Button android:id="@+id/back_button"
+            android:layout_height="48dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/button_previous" />
+        <View android:layout_height="48dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"/>
+        <Button android:id="@+id/next_button"
+            android:layout_height="48dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/button_next" />
+    </LinearLayout>
+</LinearLayout>
