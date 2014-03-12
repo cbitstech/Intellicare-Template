@@ -85,7 +85,7 @@
         android:layout_height="wrap_content"
         android:inputType="number"
         android:ems="10"
-        android:id="@+id/editText_help_number"
+        android:id="@+id/editText_help_frequency"
         android:maxWidth="48dp"
         android:maxHeight="60dp"
         android:layout_marginLeft="24dp"

@@ -68,7 +68,7 @@ public class MainActivity extends Activity
 
        tools.add(new Tool(this.getString(R.string.tool_worry_practice), this.getString(R.string.desc_worry_practice), R.drawable.clock_log_dark, new Intent(this, WorryPracticeActivity.class)));
        tools.add(new Tool(this.getResources().getString(R.string.tool_didactic_content), this.getString(R.string.desc_didactic_content), R.drawable.clock_log_dark, new Intent(this, DidacticActivity.class)));
-       // tools.add(new Tool(this.getString(R.string.tool_survey_wizard), this.getString(R.string.desc_survey_wizard), R.drawable.clock_diary_dark, new Intent(this, SurveyWizardActivity.class)));
+       // tools.add(new Tool(this.getString(R.string.tool_survey_wizard), this.getString(R.string.desc_survey_wizard), R.drawable.clock_diary_dark, new Intent(this, WizardOneActivity.class)));
        tools.add(new Tool(this.getResources().getString(R.string.tool_replay_intro), this.getString(R.string.desc_replay_intro), R.drawable.clock_tips, introIntent));
 
         ListView toolsList = (ListView) this.findViewById(R.id.list_tools);

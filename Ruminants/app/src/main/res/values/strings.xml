@@ -98,11 +98,10 @@
         <item>hay-nt time for ru-MOO-nation</item>
         <item>chew on this idea</item>
         <item>my beef is with worrying</item>
-        <item>greener grass grows with sunny thoughts</item>
+        <item>field those ruminations</item>
         <item>fence in rumination</item>
         <item>let bessie figure it out</item>
         <item>ok to say "no MOO-ore"</item>
-        <item>do yr part to stop global warming</item>
         <item>herd about worry practice?</item>
     </string-array>
 
@@ -201,8 +200,8 @@
 
 
 
-    <string name="db_create_survey_table">CREATE TABLE ruminants.survey_results (
-	id PRIMARY KEY ASC ON CONFLICT REPLACE AUTOINCREMENT,
+    <string name="db_create_wizard_one_table">CREATE TABLE IF NOT EXISTS ruminants.wizard_one (
+	_id INTEGER PRIMARY KEY,
 	attempted_stop_methods VARCHAR,
 	duration INTEGER,
 	emotion VARCHAR,
@@ -210,6 +209,13 @@
 	rumination_isOver BOOLEAN,
 	rumination_termination_cause VARCHAR,
 	trigger VARCHAR)</string>
+
+    <string name="db_create_profile_table">CREATE TABLE IF NOT EXISTS ruminants.profile (
+	_id INTEGER PRIMARY KEY,
+	concerns VARCHAR,
+	help_frequency INTEGER,
+	ruminating_lately BOOLEAN)
+    </string>
 
     <string name="nope">Talk to bessie more.</string>
     <string name="question_ruminating_lately">Have you been ruminating lately?</string>
@@ -221,6 +227,10 @@
     <string name="wpt_instructions_title">Using the Worry Practice Tool</string>
     <string name="ok">OK</string>
     <string name="time_picker_title">Choose how long you wish to ruminate</string>
+    <string name="wizard_one_title">Rumination Record</string>
+    <string name="profile_title">Create Your Profile</string>
+    <string name="action_save_profile">Save Profile</string>
+    <string name="toast_profile_recorded">Your profile has been saved.</string>
 
 
 </resources>

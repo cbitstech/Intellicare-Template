@@ -18,6 +18,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+// probably not going to be used --- GS
+
 public class RecallWizardActivity extends Activity
 {
 /*    private static final String SELECTED_RADIO_HELPFUL = "selected_radio_helpful";
@@ -99,7 +101,7 @@ public class RecallWizardActivity extends Activity
                 return true;
             }
 
-            values.put(RuminantContentProvider.RECALL_HELPFUL, (helpfulChecked == R.id.rum_yes));
+            values.put(RuminantsContentProvider.RECALL_HELPFUL, (helpfulChecked == R.id.rum_yes));
 
             payload.put("helpful", (helpfulChecked == R.id.help_yes));
 
@@ -112,7 +114,7 @@ public class RecallWizardActivity extends Activity
                 return true;
             }
 
-            values.put(RuminantContentProvider.RECALL_BETTER, (betterChecked == R.id.better_yes));
+            values.put(RuminantsContentProvider.RECALL_BETTER, (betterChecked == R.id.better_yes));
 
             payload.put("better", (helpfulChecked == R.id.better_yes));
 
@@ -121,13 +123,13 @@ public class RecallWizardActivity extends Activity
 
             EditText differentStrategy = (EditText) this.findViewById(R.id.field_different_strategy);
 
-            values.put(RuminantContentProvider.RECALL_DIFFERENT_STRATEGY, differentStrategy.getEditableText().toString());
+            values.put(RuminantsContentProvider.RECALL_DIFFERENT_STRATEGY, differentStrategy.getEditableText().toString());
 
             payload.put("different_strategy_response", differentStrategy);
 
-            values.put(RuminantContentProvider.RECALL_TIMESTAMP, System.currentTimeMillis());
+            values.put(RuminantsContentProvider.RECALL_TIMESTAMP, System.currentTimeMillis());
 
-            this.getContentResolver().insert(RuminantContentProvider.RECALL_WIZARD_URI, values);
+            this.getContentResolver().insert(RuminantsContentProvider.RECALL_WIZARD_URI, values);
 
             LogManager.getInstance(this).log("stored_recall", payload);
 
