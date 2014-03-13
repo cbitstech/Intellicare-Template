@@ -29,7 +29,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 public class AvastContentProvider extends ContentProvider 
 {
@@ -77,11 +76,17 @@ public class AvastContentProvider extends ContentProvider
     public static final String LOCATION_RADIUS = "radius";
     public static final String LOCATION_DURATION = "duration";
     public static final String LOCATION_ENABLED = "enabled";
+	public static final String LOCATION_ID = "_id";
 
 	protected static final String VENUE_TYPE_FOURSQUARE_ID = "foursquare_id";
 	protected static final String VENUE_TYPE_ENABLED = "enabled";
 	protected static final String VENUE_TYPE_NAME = "name";
 	protected static final String VENUE_TYPE_FOURSQUARE_PARENT_ID = "parent_id";
+	protected static final String VENUE_TYPE_ID = "_id";
+
+	public static final double DEFAULT_RADIUS = 200;
+	public static final double DEFAULT_INITIAL_DURATION = 0;
+
 
     private UriMatcher _matcher = new UriMatcher(UriMatcher.NO_MATCH);
 	private SQLiteDatabase _db = null;
@@ -240,8 +245,6 @@ public class AvastContentProvider extends ContentProvider
 			{
 				String query = context.getString(R.string.query_venue, context.getString(R.string.fs_client_id), context.getString(R.string.fs_client_secret), target.latitude, target.longitude, category);
 
-				Log.e("AYH", "FETCH LOCATIONS FROM " + query);
-				
 				try 
 				{
 					URL url = new URL(query);
@@ -255,8 +258,6 @@ public class AvastContentProvider extends ContentProvider
 					encoding = encoding == null ? "UTF-8" : encoding;
 
 					String body = IOUtils.toString(in, encoding);
-
-					Log.e("AYH", "FETCHED LOCATIONS FROM " + query);
 
 					JSONObject json = new JSONObject(body);
 					JSONObject response = json.getJSONObject("response");
@@ -425,5 +426,12 @@ public class AvastContentProvider extends ContentProvider
 	public static List<Category> getLastCategories()
 	{
 		return AvastContentProvider._lastCategories;
+	}
+
+	public static Uri uriForId(Context context, String id) 
+	{
+		Uri u = Uri.parse(context.getString(R.string.foursquare_uri_root));
+		
+		return Uri.withAppendedPath(u, id);
 	}
 }
