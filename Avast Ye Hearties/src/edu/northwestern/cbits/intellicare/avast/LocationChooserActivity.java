@@ -1,14 +1,6 @@
 package edu.northwestern.cbits.intellicare.avast;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
-
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -16,12 +8,24 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 public class LocationChooserActivity extends ConsentedActivity 
@@ -33,6 +37,10 @@ public class LocationChooserActivity extends ConsentedActivity
         super.onCreate(savedInstanceState);
 
         this.setContentView(R.layout.activity_location_chooser);
+        
+        ActionBar actionBar = this.getSupportActionBar();
+        actionBar.setTitle(R.string.title_location_picker);
+        actionBar.setSubtitle(R.string.subtitle_location_picker);
     }
 
 	protected void onResume()
@@ -100,6 +108,8 @@ public class LocationChooserActivity extends ConsentedActivity
 	{
 		int itemId = item.getItemId();
 		
+		final LocationChooserActivity me = this;
+		
 		switch (itemId)
 		{
 			case R.id.action_next:
@@ -111,7 +121,7 @@ public class LocationChooserActivity extends ConsentedActivity
 				Log.e("AYH", "PIN CENTER POINT AND PROMPT FOR DETAILS...");
 
 				MapFragment fragment = (MapFragment) this.getFragmentManager().findFragmentById(R.id.map);
-				GoogleMap map = fragment.getMap();
+				final GoogleMap map = fragment.getMap();
 				
 				final CameraPosition position = map.getCameraPosition();
 				
@@ -123,15 +133,27 @@ public class LocationChooserActivity extends ConsentedActivity
 				LayoutInflater inflater = LayoutInflater.from(this);
 				View view = inflater.inflate(R.layout.view_location_label, null, false);
 				
-				final EditText nameField = (EditText) this.findViewById(R.id.field_location_name);
+				final EditText nameField = (EditText) view.findViewById(R.id.field_location_name);
 				builder.setView(view);
 				
 				builder.setPositiveButton(R.string.action_continue, new OnClickListener()
 				{
 					public void onClick(DialogInterface arg0, int which) 
 					{
-						// TODO Auto-generated method stub
+						MarkerOptions marker = new MarkerOptions();
 						
+						Editable name = nameField.getText();
+
+						if (name != null && name.toString().trim().length() > 0)
+							marker.title(name.toString());
+						else
+							marker.title(me.getString(R.string.marker_unknown));
+						
+						marker.anchor(0.5f, 0.5f);
+						marker.position(position.target);
+						marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mark_red));
+				
+						map.addMarker(marker);
 					}
 				});
 				

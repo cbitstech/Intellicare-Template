@@ -25,6 +25,11 @@
     <string name="hint_location_name">Enter the name of this place.</string>
     <string name="label_location_examples">Examples: Home, Work, School, Family\'s, &#8230;</string>
 
+    <string name="title_location_picker">Choose your places</string>
+    <string name="subtitle_location_picker">Mark your places &amp; pin!</string>
+    
+    <string name="marker_unknown">Undisclosed Location</string>
+    
     <!-- Databases -->
     
     <string name="db_create_venue_types_table">CREATE TABLE IF NOT EXISTS venue_types(_id INTEGER PRIMARY KEY, name TEXT, foursquare_id TEXT, parent_id TEXT, enabled INTEGER DEFAULT 1);</string>
