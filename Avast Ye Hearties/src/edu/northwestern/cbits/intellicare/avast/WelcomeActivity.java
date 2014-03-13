@@ -1,7 +1,9 @@
 package edu.northwestern.cbits.intellicare.avast;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
@@ -15,11 +17,23 @@ public class WelcomeActivity extends ConsentedActivity
     {
         super.onCreate(savedInstanceState);
 
-        this.setContentView(R.layout.activity_welcome);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         
-        WebView webView = (WebView) this.findViewById(R.id.web_view);
-        
-        webView.loadUrl("file:///android_asset/www/welcome.html");
+        if (prefs.getBoolean(WelcomeActivity.INTRO_SHOWN, false))
+        {
+			Intent mainIntent = new Intent(this, MainActivity.class);
+			this.startActivity(mainIntent);
+			
+			this.finish();
+        }
+        else
+        {
+	        this.setContentView(R.layout.activity_welcome);
+	        
+	        WebView webView = (WebView) this.findViewById(R.id.web_view);
+	        
+	        webView.loadUrl("file:///android_asset/www/welcome.html");
+        }
     }
     
 	public boolean onCreateOptionsMenu(Menu menu) 
