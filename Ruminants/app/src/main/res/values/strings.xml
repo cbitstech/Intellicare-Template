@@ -92,17 +92,20 @@
         <item>ru-MOO-nation? udderly unfun!</item>
         <item>MOO-ve worries along</item>
         <item>improve your MOO-od</item>
-        <item>lasso some good thoughts</item>
+        <item>lasso good thoughts</item>
         <item>stampede over rumination</item>
         <item>re-MOO-ve worries</item>
-        <item>hay-nt time for ru-MOO-nation</item>
+        <item>hay-nt time for worries</item>
         <item>chew on this idea</item>
         <item>my beef is with worrying</item>
-        <item>field those ruminations</item>
+        <item>field rumination</item>
         <item>fence in rumination</item>
         <item>let bessie figure it out</item>
         <item>ok to say "no MOO-ore"</item>
         <item>herd about worry practice?</item>
+        <item>let thoughts range free</item>
+        <item>hoof it towards happiness</item>
+        <item>empty your fourth stomach</item>
     </string-array>
 
     <string-array name="intro_content">
@@ -200,20 +203,22 @@
 
 
 
-    <string name="db_create_wizard_one_table">CREATE TABLE IF NOT EXISTS ruminants.wizard_one (
+    <string name="db_create_wizard_one_table">CREATE TABLE IF NOT EXISTS wizard_one (
 	_id INTEGER PRIMARY KEY,
-	attempted_stop_methods VARCHAR,
+	attempted_stop_method VARCHAR,
 	duration INTEGER,
 	emotion VARCHAR,
+    wizard_one_timestamp INTEGER,
 	rumation_content VARCHAR,
 	rumination_isOver BOOLEAN,
 	rumination_termination_cause VARCHAR,
 	trigger VARCHAR)</string>
 
-    <string name="db_create_profile_table">CREATE TABLE IF NOT EXISTS ruminants.profile (
+    <string name="db_create_profile_table">CREATE TABLE IF NOT EXISTS profile (
 	_id INTEGER PRIMARY KEY,
 	concerns VARCHAR,
 	help_frequency INTEGER,
+    profile_timestamp INTEGER,
 	ruminating_lately BOOLEAN)
     </string>
 
@@ -231,6 +236,11 @@
     <string name="profile_title">Create Your Profile</string>
     <string name="action_save_profile">Save Profile</string>
     <string name="toast_profile_recorded">Your profile has been saved.</string>
+    <string name="rumination_log_title">Yr Rumination Log</string>
+    <string name="profile_wizard">add yr profile</string>
+    <string name="desc_profile_wizard">this is the profile</string>
+    <string name="tool_rumination_log">Rumination Log</string>
+    <string name="desc_rumination_log">what yr thinking about</string>
 
 
 </resources>

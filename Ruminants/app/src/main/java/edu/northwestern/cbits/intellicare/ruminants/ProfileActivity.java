@@ -49,7 +49,7 @@ public class ProfileActivity extends Activity {
 
         this.setContentView(R.layout.activity_profile);
 
-        this.getSupportActionBar().setTitle(R.string.profile_title);
+       // this.getSupportActionBar().setTitle(R.string.profile_title);
 
         final ProfileActivity me = this;
 
@@ -108,7 +108,7 @@ public class ProfileActivity extends Activity {
 
             this.getContentResolver().insert(RuminantsContentProvider.PROFILE_URI, values);
 
-            LogManager.getInstance(this).log("stored_profile", payload);
+            //LogManager.getInstance(this).log("stored_profile", payload);
 
             Toast.makeText(this, R.string.toast_profile_recorded, Toast.LENGTH_SHORT).show();
 

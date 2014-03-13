@@ -67,7 +67,7 @@ public class WizardOneActivity extends Activity
 
         this.setContentView(R.layout.activity_wizard_one);
 
-        this.getSupportActionBar().setTitle(R.string.wizard_one_title);
+        //this.getSupportActionBar().setTitle(R.string.wizard_one_title);
 
         final WizardOneActivity me = this;
 
@@ -179,7 +179,7 @@ public class WizardOneActivity extends Activity
                 return true;
             }
 
-            RadioGroup emoRadios = (RadioGroup) this.findViewById(R.id.radios_pre_rum_feelings);
+            RadioGroup emoRadios = (RadioGroup) this.findViewById(R.id.radios_emotion);
             int emoChecked = emoRadios.getCheckedRadioButtonId();
 
             if (emoChecked == -1)
@@ -213,7 +213,7 @@ public class WizardOneActivity extends Activity
 
             this.getContentResolver().insert(RuminantsContentProvider.WIZARD_ONE_URI, values);
 
-            LogManager.getInstance(this).log("stored_survey", payload);
+            //LogManager.getInstance(this).log("stored_survey", payload);
 
             Toast.makeText(this, R.string.toast_survey_wizard_recorded, Toast.LENGTH_SHORT).show();
 
@@ -222,7 +222,7 @@ public class WizardOneActivity extends Activity
 
         return true;
     }
-
+    /*
     protected void onResume()
     {
         super.onResume();
@@ -238,5 +238,5 @@ public class WizardOneActivity extends Activity
 
         super.onPause();
     }
-
+    */
 }
