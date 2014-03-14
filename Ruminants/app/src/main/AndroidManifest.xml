@@ -4,6 +4,8 @@
     android:versionCode="10000"
     android:versionName="1.0.0">
     <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <uses-sdk android:minSdkVersion="19" android:targetSdkVersion="19" />
 
     <application
@@ -55,6 +57,12 @@
             android:label="@string/app_name" >
         </activity>
     <provider android:name=".RuminantsContentProvider" android:authorities="edu.northwestern.cbits.intellicare.ruminants" android:exported="false" />
+
+        <receiver android:name=".ScheduleHelper">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
 
         <!--
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".WizardOneActivity" android:label="@string/app_name">

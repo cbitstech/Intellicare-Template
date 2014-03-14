@@ -37,6 +37,7 @@ public class IntroActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         boolean skipCheck = this.getIntent().getBooleanExtra("skipCheck", false);

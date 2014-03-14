@@ -244,6 +244,8 @@
     <string name="title_settings">Settings</string>
     <string name="profile_note_title">Fill out your profile</string>
     <string name="profile_note_message">tell bessie what is on yr mind</string>
+    <string name="help_note_title">ru-MOO-nating?</string>
+    <string name="help_note_message">True a rumination tool.</string>
 
 
 </resources>
