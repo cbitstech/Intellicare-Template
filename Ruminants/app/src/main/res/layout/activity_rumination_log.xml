@@ -14,8 +14,7 @@
            android:textStyle="bold"
            android:textSize="36sp"
            android:singleLine="true"
-           android:paddingBottom="6dp"
-           android:background="#fffccc" />
+           android:paddingBottom="6dp" />
 
        <ListView
            android:layout_width="match_parent"

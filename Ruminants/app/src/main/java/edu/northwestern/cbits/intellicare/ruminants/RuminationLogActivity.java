@@ -43,25 +43,9 @@ public class RuminationLogActivity extends Activity {
 
         ArrayList<Entry> entries = new ArrayList<Entry>();
 
-//    long now = System.currentTimeMillis();
-
         final ListView concernList = (ListView) this.findViewById(R.id.concern_entries);
         final ListView triggerList = (ListView) this.findViewById(R.id.trigger_entries);
 
-/*        final ArrayAdapter<Entry> adapter = new ArrayAdapter<Entry>(this, R.layout.row_concern, entries) {
-            public View getView(int position, View convertView, ViewGroup parent) {
-                if (convertView == null) {
-                    LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-                    convertView = inflater.inflate(R.layout.row_concern, parent, false);
-
-
-                }
-
-                return convertView;
-            }
-
-        };
-*/
         Cursor c = me.getContentResolver().query(RuminantsContentProvider.PROFILE_URI, null, null, null, RuminantsContentProvider.PROFILE_ID);
 
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(me, R.layout.row_concern, c, new String[0], new int[0]) {

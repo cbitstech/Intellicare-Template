@@ -2,10 +2,16 @@ package edu.northwestern.cbits.intellicare.ruminants;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,14 +26,18 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.LogManager;
 
 public class MainActivity extends Activity
 {
-	protected void onCreate(Bundle savedInstanceState) 
+    private static final int NOTE_ID = 237894563;
+
+    protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
 	}
 
     private class Tool
@@ -54,7 +64,7 @@ public class MainActivity extends Activity
 /*
         CrashManager.register(this, APP_ID, new CrashManagerListener()
         {
-            public boolean shouldAutoUploadCrashes()
+            public bintoolean shouldAutoUploadCrashes()
             {
                 return true;
             }
@@ -144,3 +154,5 @@ public class MainActivity extends Activity
     }
 
 }
+
+
