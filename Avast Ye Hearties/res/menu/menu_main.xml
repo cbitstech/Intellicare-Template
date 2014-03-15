@@ -1,6 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:robot="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/action_filter_venues"
+    <item android:id="@+id/action_list_venues"
         robot:showAsAction="always"
+        android:icon="@drawable/ic_action_foursquare"
+        android:title="@string/action_list_venues" />
+    <item android:id="@+id/action_filter_venues"
+        robot:showAsAction="never"
         android:icon="@drawable/ic_action_foursquare"
         android:title="@string/action_filter_venues" />
     <item

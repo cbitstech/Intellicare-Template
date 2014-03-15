@@ -18,6 +18,7 @@
         <activity android:name=".VenueTypeActivity" android:theme="@style/Theme.AppCompat.Light" android:label="@string/app_name" />
         <activity android:name=".LocationChooserActivity" android:theme="@style/Theme.AppCompat.Light" android:label="@string/app_name" />
         <activity android:name=".SettingsActivity" android:theme="@style/Theme.AppCompat.Light" android:label="@string/app_name" />
+        <activity android:name=".MyVenuesActivity" android:theme="@style/Theme.AppCompat.Light" android:label="@string/app_name" />
         <activity android:name=".WelcomeActivity" android:theme="@style/Theme.AppCompat.Light" android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

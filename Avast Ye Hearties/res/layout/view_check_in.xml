@@ -1,0 +1,66 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:id="@+id/settings_root">
+    <TextView android:text="@string/instructions_checkin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp" />
+    <TimePicker android:id="@+id/field_checkin_time"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
+
+    <SeekBar android:id="@+id/field_relaxed"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" />
+    <LinearLayout android:orientation="horizontal"
+        android:layout_width="match_parent"
+	    android:layout_height="wrap_content">
+        <TextView android:text="@string/label_very_tense"
+            android:textSize="12sp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:gravity="left" />
+        <TextView android:id="@+id/label_relaxed"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center" />
+        <TextView android:text="@string/label_very_relaxed"
+            android:textSize="12sp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:gravity="right" />
+	</LinearLayout>
+
+    <SeekBar android:id="@+id/field_entertained"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" />
+    <LinearLayout android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView android:text="@string/label_very_bored"
+            android:textSize="12sp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:gravity="left" />
+        <TextView android:id="@+id/label_entertained"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center" />
+        <TextView android:text="@string/label_very_entertained"
+            android:textSize="12sp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:gravity="right" />
+  	    </LinearLayout>
+</LinearLayout>
+
