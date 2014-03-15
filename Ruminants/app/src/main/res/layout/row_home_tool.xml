@@ -21,7 +21,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginRight="8dp"
-        android:src="@drawable/clock_log_dark"
+        android:src="@drawable/clock_checklist_dark"
         android:layout_gravity="top"
         layout_width="wrap_content" />
 </LinearLayout>

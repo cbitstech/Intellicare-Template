@@ -4,6 +4,8 @@
     android:versionCode="10000"
     android:versionName="1.0.0">
     <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <uses-sdk android:minSdkVersion="19" android:targetSdkVersion="19" />
 
     <application
@@ -34,11 +36,33 @@
             android:label="@string/app_name" >
         </activity>
 
+        <activity android:theme="@android:style/Theme.Holo.Light"
+            android:name=".ProfileActivity"
+            android:label="@string/app_name" >
+        </activity>
 
-     <activity android:theme="@android:style/Theme.Holo.Light"
-        android:name=".MainActivity"
-        android:label="@string/app_name" >
-    </activity>
+        <activity android:theme="@android:style/Theme.Holo.Light"
+            android:name=".RuminationLogActivity"
+            android:label="@string/app_name" >
+        </activity>
+
+
+        <activity android:theme="@android:style/Theme.Holo.Light"
+            android:name=".WizardOneActivity"
+            android:label="@string/app_name" >
+        </activity>
+
+        <activity android:theme="@android:style/Theme.Holo.Light"
+            android:name=".MainActivity"
+            android:label="@string/app_name" >
+        </activity>
+    <provider android:name=".RuminantsContentProvider" android:authorities="edu.northwestern.cbits.intellicare.ruminants" android:exported="false" />
+
+        <receiver android:name=".ScheduleHelper">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
 
         <!--
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".WizardOneActivity" android:label="@string/app_name">
@@ -53,7 +77,7 @@
             <activity android:theme="@style/Theme.AppCompat.Light" android:name=".SettingsActivity" android:label="@string/app_name" />
             <activity android:theme="@style/Theme.AppCompat.Light" android:name=".TipsActivity" android:label="@string/app_name" />
 
-            <provider android:name=".RuminantsContentProvider" android:authorities="edu.northwestern.cbits.intellicare.ruminants" android:exported="false" />
+
 
             <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.ConsentActivity" android:label="@string/app_name" />
             <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.RecruitmentActivity" android:label="@string/app_name" />

@@ -11,7 +11,7 @@ import android.net.Uri;
 
     public class RuminantsContentProvider extends ContentProvider
     {
-    private static final int PROFILE = 1;
+    public static final int PROFILE = 1;
     private static final int WIZARD_ONE = 2;
 
 
@@ -23,8 +23,9 @@ import android.net.Uri;
     public static final Uri PROFILE_URI = Uri.parse("content://" + AUTHORITY + "/" + PROFILE_TABLE);
     public static final Uri WIZARD_ONE_URI = Uri.parse("content://" + AUTHORITY + "/" + WIZARD_ONE_TABLE);
 
-    private static final int DATABASE_VERSION = 0;
+    private static final int DATABASE_VERSION = 1;
 
+    public static final String WIZARD_ONE_ID = "_id";
     public static final String WIZARD_ONE_ATTEMPTED_STOP_METHOD = "attempted_stop_method";
     public static final String WIZARD_ONE_DURATION = "duration";
     public static final String WIZARD_ONE_EMOTION = "emotion";
@@ -34,6 +35,7 @@ import android.net.Uri;
 
     public static final String WIZARD_ONE_TIMESTAMP= "wizard_one_timestamp";
 
+    public static final String PROFILE_ID = "_id";
     public static final String PROFILE_RUMINATION_CONCERNS = "concerns";
     public static final String PROFILE_HELP_FREQUENCY = "help_frequency";
     public static final String PROFILE_RUMINATING_LATELY = "ruminating_lately";
@@ -58,7 +60,7 @@ import android.net.Uri;
     {
         final Context context = this.getContext().getApplicationContext();
 
-        SQLiteOpenHelper helper = new SQLiteOpenHelper(context, "avast.db", null, RuminantsContentProvider.DATABASE_VERSION)
+        SQLiteOpenHelper helper = new SQLiteOpenHelper(context, "ruminants.db", null, RuminantsContentProvider.DATABASE_VERSION)
         {
             public void onCreate(SQLiteDatabase db)
             {
@@ -122,15 +124,21 @@ import android.net.Uri;
     @Override
     public Uri insert(Uri uri, ContentValues values)
     {
+        long newId = -1;
         switch(this._matcher.match(uri))
         {
             case RuminantsContentProvider.PROFILE:
+                newId = this._db.insert(RuminantsContentProvider.PROFILE_TABLE, null, values);
+
                 break;
             case RuminantsContentProvider.WIZARD_ONE:
-                long newLocationId = this._db.insert(RuminantsContentProvider.WIZARD_ONE_TABLE, null, values);
+                newId = this._db.insert(RuminantsContentProvider.WIZARD_ONE_TABLE, null, values);
 
-                return Uri.withAppendedPath(uri, "" + newLocationId);
+                break;
         }
+
+        if (newId != -1)
+            return Uri.withAppendedPath(uri, "" + newId);
 
         return null;
     }

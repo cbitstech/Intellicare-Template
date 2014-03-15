@@ -2,10 +2,16 @@ package edu.northwestern.cbits.intellicare.ruminants;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,15 +26,20 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.LogManager;
 
 public class MainActivity extends Activity
 {
-	protected void onCreate(Bundle savedInstanceState) 
+    private static final int NOTE_ID = 237894563;
+
+    protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-	}
+
+        ScheduleManager.getInstance(this.getApplicationContext());
+    }
 
     private class Tool
     {
@@ -54,7 +65,7 @@ public class MainActivity extends Activity
 /*
         CrashManager.register(this, APP_ID, new CrashManagerListener()
         {
-            public boolean shouldAutoUploadCrashes()
+            public bintoolean shouldAutoUploadCrashes()
             {
                 return true;
             }
@@ -66,10 +77,12 @@ public class MainActivity extends Activity
 
        ArrayList<Tool> tools = new ArrayList<Tool>();
 
-       tools.add(new Tool(this.getString(R.string.tool_worry_practice), this.getString(R.string.desc_worry_practice), R.drawable.clock_log_dark, new Intent(this, WorryPracticeActivity.class)));
-       tools.add(new Tool(this.getResources().getString(R.string.tool_didactic_content), this.getString(R.string.desc_didactic_content), R.drawable.clock_log_dark, new Intent(this, DidacticActivity.class)));
-       // tools.add(new Tool(this.getString(R.string.tool_survey_wizard), this.getString(R.string.desc_survey_wizard), R.drawable.clock_diary_dark, new Intent(this, WizardOneActivity.class)));
-       tools.add(new Tool(this.getResources().getString(R.string.tool_replay_intro), this.getString(R.string.desc_replay_intro), R.drawable.clock_tips, introIntent));
+       tools.add(new Tool(this.getString(R.string.tool_worry_practice), this.getString(R.string.desc_worry_practice), R.drawable.clock_checklist_dark, new Intent(this, WorryPracticeActivity.class)));
+       tools.add(new Tool(this.getString(R.string.survey_wizard_title), this.getString(R.string.desc_survey_wizard), R.drawable.clock_checklist, new Intent(this, WizardOneActivity.class)));
+       tools.add(new Tool(this.getString(R.string.tool_rumination_log), this.getString(R.string.desc_rumination_log), R.drawable.clock_checklist_dark, new Intent(this, RuminationLogActivity.class)));
+       tools.add(new Tool(this.getResources().getString(R.string.tool_didactic_content), this.getString(R.string.desc_didactic_content), R.drawable.clock_question_dark, new Intent(this, DidacticActivity.class)));
+       tools.add(new Tool(this.getString(R.string.profile_wizard), this.getString(R.string.desc_profile_wizard), R.drawable.clock_checklist, new Intent(this, ProfileActivity.class)));
+       tools.add(new Tool(this.getResources().getString(R.string.tool_replay_intro), this.getString(R.string.desc_replay_intro), R.drawable.clock_question_dark, introIntent));
 
         ListView toolsList = (ListView) this.findViewById(R.id.list_tools);
 
@@ -142,3 +155,5 @@ public class MainActivity extends Activity
     }
 
 }
+
+
