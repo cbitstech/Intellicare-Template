@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">iCope</string>
+    <string name="action_view_messages">View Cards</string>
+    <string name="action_add_message">Add Card</string>
+    <string name="action_schedule">Schedule Card</string>
+    <string name="action_edit">Edit Card</string>
+
+    
+    <string name="subtitle_today_messages">%d upcoming cards</string>
+</resources>
