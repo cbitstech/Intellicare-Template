@@ -29,6 +29,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class AvastContentProvider extends ContentProvider 
 {
@@ -37,6 +38,25 @@ public class AvastContentProvider extends ContentProvider
 		String name = null;
 		LatLng location = null;
 		String foursquareId = null;
+		String typeId = null;
+		String address = null;
+		public float distance = 0;
+		
+		public int hashCode()
+		{
+			if (this.foursquareId != null)
+				return this.foursquareId.hashCode();
+			
+			return "null".hashCode();
+		}
+		
+		public boolean equals(Object obj)
+		{
+			if (obj == null)
+				return false;
+			
+			return this.hashCode() == obj.hashCode();
+		}
 	}
 
 	public static class Category
@@ -68,7 +88,7 @@ public class AvastContentProvider extends ContentProvider
     public static final Uri VENUE_URI = Uri.parse("content://" + AUTHORITY + "/" + VENUE_TABLE);
     public static final Uri CHECKIN_URI = Uri.parse("content://" + AUTHORITY + "/" + CHECKIN_TABLE);
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public static final String LOCATION_NAME = "name";
     public static final String LOCATION_LATITUDE = "latitude";
@@ -87,6 +107,17 @@ public class AvastContentProvider extends ContentProvider
 	public static final double DEFAULT_RADIUS = 200;
 	public static final double DEFAULT_INITIAL_DURATION = 0;
 
+	protected static final String CHECKIN_VENUE_ID = "venue_id";
+	protected static final String CHECKIN_DATE = "date";
+	protected static final String CHECKIN_RELAXED = "relaxed";
+	protected static final String CHECKIN_ENTERTAINED = "entertained";
+
+	protected static final String VENUE_NAME = "name";
+	protected static final String VENUE_FOURSQUARE_ID = "foursquare_id";
+	protected static final String VENUE_ADDRESS = "address";
+	protected static final String VENUE_CATEGORY_ID = "type_id";
+	protected static final String VENUE_LATITUDE = "latitude";
+	protected static final String VENUE_LONGITUDE = "longitude";
 
     private UriMatcher _matcher = new UriMatcher(UriMatcher.NO_MATCH);
 	private SQLiteDatabase _db = null;
@@ -122,6 +153,10 @@ public class AvastContentProvider extends ContentProvider
             	switch (oldVersion)
             	{
 	                case 0:
+
+	                case 1:
+	    	            db.execSQL(context.getString(R.string.db_update_checkins_add_relaxed));
+	    	            db.execSQL(context.getString(R.string.db_update_checkins_add_entertained));
 
 	                default:
                         break;
@@ -269,12 +304,37 @@ public class AvastContentProvider extends ContentProvider
 					{
 						JSONObject venue = venues.getJSONObject(i);
 						
+						Log.e("AYH", "VENUE: " + venue.toString(2));
+						
 						Venue v = new Venue();
 						v.name = venue.getString("name");
 						v.foursquareId = venue.getString("id");
 						
+						JSONArray categories = venue.getJSONArray("categories");
+						
+						for (int j = 0; j < categories.length(); j++)
+						{
+							JSONObject category = categories.getJSONObject(j);
+							
+							if (category.has("primary") && category.getBoolean("primary"))
+								v.typeId = category.getString("id");
+						}
+						
 						JSONObject location = venue.getJSONObject("location");
 						v.location = new LatLng(location.getDouble("lat"), location.getDouble("lng"));
+						
+						StringBuffer address = new StringBuffer();
+						
+						if (location.has("address"))
+							address.append(location.getString("address") + "\n");
+						
+						if (location.has("city") && location.has("state"))
+							address.append(location.getString("city") + ", " + location.getString("state") + "\n");
+
+						if (location.has("postalCode"))
+							address.append(location.getString("postalCode") + "\n");
+						
+						v.address = address.toString().trim();
 						
 						AvastContentProvider._lastVenues.add(v);
 					}

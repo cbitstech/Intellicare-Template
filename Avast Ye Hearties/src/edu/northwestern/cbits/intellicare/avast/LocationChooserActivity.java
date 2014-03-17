@@ -136,7 +136,7 @@ public class LocationChooserActivity extends ConsentedActivity
 			}
 		});
 		
-		Cursor c = this.getContentResolver().query(DataContentProvider.LOCATION_URI, null, null, null, null);
+		Cursor c = this.getContentResolver().query(AvastContentProvider.LOCATION_URI, null, null, null, null);
 		
 		while (c.moveToNext())
 		{
@@ -186,7 +186,7 @@ public class LocationChooserActivity extends ConsentedActivity
 					Toast.makeText(this, R.string.toast_no_locations_error, Toast.LENGTH_LONG).show();
 				else
 				{
-					this.getContentResolver().delete(DataContentProvider.LOCATION_URI, AvastContentProvider.LOCATION_ID + " != -1", null);
+					this.getContentResolver().delete(AvastContentProvider.LOCATION_URI, AvastContentProvider.LOCATION_ID + " != -1", null);
 					
 					for (Marker marker : this._markers)
 					{
@@ -194,14 +194,14 @@ public class LocationChooserActivity extends ConsentedActivity
 						
 						LatLng coordinate = marker.getPosition();
 						
-						values.put(DataContentProvider.LOCATION_NAME, marker.getTitle());
-						values.put(DataContentProvider.LOCATION_LATITUDE, coordinate.latitude);
-						values.put(DataContentProvider.LOCATION_LONGITUDE, coordinate.longitude);
-						values.put(DataContentProvider.LOCATION_RADIUS, AvastContentProvider.DEFAULT_RADIUS);
-						values.put(DataContentProvider.LOCATION_DURATION, AvastContentProvider.DEFAULT_INITIAL_DURATION);
-						values.put(DataContentProvider.LOCATION_ENABLED, true);
+						values.put(AvastContentProvider.LOCATION_NAME, marker.getTitle());
+						values.put(AvastContentProvider.LOCATION_LATITUDE, coordinate.latitude);
+						values.put(AvastContentProvider.LOCATION_LONGITUDE, coordinate.longitude);
+						values.put(AvastContentProvider.LOCATION_RADIUS, AvastContentProvider.DEFAULT_RADIUS);
+						values.put(AvastContentProvider.LOCATION_DURATION, AvastContentProvider.DEFAULT_INITIAL_DURATION);
+						values.put(AvastContentProvider.LOCATION_ENABLED, true);
 						
-						this.getContentResolver().insert(DataContentProvider.LOCATION_URI, values);
+						this.getContentResolver().insert(AvastContentProvider.LOCATION_URI, values);
 					}
 					
 			        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);

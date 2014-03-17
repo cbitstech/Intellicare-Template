@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">iCope</string>
+    <string name="action_view_messages">View Cards</string>
+    <string name="action_add_message">Add Card</string>
+    <string name="action_schedule">Schedule Card</string>
+    <string name="action_edit">Edit Card</string>
+    <string name="action_save_card">Save Card</string>
+    <string name="action_schedule">Schedule</string>
+    <string name="action_not_now">Not Now</string>
+        
+    <string name="subtitle_today_messages">%d upcoming cards</string>
+    
+    <string name="question_event">What is the important situation or event?</string>
+    <string name="hint_event">Think of an important situation or event that is stressful or that you often avoid. Be as specific as possible.</string>
+
+    <string name="question_reminder">What do you want to remind yourself of when this happens?</string>
+    <string name="hint_reminder">Specifically, what do you want to think or do when this happens? What would you say to yourself or what is your action plan?</string>
+    
+    <string name="title_add_card">Add New Card</string>
+    <string name="title_schedule_reminder">Schedule Reminder</string>
+    
+    <string name="title_card_library">Card Library</string>
+    <string name="subtitle_library">%d cards</string>
+    
+	<!-- Databases -->
+    
+    <string name="db_create_reminders_table">CREATE TABLE IF NOT EXISTS reminders(_id INTEGER PRIMARY KEY, card_id INTEGER, year INTEGER, month INTEGER, day INTEGER, hour INTEGER, minute INTEGER, second INTEGER);</string>
+    <string name="db_create_cards_table">CREATE TABLE IF NOT EXISTS cards(_id INTEGER PRIMARY KEY, event TEXT, reminder TEXT);</string>
+</resources>

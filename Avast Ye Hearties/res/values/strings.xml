@@ -17,10 +17,15 @@
     <string name="action_close">Close</string>
 	<string name="action_remove">Remove</string>
 	<string name="action_save">Save</string>
+	<string name="action_checkin">Check In</string>
+	<string name="action_cancel">Cancel</string>
 	<string name="action_filter_venues">Filter Venues</string>
+	<string name="action_list_venues">List My Venues</string>
 	<string name="action_edit_venues">Edit Place Types</string>
 	<string name="action_edit_locations">Edit My Locations</string>
-	
+	<string name="action_yes">Yes</string>
+	<string name="action_no">No</string>
+		
     <string name="title_venue_type_picker">Choose Destinations</string>
     <string name="message_venue_type_picker">Search or browse this list to find the kinds of places that you enjoy or help you relax. </string>
 
@@ -44,27 +49,60 @@
     
     <string name="toast_no_locations_error">Please pin at least one location to continue.</string>
 
-    <string name="label_location_desc" formatted="false">Location at (%.6f, %.6f)</string>
+    <string name="label_location_desc" formatted="false">Location at (%.3f, %.3f)</string>
     <string name="foursquare_uri_root">https://foursquare.com/v</string>
     <string name="foursquare_attribution">Powered by Foursquare</string>
     
     <string-array name="list_venue_options">
         <item>More information&#8230;</item>
         <item>Check in&#8230;</item>
-        <item>Add to todo list&#8230;</item>
+        <item>Add to my venues&#8230;</item>
     </string-array>
 
+    <string-array name="list_venue_options_sans_add">
+        <item>More information&#8230;</item>
+        <item>Check in&#8230;</item>
+    </string-array>
+    
     <string name="title_checkin">Check In</string>
 	<string name="title_filter_places">Filter Places</string>
 
 	<string name="title_settings">Settings</string>
 	
 	<string name="pref_install_foursquare">Install Foursquare (Optional)</string>
+	
+	<string name="instructions_checkin">Please log when you visited and how much the place entertained and relaxed you.</string>
 
+	<string name="label_very_tense">Very Tense</string>
+	<string name="label_tense">Tense</string>
+	<string name="label_normal">Normal</string>
+	<string name="label_relaxed">Relaxed</string>
+	<string name="label_very_relaxed">Very Relaxed</string>
+
+	<string name="label_very_bored">Very Bored</string>
+	<string name="label_bored">Bored</string>
+	<string name="label_normal">Normal</string>
+	<string name="label_entertained">Entertained</string>
+	<string name="label_very_entertained">Very Entertained</string>
+		
+	
+	<string name="instructions_checkin">Please log when and how much you enjoyed your visit.</string>
+	<string name="instructions_checkin">Please log when and how much you enjoyed your visit.</string>
+
+	<string name="title_my_venues">My Venues</string>
+	<string name="subtitle_my_venues_single">1 venue</string>
+	<string name="subtitle_my_venues" formatted="false">%d venues</string>
+	<string name="message_delete_venue">Delete this place from your list of venues?</string>
+
+	<string name="label_distance" formatted="false">Distance: %.1f mi.</string>
+						
 	<!-- Databases -->
     
     <string name="db_create_venue_types_table">CREATE TABLE IF NOT EXISTS venue_types(_id INTEGER PRIMARY KEY, name TEXT, foursquare_id TEXT, parent_id TEXT, enabled INTEGER DEFAULT 1);</string>
     <string name="db_create_locations_table">CREATE TABLE IF NOT EXISTS locations(_id INTEGER PRIMARY KEY, name TEXT, latitude REAL, longitude REAL, radius REAL, duration INTEGER DEFAULT 0, enabled DEFAULT 1);</string>
     <string name="db_create_venues_table">CREATE TABLE IF NOT EXISTS venues(_id INTEGER PRIMARY KEY, name TEXT, foursquare_id TEXT, type_id TEXT, address TEXT, latitude REAL, longitude REAL);</string>
     <string name="db_create_checkins_table">CREATE TABLE IF NOT EXISTS checkins(_id INTEGER PRIMARY KEY, venue_id integer, date integer);</string>
+
+    <string name="db_update_checkins_add_relaxed">ALTER TABLE checkins ADD COLUMN relaxed INTEGER;</string>
+    <string name="db_update_checkins_add_entertained">ALTER TABLE checkins ADD COLUMN entertained INTEGER;</string>
 </resources>

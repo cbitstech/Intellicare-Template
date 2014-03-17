@@ -1,8 +1,10 @@
 package edu.northwestern.cbits.intellicare.avast;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -18,14 +20,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.TimePicker;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -46,7 +51,8 @@ public class MainActivity extends ConsentedActivity
 	private static final String LAST_LONGITUDE = "last_known_longitude";
 	
 	private HashSet<Marker> _venueMarkers = new HashSet<Marker>();
-	private HashMap<Marker, String> _markerIds = new HashMap<Marker, String>();
+	private HashSet<Venue> _myVenues = new HashSet<Venue>();
+	private HashMap<Marker, Venue> _markerMap = new HashMap<Marker, Venue>();
 	private HashMap<Marker, Long> _placeIds = new HashMap<Marker, Long>();
 	
 	protected void onCreate(Bundle savedInstanceState) 
@@ -90,6 +96,9 @@ public class MainActivity extends ConsentedActivity
 
 		MapFragment fragment = (MapFragment) this.getFragmentManager().findFragmentById(R.id.map);
 		GoogleMap map = fragment.getMap();
+		
+		map.clear();
+		this._myVenues.clear();
 
 		Cursor c = this.getContentResolver().query(AvastContentProvider.LOCATION_URI, null, null, null, null);
 		
@@ -107,60 +116,47 @@ public class MainActivity extends ConsentedActivity
 			this._placeIds.put(map.addMarker(marker), c.getLong(c.getColumnIndex(AvastContentProvider.LOCATION_ID)));
 		}
 		
+		c.close();
+
+        c = this.getContentResolver().query(AvastContentProvider.VENUE_URI, null, null, null, null);
+        
+        while (c.moveToNext())
+        {
+        	Venue venue = new Venue();
+        	
+        	venue.foursquareId = c.getString(c.getColumnIndex(AvastContentProvider.VENUE_FOURSQUARE_ID));
+        	venue.name = c.getString(c.getColumnIndex(AvastContentProvider.VENUE_NAME));
+        	venue.address = c.getString(c.getColumnIndex(AvastContentProvider.VENUE_ADDRESS));
+        	venue.typeId = c.getString(c.getColumnIndex(AvastContentProvider.VENUE_CATEGORY_ID));
+        	venue.location = new LatLng(c.getDouble(c.getColumnIndex(AvastContentProvider.VENUE_LATITUDE)), c.getDouble(c.getColumnIndex(AvastContentProvider.VENUE_LONGITUDE)));
+
+        	this._myVenues.add(venue);
+        	
+			MarkerOptions marker = new MarkerOptions();
+			marker.position(venue.location);
+			marker.title(venue.name);
+			marker.snippet(venue.address);
+			marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+
+			Marker m = map.addMarker(marker);
+		
+			me._venueMarkers.add(m);
+			me._markerMap.put(m, venue);
+        }
+        
+        c.close();
+		
 		map.setOnInfoWindowClickListener(new OnInfoWindowClickListener()
 		{
 			public void onInfoWindowClick(final Marker marker) 
 			{
-				AlertDialog.Builder builder = new AlertDialog.Builder(me);
-				
-				builder.setTitle(marker.getTitle());
-				builder.setItems(R.array.list_venue_options, new OnClickListener()
-				{
+				final Venue venue = me._markerMap.get(marker);
 
-					public void onClick(DialogInterface arg0, int which) 
-					{
-						switch (which)
-						{
-							case 0:
-								String id = me._markerIds.get(marker);
-								
-								if (id != null)
-								{
-									Uri u = AvastContentProvider.uriForId(me, id);
-									
-									if (u != null)
-									{
-										Intent intent = new Intent(Intent.ACTION_VIEW);
-										intent.setData(u);
-										
-										me.startActivity(intent);
-									}
-								}
-								
-								Long placeId = me._placeIds.get(marker);
-								
-								if (placeId != null)
-									me.selectLocation(placeId.longValue());
-								
-								break;
-							case 1:
-								Toast.makeText(me, "ToDo: CHEck iN", Toast.LENGTH_LONG).show();
-								
-								break;
-							case 2:
-								Toast.makeText(me, "ToDo: add tO tOdO lIST", Toast.LENGTH_LONG).show();
-								
-								break;
-						}
-					}
-				});
-				
-				builder.create().show();
+				MainActivity.showOptions(me, venue);
 			}
 		});
 		
 		c.close();
-
 		
 		final ListView locations = (ListView) this.findViewById(R.id.locations_list);
 		
@@ -196,6 +192,216 @@ public class MainActivity extends ConsentedActivity
 			}
 		});
 	}
+
+	protected static void showOptions(final Activity activity, final Venue venue) 
+	{
+		if (venue == null)
+			return;
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+		
+		builder.setTitle(venue.name);
+
+		int optionsList = R.array.list_venue_options;
+		
+		String selection = AvastContentProvider.VENUE_FOURSQUARE_ID + " = ?";
+		String[] args = { "" + venue.foursquareId };
+		
+		Cursor c = activity.getContentResolver().query(AvastContentProvider.VENUE_URI, null, selection, args, null);
+		
+		if (c.getCount() > 0)
+			optionsList = R.array.list_venue_options_sans_add;
+		
+		c.close();
+		
+		builder.setItems(optionsList, new OnClickListener()
+		{
+			public void onClick(DialogInterface arg0, int which) 
+			{
+				switch (which)
+				{
+					case 0:
+						String id = venue.foursquareId;
+						
+						if (id != null)
+						{
+							Uri u = AvastContentProvider.uriForId(activity, id);
+							
+							if (u != null)
+							{
+								Intent intent = new Intent(Intent.ACTION_VIEW);
+								intent.setData(u);
+								
+								activity.startActivity(intent);
+							}
+						}
+						
+						break;
+					case 1:
+						AlertDialog.Builder checkInBuilder = new AlertDialog.Builder(activity);
+						
+						checkInBuilder.setTitle(venue.name);
+
+						LayoutInflater inflater = LayoutInflater.from(activity);
+						View view = inflater.inflate(R.layout.view_check_in, null, false);
+						
+						final TimePicker timePicker = (TimePicker) view.findViewById(R.id.field_checkin_time);
+						
+						final TextView relaxLabel = (TextView) view.findViewById(R.id.label_relaxed);
+					
+						final SeekBar relaxed = (SeekBar) view.findViewById(R.id.field_relaxed);
+						relaxed.setMax(4);
+						relaxed.setProgress(2);
+						relaxed.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
+						{
+							public void onProgressChanged(SeekBar bar, int which, boolean fromUser) 
+							{
+								switch (which)
+								{
+									case 0:
+										relaxLabel.setText(R.string.label_very_tense);
+										break;
+									case 1:
+										relaxLabel.setText(R.string.label_tense);
+										break;
+									case 2:
+										relaxLabel.setText(R.string.label_normal);
+										break;
+									case 3:
+										relaxLabel.setText(R.string.label_relaxed);
+										break;
+									case 4:
+										relaxLabel.setText(R.string.label_very_relaxed);
+										break;
+								}
+							}
+
+							public void onStartTrackingTouch(SeekBar arg0) 
+							{
+
+							}
+
+							public void onStopTrackingTouch(SeekBar arg0) 
+							{
+
+							}
+						});
+						
+
+						final TextView entertainLabel = (TextView) view.findViewById(R.id.label_entertained);
+						
+						final SeekBar entertained = (SeekBar) view.findViewById(R.id.field_entertained);
+						entertained.setMax(4);
+						entertained.setProgress(2);
+						entertained.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
+						{
+							public void onProgressChanged(SeekBar bar, int which, boolean fromUser) 
+							{
+								switch (which)
+								{
+									case 0:
+										entertainLabel.setText(R.string.label_very_bored);
+										break;
+									case 1:
+										entertainLabel.setText(R.string.label_bored);
+										break;
+									case 2:
+										entertainLabel.setText(R.string.label_normal);
+										break;
+									case 3:
+										entertainLabel.setText(R.string.label_entertained);
+										break;
+									case 4:
+										entertainLabel.setText(R.string.label_very_entertained);
+										break;
+								}
+							}
+
+							public void onStartTrackingTouch(SeekBar arg0) 
+							{
+
+							}
+
+							public void onStopTrackingTouch(SeekBar arg0) 
+							{
+
+							}
+						});
+
+						checkInBuilder.setView(view);
+
+						checkInBuilder.setPositiveButton(R.string.action_checkin, new OnClickListener()
+						{
+							public void onClick(DialogInterface dialog, int which) 
+							{
+								int hour = timePicker.getCurrentHour();
+								int minute = timePicker.getCurrentMinute();
+								
+								Calendar c = Calendar.getInstance();
+								c.set(Calendar.HOUR_OF_DAY, hour);
+								c.set(Calendar.MINUTE, minute);
+								
+								long checkinTime = c.getTimeInMillis();
+								long now = System.currentTimeMillis();
+								
+								if (checkinTime > now)
+									checkinTime -= 24 * 60 * 60 * 1000;
+								
+								int relaxedValue = relaxed.getProgress();
+								int entertainedValue = entertained.getProgress();
+
+								ContentValues values = new ContentValues();
+								values.put(AvastContentProvider.CHECKIN_VENUE_ID, venue.foursquareId);
+								values.put(AvastContentProvider.CHECKIN_DATE, checkinTime);
+								values.put(AvastContentProvider.CHECKIN_RELAXED, relaxedValue);
+								values.put(AvastContentProvider.CHECKIN_ENTERTAINED, entertainedValue);
+								
+								activity.getContentResolver().insert(AvastContentProvider.CHECKIN_URI, values);
+							}
+						});
+
+						checkInBuilder.setNegativeButton(R.string.action_cancel, new OnClickListener()
+						{
+							public void onClick(DialogInterface dialog, int which) 
+							{
+
+							}
+						});
+
+						checkInBuilder.create().show();
+						
+						break;
+					case 2:
+						String selection = AvastContentProvider.VENUE_FOURSQUARE_ID + " = ?";
+						String[] args = { "" + venue.foursquareId };
+						
+						Cursor c = activity.getContentResolver().query(AvastContentProvider.VENUE_URI, null, selection, args, null);
+						
+						if (c.getCount() > 0)
+						{
+							
+						}
+						else
+						{
+							ContentValues values = new ContentValues();
+							values.put(AvastContentProvider.VENUE_NAME, venue.name);
+							values.put(AvastContentProvider.VENUE_FOURSQUARE_ID, venue.foursquareId);
+							values.put(AvastContentProvider.VENUE_CATEGORY_ID, venue.typeId);
+							values.put(AvastContentProvider.VENUE_ADDRESS, venue.address);
+							values.put(AvastContentProvider.VENUE_LATITUDE, venue.location.latitude);
+							values.put(AvastContentProvider.VENUE_LONGITUDE, venue.location.longitude);
+							
+							activity.getContentResolver().insert(AvastContentProvider.VENUE_URI, values);
+						}
+
+						c.close();
+						
+						break;
+				}
+			}
+		});
+		
+		builder.create().show();	}
 
 	protected void selectLocation(long id) 
 	{
@@ -238,7 +444,7 @@ public class MainActivity extends ConsentedActivity
 			}
 			
 			this._venueMarkers.clear();
-			this._markerIds.clear();
+			this._markerMap.clear();
 			
 			if (sb.length() > 0)
 			{		
@@ -251,11 +457,15 @@ public class MainActivity extends ConsentedActivity
 							MarkerOptions marker = new MarkerOptions();
 							marker.position(venue.location);
 							marker.title(venue.name);
+							marker.snippet(venue.address);
 	
+							if (me._myVenues.contains(venue))
+								marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+
 							Marker m = map.addMarker(marker);
 							
 							me._venueMarkers.add(m);
-							me._markerIds.put(m, venue.foursquareId);
+							me._markerMap.put(m, venue);
 						}
 					}
 				});
@@ -284,7 +494,13 @@ public class MainActivity extends ConsentedActivity
 				venueIntent.putExtra(VenueTypeActivity.ONE_SHOT, true);
 				
 				this.startActivity(venueIntent);
-
+	
+				break;
+			case R.id.action_list_venues:
+				Intent myVenuesIntent = new Intent(this, MyVenuesActivity.class);
+				
+				this.startActivity(myVenuesIntent);
+	
 				break;
 			case R.id.action_edit_locations:
 				Intent locationIntent = new Intent(this, LocationChooserActivity.class);

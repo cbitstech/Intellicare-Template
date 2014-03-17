@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:robot="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_schedule"
+        robot:showAsAction="always"
+        android:icon="@drawable/ic_action_alarm"
+        android:title="@string/action_schedule" />
+    <item android:id="@+id/action_edit"
+        robot:showAsAction="always"
+        android:icon="@drawable/ic_action_edit"
+        android:title="@string/action_edit" />
+</menu>
