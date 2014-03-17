@@ -11,12 +11,12 @@
         android:text="@string/timer_title"
         android:id="@+id/textView2"
         android:gravity="left"
-        android:layout_marginLeft="24dp"
         android:layout_marginBottom="6dp"
-        android:textColor="#0099cc"
+        android:textColor="#000"
         android:textStyle="bold"
         android:textSize="18sp"
-        android:layout_marginTop="12dp" />
+        android:layout_marginTop="12dp"
+        android:layout_gravity="center_horizontal" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -28,7 +28,7 @@
             android:id="@+id/timer_minute"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="10dip"
+            android:paddingRight="10dp"
             android:textSize="96sp"
             android:layout_marginLeft="24dp"
             android:layout_marginRight="0dp"
@@ -38,12 +38,12 @@
             android:background="#669900"
             android:layout_gravity="center|right"
             android:gravity="center_horizontal|right"
-            android:minWidth="96dp" />
+            android:minWidth="108dp"
+            android:paddingLeft="36dp" />
         <TextView
             android:id="@+id/timer_second"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="10dip"
             android:textSize="96sp"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="24dp"
@@ -84,7 +84,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/show_help"
-        android:id="@+id/button3"
+        android:id="@+id/didactic_button"
         android:layout_marginBottom="12dp"
         android:layout_marginTop="12dp"
         android:layout_gravity="center_horizontal" />

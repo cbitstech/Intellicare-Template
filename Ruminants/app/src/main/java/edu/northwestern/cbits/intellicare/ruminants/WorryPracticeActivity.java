@@ -5,11 +5,13 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -66,7 +68,7 @@ public class WorryPracticeActivity extends Activity  {
             {
                 int index = prefs.getInt(WorryPracticeActivity.LAST_SELECTED_DURATION, -1);
 
-                me.startTime = Integer.parseInt(me.getResources().getStringArray(R.array.time_choices_wpt)[index]) * 1000;
+                me.startTime = Integer.parseInt(me.getResources().getStringArray(R.array.time_intervals_wpt)[index]) * 1000;
 
                 final TextView minute = (TextView) me.findViewById(R.id.timer_minute);
                 final TextView second = (TextView) me.findViewById(R.id.timer_second);
@@ -76,6 +78,7 @@ public class WorryPracticeActivity extends Activity  {
                     @Override
                     public void onFinish() {
                         minute.setText(R.string.timeup);
+                        second.setText("");
                     }
                     @Override
                     public void onTick(long millisUntilFinished) {
@@ -100,13 +103,27 @@ public class WorryPracticeActivity extends Activity  {
 
                         minute.setText( minutes + ":");
                     }
+
+
                 };
+
+                final Button reset = (Button) me.findViewById(R.id.reset_button);
+                reset.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        me.countDownTimer.start();
+                    }
+                });
+
 
             }
         });
 
         AlertDialog dialog = builder.create();
         dialog.show();
+
     }
 
     private static String LAST_SELECTED_DURATION = "last_selected_duration";
@@ -151,5 +168,17 @@ public class WorryPracticeActivity extends Activity  {
                 }
             }
         });
+
+        final Button didactic = (Button) this.findViewById(R.id.didactic_button);
+        didactic.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Intent didacticIntent =  new Intent(me, DidacticActivity.class);
+                me.startActivity(didacticIntent);
+            }
+        });
     }
+
 }

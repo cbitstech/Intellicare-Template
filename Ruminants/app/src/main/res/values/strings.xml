@@ -29,7 +29,7 @@
     <string name="reset_wpt">Reset</string>
     <string name="start_wpt">Start</string>
     <string name="stop_wpt">Stop</string>
-    <string name="timeup">Time to MOOOOOOOOOOOVE on!</string>
+    <string name="timeup">Done!</string>
     <string name="show_help">Show How This Helps</string>
 
     <string name="question_ruminating">Ruminating? Click here!</string>
@@ -89,7 +89,7 @@
     </string-array>
 
     <string-array name="pun_bank">
-        <item>ru-MOO-nation? udderly unfun!</item>
+        <item>rumination - udderly unfun</item>
         <item>MOO-ve worries along</item>
         <item>improve your MOO-od</item>
         <item>lasso good thoughts</item>
@@ -195,10 +195,16 @@
         <item>5</item>
     </string-array>
 
-    <string-array name="time_choices_wpt">
+    <string-array name="time_intervals_wpt">
         <item>480</item> // 8 minutes
         <item>300</item> // 5 minutes
         <item>180</item> // 3 minutes
+    </string-array>
+
+    <string-array name="time_choices_wpt">
+        <item>8 minutes</item>
+        <item>5 minutes</item>
+        <item>3 minutes</item>
     </string-array>
 
 
@@ -246,6 +252,8 @@
     <string name="profile_note_message">tell bessie what is on yr mind</string>
     <string name="help_note_title">ru-MOO-nating?</string>
     <string name="help_note_message">True a rumination tool.</string>
+    <string name="tool_chooser_name">Choose a tool to use</string>
+    <string name="desc_tool_chooser">no mooo-oore rumination!</string>
 
 
 </resources>

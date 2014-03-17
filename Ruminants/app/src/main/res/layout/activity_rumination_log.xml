@@ -2,7 +2,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="top">
+        android:gravity="top"
+       android:showDividers="none">
 
        <TextView
            android:layout_width="fill_parent"
@@ -14,16 +15,15 @@
            android:textStyle="bold"
            android:textSize="36sp"
            android:singleLine="true"
-           android:paddingBottom="6dp" />
+           android:paddingBottom="6dp"
+           android:paddingTop="8dp" />
 
        <ListView
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:id="@+id/concern_entries"
-           android:paddingTop="6dp" />
+           android:id="@+id/concern_entries" />
        <ListView
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:id="@+id/trigger_entries"
-           android:paddingTop="6dp" />
+           android:id="@+id/trigger_entries" />
    </LinearLayout>

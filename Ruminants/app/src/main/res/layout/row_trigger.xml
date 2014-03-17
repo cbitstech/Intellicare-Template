@@ -2,7 +2,9 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:showDividers="none"
+    android:padding="6dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -11,7 +13,7 @@
         android:text="Medium Text"
         android:id="@+id/trigger_description"
         android:paddingLeft="24dp"
-        android:textSize="28sp" />
+        android:textSize="22sp" />
 
     <TextView
         android:layout_width="wrap_content"

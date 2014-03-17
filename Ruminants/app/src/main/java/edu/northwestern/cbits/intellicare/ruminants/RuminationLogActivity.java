@@ -5,11 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class RuminationLogActivity extends Activity {
         final ListView concernList = (ListView) this.findViewById(R.id.concern_entries);
         final ListView triggerList = (ListView) this.findViewById(R.id.trigger_entries);
 
-        Cursor c = me.getContentResolver().query(RuminantsContentProvider.PROFILE_URI, null, null, null, RuminantsContentProvider.PROFILE_ID);
+        Cursor c = me.getContentResolver().query(RuminantsContentProvider.PROFILE_URI, null, null, null, RuminantsContentProvider.PROFILE_ID + " DESC LIMIT 3");
 
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(me, R.layout.row_concern, c, new String[0], new int[0]) {
             public void bindView(View view, Context context, Cursor cursor) {
@@ -57,14 +57,15 @@ public class RuminationLogActivity extends Activity {
                 TextView timestamp = (TextView) view.findViewById(R.id.concern_date);
                 Timestamp stamp = new Timestamp(cursor.getLong(cursor.getColumnIndex(RuminantsContentProvider.PROFILE_TIMESTAMP)));
                 Date date = new Date(stamp.getTime());
-                timestamp.setText(date.toString());
+                String triggerDate = new SimpleDateFormat("MM-dd hh:mm").format(date);
+                timestamp.setText(triggerDate);
 
             }
         };
 
         concernList.setAdapter(adapter);
 
-        Cursor k = me.getContentResolver().query(RuminantsContentProvider.WIZARD_ONE_URI, null, null, null, RuminantsContentProvider.WIZARD_ONE_ID);
+        Cursor k = me.getContentResolver().query(RuminantsContentProvider.WIZARD_ONE_URI, null, null, null, RuminantsContentProvider.WIZARD_ONE_ID + " DESC");
 
         SimpleCursorAdapter wizard_adapter = new SimpleCursorAdapter(me, R.layout.row_trigger, k, new String[0], new int[0]) {
 
@@ -76,13 +77,14 @@ public class RuminationLogActivity extends Activity {
                 TextView timestamp = (TextView) view.findViewById(R.id.trigger_date);
 
                 Timestamp stamp = new Timestamp(cursor.getLong(cursor.getColumnIndex(RuminantsContentProvider.WIZARD_ONE_TIMESTAMP)));
-                Date triggerDate = new Date(stamp.getTime());
-                timestamp.setText(triggerDate.toString());
+                Date date = new Date(stamp.getTime());
+                String triggerDate = new SimpleDateFormat("MM-dd hh:mm").format(date);
+                timestamp.setText(triggerDate);
 
                 }
             };
         triggerList.setAdapter(wizard_adapter);
-        };
+        }
 
     }
 
