@@ -8,14 +8,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1">
-		<TextView android:id="@+id/label_tool_name"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:textSize="24sp" />
-		<TextView android:id="@+id/label_tool_description"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:textSize="14sp" />
+        <TextView android:id="@+id/rum_tool_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="22sp" />
+        <TextView android:id="@+id/rum_tool_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp" />
     </LinearLayout>
     <ImageView android:id="@+id/icon_tool"
         android:layout_width="48dp"

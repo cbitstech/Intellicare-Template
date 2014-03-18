@@ -2,6 +2,7 @@ package edu.northwestern.cbits.intellicare.ruminants;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -31,7 +32,7 @@ import java.util.logging.LogManager;
 
 public class MainActivity extends Activity
 {
-    private static final int NOTE_ID = 237894563;
+    public static final String RUNBEFORE = "runBefore";
 
     protected void onCreate(Bundle savedInstanceState)
 	{
@@ -58,6 +59,29 @@ public class MainActivity extends Activity
     }
     @SuppressLint("SetJavaScriptEnabled")
 
+   /* protected void onCreate() {
+        // check if this is first app use
+        ActivityManager am = (ActivityManager)this.getSystemService(Context.ACTIVITY_SERVICE);
+        int sizeStack =  am.getRunningTasks(1).get(0).numActivities;
+
+        // if first app use have user fill out profile
+        if (sizeStack == 2)
+        {Intent launchIntent = new Intent(this, ProfileActivity.class);
+            this.startActivity(launchIntent);
+
+            return;}
+
+        // then set RUNBEFORE to true to turn profiles over to notification manager
+        else {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean(MainActivity.RUNBEFORE, true);
+            editor.commit();
+
+            return;
+        }
+    } */
+
     protected void onResume()
     {
         super.onResume();
@@ -73,14 +97,12 @@ public class MainActivity extends Activity
 */
         final MainActivity me = this;
 
-      Intent introIntent = new Intent(this, IntroActivity.class).putExtra("skipCheck", true);
+       Intent introIntent = new Intent(this, IntroActivity.class).putExtra("skipCheck", true);
 
        ArrayList<Tool> tools = new ArrayList<Tool>();
 
-       tools.add(new Tool(this.getString(R.string.tool_worry_practice), this.getString(R.string.desc_worry_practice), R.drawable.clock_checklist_dark, new Intent(this, WorryPracticeActivity.class)));
-       tools.add(new Tool(this.getString(R.string.survey_wizard_title), this.getString(R.string.desc_survey_wizard), R.drawable.clock_checklist, new Intent(this, WizardOneActivity.class)));
        tools.add(new Tool(this.getString(R.string.tool_rumination_log), this.getString(R.string.desc_rumination_log), R.drawable.clock_checklist_dark, new Intent(this, RuminationLogActivity.class)));
-       tools.add(new Tool(this.getResources().getString(R.string.tool_didactic_content), this.getString(R.string.desc_didactic_content), R.drawable.clock_question_dark, new Intent(this, DidacticActivity.class)));
+       tools.add(new Tool(this.getResources().getString(R.string.tool_chooser_name), this.getString(R.string.desc_tool_chooser), R.drawable.clock_question_dark, new Intent(this, ToolChooserActivity.class)));
        tools.add(new Tool(this.getString(R.string.profile_wizard), this.getString(R.string.desc_profile_wizard), R.drawable.clock_checklist, new Intent(this, ProfileActivity.class)));
        tools.add(new Tool(this.getResources().getString(R.string.tool_replay_intro), this.getString(R.string.desc_replay_intro), R.drawable.clock_question_dark, introIntent));
 

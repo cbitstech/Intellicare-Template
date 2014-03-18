@@ -59,7 +59,7 @@ public class ScheduleManager {
 
     public void updateSchedule()
     {
-        Log.e("CAR", "TICK");
+        //Log.e("CAR", "TICK");
 
 //        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
 
@@ -81,7 +81,7 @@ public class ScheduleManager {
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
 
-        Log.e("CAR", "H: " + hour + " M: " + minute);
+        //Log.e("CAR", "H: " + hour + " M: " + minute);
 
         // Profile notification...
         if (hour == ScheduleManager.DEFAULT_PROFILE_HOUR && minute == ScheduleManager.DEFAULT_PROFILE_MINUTE)
@@ -127,10 +127,10 @@ public class ScheduleManager {
         else if  ((helpFrequency == 3) && ((hour == 9 && minute == 0 || hour == 13 && minute == 0 || hour == 18 && minute == 0))) {
             timeToFire = true;
         }
-        // Testing below
+        /*Testing below
         else if ((hour == 14 && minute == 52)) {
             timeToFire = true;
-        }
+        } */
 
         // Helper notification...
         if (timeToFire)

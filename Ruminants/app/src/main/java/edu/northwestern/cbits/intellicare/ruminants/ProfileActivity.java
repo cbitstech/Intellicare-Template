@@ -2,6 +2,7 @@ package edu.northwestern.cbits.intellicare.ruminants;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -113,6 +114,9 @@ public class ProfileActivity extends Activity {
             Toast.makeText(this, R.string.toast_profile_recorded, Toast.LENGTH_SHORT).show();
 
             this.finish();
+
+            Intent launchIntent = new Intent(this, MainActivity.class);
+            this.startActivity(launchIntent);
         }
 
         return true;

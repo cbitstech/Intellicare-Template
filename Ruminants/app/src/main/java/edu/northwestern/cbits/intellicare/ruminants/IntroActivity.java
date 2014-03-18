@@ -42,7 +42,8 @@ public class IntroActivity extends Activity {
 
         boolean skipCheck = this.getIntent().getBooleanExtra("skipCheck", false);
 
-        if (prefs.getBoolean(RUNBEFORE, false) && skipCheck == false)
+        // if not first use, user goes to main activity
+        if (prefs.getBoolean(RUNBEFORE, true) && !skipCheck)
         {
             this.finish();
 
@@ -50,7 +51,8 @@ public class IntroActivity extends Activity {
             this.startActivity(launchIntent);
 
             return;
-    }
+        }
+
         this.setContentView(R.layout.activity_intro);
     }
 
@@ -87,8 +89,6 @@ public class IntroActivity extends Activity {
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putBoolean(IntroActivity.RUNBEFORE, true);
                 editor.commit();
-
-                this.finish();
 
                 return;
             }

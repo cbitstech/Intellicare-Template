@@ -1,13 +1,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#ffffff">
     <View android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#808080"/>
     <ImageView
-        android:layout_width="96dp"
-        android:layout_height="96dp"
+        android:layout_width="144dp"
+        android:layout_height="144dp"
         android:id="@+id/imageView"
         android:baselineAlignBottom="true"
         android:src="@drawable/bessie_placeholder"
@@ -15,5 +16,6 @@
     <ListView android:id="@+id/list_tools"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3" />
+        android:layout_weight="3"
+        android:background="#e5ffd3" />
 </LinearLayout>
