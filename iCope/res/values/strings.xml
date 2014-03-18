@@ -7,23 +7,46 @@
     <string name="action_save_card">Save Card</string>
     <string name="action_schedule">Schedule</string>
     <string name="action_not_now">Not Now</string>
-        
+    <string name="action_schedule">Schedule&#8230;</string>
+    <string name="action_helpful">Helpful</string>
+    <string name="action_not_helpful">Not Helpful</string>
+    
     <string name="subtitle_today_messages">%d upcoming cards</string>
+    <string name="message_no_reminders">No upcoming reminders.\n\nTap a button above to add a new card and reminder, or to reschedule an existing card.</string>
     
     <string name="question_event">What is the important situation or event?</string>
-    <string name="hint_event">Think of an important situation or event that is stressful or that you often avoid. Be as specific as possible.</string>
+    <string name="hint_event">Example: I get nervous about speaking at meetings.</string>
 
     <string name="question_reminder">What do you want to remind yourself of when this happens?</string>
-    <string name="hint_reminder">Specifically, what do you want to think or do when this happens? What would you say to yourself or what is your action plan?</string>
+    <string name="hint_reminder">Example: Remind myself that almost everyone is nervous speaking publicly.</string>
+    
+    <string name="question_event_type">What kind of event is this?</string>
+    <string name="hint_event_type">What kind of event is this? (e.g. work)</string>
     
     <string name="title_add_card">Add New Card</string>
     <string name="title_schedule_reminder">Schedule Reminder</string>
     
     <string name="title_card_library">Card Library</string>
-    <string name="subtitle_library">%d cards</string>
-    
+    <string name="subtitle_library" formatted="false">%d cards</string>
+
+   	<string-array name="list_card_options">
+        <item>Edit Card</item>
+        <item>Schedule Reminder</item>
+   	</string-array>
+
+    <string name="title_card_actions">Actions</string>
+	<string name="type_unknown">Unknown Event Type</string>   	
+
+	<string name="message_single_remainder">One additional card\nscheduled for the future.</string>
+	<string name="message_remainders" formatted="false">%d additional cards\nscheduled for the future.</string>
+
+	<string name="title_card_reminder">iCope Reminder</string>
+			
 	<!-- Databases -->
     
     <string name="db_create_reminders_table">CREATE TABLE IF NOT EXISTS reminders(_id INTEGER PRIMARY KEY, card_id INTEGER, year INTEGER, month INTEGER, day INTEGER, hour INTEGER, minute INTEGER, second INTEGER);</string>
     <string name="db_create_cards_table">CREATE TABLE IF NOT EXISTS cards(_id INTEGER PRIMARY KEY, event TEXT, reminder TEXT);</string>
+
+    <string name="db_update_cards_add_card_type">ALTER TABLE cards ADD COLUMN card_type TEXT;</string>
 </resources>
+

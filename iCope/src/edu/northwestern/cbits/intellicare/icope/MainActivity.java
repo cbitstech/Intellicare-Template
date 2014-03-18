@@ -1,21 +1,24 @@
 package edu.northwestern.cbits.intellicare.icope;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.text.DateFormat;
+import java.util.List;
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.ActionBar;
-import android.text.format.DateFormat;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.icope.CopeContentProvider.Reminder;
 
 public class MainActivity extends ConsentedActivity 
 {
@@ -23,58 +26,105 @@ public class MainActivity extends ConsentedActivity
 	{
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_main);
+		
+		ScheduleManager.getInstance(this).updateSchedule();
 	}
 	
-	@SuppressWarnings("deprecation")
 	protected void onResume()
 	{
 		super.onResume();
 		
 		ListView list = (ListView) this.findViewById(R.id.cards_list);
 		
-		Cursor c = this.getContentResolver().query(CopeContentProvider.REMINDER_URI, null, null, null, null);
+		final List<Reminder> reminders = CopeContentProvider.listUpcomingReminders(this);
 		
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.row_reminder, c, new String[0], new int[0])
+		final MainActivity me = this;
+		
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row_reminder, new String[2])
 		{
-			public void bindView (View view, Context context, Cursor cursor)
+			public View getView(int position, View convertView, ViewGroup parent)
 			{
-				TextView reminderTime = (TextView) view.findViewById(R.id.label_reminder_time);
-				
-				Calendar c = Calendar.getInstance();
-				c.set(Calendar.YEAR, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_YEAR)));
-				c.set(Calendar.MONTH, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_MONTH)));
-				c.set(Calendar.DAY_OF_MONTH, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_DAY)));
-				c.set(Calendar.HOUR_OF_DAY, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_HOUR)));
-				c.set(Calendar.MINUTE, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_MINUTE)));
-				c.set(Calendar.SECOND, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_SECOND)));
-				
-				reminderTime.setText(c.getTime().toString());
-				
-				String selection = CopeContentProvider.CARD_ID + " = ?";
-				String selectionArgs[] = { cursor.getString(cursor.getColumnIndex(CopeContentProvider.REMINDER_CARD_ID)) };
-				
-				Cursor cardCursor = context.getContentResolver().query(CopeContentProvider.CARD_URI, null, selection, selectionArgs, null);
-				
-				if (cardCursor.moveToNext())
+				if (position == 0)
 				{
-					TextView event = (TextView) view.findViewById(R.id.label_reminder_event);
-					TextView reminder = (TextView) view.findViewById(R.id.label_reminder_reminder);
+					if (convertView == null)
+					{
+	    				LayoutInflater inflater = LayoutInflater.from(me);
+	    				convertView = inflater.inflate(R.layout.row_reminder, parent, false);
+					}
 					
-					event.setText(cardCursor.getString(cardCursor.getColumnIndex(CopeContentProvider.CARD_EVENT)));
-					reminder.setText(cardCursor.getString(cardCursor.getColumnIndex(CopeContentProvider.CARD_REMINDER)));
+					Reminder r = reminders.get(position);
+	
+					DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(me);
+					DateFormat dateFormat = android.text.format.DateFormat.getLongDateFormat(me);
+	
+					TextView reminderTime = (TextView) convertView.findViewById(R.id.label_reminder_time);
+	
+					reminderTime.setText(dateFormat.format(r.date) + " @ " + timeFormat.format(r.date));
+					
+					String selection = CopeContentProvider.CARD_ID + " = ?";
+					String selectionArgs[] = { "" + r.cardId };
+					
+					Cursor cardCursor = me.getContentResolver().query(CopeContentProvider.CARD_URI, null, selection, selectionArgs, null);
+					
+					if (cardCursor.moveToNext())
+					{
+						TextView event = (TextView) convertView.findViewById(R.id.label_reminder_event);
+						TextView reminder = (TextView) convertView.findViewById(R.id.label_reminder_reminder);
+						TextView type = (TextView) convertView.findViewById(R.id.label_reminder_type);
+						
+						event.setText(cardCursor.getString(cardCursor.getColumnIndex(CopeContentProvider.CARD_EVENT)));
+						reminder.setText(cardCursor.getString(cardCursor.getColumnIndex(CopeContentProvider.CARD_REMINDER)));
+						type.setText(cardCursor.getString(cardCursor.getColumnIndex(CopeContentProvider.CARD_TYPE)));
+					}
+					
+					cardCursor.close();
+					
+					return convertView;
+				}
+				else if(reminders.size() > 1)
+				{
+					if (convertView == null)
+					{
+	    				LayoutInflater inflater = LayoutInflater.from(me);
+	    				convertView = inflater.inflate(R.layout.row_reminder_rest, parent, false);
+					}
+	
+					TextView remainder = (TextView) convertView.findViewById(R.id.label_remainder);
+					
+					if (reminders.size() == 2)
+						remainder.setText(R.string.message_single_remainder);
+					else
+						remainder.setText(me.getString(R.string.message_remainders, reminders.size() - 1));
+					
+					return convertView;
 				}
 				
-				cardCursor.close();
+				return null;
 			}
 		};
 
-		java.text.DateFormat todayFormat = DateFormat.getMediumDateFormat(this);
-
 		ActionBar actionBar = this.getSupportActionBar();
-		actionBar.setTitle(todayFormat.format(new Date()));
-		actionBar.setSubtitle(this.getString(R.string.subtitle_today_messages, c.getCount()));
+		actionBar.setTitle(R.string.app_name);
 		
 		list.setAdapter(adapter);
+		
+		list.setOnItemClickListener(new OnItemClickListener()
+		{
+			public void onItemClick(AdapterView<?> parent, View row, int position, long id) 
+			{
+				if (position == 0)
+				{
+					Reminder r = reminders.get(0);
+					
+					Intent intent = new Intent(me, ViewCardActivity.class);
+					intent.putExtra(ViewCardActivity.REMINDER_ID, r.reminderId);
+					
+					me.startActivity(intent);
+				}
+			}
+		});
+		
+		list.setEmptyView(this.findViewById(R.id.view_empty));
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) 
