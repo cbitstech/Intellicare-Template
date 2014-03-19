@@ -59,7 +59,8 @@ public class DidacticActivity extends Activity {
 
         if (page >= this.mContentSet.length)
         {
-            this.finish();
+            Intent launchIntent = new Intent(this, MainActivity.class);
+            this.startActivity(launchIntent);
 
             return;
         }

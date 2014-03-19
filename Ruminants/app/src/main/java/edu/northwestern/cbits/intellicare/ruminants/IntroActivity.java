@@ -79,20 +79,11 @@ public class IntroActivity extends Activity {
 
         if (page >= titleValues.length)
         {
-            if (sizeStack == 1)
-            {Intent launchIntent = new Intent(this, MainActivity.class);
+            Intent launchIntent = new Intent(this, MainActivity.class);
             this.startActivity(launchIntent);
 
-            return;}
+            return;
 
-            else {
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putBoolean(IntroActivity.RUNBEFORE, true);
-                editor.commit();
-
-                return;
-            }
         }
         else if (page < 0)
         {   if (sizeStack == 1)

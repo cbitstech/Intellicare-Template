@@ -154,7 +154,7 @@ public class MainActivity extends Activity
         return true;
     }
 
-    public boolean onOptionsItemSelected(MenuItem item) {
+   /* public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
             case R.id.action_reset:
@@ -169,7 +169,7 @@ public class MainActivity extends Activity
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    } */
 
     protected void onPause()
     {
