@@ -22,6 +22,10 @@
     <string name="title_catch_help">Automatic Thoughts</string>
     <string name="message_catch_help">(Content to be provided by Stephen&#8230;)</string>
 
+    <string name="title_review">Review</string>
+    <string name="subtitle_review_single">1 thought &amp; response pair</string>
+    <string name="subtitle_review" formatted="false">%d thought &amp; response pairs</string>
+    
     <string name="title_change_help">Rational Responses</string>
     <string name="message_change_help">Ask yourself these questions:\n\nIs there a more rational way of thinking?\n\nAm I focusing on things that aren\'t relevant?\n\nWhat are the disadvantages of thinking this way?\n\nWhat would someone else think about?</string>
     

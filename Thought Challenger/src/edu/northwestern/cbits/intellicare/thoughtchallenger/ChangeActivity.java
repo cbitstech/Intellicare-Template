@@ -1,10 +1,12 @@
 package edu.northwestern.cbits.intellicare.thoughtchallenger;
 
+import org.json.JSONArray;
+
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -92,8 +94,6 @@ public class ChangeActivity extends ConsentedActivity
 				builder.create().show();
 				
 				break;
-	
-		
 			case R.id.action_done:
 				String original = this.getIntent().getStringExtra(ChangeActivity.THOUGHT_VALUE);
 
@@ -103,7 +103,13 @@ public class ChangeActivity extends ConsentedActivity
 				
 				if (promptValue.length() > 5)
 				{
-					Log.e("TC", "TODO: SAVE " + original + " --- " + promptValue);
+					ContentValues values = new ContentValues();
+					values.put(ThoughtContentProvider.PAIR_AUTOMATIC_THOUGHT, original);
+					values.put(ThoughtContentProvider.PAIR_RATIONAL_RESPONSE, promptValue);
+					values.put(ThoughtContentProvider.PAIR_DISTORTIONS, (new JSONArray()).toString());
+					values.put(ThoughtContentProvider.PAIR_TAGS, (new JSONArray()).toString());
+					
+					this.getContentResolver().insert(ThoughtContentProvider.THOUGHT_PAIR_URI, values);
 					
 					Intent intent = new Intent(this, MainActivity.class);
 					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

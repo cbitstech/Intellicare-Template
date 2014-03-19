@@ -55,7 +55,8 @@ public class MainActivity extends ConsentedActivity
 					{
 						public void onClick(DialogInterface dialog, int which) 
 						{
-
+							Intent intent = new Intent(me, CatchActivity.class);
+							me.startActivity(intent);
 						}
 					});
 
