@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:robot="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/action_profile_save"
-        robot:showAsAction="always"
+        android:showAsAction="always"
         android:title="@string/action_save_profile" />
 </menu>

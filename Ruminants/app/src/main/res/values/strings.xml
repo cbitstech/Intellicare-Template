@@ -7,7 +7,7 @@
     <string name="next">Next</string>
     <string name="previous">Back</string>
 
-    <string name="worry_tool_title">Worry Practice Tool</string>
+    <string name="worry_tool_title">Worry Practice</string>
 
     <string name="question_rumination_bool">Are you ruminating?</string>
     <string name="question_rumination_trigger">What happened before the rumination started?</string>
@@ -28,7 +28,7 @@
 
     <string name="question_ruminating">Ruminating? Click here!</string>
 
-    <string name="tool_didactic_content">Rumination Strategies</string>
+    <string name="tool_didactic_content">Strategies</string>
     <string name="desc_didactic_content">Learn how to manage worries</string>
     <string name="tool_survey_wizard">Rumination Diary</string>
     <string name="desc_survey_wizard">Describe your worries</string>
@@ -40,7 +40,7 @@
     <string name="wizards_button">Wizards</string>
     <string name="replay_intro_button">Replay Intro</string>
     <string name="replay_intro">Replay Intro</string>
-    <string name="survey_wizard_title">Rumination Logging</string>
+    <string name="survey_wizard_title">Logging</string>
 
     <string name="hint_comments">It\'s ok to be general</string>
 
@@ -98,6 +98,7 @@
         <item>let thoughts range free</item>
         <item>hoof it towards happiness</item>
         <item>empty your fourth stomach</item>
+        <item>It works!</item>
     </string-array>
 
     <string-array name="intro_content">

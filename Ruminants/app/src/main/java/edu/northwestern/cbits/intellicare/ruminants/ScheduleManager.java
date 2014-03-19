@@ -81,8 +81,6 @@ public class ScheduleManager {
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
 
-        //Log.e("CAR", "H: " + hour + " M: " + minute);
-
         // Profile notification...
         if (hour == ScheduleManager.DEFAULT_PROFILE_HOUR && minute == ScheduleManager.DEFAULT_PROFILE_MINUTE)
         {
