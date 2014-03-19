@@ -11,11 +11,14 @@
     <string name="subtitle_change">Step 3 of 3</string>
     
     <string name="action_next">Next</string>
+    <string name="action_previous">Previous</string>
     <string name="action_done">Done</string>
     <string name="action_continue">Continue</string>
     <string name="action_help">Help</string>
     <string name="action_challenge">Challenge</string>
     <string name="action_review">Review</string>
+    <string name="action_edit_tags">Edit Tags&#8230;</string>
+    <string name="action_select_distortion">Select Distortion&#8230;</string>
     
     <string name="link_examples">Examples</string>
     
@@ -44,6 +47,9 @@
     <string name="title_challenges_needed">Challenges Needed</string>
     <string name="message_challenges_needed">Before you can review the thoughts, you must challenge at least one!</string>
     
+    <string name="label_automatic_thought">Automatic Thought</string>
+    <string name="label_rational_response">Rational Response</string>
+
    	<string-array name="list_negative_thoughts">
         <item>I am helpless.</item>
         <item>I am unlovable.</item>

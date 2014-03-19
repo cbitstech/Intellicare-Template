@@ -1,4 +1,51 @@
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/list_review"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+	<ScrollView android:layout_weight="1" 
+	    android:layout_height="0dp"
+	    android:layout_width="match_parent">
+	    <LinearLayout android:orientation="vertical"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:padding="8dp">
+		    <TextView android:text="@string/label_automatic_thought"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content" 
+		        android:textSize="14sp"
+		        android:textStyle="bold" />
+		    <TextView android:id="@+id/automatic_thought"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content" 
+		        android:textSize="18sp"
+		        android:layout_marginBottom="32dp" />
+		    <TextView android:text="@string/label_rational_response"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content" 
+		        android:textSize="14sp"
+		        android:textStyle="bold" />
+		    <TextView android:id="@+id/rational_response"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content" 
+		        android:textSize="18sp" />
+	    </LinearLayout>
+	</ScrollView>
+	<LinearLayout android:orientation="horizontal"
+	    android:layout_height="wrap_content"
+	    android:layout_width="match_parent"
+	    android:padding="4dp"
+	    android:background="@color/bottom_bar_gray">
+	    <Button android:id="@+id/action_edit_tags"
+	        android:text="@string/action_edit_tags"
+	        android:layout_height="48dp"
+	        android:layout_width="0dp"
+	        android:layout_weight="1" />
+	    <View android:layout_width="4dp"
+	        android:layout_height="4dp" />
+	    <Button android:id="@+id/action_select_distortion"
+	        android:text="@string/action_select_distortion"
+	        android:layout_height="48dp"
+	        android:layout_width="0dp"
+	        android:layout_weight="1" />
+	</LinearLayout>
+</LinearLayout>

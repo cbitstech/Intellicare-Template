@@ -1,4 +1,6 @@
 package edu.northwestern.cbits.intellicare.thoughtchallenger;
+import org.json.JSONArray;
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
@@ -120,5 +122,34 @@ public class ThoughtContentProvider extends ContentProvider
         }
 		
 		return 0;
+	}
+
+	public static JSONArray positiveWordArray(Context context) 
+	{
+		JSONArray words = new JSONArray();
+
+		String[] thoughts = context.getResources().getStringArray(R.array.list_positive_thoughts);
+		
+		for (String s : thoughts)
+		{
+			s = s.toLowerCase();
+			
+			s = s.replace(".", " ");
+			s = s.replace(",", " ");
+			s = s.replace("!", " ");
+			s = s.replace("?", " ");
+			
+			String[] tokens = s.split(" ");
+			
+			for (String token : tokens)
+			{
+				token = token.trim();
+				
+				if (token.length() > 0)
+					words.put(token);
+			}
+		}
+		
+		return words;
 	}
 }
