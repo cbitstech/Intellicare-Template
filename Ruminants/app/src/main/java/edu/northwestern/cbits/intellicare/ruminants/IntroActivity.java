@@ -38,7 +38,8 @@ public class IntroActivity extends Activity {
     {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+      /*  SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         boolean skipCheck = this.getIntent().getBooleanExtra("skipCheck", false);
 
@@ -51,7 +52,7 @@ public class IntroActivity extends Activity {
             this.startActivity(launchIntent);
 
             return;
-        }
+        } */
 
         this.setContentView(R.layout.activity_intro);
     }
@@ -205,7 +206,7 @@ public class IntroActivity extends Activity {
         /* want to pick a subset of puns */
         int max = punBank.length;
         Random random = new Random();
-        int randomNum = random.nextInt(max - punNumber); // ensures that the range won't exceed the max index of the pun bank
+        int randomNum = random.nextInt(max - punNumber);
 
         // Arguments are: sourceArray, sourceStartIndex, destinationArray, destinationStartIndex, numElementsToCopy
         System.arraycopy( punBank, randomNum, punValues, 0, punNumber );

@@ -3,11 +3,21 @@
 h1 	{text-align: center;
 	font-size: 24px;
 	text-transform: lowercase;
+	margin: 12px 24px 24px 0px;
 	}
 		
 h2 {text-align: center;
 	font-family: Roboto Light, sans-serif;
+	font-size: 12px;
 	vertical-align: bottom;}
+
+h3 { margin-left: 24px;
+        margin-right: 24px;
+		text-align: center;
+		width: 308px;
+		font-size: 36px;
+		font-family: Roboto Light, sans-serif;
+		}
 	
 #container {position: absolute;
             top: 0px;
@@ -25,22 +35,27 @@ h2 {text-align: center;
         bottom: 0px;
 		margin-left: 96px;
 		width: 192px;
-		height: 192px;
+		height: 144px;
 		}
 
 #content {position: relative;
-		height: 344px;
+		height: 324px;
 		}
+
+#didactic_content {position: relative;
+        height: 324px;
+        padding: 24px;
+        font-size: 16px;
+        }
+
+p { margin-left: 4px;
+    margin-right: 4px;
+    font-size: 18px;
+    }
+
 		
-#content p { display: block;
-		margin-left: auto;
-		margin-right: auto;
-		width: 308px;
-		font-family: Roboto Light, sans-serif;
-		}
-		
-#field { height: 150px;
-        padding: 5px;
+#field { height: 180px;
+        padding: 15px;
 		background-color: #669900;
     }
 		
