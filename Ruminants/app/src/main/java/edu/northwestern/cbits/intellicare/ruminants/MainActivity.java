@@ -103,7 +103,7 @@ public class MainActivity extends Activity
 
        tools.add(new Tool(this.getString(R.string.tool_rumination_log), this.getString(R.string.desc_rumination_log), R.drawable.clock_checklist_dark, new Intent(this, RuminationLogActivity.class)));
        tools.add(new Tool(this.getResources().getString(R.string.tool_chooser_name), this.getString(R.string.desc_tool_chooser), R.drawable.clock_question_dark, new Intent(this, ToolChooserActivity.class)));
-       tools.add(new Tool(this.getString(R.string.profile_wizard), this.getString(R.string.desc_profile_wizard), R.drawable.clock_checklist, new Intent(this, ProfileActivity.class)));
+       tools.add(new Tool(this.getString(R.string.profile_wizard), this.getString(R.string.desc_profile_wizard), R.drawable.clock_checklist_dark, new Intent(this, ProfileActivity.class)));
        tools.add(new Tool(this.getResources().getString(R.string.tool_replay_intro), this.getString(R.string.desc_replay_intro), R.drawable.clock_question_dark, introIntent));
 
         ListView toolsList = (ListView) this.findViewById(R.id.list_tools);
@@ -154,7 +154,7 @@ public class MainActivity extends Activity
         return true;
     }
 
-    public boolean onOptionsItemSelected(MenuItem item) {
+   /* public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
             case R.id.action_reset:
@@ -169,7 +169,7 @@ public class MainActivity extends Activity
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    } */
 
     protected void onPause()
     {

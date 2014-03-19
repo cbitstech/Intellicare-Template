@@ -51,7 +51,7 @@ public class ToolChooserActivity extends Activity {
     ArrayList<Tool> tools = new ArrayList<Tool>();
 
     tools.add(new Tool(this.getString(R.string.tool_worry_practice), this.getString(R.string.desc_worry_practice), R.drawable.clock_checklist_dark, new Intent(this, WorryPracticeActivity.class)));
-    tools.add(new Tool(this.getString(R.string.survey_wizard_title), this.getString(R.string.desc_survey_wizard), R.drawable.clock_checklist, new Intent(this, WizardOneActivity.class)));
+    tools.add(new Tool(this.getString(R.string.survey_wizard_title), this.getString(R.string.desc_survey_wizard), R.drawable.clock_checklist_dark, new Intent(this, WizardOneActivity.class)));
     tools.add(new Tool(this.getResources().getString(R.string.tool_didactic_content), this.getString(R.string.desc_didactic_content), R.drawable.clock_question_dark, new Intent(this, DidacticActivity.class)));
 
     ListView toolsList = (ListView) this.findViewById(R.id.rum_tools);

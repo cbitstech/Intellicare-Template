@@ -38,7 +38,8 @@ public class IntroActivity extends Activity {
     {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+      /*  SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         boolean skipCheck = this.getIntent().getBooleanExtra("skipCheck", false);
 
@@ -51,7 +52,7 @@ public class IntroActivity extends Activity {
             this.startActivity(launchIntent);
 
             return;
-        }
+        } */
 
         this.setContentView(R.layout.activity_intro);
     }
@@ -78,20 +79,11 @@ public class IntroActivity extends Activity {
 
         if (page >= titleValues.length)
         {
-            if (sizeStack == 1)
-            {Intent launchIntent = new Intent(this, MainActivity.class);
+            Intent launchIntent = new Intent(this, MainActivity.class);
             this.startActivity(launchIntent);
 
-            return;}
+            return;
 
-            else {
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putBoolean(IntroActivity.RUNBEFORE, true);
-                editor.commit();
-
-                return;
-            }
         }
         else if (page < 0)
         {   if (sizeStack == 1)
@@ -205,7 +197,7 @@ public class IntroActivity extends Activity {
         /* want to pick a subset of puns */
         int max = punBank.length;
         Random random = new Random();
-        int randomNum = random.nextInt(max - punNumber); // ensures that the range won't exceed the max index of the pun bank
+        int randomNum = random.nextInt(max - punNumber);
 
         // Arguments are: sourceArray, sourceStartIndex, destinationArray, destinationStartIndex, numElementsToCopy
         System.arraycopy( punBank, randomNum, punValues, 0, punNumber );

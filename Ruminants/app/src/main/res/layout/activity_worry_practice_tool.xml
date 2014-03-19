@@ -2,19 +2,20 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#fff">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/timer_title"
         android:id="@+id/textView2"
-        android:gravity="left"
+        android:gravity="center_horizontal"
         android:layout_marginBottom="6dp"
         android:textColor="#000"
         android:textStyle="bold"
-        android:textSize="18sp"
+        android:textSize="24sp"
         android:layout_marginTop="12dp"
         android:layout_gravity="center_horizontal" />
 
@@ -35,7 +36,6 @@
             android:layout_marginBottom="12dp"
             android:layout_marginTop="12dp"
             android:minHeight="144dp"
-            android:background="#669900"
             android:layout_gravity="center|right"
             android:gravity="center_horizontal|right"
             android:minWidth="108dp"
@@ -50,7 +50,6 @@
             android:layout_marginBottom="12dp"
             android:layout_marginTop="12dp"
             android:minHeight="144dp"
-            android:background="#669900"
             android:layout_gravity="center|left"
             android:gravity="center_horizontal|left"
             android:minWidth="144dp" />
@@ -69,7 +68,13 @@
             android:text="@string/start_wpt"
             android:id="@+id/start_button"
             android:minWidth="48dp"
-            android:minHeight="48dp" />
+            android:minHeight="36dp"
+            android:textStyle="bold"
+            android:background="#7cbc6e"
+            android:padding="12dp"
+            android:layout_marginRight="6dp"
+            android:singleLine="false"
+            android:shadowColor="#636363" />
 
         <Button
             android:layout_width="wrap_content"
@@ -77,7 +82,13 @@
             android:text="@string/reset_wpt"
             android:id="@+id/reset_button"
             android:minWidth="48dp"
-            android:minHeight="48dp"/>
+            android:minHeight="36dp"
+            android:textStyle="bold"
+            android:background="#7cbc6e"
+            android:padding="12dp"
+            android:layout_marginLeft="6dp"
+            android:singleLine="false"
+            android:shadowColor="#636363" />
     </LinearLayout>
 
     <Button
@@ -87,13 +98,18 @@
         android:id="@+id/didactic_button"
         android:layout_marginBottom="12dp"
         android:layout_marginTop="12dp"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:textStyle="italic"
+        android:background="#7cbc6e"
+        android:padding="12dp"
+        android:singleLine="false"
+        android:shadowColor="#636363" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageView"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/bessie_placeholder" />
+        android:src="@drawable/bessie" />
 
 </LinearLayout>
