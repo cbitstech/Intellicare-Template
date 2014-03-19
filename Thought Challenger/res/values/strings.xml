@@ -1,5 +1,112 @@
 <resources>
-
     <string name="app_name">Thought Challenger</string>
 
+    <string name="title_catch">Catch It</string>
+    <string name="subtitle_catch">Step 1 of 3</string>
+
+    <string name="title_check">Check It</string>
+    <string name="subtitle_check">Step 2 of 3</string>
+
+    <string name="title_change">Change It</string>
+    <string name="subtitle_change">Step 3 of 3</string>
+    
+    <string name="action_next">Next</string>
+    <string name="action_done">Done</string>
+    <string name="action_continue">Continue</string>
+    <string name="action_help">Help</string>
+    <string name="action_challenge">Challenge</string>
+    <string name="action_review">Review</string>
+    
+    <string name="link_examples">Examples</string>
+    
+    <string name="title_catch_help">Automatic Thoughts</string>
+    <string name="message_catch_help">(Content to be provided by Stephen&#8230;)</string>
+
+    <string name="title_change_help">Rational Responses</string>
+    <string name="message_change_help">Ask yourself these questions:\n\nIs there a more rational way of thinking?\n\nAm I focusing on things that aren\'t relevant?\n\nWhat are the disadvantages of thinking this way?\n\nWhat would someone else think about?</string>
+    
+    <string name="step_one">Be careful of what you\'re thinking when you feel bad.</string>
+    <string name="step_one_prompt">What is your negative or unrealistic thought?</string>
+    <string name="step_one_continue">Please enter the full thought to continue&#8230;</string>
+
+    <string name="step_two">Stop and reflect on what you\'re thinking.\n\nIs it really true?\n\nDo you have experience to back it up?\n\nIs this thought absolutely true in all situations and all the time?</string>
+
+    <string name="step_three">Substitute a more realistic thought.</string>
+    <string name="step_three_prompt">What is an alternative and helpful way of thinking?</string>
+    <string name="step_three_continue">Please enter your new thought to continue&#8230;</string>
+
+    <string name="title_negative_thoughts">Automatic Thoughts</string>
+    
+    <string name="title_challenges_needed">Challenges Needed</string>
+    <string name="message_challenges_needed">Before you can review the thoughts, you must challenge at least one!</string>
+    
+   	<string-array name="list_negative_thoughts">
+        <item>I am helpless.</item>
+        <item>I am unlovable.</item>
+        <item>I shouldn\'t need help.</item>
+        <item>I am inadequate.</item>
+        <item>I am bound to be rejected.</item>
+        <item>I should be perfect.</item>
+        <item>This anxiety will drive me insane.</item>
+        <item>The world is a dangerous place.</item>
+        <item>I\'m going to make a fool of myself.</item>
+        <item>I\'ll fail if I don\'t plan ahead.</item>
+        <item>People will judge me.</item> 
+        <item>People are going to take advantage of me.</item>
+        <item>I\'m always going to be anxious/depressed.</item>
+        <item>My opinions are not important.</item>
+        <item>There\'s something wrong with me.</item>
+        <item>I\'m going to have a stroke/heart attack.</item>
+        <item>I can\'t cope.</item>
+        <item>I\'m worthless.</item>
+        <item>People are going to think that I\'m stupid.</item>
+        <item>I don\'t fit in.</item>
+        <item>I\'m so weak.</item>
+        <item>I can\'t do this.</item>
+        <item>I\'m a failure.</item>
+        <item>The world is full of bad people.</item>
+        <item>Everybody dislikes me.</item>
+        <item>I don\'t deserve to be happy.</item>
+        <item>I\'m going to be alone.</item>
+        <item>I\'m not good enough.</item>
+        <item>I\'m incompetent.</item>
+        <item>Nobody cares about me.</item>
+   	</string-array>
+    
+    <string name="title_positive_thoughts">Rational Responses</string>
+
+   	<string-array name="list_positive_thoughts">
+        <item>Some of the things I do make life better.</item>
+        <item>My parents care about me.</item>
+        <item>When my friends encounter problems, I\'d help them if they\'d ask.</item>
+        <item>I\'m just as good as most people.</item>
+        <item>If I give it a try, I can succeed.</item>
+        <item>Nobody in this world is perfect, I can give it my best.</item>
+        <item>I\'ve experienced anxiety before and dealt with it.</item>
+        <item>Good things happen when I get out and do things.</item>
+        <item>I might feel anxious, but I can still have a good time.</item>
+        <item>I don\'t have to figure everything out to do something productive.</item>
+        <item>People\'s opinions don\'t have to affect my behavior.</item>
+        <item>There are plenty of good people in the world.</item>
+        <item>I might feel bad now, but even when that\'s happened in the past it hasn\'t lasted forever.</item>
+        <item>Some people value my opinions.</item>
+        <item>I\'m a person with strengths and weaknesses, just like everyone else in the world.</item>
+        <item>I\'ve been in these situations before and made it through.</item>
+        <item>I can accomplish some things.</item>
+        <item>When I accomplish things I\'m worthwhile.</item>
+        <item>Even if people think negatively about me, that doesn\'t mean I can\'t have a good time.</item>
+        <item>I fit in to certain places.</item>
+        <item>I have some strengths.</item>
+        <item>I can\'t do all of this at once, but I can start on a small step.</item>
+        <item>I succeed at some things.</item>
+        <item>There are some bad people in the world, but also lots of good people.</item>
+        <item>My friend likes me.</item>
+        <item>Sometimes I feel happy and I deserve that.</item>
+        <item>There are people I\'m connected to.</item>
+        <item>There are plenty of things I\'m good at.</item>
+        <item>I can do some things well.</item>
+        <item>There are some people who care about me.</item>   	
+   	</string-array>
+
+   	<string name="db_create_pairs_table">CREATE TABLE IF NOT EXISTS pairs(_id INTEGER PRIMARY KEY, automatic_thought TEXT, rational_response TEXT, tags TEXT, distortions text);</string>
 </resources>
