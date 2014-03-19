@@ -1,4 +1,9 @@
 package edu.northwestern.cbits.intellicare.icope;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
@@ -33,12 +38,21 @@ public class CopeContentProvider extends ContentProvider
 	protected static final String CARD_EVENT = "event";
 	protected static final String CARD_REMINDER = "reminder";
 	protected static final String CARD_ID = "_id";
+	protected static final String CARD_TYPE = "card_type";
 
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
+	public static final String ID = "_id";
 
     private UriMatcher _matcher = new UriMatcher(UriMatcher.NO_MATCH);
 	private SQLiteDatabase _db = null;
 	
+	public static class Reminder
+	{
+		public Date date;
+		public long cardId;
+		public long reminderId;
+	}
+
     public CopeContentProvider()
     {
     	super();
@@ -66,7 +80,9 @@ public class CopeContentProvider extends ContentProvider
             	switch (oldVersion)
             	{
 	                case 0:
-
+	                	
+	                case 1:
+	    	            db.execSQL(context.getString(R.string.db_update_cards_add_card_type));
 	                default:
                         break;
             	}
@@ -141,5 +157,57 @@ public class CopeContentProvider extends ContentProvider
         }
 		
 		return 0;
+	}
+
+	public static List<String> listCardTypes(Context context) 
+	{
+		ArrayList<String> types = new ArrayList<String>();
+		
+		Cursor c = context.getContentResolver().query(CopeContentProvider.CARD_URI, null, null, null, null);
+		
+		while (c.moveToNext())
+		{
+			String type = c.getString(c.getColumnIndex(CopeContentProvider.CARD_TYPE));
+			
+			if (type != null && type.trim().length() > 0 && types.contains(type) == false)
+				types.add(type);
+		}
+		
+		c.close();
+		
+		return types;
+	}
+
+	public static ArrayList<Reminder> listUpcomingReminders(Context context) 
+	{
+		ArrayList<Reminder> list = new ArrayList<Reminder>();
+
+		Cursor cursor = context.getContentResolver().query(CopeContentProvider.REMINDER_URI, null, null, null, null);
+
+		long now = System.currentTimeMillis();
+
+		while (cursor.moveToNext())
+		{
+			Calendar c = Calendar.getInstance();
+			c.set(Calendar.YEAR, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_YEAR)));
+			c.set(Calendar.MONTH, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_MONTH)));
+			c.set(Calendar.DAY_OF_MONTH, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_DAY)));
+			c.set(Calendar.HOUR_OF_DAY, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_HOUR)));
+			c.set(Calendar.MINUTE, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_MINUTE)));
+			c.set(Calendar.SECOND, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_SECOND)));
+
+			Date date = c.getTime();
+			
+			if (date.getTime() > now)
+			{
+				Reminder r = new Reminder();
+				r.date = date;
+				r.cardId = cursor.getLong(cursor.getColumnIndex(CopeContentProvider.REMINDER_CARD_ID));
+				r.reminderId = cursor.getLong(cursor.getColumnIndex(CopeContentProvider.ID));
+				list.add(r);
+			}
+		}
+		
+		return list;
 	}
 }
