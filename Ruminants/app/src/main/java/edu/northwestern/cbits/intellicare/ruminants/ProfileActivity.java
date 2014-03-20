@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -22,7 +23,6 @@ public class ProfileActivity extends Activity {
     private static final String SELECTED_HELP_FREQUENCY = "help_frequency";
     private static final String SELECTED_ISSUES = "commonly_encountered_issues";
 
-    protected int _helpFrequency = -1;
 
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -35,8 +35,8 @@ public class ProfileActivity extends Activity {
         if (rumChecked != -1)
             outState.putInt(ProfileActivity.SELECTED_RADIO_RUMINATING_LATELY, rumChecked);
 
-        if (this._helpFrequency != -1)
-            outState.putInt(ProfileActivity.SELECTED_HELP_FREQUENCY, this._helpFrequency);
+        EditText help = (EditText) this.findViewById(R.id.editText_help_frequency);
+        outState.putString(ProfileActivity.SELECTED_HELP_FREQUENCY, help.getEditableText().toString());
 
         EditText issues = (EditText) this.findViewById(R.id.field_rumination_content);
         outState.putString(ProfileActivity.SELECTED_ISSUES, issues.getEditableText().toString());
@@ -97,8 +97,8 @@ public class ProfileActivity extends Activity {
             payload.put("ruminating_lately", (rumChecked == R.id.rum_yes));
 
 
-            values.put(RuminantsContentProvider.PROFILE_HELP_FREQUENCY, this._helpFrequency);
-            payload.put("help_frequency", _helpFrequency);
+            values.put(RuminantsContentProvider.PROFILE_HELP_FREQUENCY, SELECTED_HELP_FREQUENCY);
+            payload.put("help_frequency", SELECTED_HELP_FREQUENCY);
 
             // toast required if not completed
             EditText concerns = (EditText) this.findViewById(R.id.field_rumination_content);
@@ -118,6 +118,7 @@ public class ProfileActivity extends Activity {
             Intent launchIntent = new Intent(this, MainActivity.class);
             this.startActivity(launchIntent);
         }
+
 
         return true;
     }

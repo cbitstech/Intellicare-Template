@@ -1,9 +1,12 @@
 package edu.northwestern.cbits.intellicare.ruminants;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -24,6 +27,8 @@ import java.util.Random;
 public class DidacticActivity extends Activity {
 
     private static final int NUM_PAGES = 5;
+
+    public static int DIDACTIC_COMPLETE = 0;
 
     private ViewPager mPager;
 
@@ -59,6 +64,11 @@ public class DidacticActivity extends Activity {
 
         if (page >= this.mContentSet.length)
         {
+            ContentValues values = new ContentValues();
+
+            values.put(RuminantsContentProvider.DIDACTIC_TIMESTAMP, System.currentTimeMillis());
+            this.getContentResolver().insert(RuminantsContentProvider.DIDACTIC_USE_URI, values);
+
             Intent launchIntent = new Intent(this, MainActivity.class);
             this.startActivity(launchIntent);
 

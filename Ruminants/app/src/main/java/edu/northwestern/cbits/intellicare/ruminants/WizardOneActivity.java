@@ -5,7 +5,9 @@ import java.util.logging.LogManager;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -74,7 +76,7 @@ public class WizardOneActivity extends Activity
         final TextView duration = (TextView) this.findViewById(R.id.label_rumination_duration);
 
         final SeekBar rumDuration = (SeekBar) this.findViewById(R.id.field_rumination_duration);
-        rumDuration.setMax(5);
+        rumDuration.setMax(4);
 
         if (savedInstanceState.containsKey(WizardOneActivity.SELECTED_RUM_DURATION))
             rumDuration.setProgress(savedInstanceState.getInt(WizardOneActivity.SELECTED_RUM_DURATION));
@@ -158,6 +160,7 @@ public class WizardOneActivity extends Activity
         if (item.getItemId() == R.id.action_save)
         {
             ContentValues values = new ContentValues();
+            ContentValues useValues = new ContentValues();
             HashMap<String, Object> payload = new HashMap<String, Object>();
 
             RadioGroup rumRadios = (RadioGroup) this.findViewById(R.id.radios_ruminating);
@@ -211,7 +214,10 @@ public class WizardOneActivity extends Activity
 
             values.put(RuminantsContentProvider.WIZARD_ONE_TIMESTAMP, System.currentTimeMillis());
 
+            useValues.put(RuminantsContentProvider.LOG_USE_TIMESTAMP, System.currentTimeMillis());
+
             this.getContentResolver().insert(RuminantsContentProvider.WIZARD_ONE_URI, values);
+            this.getContentResolver().insert(RuminantsContentProvider.LOG_USE_URI, useValues);
 
             //LogManager.getInstance(this).log("stored_survey", payload);
 

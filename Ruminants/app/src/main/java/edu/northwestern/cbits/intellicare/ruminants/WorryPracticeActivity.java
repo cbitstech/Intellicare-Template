@@ -3,6 +3,7 @@ package edu.northwestern.cbits.intellicare.ruminants;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -77,6 +78,12 @@ public class WorryPracticeActivity extends Activity  {
                 {
                     @Override
                     public void onFinish() {
+
+                        ContentValues values = new ContentValues();
+
+                        values.put(RuminantsContentProvider.WPT_USE_TIMESTAMP, System.currentTimeMillis());
+                        me.getContentResolver().insert(RuminantsContentProvider.WPT_USE_URI, values);
+
                         minute.setText(R.string.timeup);
                         second.setText("");
                     }
