@@ -19,6 +19,8 @@
     <string name="action_review">Review</string>
     <string name="action_edit_tags">Edit Tags&#8230;</string>
     <string name="action_select_distortion">Select Distortion&#8230;</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_add_tag">Add Tag</string>
     
     <string name="link_examples">Examples</string>
     
@@ -49,7 +51,13 @@
     
     <string name="label_automatic_thought">Automatic Thought</string>
     <string name="label_rational_response">Rational Response</string>
-
+    <string name="label_distortion">Distortion</string>
+    <string name="placeholder_distortion">(None provided.)</string>
+    <string name="label_tags">Tags</string>
+    <string name="placeholder_tags">(None provided.)</string>
+    
+    <string name="placeholder_add_tip">Enter new tag&#8230;</string>
+    
    	<string-array name="list_negative_thoughts">
         <item>I am helpless.</item>
         <item>I am unlovable.</item>
@@ -117,6 +125,20 @@
         <item>I can do some things well.</item>
         <item>There are some people who care about me.</item>   	
    	</string-array>
+   	
+  	<string-array name="list_distortions">
+        <item>Absolutes: Thinking in extremes, all good or all bad, the best or the worst. Perfectionism, 0\%% or 100\%%, perfect or a failure.</item>
+        <item>Guesses: Making guesses or jumping to conclusions that are overly negative. These guesses include thinking you know what others are thinking and that they are thinking negatively about you.</item>
+        <item>Tunnel Vision: Seeing only the things that confirm your negative view while ignoring positive experiences.</item>
+        <item>Magnifying or Minimizing: Magnifying negative things, blowing their importance or consequences out of proportion. Minimizing positive things, shrinking down their significance.</item>
+        <item>Labeling: Attaching a negative label, instead of seeing an error or problem.</item>
+        <item>Overgeneralization: Taking one negative characteristic or event and seeing it as a never-ending pattern.</item>
+        <item>Personalization: You take responsibility for thing that you don\'t have control over.</item>
+        <item>"Should"ing yourself: Telling yourself you should, ought, and must do something.</item>
+    </string-array>
+   	<string name="title_distortions">Choose a Distortion</string>
+  		
+   	<string name="title_settings">Settings</string>
 
-   	<string name="db_create_pairs_table">CREATE TABLE IF NOT EXISTS pairs(_id INTEGER PRIMARY KEY, automatic_thought TEXT, rational_response TEXT, tags TEXT, distortions text);</string>
+   	<string name="db_create_pairs_table">CREATE TABLE IF NOT EXISTS pairs(_id INTEGER PRIMARY KEY, automatic_thought TEXT, rational_response TEXT, tags TEXT, distortions TEXT);</string>
 </resources>

@@ -106,7 +106,7 @@ public class ChangeActivity extends ConsentedActivity
 					ContentValues values = new ContentValues();
 					values.put(ThoughtContentProvider.PAIR_AUTOMATIC_THOUGHT, original);
 					values.put(ThoughtContentProvider.PAIR_RATIONAL_RESPONSE, promptValue);
-					values.put(ThoughtContentProvider.PAIR_DISTORTIONS, (new JSONArray()).toString());
+					values.put(ThoughtContentProvider.PAIR_DISTORTIONS, "");
 					values.put(ThoughtContentProvider.PAIR_TAGS, (new JSONArray()).toString());
 					
 					this.getContentResolver().insert(ThoughtContentProvider.THOUGHT_PAIR_URI, values);

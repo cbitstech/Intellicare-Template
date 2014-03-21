@@ -40,7 +40,12 @@ public class MainActivity extends ConsentedActivity
 		
 		final MainActivity me = this;
 		
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row_reminder, new String[2])
+		String[] items = new String[2];
+		
+		if (reminders.size() == 1)
+			items = new String[1];
+		
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row_reminder, items)
 		{
 			public View getView(int position, View convertView, ViewGroup parent)
 			{

@@ -1,0 +1,11 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="vertical">
+	<EditText android:id="@+id/field_new_tag"
+	    android:layout_margin="8dp" 
+	    android:layout_height="wrap_content"
+	    android:layout_width="match_parent"
+	    android:hint="@string/placeholder_add_tip" />
+</LinearLayout>
+     

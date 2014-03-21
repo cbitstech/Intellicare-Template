@@ -9,14 +9,16 @@ import org.json.JSONArray;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.widget.Button;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
@@ -24,7 +26,6 @@ import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class MainActivity extends ConsentedActivity 
 {
-	@SuppressLint("SetJavaScriptEnabled")
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
@@ -83,15 +84,32 @@ public class MainActivity extends ConsentedActivity
 					
 					builder.create().show();
 				}
+				
+				c.close();
 			}
 		});
+	}
+	
+	@SuppressLint("SetJavaScriptEnabled")
+	protected void onResume()
+	{
+		super.onResume();
 		
 		WebView cloud = (WebView) this.findViewById(R.id.cloud_view);
 		cloud.getSettings().setJavaScriptEnabled(true);
-		
-		cloud.loadDataWithBaseURL("file:///android_asset/www/", this.generatePage(), "text/html", null, null);
+		cloud.setVerticalScrollBarEnabled(false);
+		cloud.setHorizontalScrollBarEnabled(false);
 
-//		cloud.loadUrl("file:///android_asset/www/cloud.html");
+		cloud.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+
+		//To disabled the horizontal and vertical scrolling:
+		cloud.setOnTouchListener(new View.OnTouchListener() {
+			public boolean onTouch(View arg0, MotionEvent arg1) 
+			{
+				return false;
+			}
+		});
+		cloud.loadDataWithBaseURL("file:///android_asset/www/", this.generatePage(), "text/html", null, null);
 	}
 
 	private String generatePage() 
@@ -124,24 +142,34 @@ public class MainActivity extends ConsentedActivity
 		JSONArray wordsList = ThoughtContentProvider.positiveWordArray(this);
 
 		graphString = graphString.replaceAll("WORDS_LIST", wordsList.toString());
-
-/*		try 
-		{
-			graphString = graphString.replaceAll("VALUES_JSON", graphValues.toString());
-
-			FileUtils.writeStringToFile(new File(Environment.getExternalStorageDirectory(), "graph.html"), graphString);
-		} 
-		catch (IOException e) 
-		{
-			LogManager.getInstance(context).logException(e);
-		} 
-		catch (JSONException e) 
-		{
-			LogManager.getInstance(context).logException(e);
-		}
-*/
-		Log.e("GS", "GRAPH: " + graphString);
 		
 		return graphString;
 	}
+	
+	public boolean onCreateOptionsMenu(Menu menu) 
+	{
+		this.getMenuInflater().inflate(R.menu.menu_main, menu);
+		return true;
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		int itemId = item.getItemId();
+		
+		switch (itemId)
+		{
+			case R.id.action_settings:
+				Intent settingsIntent = new Intent(this, SettingsActivity.class);
+				this.startActivity(settingsIntent);
+				
+				break;
+			case R.id.action_feedback:
+				this.sendFeedback(this.getString(R.string.app_name));
+					
+				break;
+		}
+		
+		return true;
+	}
+
 }

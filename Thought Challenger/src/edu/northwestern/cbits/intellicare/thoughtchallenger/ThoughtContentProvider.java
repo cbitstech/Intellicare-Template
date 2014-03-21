@@ -1,17 +1,26 @@
 package edu.northwestern.cbits.intellicare.thoughtchallenger;
+import java.util.ArrayList;
+import java.util.Collections;
+
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.preference.PreferenceManager;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class ThoughtContentProvider extends ContentProvider 
 {
+	public static final String SAVED_TAGS = "saved_tags";
+
 	private static final int PAIRS = 1;
 	
     private static final String AUTHORITY = "edu.northwestern.cbits.intellicare.thoughtchallenger";
@@ -128,28 +137,202 @@ public class ThoughtContentProvider extends ContentProvider
 	{
 		JSONArray words = new JSONArray();
 
-		String[] thoughts = context.getResources().getStringArray(R.array.list_positive_thoughts);
+		Cursor c = context.getContentResolver().query(ThoughtContentProvider.THOUGHT_PAIR_URI, null, null, null, null);
 		
-		for (String s : thoughts)
+		if (c.getCount() > 0)
 		{
-			s = s.toLowerCase();
-			
-			s = s.replace(".", " ");
-			s = s.replace(",", " ");
-			s = s.replace("!", " ");
-			s = s.replace("?", " ");
-			
-			String[] tokens = s.split(" ");
-			
-			for (String token : tokens)
+			while (c.moveToNext())
 			{
-				token = token.trim();
+				String s = c.getString(c.getColumnIndex(ThoughtContentProvider.PAIR_RATIONAL_RESPONSE));
 				
-				if (token.length() > 0)
-					words.put(token);
+				s = s.toLowerCase();
+				
+				s = s.replace(".", " ");
+				s = s.replace(",", " ");
+				s = s.replace("!", " ");
+				s = s.replace("?", " ");
+				
+				String[] tokens = s.split(" ");
+				
+				for (String token : tokens)
+				{
+					token = token.trim();
+					
+					if (token.length() > 0)
+						words.put(token);
+				}
+			}
+		}
+		else
+		{
+			String[] thoughts = context.getResources().getStringArray(R.array.list_positive_thoughts);
+			
+			for (String s : thoughts)
+			{
+				s = s.toLowerCase();
+				
+				s = s.replace(".", " ");
+				s = s.replace(",", " ");
+				s = s.replace("!", " ");
+				s = s.replace("?", " ");
+				
+				String[] tokens = s.split(" ");
+				
+				for (String token : tokens)
+				{
+					token = token.trim();
+					
+					if (token.length() > 0)
+						words.put(token);
+				}
 			}
 		}
 		
+		c.close();
+		
 		return words;
+	}
+
+	public static String[] fetchTags(Context context) 
+	{
+		ArrayList<String> allTags = new ArrayList<String>();
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		
+		try 
+		{
+			JSONArray savedTags = new JSONArray(prefs.getString(ThoughtContentProvider.SAVED_TAGS, "[]"));
+
+			for (int i = 0; i < savedTags.length(); i++)
+			{
+				String tag = savedTags.getString(i);
+				
+				if (allTags.contains(tag) == false)
+					allTags.add(tag);
+			}
+		} 
+		catch (JSONException e) 
+		{
+			LogManager.getInstance(context).logException(e);
+		}
+		
+		Cursor c = context.getContentResolver().query(ThoughtContentProvider.THOUGHT_PAIR_URI, null, null, null, null);
+		
+		while (c.moveToNext())
+		{
+			try 
+			{
+				JSONArray tags = new JSONArray(c.getString(c.getColumnIndex(ThoughtContentProvider.PAIR_TAGS)));
+				
+				for (int i = 0; i < tags.length(); i++)
+				{
+					String tag = tags.getString(i);
+					
+					if (allTags.contains(tag) == false)
+						allTags.add(tag);
+				}
+			} 
+			catch (JSONException e) 
+			{
+				LogManager.getInstance(context).logException(e);
+			}
+		}
+		
+		c.close();
+
+		Collections.sort(allTags);
+		
+		String[] tags = new String[allTags.size()];
+		
+		for (int i = 0; i < tags.length; i++)
+		{
+			tags[i] = allTags.get(i);
+		}
+		
+		return tags;
+	}
+
+	public static void addTag(Context context, long id, String tag) 
+	{
+		String where = ThoughtContentProvider.ID + " = ?";
+		String[] args = { "" + id };
+ 		
+		Cursor c = context.getContentResolver().query(ThoughtContentProvider.THOUGHT_PAIR_URI, null, where, args, null);
+		
+		if (c.moveToNext())
+		{
+			try 
+			{
+				JSONArray oldTags = new JSONArray(c.getString(c.getColumnIndex(ThoughtContentProvider.PAIR_TAGS)));
+				
+				boolean add = true;
+				
+				for (int i = 0; i < oldTags.length() && add == true; i++)
+				{
+					String oldTag = oldTags.getString(i);
+					
+					if (oldTag.trim().equalsIgnoreCase(tag) == true)
+						add = false;
+				}
+				
+				if (add)
+				{
+					oldTags.put(tag.trim());
+					
+					ContentValues values = new ContentValues();
+					values.put(ThoughtContentProvider.PAIR_TAGS, oldTags.toString());
+					
+					context.getContentResolver().update(ThoughtContentProvider.THOUGHT_PAIR_URI, values, where, args);
+				}
+			} 
+			catch (JSONException e) 
+			{
+				LogManager.getInstance(context).logException(e);
+			} 
+		}
+		
+		c.close();
+	}
+
+	public static void removeTag(Context context, long id, String tag) 
+	{
+		String where = ThoughtContentProvider.ID + " = ?";
+		String[] args = { "" + id };
+ 		
+		Cursor c = context.getContentResolver().query(ThoughtContentProvider.THOUGHT_PAIR_URI, null, where, args, null);
+		
+		if (c.moveToNext())
+		{
+			try 
+			{
+				JSONArray oldTags = new JSONArray(c.getString(c.getColumnIndex(ThoughtContentProvider.PAIR_TAGS)));
+				
+				JSONArray newTags = new JSONArray();
+				
+				boolean add = true;
+				
+				for (int i = 0; i < oldTags.length() && add == true; i++)
+				{
+					String oldTag = oldTags.getString(i);
+					
+					if (oldTag.trim().equalsIgnoreCase(tag) == false)
+						newTags.put(oldTag);
+				}
+				
+				if (add)
+				{
+					ContentValues values = new ContentValues();
+					values.put(ThoughtContentProvider.PAIR_TAGS, newTags.toString());
+					
+					context.getContentResolver().update(ThoughtContentProvider.THOUGHT_PAIR_URI, values, where, args);
+				}
+			} 
+			catch (JSONException e) 
+			{
+				LogManager.getInstance(context).logException(e);
+			} 
+		}
+		
+		c.close();
 	}
 }
