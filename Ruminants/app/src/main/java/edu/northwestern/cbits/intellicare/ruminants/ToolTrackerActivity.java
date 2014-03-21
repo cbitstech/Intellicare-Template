@@ -21,12 +21,17 @@ import java.lang.reflect.Array;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
  * Created by Gwen on 3/20/14.
  */
 public class ToolTrackerActivity extends Activity {
+
+    public static long LAST_LOG_TIME = 0;
+    public static long LAST_WPT_TIME = 0;
+    public static long LAST_DIDACTIC_TIME = 0;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,25 +54,63 @@ public class ToolTrackerActivity extends Activity {
         }
     }
 
+    public void getLastTime()
+    {
+        final ToolTrackerActivity me = this;
+
+        Cursor c = me.getContentResolver().query(RuminantsContentProvider.LOG_USE_URI, null, null, null, RuminantsContentProvider.LOG_USE_ID + " DESC LIMIT 1");
+        Cursor k = me.getContentResolver().query(RuminantsContentProvider.WPT_USE_URI, null, null, null, RuminantsContentProvider.WPT_USE_ID + " DESC LIMIT 1");
+        Cursor z = me.getContentResolver().query(RuminantsContentProvider.DIDACTIC_USE_URI, null, null, null, RuminantsContentProvider.DIDACTIC_USE_ID + " DESC LIMIT 1");
+
+       LAST_LOG_TIME = c.getLong(c.getColumnIndex(RuminantsContentProvider.LOG_USE_TIMESTAMP));
+       LAST_WPT_TIME = k.getLong(c.getColumnIndex(RuminantsContentProvider.WPT_USE_TIMESTAMP));
+       LAST_DIDACTIC_TIME = z.getLong(c.getColumnIndex(RuminantsContentProvider.DIDACTIC_TIMESTAMP));
+    }
+
     public static String practicePrompt(Context context) {
 
-        String worryPracticePrompt = context.getResources().getStringArray(R.array.practice_prompt)[0];
+        long now = System.currentTimeMillis();
 
-        return worryPracticePrompt;
+        if (LAST_WPT_TIME < now - 1209600000){
+            String worryPracticePrompt = context.getResources().getStringArray(R.array.practice_prompt)[0];
+            return worryPracticePrompt;
+        }
+
+        else {
+            String worryPracticePrompt = context.getResources().getStringArray(R.array.practice_prompt)[1];
+            return worryPracticePrompt;
+        }
+
     }
 
     public static String wizardOnePrompt(Context context) {
 
-        String logPrompt = context.getResources().getStringArray(R.array.log_prompt)[0];
+        long now = System.currentTimeMillis();
 
-        return logPrompt;
+        if (LAST_LOG_TIME < (now - 1209600000)) {
+            String logPrompt = context.getResources().getStringArray(R.array.log_prompt)[0];
+            return logPrompt;
+        }
+        else {
+            String logPrompt = context.getResources().getStringArray(R.array.log_prompt)[1];
+            return logPrompt;
+        }
     }
+
 
     public static String didacticPrompt(Context context) {
 
-        String didacticToolPrompt = context.getResources().getStringArray(R.array.didactic_prompt)[0];
+        long now = System.currentTimeMillis();
 
-        return didacticToolPrompt;
+        if (LAST_DIDACTIC_TIME < now - 1209600000) {
+            String didacticToolPrompt = context.getResources().getStringArray(R.array.didactic_prompt)[0];
+            return didacticToolPrompt;
+        }
+
+        else {
+            String didacticToolPrompt = context.getResources().getStringArray(R.array.didactic_prompt)[1];
+            return didacticToolPrompt;
+        }
     }
 
 

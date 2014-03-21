@@ -266,21 +266,42 @@
 
 
     <string-array name="practice_prompt">
-        <item>Meet Bessie</item>
-        <item>Bessie is our friend</item>
-        <item>3</item>
+        <item>It\'s nice to fence in worry time.</item>
+        <item>Tried the WPT lately?</item>
+
     </string-array>
 
     <string-array name="log_prompt">
-        <item>Meet Bessie</item>
-        <item>Bessie is our friend</item>
-        <item>3</item>
+        <item>Log it and forget it.</item>
+        <item>Tried the worry logger lately?</item>
     </string-array>
 
     <string-array name="didactic_prompt">
-        <item>Meet Bessie</item>
-        <item>Bessie is our friend</item>
-        <item>3</item>
+        <item>Bessie knows how to cope with worrying.</item>
+        <item>Try some slide shows to learn to cope with worries.</item>
+    </string-array>
+
+    <string-array name="emotions">
+        <item>Joy</item>
+        <item>Contentment</item>
+        <item>Pride</item>
+        <item>Optimism</item>
+        <item>Entrhallment</item>
+        <item>Relief</item>
+        <item>Surprise</item>
+        <item>Anger</item>
+        <item>Exasperation</item>
+        <item>Rage</item>
+        <item>Disgust</item>
+        <item>Envy</item>
+        <item>Torment</item>
+        <item>Sadness</item>
+        <item>Disappointment</item>
+        <item>Shame</item>
+        <item>Neglect</item>
+        <item>Sympathy</item>
+        <item>Fear</item>
+        <item>Nervousness</item>
     </string-array>
 
 

@@ -75,9 +75,11 @@ public class ScheduleManager {
 
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
+        int day = c.get(Calendar.DAY_OF_WEEK);
 
         // Profile notification...
-        if (hour == ScheduleManager.DEFAULT_PROFILE_HOUR && minute == ScheduleManager.DEFAULT_PROFILE_MINUTE)
+        if (hour == ScheduleManager.DEFAULT_PROFILE_HOUR && minute == ScheduleManager.DEFAULT_PROFILE_MINUTE &&
+                Calendar.MONDAY == day)
         {
             Intent intent = new Intent(this._context, ProfileActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
