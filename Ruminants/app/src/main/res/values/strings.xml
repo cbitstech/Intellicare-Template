@@ -7,7 +7,7 @@
     <string name="next">Next</string>
     <string name="previous">Back</string>
 
-    <string name="worry_tool_title">Worry Practice Tool</string>
+    <string name="worry_tool_title">Worry Practice</string>
 
     <string name="question_rumination_bool">Are you ruminating?</string>
     <string name="question_rumination_trigger">What happened before the rumination started?</string>
@@ -28,7 +28,7 @@
 
     <string name="question_ruminating">Ruminating? Click here!</string>
 
-    <string name="tool_didactic_content">Rumination Strategies</string>
+    <string name="tool_didactic_content">Strategies</string>
     <string name="desc_didactic_content">Learn how to manage worries</string>
     <string name="tool_survey_wizard">Rumination Diary</string>
     <string name="desc_survey_wizard">Describe your worries</string>
@@ -40,7 +40,7 @@
     <string name="wizards_button">Wizards</string>
     <string name="replay_intro_button">Replay Intro</string>
     <string name="replay_intro">Replay Intro</string>
-    <string name="survey_wizard_title">Rumination Logging</string>
+    <string name="survey_wizard_title">Logging</string>
 
     <string name="hint_comments">It\'s ok to be general</string>
 
@@ -98,6 +98,7 @@
         <item>let thoughts range free</item>
         <item>hoof it towards happiness</item>
         <item>empty your fourth stomach</item>
+        <item>It works!</item>
     </string-array>
 
     <string-array name="intro_content">
@@ -214,6 +215,19 @@
 	ruminating_lately BOOLEAN)
     </string>
 
+    <string name="db_create_wpt_use_table">CREATE TABLE IF NOT EXISTS wpt_use (
+	_id INTEGER PRIMARY KEY,
+    wpt_timestamp INTEGER)</string>
+
+    <string name="db_create_log_use_table">CREATE TABLE IF NOT EXISTS log_use (
+    _id INTEGER PRIMARY KEY,
+    log_timestamp INTEGER)</string>
+
+    <string name="db_create_didactic_use_table">CREATE TABLE IF NOT EXISTS didactic_use (
+	_id INTEGER PRIMARY KEY,
+    didactic_timestamp INTEGER)</string>
+
+
     <string name="nope">Talk to bessie more.</string>
     <string name="question_ruminating_lately">Have you been ruminating lately?</string>
     <string name="question_rumination_content">What have you been ruminating about?</string>
@@ -243,6 +257,31 @@
     <string name="worry_log_subtitle">Concerns you\'ve been working on.</string>
     <string name="rum_tools_title">Rumination Tools</string>
     <string name="main_activity_title">Main Paddock</string>
+    <string name="wpt_use">You\'ve used the WPT </string>
+    <string name="worry_log_use">You\'ve used the worry log</string>
+    <string name="didactic_content_use">You\'ve used didactic content</string>
+    <string name="tool_log_title">Worry Battles Fought and Won</string>
+    <string name="tool_use_log">Access Tool Use Stats</string>
+    <string name="desc_tool_chooser_log">The work you\'ve done</string>
+
+
+    <string-array name="practice_prompt">
+        <item>Meet Bessie</item>
+        <item>Bessie is our friend</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="log_prompt">
+        <item>Meet Bessie</item>
+        <item>Bessie is our friend</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="didactic_prompt">
+        <item>Meet Bessie</item>
+        <item>Bessie is our friend</item>
+        <item>3</item>
+    </string-array>
 
 
 </resources>

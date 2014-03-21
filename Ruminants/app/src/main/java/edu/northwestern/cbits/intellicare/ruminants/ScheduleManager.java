@@ -10,7 +10,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
+
 
 import java.util.Calendar;
 
@@ -21,8 +21,8 @@ public class ScheduleManager {
 //    public static final String REMINDER_HOUR = "preferred_hour";
 //    public static final String REMINDER_MINUTE = "preferred_minutes";
 
-    public static final int DEFAULT_PROFILE_HOUR = 14;
-    public static final int DEFAULT_PROFILE_MINUTE = 51;
+    public static final int DEFAULT_PROFILE_HOUR = 9;
+    public static final int DEFAULT_PROFILE_MINUTE = 00;
 
 //    private static final String LAST_PROFILE_NOTIFICATION = "last_notification";
 //    private static final String LAST_PROFILE_NOTIFICATION = "last_notification";
@@ -59,11 +59,6 @@ public class ScheduleManager {
 
     public void updateSchedule()
     {
-        //Log.e("CAR", "TICK");
-
-//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
-
-//        long lastProfileNotification = prefs.getLong(ScheduleManager.PROFILE_LAST_NOTIFICATION, 0);
         long now = System.currentTimeMillis();
 
 //        int hour = prefs.getInt(ScheduleManager.REMINDER_HOUR, ScheduleManager.DEFAULT_HOUR);
@@ -80,8 +75,6 @@ public class ScheduleManager {
 
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
-
-        //Log.e("CAR", "H: " + hour + " M: " + minute);
 
         // Profile notification...
         if (hour == ScheduleManager.DEFAULT_PROFILE_HOUR && minute == ScheduleManager.DEFAULT_PROFILE_MINUTE)
@@ -115,8 +108,6 @@ public class ScheduleManager {
         k.close();
 
         boolean timeToFire = false;
-
-        Log.e("CAR", "FREQ: " + helpFrequency);
 
         if ((helpFrequency == 1) && (hour == 9 && minute == 0)) {
             timeToFire = true;

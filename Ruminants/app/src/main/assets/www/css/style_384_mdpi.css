@@ -44,7 +44,7 @@ h3 { margin-left: 24px;
 
 #didactic_content {position: relative;
         height: 324px;
-        padding: 24px;
+        padding: 12px;
         font-size: 16px;
         }
 
@@ -55,7 +55,7 @@ p { margin-left: 4px;
 
 		
 #field { height: 180px;
-        padding: 15px;
+        padding: 5px;
 		background-color: #669900;
     }
 		

@@ -197,7 +197,7 @@ public class IntroActivity extends Activity {
         /* want to pick a subset of puns */
         int max = punBank.length;
         Random random = new Random();
-        int randomNum = random.nextInt(max - punNumber);
+        int randomNum = random.nextInt(4);
 
         // Arguments are: sourceArray, sourceStartIndex, destinationArray, destinationStartIndex, numElementsToCopy
         System.arraycopy( punBank, randomNum, punValues, 0, punNumber );
