@@ -1,0 +1,28 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical">
+    <WebView android:id="@+id/cloud_view" 
+        android:background="#ffffff"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+	<LinearLayout android:orientation="horizontal"
+	    android:layout_height="160dp"
+	    android:layout_width="match_parent"
+        android:background="#ffffff"
+	    android:padding="16dp">
+	    <!--  <Button android:id="@+id/button_challenge"
+	        android:text="@string/action_challenge"
+	        android:layout_width="0dp"
+	        android:layout_height="128dp"
+	        android:layout_weight="1" />
+	    <View android:layout_width="16dp"
+	        android:layout_height="16dp" />
+	    <Button android:id="@+id/button_review"
+	        android:text="@string/action_review"
+	        android:layout_width="0dp"
+	        android:layout_height="128dp"
+	        android:layout_weight="1" />  -->
+    </LinearLayout>
+</LinearLayout>
