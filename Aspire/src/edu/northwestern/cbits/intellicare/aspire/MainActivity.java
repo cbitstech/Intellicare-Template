@@ -88,6 +88,8 @@ public class MainActivity extends ConsentedActivity
 			public void onClick(View arg0) 
 			{
 				Intent intent = new Intent(me, EditActivity.class);
+				intent.putExtra(EditActivity.CARD_ID, me.currentCardId());
+				
 				me.startActivity(intent);
 			}
 		});
@@ -105,6 +107,25 @@ public class MainActivity extends ConsentedActivity
 		this.showCard(0);
 	}
 	
+	protected long currentCardId() 
+	{
+		ArrayList<Long> cardIds = new ArrayList<Long>();
+
+		Cursor c = this.getContentResolver().query(AspireContentProvider.ASPIRE_PATH_URI, null, null, null, AspireContentProvider.PATH_CARD_ID);
+		
+		while (c.moveToNext())
+		{
+			Long cardId = Long.valueOf(c.getLong(c.getColumnIndex(AspireContentProvider.PATH_CARD_ID)));
+			
+			if (cardIds.contains(cardId) == false)
+				cardIds.add(cardId);
+		}
+		
+		c.close();
+		
+		return cardIds.get(this._index);
+	}
+
 	private void showCard(int index) 
 	{
 		final MainActivity me = this;
@@ -300,8 +321,30 @@ public class MainActivity extends ConsentedActivity
 		}
 		
 		c.close();
+		
+		this.updateWeek();
 	}
 	
+	private void updateWeek() 
+	{
+		Calendar cal = Calendar.getInstance();
+
+		int[] dayIds = { R.id.day_zero, R.id.day_one, R.id.day_two, 
+				           R.id.day_three, R.id.day_four, R.id.day_five,
+				           R.id.day_six };
+
+		int[] weekdays = { R.string.day_sun, R.string.day_mon, R.string.day_tue, 
+				           R.string.day_wed, R.string.day_thu, R.string.day_fri,
+				           R.string.day_sat };
+		
+		int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK - 1);
+		
+		for (int i = 0; i < 7; i++)
+		{
+			
+		}
+	}
+
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
 		this.getMenuInflater().inflate(R.menu.menu_main, menu);

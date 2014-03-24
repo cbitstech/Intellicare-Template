@@ -85,7 +85,8 @@
             <LinearLayout android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:id="@+id/day_zero" >
                 <ImageView android:id="@+id/image_day"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
@@ -103,7 +104,8 @@
             <LinearLayout android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:id="@+id/day_one" >
                 <ImageView android:id="@+id/image_day"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
@@ -121,7 +123,8 @@
             <LinearLayout android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:id="@+id/day_two" >
                 <ImageView android:id="@+id/image_day"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
@@ -139,7 +142,8 @@
             <LinearLayout android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:id="@+id/day_three" >
                 <ImageView android:id="@+id/image_day"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
@@ -157,7 +161,8 @@
 			<LinearLayout android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:id="@+id/day_four" >
                 <ImageView android:id="@+id/image_day"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
@@ -175,7 +180,8 @@
             <LinearLayout android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:id="@+id/day_five" >
                 <ImageView android:id="@+id/image_day"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
@@ -193,7 +199,8 @@
             <LinearLayout android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:id="@+id/day_six">
                 <ImageView android:id="@+id/image_day"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
