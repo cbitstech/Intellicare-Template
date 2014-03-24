@@ -26,6 +26,7 @@ public class AspireContentProvider extends ContentProvider
 
 	protected static final String CARD_NAME = "name";
 	protected static final String CARD_DESCRIPTION = "description";
+	protected static final String CARD_IMAGE = "card_image";
 
 	protected static final String PATH_CARD_ID = "card_id";
 	protected static final String PATH_PATH = "path";
@@ -35,7 +36,7 @@ public class AspireContentProvider extends ContentProvider
 	protected static final String TASK_MONTH = "month";
 	protected static final String TASK_DAY = "day";
 
-	private static final int DATABASE_VERSION = 3;
+	private static final int DATABASE_VERSION = 4;
 	public static final String ID = "_id";
 
     private UriMatcher _matcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -160,6 +161,8 @@ public class AspireContentProvider extends ContentProvider
 	    	            db.execSQL(context.getString(R.string.db_create_paths_table));
 	                case 2:
 	    	            db.execSQL(context.getString(R.string.db_create_tasks_table));
+	                case 3:
+	    	            db.execSQL(context.getString(R.string.db_update_cards_add_card_image));
 	                default:
                         break;
             	}

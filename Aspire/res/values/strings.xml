@@ -19,6 +19,8 @@
     <string name="title_path_needed">Choose Value</string>
     <string name="message_path_needed">Please select your first value.</string>
 
+    <string name="message_no_paths">No paths for this day&#8230;</string>
+    
     <string name="subtitle_single_value">1 value</string>
     <string name="subtitle_values" formatted="false">%d values</string>
 
@@ -48,6 +50,9 @@
     <!-- Database -->
     
    	<string name="db_create_cards_table">CREATE TABLE IF NOT EXISTS cards(_id INTEGER PRIMARY KEY, name TEXT, description TEXT);</string>
+
+   	<string name="db_update_cards_add_card_image">ALTER TABLE cards ADD COLUMN card_image TEXT;</string>
+   	
    	<string name="db_create_paths_table">CREATE TABLE IF NOT EXISTS paths(_id INTEGER PRIMARY KEY, card_id INTEGER, path TEXT);</string>
    	<string name="db_create_tasks_table">CREATE TABLE IF NOT EXISTS tasks(_id INTEGER PRIMARY KEY, path_id INTEGER, year INTEGER, month INTEGER, day INTEGER);</string>
    		
