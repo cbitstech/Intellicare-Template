@@ -16,7 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.DatePicker;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
@@ -142,25 +142,30 @@ public class AddCardActivity extends ConsentedActivity
 		{
 			public void onClick(DialogInterface arg0, int which) 
 			{
-				DatePicker datePicker = (DatePicker) view.findViewById(R.id.date_picker);
 				TimePicker timePicker = (TimePicker) view.findViewById(R.id.time_picker);
 				
-				int year = datePicker.getYear();
-				int month = datePicker.getMonth();
-				int day = datePicker.getDayOfMonth();
+				CheckBox sunday = (CheckBox) view.findViewById(R.id.check_sun);
+				CheckBox monday = (CheckBox) view.findViewById(R.id.check_mon);
+				CheckBox tuesday = (CheckBox) view.findViewById(R.id.check_tue);
+				CheckBox wednesday = (CheckBox) view.findViewById(R.id.check_wed);
+				CheckBox thursday = (CheckBox) view.findViewById(R.id.check_thu);
+				CheckBox friday = (CheckBox) view.findViewById(R.id.check_fri);
+				CheckBox saturday = (CheckBox) view.findViewById(R.id.check_sat);
 				
 				int hour = timePicker.getCurrentHour();
 				int minute = timePicker.getCurrentMinute();
-				int second = 0;
 				
 				ContentValues values = new ContentValues();
 				values.put(CopeContentProvider.REMINDER_CARD_ID, id);
-				values.put(CopeContentProvider.REMINDER_YEAR, year);
-				values.put(CopeContentProvider.REMINDER_MONTH, month);
-				values.put(CopeContentProvider.REMINDER_DAY, day);
+				values.put(CopeContentProvider.REMINDER_SUNDAY, sunday.isChecked());
+				values.put(CopeContentProvider.REMINDER_MONDAY, monday.isChecked());
+				values.put(CopeContentProvider.REMINDER_TUESDAY, tuesday.isChecked());
+				values.put(CopeContentProvider.REMINDER_WEDNESDAY, wednesday.isChecked());
+				values.put(CopeContentProvider.REMINDER_THURSDAY, thursday.isChecked());
+				values.put(CopeContentProvider.REMINDER_FRIDAY, friday.isChecked());
+				values.put(CopeContentProvider.REMINDER_SATURDAY, saturday.isChecked());
 				values.put(CopeContentProvider.REMINDER_HOUR, hour);
 				values.put(CopeContentProvider.REMINDER_MINUTE, minute);
-				values.put(CopeContentProvider.REMINDER_SECOND, second);
 				
 				activity.getContentResolver().insert(CopeContentProvider.REMINDER_URI, values);
 				

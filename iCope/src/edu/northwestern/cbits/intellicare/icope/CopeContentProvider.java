@@ -1,6 +1,8 @@
 package edu.northwestern.cbits.intellicare.icope;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +14,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
-
 
 public class CopeContentProvider extends ContentProvider 
 {
@@ -28,19 +29,22 @@ public class CopeContentProvider extends ContentProvider
 	protected static final Uri CARD_URI = Uri.parse("content://" + AUTHORITY + "/" + CARD_TABLE);;
 
 	protected static final String REMINDER_CARD_ID = "card_id";
-	protected static final String REMINDER_YEAR = "year";
-	protected static final String REMINDER_MONTH = "month";
-	protected static final String REMINDER_DAY = "day";
 	protected static final String REMINDER_HOUR = "hour";
 	protected static final String REMINDER_MINUTE = "minute";
-	protected static final String REMINDER_SECOND = "second";
+	protected static final String REMINDER_SUNDAY = "sunday";
+	protected static final String REMINDER_MONDAY = "monday";
+	protected static final String REMINDER_TUESDAY = "tuesday";
+	protected static final String REMINDER_WEDNESDAY = "wednesday";
+	protected static final String REMINDER_THURSDAY = "thursday";
+	protected static final String REMINDER_FRIDAY = "friday";
+	protected static final String REMINDER_SATURDAY = "saturday";
 
 	protected static final String CARD_EVENT = "event";
 	protected static final String CARD_REMINDER = "reminder";
 	protected static final String CARD_ID = "_id";
 	protected static final String CARD_TYPE = "card_type";
 
-	private static final int DATABASE_VERSION = 2;
+	private static final int DATABASE_VERSION = 1;
 	public static final String ID = "_id";
 
     private UriMatcher _matcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -81,8 +85,6 @@ public class CopeContentProvider extends ContentProvider
             	{
 	                case 0:
 	                	
-	                case 1:
-	    	            db.execSQL(context.getString(R.string.db_update_cards_add_card_type));
 	                default:
                         break;
             	}
@@ -184,30 +186,71 @@ public class CopeContentProvider extends ContentProvider
 
 		Cursor cursor = context.getContentResolver().query(CopeContentProvider.REMINDER_URI, null, null, null, null);
 
-		long now = System.currentTimeMillis();
+		final long now = System.currentTimeMillis();
 
 		while (cursor.moveToNext())
 		{
-			Calendar c = Calendar.getInstance();
-			c.set(Calendar.YEAR, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_YEAR)));
-			c.set(Calendar.MONTH, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_MONTH)));
-			c.set(Calendar.DAY_OF_MONTH, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_DAY)));
-			c.set(Calendar.HOUR_OF_DAY, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_HOUR)));
-			c.set(Calendar.MINUTE, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_MINUTE)));
-			c.set(Calendar.SECOND, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_SECOND)));
-
-			Date date = c.getTime();
-			
-			if (date.getTime() > now)
+			for (int i = 0; i < 7; i++)
 			{
-				Reminder r = new Reminder();
-				r.date = date;
-				r.cardId = cursor.getLong(cursor.getColumnIndex(CopeContentProvider.REMINDER_CARD_ID));
-				r.reminderId = cursor.getLong(cursor.getColumnIndex(CopeContentProvider.ID));
-				list.add(r);
+				Calendar c = Calendar.getInstance();
+				c.setTimeInMillis(now + (i * 24 * 60 * 60 * 1000 ));
+				
+				c.set(Calendar.HOUR_OF_DAY, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_HOUR)));
+				c.set(Calendar.MINUTE, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_MINUTE)));
+				c.set(Calendar.SECOND, 0);
+
+				int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+				
+				boolean include = false;
+				
+				switch (dayOfWeek % 8)
+				{
+					case Calendar.SUNDAY:
+						include = (cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_SUNDAY)) != 0); 
+						break;
+					case Calendar.MONDAY:
+						include = (cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_MONDAY)) != 0); 
+						break;
+					case Calendar.TUESDAY:
+						include = (cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_TUESDAY)) != 0); 
+						break;
+					case Calendar.WEDNESDAY:
+						include = (cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_WEDNESDAY)) != 0); 
+						break;
+					case Calendar.THURSDAY:
+						include = (cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_THURSDAY)) != 0); 
+						break;
+					case Calendar.FRIDAY:
+						include = (cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_FRIDAY)) != 0); 
+						break;
+					case Calendar.SATURDAY:
+						include = (cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_SATURDAY)) != 0); 
+						break;
+				}
+				
+				Date date = c.getTime();
+				
+				if (include && date.getTime() > now)
+				{
+					Reminder r = new Reminder();
+					r.date = date;
+					r.cardId = cursor.getLong(cursor.getColumnIndex(CopeContentProvider.REMINDER_CARD_ID));
+					r.reminderId = cursor.getLong(cursor.getColumnIndex(CopeContentProvider.ID));
+					list.add(r);
+				}
 			}
 		}
 		
+		cursor.close();
+		
+		Collections.sort(list, new Comparator<Reminder>()
+		{
+			public int compare(Reminder one, Reminder two) 
+			{
+				return one.date.compareTo(two.date);
+			}
+		});
+
 		return list;
 	}
 }

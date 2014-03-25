@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,11 +30,16 @@ public class LibraryActivity extends ConsentedActivity
 		actionBar.setTitle(R.string.title_card_library);
 	}
 	
-	@SuppressWarnings("deprecation")
 	protected void onResume()
 	{
 		super.onResume();
 		
+		this.refreshList();
+	}
+	
+	@SuppressWarnings("deprecation")
+	private void refreshList()
+	{
 		final LibraryActivity me = this;
 		
 		ListView list = (ListView) this.findViewById(R.id.cards_list);
@@ -62,8 +66,6 @@ public class LibraryActivity extends ConsentedActivity
 				{
 					public void onClick(View arg0) 
 					{
-						Log.e("IC", "SCHEDULE " + id);
-						
 						AddCardActivity.scheduleCard(me, id, false);
 					}
 				});
@@ -71,7 +73,11 @@ public class LibraryActivity extends ConsentedActivity
 		};
 
 		ActionBar actionBar = this.getSupportActionBar();
-		actionBar.setSubtitle(this.getString(R.string.subtitle_library, c.getCount()));
+
+		if (c.getCount() == 1)
+			actionBar.setSubtitle(R.string.subtitle_library_single);
+		else
+			actionBar.setSubtitle(this.getString(R.string.subtitle_library, c.getCount()));
 		
 		list.setAdapter(adapter);
 		
@@ -89,14 +95,46 @@ public class LibraryActivity extends ConsentedActivity
 						switch(which)
 						{
 							case 0:
+								AddCardActivity.scheduleCard(me, id, false);
+
+								break;
+							case 1:
 								Intent editIntent = new Intent(me, AddCardActivity.class);
 								editIntent.putExtra(AddCardActivity.CARD_ID, id);
 								
 								me.startActivity(editIntent);
-
+								
 								break;
-							case 1:
-								AddCardActivity.scheduleCard(me, id, false);
+							case 2:
+								AlertDialog.Builder builder = new AlertDialog.Builder(me);
+								builder.setTitle(R.string.title_confirm_delete);
+								builder.setMessage(R.string.message_confirm_delete);
+								
+								builder.setNegativeButton(R.string.action_no, new OnClickListener()
+								{
+									public void onClick(DialogInterface arg0, int arg1) 
+									{
+
+									}
+								});
+
+								builder.setPositiveButton(R.string.action_yes, new OnClickListener()
+								{
+									public void onClick(DialogInterface arg0, int arg1) 
+									{
+										String where = CopeContentProvider.ID + " = ?";
+										String[] args = { "" + id };
+										
+										me.getContentResolver().delete(CopeContentProvider.CARD_URI, where, args);
+
+										where = CopeContentProvider.CARD_ID + " = ?";
+										me.getContentResolver().delete(CopeContentProvider.REMINDER_URI, where, args);
+										
+										me.refreshList();
+									}
+								});
+
+								builder.create().show();
 								
 								break;
 						}

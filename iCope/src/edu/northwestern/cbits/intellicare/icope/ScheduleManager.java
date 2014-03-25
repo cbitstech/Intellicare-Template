@@ -47,14 +47,10 @@ public class ScheduleManager
 	{
 		Calendar c = Calendar.getInstance();
 		
-		String where = CopeContentProvider.REMINDER_YEAR + " = ? AND " + 
-						CopeContentProvider.REMINDER_MONTH + " = ? AND " + 
-						CopeContentProvider.REMINDER_DAY + " = ? AND " + 
-						CopeContentProvider.REMINDER_HOUR + " = ? AND " + 
-						CopeContentProvider.REMINDER_MINUTE + " = ?"; 
+		String where = CopeContentProvider.REMINDER_HOUR + " = ? AND " + 
+					   CopeContentProvider.REMINDER_MINUTE + " = ?"; 
 		
-		String[] args = { "" + c.get(Calendar.YEAR), "" + c.get(Calendar.MONTH), "" + c.get(Calendar.DAY_OF_MONTH),
-				"" + c.get(Calendar.HOUR_OF_DAY), "" + c.get(Calendar.MINUTE) }; 
+		String[] args = { "" + c.get(Calendar.HOUR_OF_DAY), "" + c.get(Calendar.MINUTE) }; 
 		
 		Cursor cursor = this._context.getContentResolver().query(CopeContentProvider.REMINDER_URI, null, where, args, null);
 		
@@ -67,38 +63,79 @@ public class ScheduleManager
 			long reminderId = cursor.getLong(cursor.getColumnIndex(CopeContentProvider.ID));
 			long cardId = cursor.getLong(cursor.getColumnIndex(CopeContentProvider.REMINDER_CARD_ID));
 			
-			String cardWhere = CopeContentProvider.ID + " = ?";
-			String[] cardArgs = { "" + cardId };
-		
-			Cursor cardCursor = this._context.getContentResolver().query(CopeContentProvider.CARD_URI, null, cardWhere, cardArgs, null);
+			boolean today = false;
 			
-			if (cardCursor.moveToNext())
+			switch (c.get(Calendar.DAY_OF_WEEK))
 			{
-				String message = cardCursor.getString(cardCursor.getColumnIndex(CopeContentProvider.CARD_REMINDER));
-				
-				Long lastShown = this._lastFires.get(message);
-				
-				if (lastShown == null)
-					lastShown = Long.valueOf(0);
-				
-				if (now - lastShown > 60000)
-				{
-					Intent intent = new Intent(this._context, ViewCardActivity.class);
-					intent.putExtra(ViewCardActivity.REMINDER_ID, reminderId);
+				case Calendar.SUNDAY:
+					if (cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_SUNDAY)) != 0)
+						today = true;
 					
-					PendingIntent pi = PendingIntent.getActivity(this._context, 0, intent, 0, null);
-					Uri u = Uri.withAppendedPath(ViewCardActivity.URI, "" + reminderId);
+					break;
+				case Calendar.MONDAY:
+					if (cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_MONDAY)) != 0)
+						today = true;
 					
-					StatusNotificationManager.getInstance(this._context).notifyBigText(97521, R.drawable.ic_notification, title, message, pi, u);
+					break;
+				case Calendar.TUESDAY:
+					if (cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_TUESDAY)) != 0)
+						today = true;
 					
-					this._lastFires.put(message, now);
-				}
-				
-				
-				
+					break;
+				case Calendar.WEDNESDAY:
+					if (cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_WEDNESDAY)) != 0)
+						today = true;
+					
+					break;
+				case Calendar.THURSDAY:
+					if (cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_THURSDAY)) != 0)
+						today = true;
+					
+					break;
+				case Calendar.FRIDAY:
+					if (cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_FRIDAY)) != 0)
+						today = true;
+					
+					break;
+				case Calendar.SATURDAY:
+					if (cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_SATURDAY)) != 0)
+						today = true;
+					
+					break;
 			}
 			
-			cardCursor.close();
+			if (today)
+			{
+				String cardWhere = CopeContentProvider.ID + " = ?";
+				String[] cardArgs = { "" + cardId };
+			
+				Cursor cardCursor = this._context.getContentResolver().query(CopeContentProvider.CARD_URI, null, cardWhere, cardArgs, null);
+				
+				if (cardCursor.moveToNext())
+				{
+					String message = cardCursor.getString(cardCursor.getColumnIndex(CopeContentProvider.CARD_REMINDER));
+					
+					Long lastShown = this._lastFires.get(message);
+					
+					if (lastShown == null)
+						lastShown = Long.valueOf(0);
+					
+					if (now - lastShown > 60000)
+					{
+						Intent intent = new Intent(this._context, ViewCardActivity.class);
+						intent.putExtra(ViewCardActivity.REMINDER_ID, reminderId);
+						
+						PendingIntent pi = PendingIntent.getActivity(this._context, 0, intent, 0);
+						Uri u = Uri.withAppendedPath(ViewCardActivity.URI, "" + reminderId);
+						
+						StatusNotificationManager.getInstance(this._context).notifyBigText(97521, R.drawable.ic_notification, title, message, pi, u);
+						
+						this._lastFires.put(message, now);
+					}
+				}
+				
+				cardCursor.close();
+			}
 		}
 		
 		cursor.close();

@@ -3,6 +3,12 @@ package edu.northwestern.cbits.intellicare.icope;
 import java.text.DateFormat;
 import java.util.List;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.CrashManagerListener;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -14,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -34,6 +41,19 @@ public class MainActivity extends ConsentedActivity
 	{
 		super.onResume();
 		
+		CrashManager.register(this, "ba2344cc1da5b5500fc9b80b5d6abf77", new CrashManagerListener() 
+		{
+			public boolean shouldAutoUploadCrashes() 
+			{
+				    return true;
+			}
+		});
+		
+		this.refresh();
+	}
+	
+	private void refresh()
+	{
 		ListView list = (ListView) this.findViewById(R.id.cards_list);
 		
 		final List<Reminder> reminders = CopeContentProvider.listUpcomingReminders(this);
@@ -44,6 +64,8 @@ public class MainActivity extends ConsentedActivity
 		
 		if (reminders.size() == 1)
 			items = new String[1];
+		else if (reminders.size() == 0)
+			items = new String[0];
 		
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row_reminder, items)
 		{
@@ -126,6 +148,46 @@ public class MainActivity extends ConsentedActivity
 					
 					me.startActivity(intent);
 				}
+			}
+		});
+		
+		list.setOnItemLongClickListener(new OnItemLongClickListener()
+		{
+			public boolean onItemLongClick(AdapterView<?> arg0, View view, final int position, long id)
+			{
+				if (position == 0)
+				{
+					AlertDialog.Builder builder = new AlertDialog.Builder(me);
+					builder.setTitle(R.string.title_delete_reminder);
+					builder.setMessage(R.string.message_delete_reminder);
+					
+					builder.setPositiveButton(R.string.action_yes, new OnClickListener()
+					{
+						public void onClick(DialogInterface arg0, int arg1) 
+						{
+							Reminder r = reminders.get(position);
+							
+							String where = CopeContentProvider.ID + " = ?";
+							String[] args = { "" + r.reminderId };
+							
+							me.getContentResolver().delete(CopeContentProvider.REMINDER_URI, where, args);
+
+							me.refresh();
+						}
+					});
+					
+					builder.setNegativeButton(R.string.action_no, new OnClickListener()
+					{
+						public void onClick(DialogInterface arg0, int arg1) 
+						{
+
+						}
+					});
+					
+					builder.create().show();
+				}
+				
+				return true;
 			}
 		});
 		

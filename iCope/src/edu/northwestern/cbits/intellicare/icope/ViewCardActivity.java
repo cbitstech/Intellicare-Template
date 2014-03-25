@@ -10,8 +10,8 @@ import edu.northwestern.cbits.intellicare.logging.LogManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.DialogInterface.OnShowListener;
 import android.content.Intent;
 import android.database.Cursor;
@@ -78,12 +78,8 @@ public class ViewCardActivity extends Activity
 				DateFormat dateFormat = android.text.format.DateFormat.getLongDateFormat(this);
 
 				Calendar c = Calendar.getInstance();
-				c.set(Calendar.YEAR, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_YEAR)));
-				c.set(Calendar.MONTH, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_MONTH)));
-				c.set(Calendar.DAY_OF_MONTH, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_DAY)));
 				c.set(Calendar.HOUR_OF_DAY, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_HOUR)));
 				c.set(Calendar.MINUTE, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_MINUTE)));
-				c.set(Calendar.SECOND, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_SECOND)));
 
 				Date date = c.getTime();
 				
@@ -107,11 +103,15 @@ public class ViewCardActivity extends Activity
 					type.setText(cardCursor.getString(cardCursor.getColumnIndex(CopeContentProvider.CARD_TYPE)));
 				}
 				
+				cardCursor.close();
+				
 				builder.setPositiveButton(R.string.action_helpful, new OnClickListener()
 				{
 					public void onClick(DialogInterface arg0, int arg1) 
 					{
 						Log.e("IC", "TODO: LOG POSITIVE");
+						
+						me.finish();
 					}
 				});
 
@@ -120,12 +120,14 @@ public class ViewCardActivity extends Activity
 					public void onClick(DialogInterface arg0, int arg1) 
 					{
 						Log.e("IC", "TODO: LOG NEGATIVE");
+
+						me.finish();
 					}
 				});
 				
-				builder.setOnDismissListener(new OnDismissListener()
+				builder.setOnCancelListener(new OnCancelListener()
 				{
-					public void onDismiss(DialogInterface arg0) 
+					public void onCancel(DialogInterface arg0) 
 					{
 						me.finish();
 					}
