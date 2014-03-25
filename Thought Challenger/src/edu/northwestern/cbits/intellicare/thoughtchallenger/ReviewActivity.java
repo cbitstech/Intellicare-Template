@@ -2,6 +2,7 @@ package edu.northwestern.cbits.intellicare.thoughtchallenger;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,7 +20,6 @@ import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -97,6 +97,10 @@ public class ReviewActivity extends ConsentedActivity
 								
 								if (add)
 								{
+									HashMap<String, Object> payload = new HashMap<String, Object>();
+									payload.put("tag", newTag);
+									LogManager.getInstance(me).log("added_tag", payload);
+
 									savedTags.put(newTag);
 									e.putString(ThoughtContentProvider.SAVED_TAGS, savedTags.toString());
 									e.commit();
@@ -148,7 +152,7 @@ public class ReviewActivity extends ConsentedActivity
 							for (int i = 0; i < tagsArray.length(); i++)
 							{
 								String tag = tagsArray.getString(i);
-								
+
 								if (selectedTags.contains(tag) == false)
 									selectedTags.add(tag);
 							}
@@ -176,10 +180,21 @@ public class ReviewActivity extends ConsentedActivity
 						{
 							if (finalId != -1)
 							{
+								HashMap<String, Object> payload = new HashMap<String, Object>();
+								payload.put("tag", tagList[position]);
+
 								if (checked)
+								{
 									ThoughtContentProvider.addTag(me, finalId, tagList[position]);
+
+									LogManager.getInstance(me).log("added_tag", payload);
+								}
 								else
+								{
 									ThoughtContentProvider.removeTag(me, finalId, tagList[position]);
+
+									LogManager.getInstance(me).log("removed_tag", payload);
+								}
 							}
 						}
 					});
@@ -224,6 +239,10 @@ public class ReviewActivity extends ConsentedActivity
 										
 										if (add)
 										{
+											HashMap<String, Object> payload = new HashMap<String, Object>();
+											payload.put("tag", newTag);
+											LogManager.getInstance(me).log("added_tag", payload);
+
 											savedTags.put(newTag);
 											e.putString(ThoughtContentProvider.SAVED_TAGS, savedTags.toString());
 											e.commit();
@@ -315,6 +334,10 @@ public class ReviewActivity extends ConsentedActivity
 							String[] args = { "" + id };
 							
 							me.getContentResolver().update(ThoughtContentProvider.THOUGHT_PAIR_URI, values, where, args);
+							
+							HashMap<String, Object> payload = new HashMap<String, Object>();
+							payload.put("distortion", distortions[me._distortionIndex]);
+							LogManager.getInstance(me).log("selected_distortion", payload);
 						}
 						
 						c.close();
@@ -337,6 +360,22 @@ public class ReviewActivity extends ConsentedActivity
 			this.getSupportActionBar().setSubtitle(this.getString(R.string.subtitle_review, c.getCount()));
 		
 		this.showPair(r.nextInt(c.getCount()));
+	}
+	
+	protected void onResume()
+	{
+		super.onResume();
+		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("opened_review", payload);
+	}
+	
+	protected void onPause()
+	{
+		super.onPause();
+		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("closed_review", payload);
 	}
 
 	private void showPair(int index) 
@@ -372,6 +411,11 @@ public class ReviewActivity extends ConsentedActivity
 			
 			automatic.setText(c.getString(c.getColumnIndex(ThoughtContentProvider.PAIR_AUTOMATIC_THOUGHT)));
 			response.setText(c.getString(c.getColumnIndex(ThoughtContentProvider.PAIR_RATIONAL_RESPONSE)));
+			
+			HashMap<String, Object> payload = new HashMap<String, Object>();
+			payload.put("automatic_thought", automatic.getText().toString());
+			payload.put("rational_response", response.getText().toString());
+			LogManager.getInstance(this).log("showed_pair", payload);
 			
 			String distortionValue = c.getString(c.getColumnIndex(ThoughtContentProvider.PAIR_DISTORTIONS)); 
 			
@@ -431,8 +475,6 @@ public class ReviewActivity extends ConsentedActivity
 	
 	protected void onActivityResult (int requestCode, int resultCode, Intent data)
 	{
-		Log.e("TC", "RESPONSE: " + data);
-		
 		if (resultCode == Activity.RESULT_OK)
 		{
 			if (requestCode == ReviewActivity.FETCH_THOUGHT)
@@ -447,17 +489,23 @@ public class ReviewActivity extends ConsentedActivity
 	{
 		int itemId = item.getItemId();
 		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+
 		switch (itemId)
 		{
 			case R.id.action_next:
 				this._index += 1;
 				this.showPair(this._index);
 
+				LogManager.getInstance(this).log("next_pair", payload);
+				
 				break;
 			case R.id.action_previous:
 				this._index -= 1;
 				this.showPair(this._index);
-				
+
+				LogManager.getInstance(this).log("previous_pair", payload);
+
 				break;
 			case R.id.action_list:
 				Intent intent = new Intent(this, ThoughtsListActivity.class);

@@ -1,5 +1,7 @@
 package edu.northwestern.cbits.intellicare.thoughtchallenger;
 
+import java.util.HashMap;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class CatchActivity extends ConsentedActivity 
 {
@@ -43,6 +46,10 @@ public class CatchActivity extends ConsentedActivity
 						String[] thoughts = me.getResources().getStringArray(R.array.list_negative_thoughts);
 						
 						prompt.setText(thoughts[which]);
+						
+						HashMap<String, Object> payload = new HashMap<String, Object>();
+						payload.put("automatic_thought", thoughts[which]);
+						LogManager.getInstance(me).log("selected_thought", payload);
 					}
 				});
 				
@@ -55,8 +62,27 @@ public class CatchActivity extends ConsentedActivity
 				});
 				
 				builder.create().show();
+				
+				HashMap<String, Object> payload = new HashMap<String, Object>();
+				LogManager.getInstance(me).log("showed_examples", payload);
 			}
 		});
+	}
+	
+	protected void onResume()
+	{
+		super.onResume();
+		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("opened_catch", payload);
+	}
+	
+	protected void onPause()
+	{
+		super.onPause();
+
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("closed_catch", payload);
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) 
@@ -88,6 +114,9 @@ public class CatchActivity extends ConsentedActivity
 				
 				builder.create().show();
 				
+				HashMap<String, Object> payload = new HashMap<String, Object>();
+				LogManager.getInstance(this).log("showed_catch_help", payload);
+
 				break;
 
 			case R.id.action_next:

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 
 import org.json.JSONArray;
 
@@ -57,6 +58,22 @@ public class ThoughtsListActivity extends ConsentedActivity
 		this.refreshList();
 	}
 	
+	protected void onResume()
+	{
+		super.onResume();
+		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("opened_list", payload);
+	}
+	
+	protected void onPause()
+	{
+		super.onPause();
+		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("closed_list", payload);
+	}
+	
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
 		this.getMenuInflater().inflate(R.menu.menu_list, menu);
@@ -81,7 +98,7 @@ public class ThoughtsListActivity extends ConsentedActivity
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				builder.setTitle(R.string.title_display_options);
 				
-				String[] options = this.getResources().getStringArray(R.array.list_display_options);
+				final String[] options = this.getResources().getStringArray(R.array.list_display_options);
 				
 				builder.setSingleChoiceItems(options, prefs.getInt(ThoughtsListActivity.SELECTED_ITEMS, 0), new OnClickListener()
 				{
@@ -90,7 +107,11 @@ public class ThoughtsListActivity extends ConsentedActivity
 						Editor e = prefs.edit();
 						e.putInt(ThoughtsListActivity.SELECTED_ITEMS, which);
 						e.commit();
-						
+
+						HashMap<String, Object> payload = new HashMap<String, Object>();
+						payload.put("filter", options[which]);
+						LogManager.getInstance(me).log("filtered_list", payload);
+
 						me.refreshList();
 					}
 				});
@@ -142,6 +163,9 @@ public class ThoughtsListActivity extends ConsentedActivity
 			});
 			
 			cloud.loadDataWithBaseURL("file:///android_asset/www/", this.generatePage(), "text/html", null, null);
+
+			HashMap<String, Object> payload = new HashMap<String, Object>();
+			LogManager.getInstance(this).log("displayed_cloud", payload);
 		}
 		else
 		{
@@ -195,6 +219,9 @@ public class ThoughtsListActivity extends ConsentedActivity
 					me.finish();
 				}
 			});
+			
+			HashMap<String, Object> payload = new HashMap<String, Object>();
+			LogManager.getInstance(this).log("displayed_list", payload);
 		}
 	}
 

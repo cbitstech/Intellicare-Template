@@ -4,6 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.CrashManagerListener;
 
 import org.json.JSONArray;
 
@@ -94,7 +98,15 @@ public class MainActivity extends ConsentedActivity
 	protected void onResume()
 	{
 		super.onResume();
-		
+
+		CrashManager.register(this, "4d0edbed25e405ca57b44339064d15f7", new CrashManagerListener() 
+		{
+			public boolean shouldAutoUploadCrashes() 
+			{
+				    return true;
+			}
+		});
+
 		WebView cloud = (WebView) this.findViewById(R.id.cloud_view);
 		cloud.getSettings().setJavaScriptEnabled(true);
 		cloud.setVerticalScrollBarEnabled(false);
@@ -109,7 +121,19 @@ public class MainActivity extends ConsentedActivity
 				return false;
 			}
 		});
+	
 		cloud.loadDataWithBaseURL("file:///android_asset/www/", this.generatePage(), "text/html", null, null);
+		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("opened_main", payload);
+	}
+	
+	protected void onPause()
+	{
+		super.onPause();
+
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("closed_main", payload);
 	}
 
 	private String generatePage() 
