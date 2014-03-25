@@ -3,6 +3,10 @@
         robot:showAsAction="always"
         android:icon="@drawable/ic_action_arrow_left"
         android:title="@string/action_previous" />
+    <item android:id="@+id/action_list"
+        robot:showAsAction="always"
+        android:icon="@drawable/ic_action_list"
+        android:title="@string/action_list" />
     <item android:id="@+id/action_next"
         robot:showAsAction="always"
         android:icon="@drawable/ic_action_arrow_right"

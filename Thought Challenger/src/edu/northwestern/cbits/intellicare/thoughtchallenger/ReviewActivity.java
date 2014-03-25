@@ -11,6 +11,7 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
@@ -431,6 +432,12 @@ public class ReviewActivity extends ConsentedActivity
 			case R.id.action_previous:
 				this._index -= 1;
 				this.showPair(this._index);
+				
+				break;
+			case R.id.action_list:
+				Intent intent = new Intent(this, ThoughtsListActivity.class);
+				
+				this.startActivity(intent);
 				
 				break;
 		}
