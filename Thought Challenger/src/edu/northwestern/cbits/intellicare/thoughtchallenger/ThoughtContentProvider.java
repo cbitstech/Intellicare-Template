@@ -335,4 +335,98 @@ public class ThoughtContentProvider extends ContentProvider
 		
 		c.close();
 	}
+
+	public static JSONArray fullWordArray(Context context) 
+	{
+		JSONArray positive = ThoughtContentProvider.positiveWordArray(context);
+		JSONArray negative = ThoughtContentProvider.negativeWordArray(context);
+		
+		JSONArray all = new JSONArray();
+
+		try 
+		{
+			for (int i = 0; i < positive.length(); i++)
+			{
+					all.put(positive.getString(i));
+			}
+		}
+		catch (JSONException e) 
+		{
+			LogManager.getInstance(context).logException(e);
+		}
+		
+		try 
+		{
+			for (int i = 0; i < negative.length(); i++)
+			{
+					all.put(negative.getString(i));
+			}
+		}
+		catch (JSONException e) 
+		{
+			LogManager.getInstance(context).logException(e);
+		}
+
+		return all;
+	}
+
+	public static JSONArray negativeWordArray(Context context) 
+	{
+		JSONArray words = new JSONArray();
+
+		Cursor c = context.getContentResolver().query(ThoughtContentProvider.THOUGHT_PAIR_URI, null, null, null, null);
+		
+		if (c.getCount() > 0)
+		{
+			while (c.moveToNext())
+			{
+				String s = c.getString(c.getColumnIndex(ThoughtContentProvider.PAIR_AUTOMATIC_THOUGHT));
+				
+				s = s.toLowerCase();
+				
+				s = s.replace(".", " ");
+				s = s.replace(",", " ");
+				s = s.replace("!", " ");
+				s = s.replace("?", " ");
+				
+				String[] tokens = s.split(" ");
+				
+				for (String token : tokens)
+				{
+					token = token.trim();
+					
+					if (token.length() > 0)
+						words.put(token);
+				}
+			}
+		}
+		else
+		{
+			String[] thoughts = context.getResources().getStringArray(R.array.list_negative_thoughts);
+			
+			for (String s : thoughts)
+			{
+				s = s.toLowerCase();
+				
+				s = s.replace(".", " ");
+				s = s.replace(",", " ");
+				s = s.replace("!", " ");
+				s = s.replace("?", " ");
+				
+				String[] tokens = s.split(" ");
+				
+				for (String token : tokens)
+				{
+					token = token.trim();
+					
+					if (token.length() > 0)
+						words.put(token);
+				}
+			}
+		}
+		
+		c.close();
+		
+		return words;
+	}
 }

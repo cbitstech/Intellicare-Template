@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -18,6 +19,7 @@ import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +35,9 @@ import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class ReviewActivity extends ConsentedActivity 
 {
+	public static final int FETCH_THOUGHT = 675;
+	public static final String THOUGHT_ID = "thought_id";
+	
 	private int _index = 0;
 	private int _distortionIndex = -1;
 	
@@ -321,11 +326,6 @@ public class ReviewActivity extends ConsentedActivity
 				builder.create().show();
 			}
 		});
-	}
-	
-	protected void onResume()
-	{
-		super.onResume();
 		
 		SecureRandom r = new SecureRandom();
 		
@@ -337,8 +337,6 @@ public class ReviewActivity extends ConsentedActivity
 			this.getSupportActionBar().setSubtitle(this.getString(R.string.subtitle_review, c.getCount()));
 		
 		this.showPair(r.nextInt(c.getCount()));
-		
-		c.close();
 	}
 
 	private void showPair(int index) 
@@ -353,6 +351,19 @@ public class ReviewActivity extends ConsentedActivity
 			this._index = index;
 		
 		if (c.moveToPosition(this._index))
+			this.showPair(c.getLong(c.getColumnIndex(ThoughtContentProvider.ID)));
+		
+		c.close();
+	}
+	
+	private void showPair(long id) 
+	{
+		String where = ThoughtContentProvider.ID + " = ?";
+		String[] args = { "" + id };
+		
+		Cursor c = this.getContentResolver().query(ThoughtContentProvider.THOUGHT_PAIR_URI, null, where, args, null);
+		
+		if (c.moveToNext())
 		{
 			TextView automatic = (TextView) this.findViewById(R.id.automatic_thought);
 			TextView response = (TextView) this.findViewById(R.id.rational_response);
@@ -418,6 +429,20 @@ public class ReviewActivity extends ConsentedActivity
 		return true;
 	}
 	
+	protected void onActivityResult (int requestCode, int resultCode, Intent data)
+	{
+		Log.e("TC", "RESPONSE: " + data);
+		
+		if (resultCode == Activity.RESULT_OK)
+		{
+			if (requestCode == ReviewActivity.FETCH_THOUGHT)
+			{
+				if (data.hasExtra(ReviewActivity.THOUGHT_ID))
+					this.showPair(data.getLongExtra(ReviewActivity.THOUGHT_ID, 0));
+			}
+		}		
+	}
+	
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 		int itemId = item.getItemId();
@@ -437,7 +462,7 @@ public class ReviewActivity extends ConsentedActivity
 			case R.id.action_list:
 				Intent intent = new Intent(this, ThoughtsListActivity.class);
 				
-				this.startActivity(intent);
+				this.startActivityForResult(intent, ReviewActivity.FETCH_THOUGHT);
 				
 				break;
 		}
