@@ -1,6 +1,7 @@
 package edu.northwestern.cbits.intellicare.icope;
 
 import java.text.DateFormat;
+import java.util.HashMap;
 import java.util.List;
 
 import net.hockeyapp.android.CrashManager;
@@ -26,6 +27,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.icope.CopeContentProvider.Reminder;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class MainActivity extends ConsentedActivity 
 {
@@ -48,8 +50,19 @@ public class MainActivity extends ConsentedActivity
 				    return true;
 			}
 		});
-		
+
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("opened_main", payload);
+
 		this.refresh();
+	}
+	
+	protected void onPause()
+	{
+		super.onPause();
+		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("closed_main", payload);
 	}
 	
 	private void refresh()
@@ -146,6 +159,10 @@ public class MainActivity extends ConsentedActivity
 					Intent intent = new Intent(me, ViewCardActivity.class);
 					intent.putExtra(ViewCardActivity.REMINDER_ID, r.reminderId);
 					
+					HashMap<String, Object> payload = new HashMap<String, Object>();
+					payload.put("reminder_id", r.reminderId);
+					LogManager.getInstance(me).log("viewed_reminder", payload);
+					
 					me.startActivity(intent);
 				}
 			}
@@ -171,6 +188,10 @@ public class MainActivity extends ConsentedActivity
 							String[] args = { "" + r.reminderId };
 							
 							me.getContentResolver().delete(CopeContentProvider.REMINDER_URI, where, args);
+
+							HashMap<String, Object> payload = new HashMap<String, Object>();
+							payload.put("reminder_id", r.reminderId);
+							LogManager.getInstance(me).log("deleted_reminder", payload);
 
 							me.refresh();
 						}

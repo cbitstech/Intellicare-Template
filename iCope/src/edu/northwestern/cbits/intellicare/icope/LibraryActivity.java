@@ -1,5 +1,7 @@
 package edu.northwestern.cbits.intellicare.icope;
 
+import java.util.HashMap;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,6 +19,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class LibraryActivity extends ConsentedActivity 
 {
@@ -33,8 +36,19 @@ public class LibraryActivity extends ConsentedActivity
 	protected void onResume()
 	{
 		super.onResume();
-		
+
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("opened_library", payload);
+
 		this.refreshList();
+	}
+	
+	protected void onPause()
+	{
+		super.onPause();
+
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("closed_library", payload);
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -130,6 +144,10 @@ public class LibraryActivity extends ConsentedActivity
 										where = CopeContentProvider.CARD_ID + " = ?";
 										me.getContentResolver().delete(CopeContentProvider.REMINDER_URI, where, args);
 										
+										HashMap<String, Object> payload = new HashMap<String, Object>();
+										payload.put("card_id", id);
+										LogManager.getInstance(me).log("deleted_card", payload);
+
 										me.refreshList();
 									}
 								});

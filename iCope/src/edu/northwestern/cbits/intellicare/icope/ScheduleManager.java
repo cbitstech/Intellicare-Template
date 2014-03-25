@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import edu.northwestern.cbits.intellicare.StatusNotificationManager;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class ScheduleManager
 {
@@ -132,6 +133,10 @@ public class ScheduleManager
 						
 						this._lastFires.put(message, now);
 					}
+					
+					HashMap<String, Object> payload = new HashMap<String, Object>();
+					payload.put("message", message);
+					LogManager.getInstance(this._context).log("fired_reminder", payload);
 				}
 				
 				cardCursor.close();

@@ -1,5 +1,6 @@
 package edu.northwestern.cbits.intellicare.icope;
 
+import java.util.HashMap;
 import java.util.List;
 
 import android.app.Activity;
@@ -20,6 +21,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class AddCardActivity extends ConsentedActivity 
 {
@@ -73,6 +75,17 @@ public class AddCardActivity extends ConsentedActivity
 			
 			c.close();
 		}
+		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("opened_add_card", payload);
+	}
+	
+	protected void onPause()
+	{
+		super.onPause();
+
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("closed_add_card", payload);
 	}
 	
 	public boolean onOptionsItemSelected(MenuItem item)
@@ -115,6 +128,11 @@ public class AddCardActivity extends ConsentedActivity
 			
 			String where = CopeContentProvider.ID + " = ?";
 			String[] args = { "" + cardId };
+
+			HashMap<String, Object> payload = new HashMap<String, Object>();
+			payload.put("event", values.get(CopeContentProvider.CARD_EVENT).toString());
+			payload.put("reminder", values.get(CopeContentProvider.CARD_REMINDER).toString());
+			LogManager.getInstance(this).log("updated_card", payload);
 			
 			this.getContentResolver().update(CopeContentProvider.CARD_URI, values, where, args);
 			
@@ -122,6 +140,11 @@ public class AddCardActivity extends ConsentedActivity
 		}
 		else
 		{
+			HashMap<String, Object> payload = new HashMap<String, Object>();
+			payload.put("event", values.get(CopeContentProvider.CARD_EVENT).toString());
+			payload.put("reminder", values.get(CopeContentProvider.CARD_REMINDER).toString());
+			LogManager.getInstance(this).log("added_card", payload);
+
 			List<String> segments = this.getContentResolver().insert(CopeContentProvider.CARD_URI, values).getPathSegments();
 		
 			return Long.parseLong(segments.get(segments.size() - 1));
@@ -168,7 +191,21 @@ public class AddCardActivity extends ConsentedActivity
 				values.put(CopeContentProvider.REMINDER_MINUTE, minute);
 				
 				activity.getContentResolver().insert(CopeContentProvider.REMINDER_URI, values);
+
+				HashMap<String, Object> payload = new HashMap<String, Object>();
+				payload.put("card_id", id);
+				payload.put("hour", hour);
+				payload.put("minute", minute);
+				payload.put("sunday", sunday.isChecked());
+				payload.put("monday", monday.isChecked());
+				payload.put("tuesday", tuesday.isChecked());
+				payload.put("wednesday", wednesday.isChecked());
+				payload.put("thursday", thursday.isChecked());
+				payload.put("friday", friday.isChecked());
+				payload.put("saturday", saturday.isChecked());
 				
+				LogManager.getInstance(activity).log("scheduled_card", payload);
+
 				if (finish)
 					activity.finish();
 			}
@@ -178,6 +215,10 @@ public class AddCardActivity extends ConsentedActivity
 		{
 			public void onClick(DialogInterface dialog, int which) 
 			{
+				HashMap<String, Object> payload = new HashMap<String, Object>();
+				payload.put("card_id", id);
+				LogManager.getInstance(activity).log("canceled_schedule_card", payload);
+
 				if (finish)
 					activity.finish();
 			}
