@@ -1,6 +1,7 @@
 package edu.northwestern.cbits.intellicare.aspire;
 
 import java.security.SecureRandom;
+import java.util.HashMap;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class CardActivity extends ConsentedActivity 
 {
@@ -48,6 +50,9 @@ public class CardActivity extends ConsentedActivity
 		{
 			public void onClick(View arg0) 
 			{
+				HashMap<String, Object> payload = new HashMap<String, Object>();
+				LogManager.getInstance(me).log("previous_card", payload);
+
 				me._index -= 1;
 				
 				me.showCard(me._index);
@@ -60,6 +65,9 @@ public class CardActivity extends ConsentedActivity
 		{
 			public void onClick(View arg0) 
 			{
+				HashMap<String, Object> payload = new HashMap<String, Object>();
+				LogManager.getInstance(me).log("next_card", payload);
+
 				me._index += 1;
 				
 				me.showCard(me._index);
@@ -67,6 +75,22 @@ public class CardActivity extends ConsentedActivity
 		});
 	}
 	
+	protected void onResume()
+	{
+		super.onResume();
+		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("opened_cards", payload);
+	}
+	
+	protected void onPause()
+	{
+		super.onPause();
+		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("closed_cards", payload);
+	}
+
 	private void showCard(int index) 
 	{
 		if (index < 0)
@@ -85,6 +109,11 @@ public class CardActivity extends ConsentedActivity
 		{
 			name.setText(c.getString(c.getColumnIndex(AspireContentProvider.CARD_NAME)));
 			description.setText(c.getString(c.getColumnIndex(AspireContentProvider.CARD_DESCRIPTION)));
+
+			HashMap<String, Object> payload = new HashMap<String, Object>();
+			payload.put("name", name.getText().toString());
+			payload.put("description", description.getText().toString());
+			LogManager.getInstance(this).log("showed_card", payload);
 		}
 		
 		c.close();
@@ -112,6 +141,10 @@ public class CardActivity extends ConsentedActivity
 				if (c.moveToPosition(this._index))
 				{
 					id = c.getLong(c.getColumnIndex(AspireContentProvider.ID));
+					
+					HashMap<String, Object> payload = new HashMap<String, Object>();
+					payload.put("name", c.getString(c.getColumnIndex(AspireContentProvider.CARD_NAME)));
+					LogManager.getInstance(me).log("selected_card", payload);
 				}
 				
 				c.close();
@@ -149,6 +182,10 @@ public class CardActivity extends ConsentedActivity
 								
 								me.getContentResolver().insert(AspireContentProvider.ASPIRE_PATH_URI, values);
 								
+								HashMap<String, Object> payload = new HashMap<String, Object>();
+								payload.put("path", pathField.getText().toString().trim());
+								LogManager.getInstance(me).log("added_path", payload);
+
 								me.finish();
 							}
 						});

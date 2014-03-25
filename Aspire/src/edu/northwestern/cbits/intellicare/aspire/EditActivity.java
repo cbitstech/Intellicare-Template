@@ -1,5 +1,7 @@
 package edu.northwestern.cbits.intellicare.aspire;
 
+import java.util.HashMap;
+
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -17,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class EditActivity extends ConsentedActivity 
 {
@@ -61,7 +64,18 @@ public class EditActivity extends ConsentedActivity
 	{
 		super.onResume();
 		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("closed_editor", payload);
+
 		this.refreshList();
+	}
+	
+	protected void onPause()
+	{
+		super.onPause();
+
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("opened_editor", payload);
 	}
 	
 	private void refreshList() 
@@ -99,7 +113,9 @@ public class EditActivity extends ConsentedActivity
 						
 						me.getContentResolver().delete(AspireContentProvider.ASPIRE_PATH_URI, where, args);
 								
-						
+						HashMap<String, Object> payload = new HashMap<String, Object>();
+						LogManager.getInstance(me).log("deleted_path", payload);
+
 						me.refreshList();
 					}
 				});
@@ -114,6 +130,9 @@ public class EditActivity extends ConsentedActivity
 				
 				builder.create().show();
 				
+				HashMap<String, Object> payload = new HashMap<String, Object>();
+				LogManager.getInstance(me).log("opened_edit_options", payload);
+
 				return true;
 			}
 		});
@@ -157,6 +176,10 @@ public class EditActivity extends ConsentedActivity
 						me.getContentResolver().insert(AspireContentProvider.ASPIRE_PATH_URI, values);
 						
 						me.refreshList();
+						
+						HashMap<String, Object> payload = new HashMap<String, Object>();
+						payload.put("path", taskField.getText().toString().trim());
+						LogManager.getInstance(me).log("added_path", payload);
 					}
 				});
 				

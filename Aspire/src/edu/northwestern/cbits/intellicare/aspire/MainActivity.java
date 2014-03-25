@@ -8,6 +8,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.CrashManagerListener;
+
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -55,6 +58,9 @@ public class MainActivity extends ConsentedActivity
 		{
 			public void onClick(View arg0) 
 			{
+				HashMap<String, Object> payload = new HashMap<String, Object>();
+				LogManager.getInstance(me).log("previous_card", payload);
+
 				me._index  -= 1;
 				
 				me.showCard(me._index);
@@ -67,6 +73,9 @@ public class MainActivity extends ConsentedActivity
 		{
 			public void onClick(View arg0) 
 			{
+				HashMap<String, Object> payload = new HashMap<String, Object>();
+				LogManager.getInstance(me).log("next_card", payload);
+
 				me._index  += 1;
 				
 				me.showCard(me._index);
@@ -92,9 +101,12 @@ public class MainActivity extends ConsentedActivity
 		{
 			public void onClick(View arg0) 
 			{
-		       Intent in = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+				HashMap<String, Object> payload = new HashMap<String, Object>();
+				LogManager.getInstance(me).log("fetching_photo", payload);
 
-		       me.startActivityForResult(in, MainActivity.RESULT_FETCH_IMAGE);
+				Intent in = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+				me.startActivityForResult(in, MainActivity.RESULT_FETCH_IMAGE);
 			}
 		});
 		
@@ -107,7 +119,10 @@ public class MainActivity extends ConsentedActivity
         {
             if (resultCode == RESULT_OK) 
             {
-            	String where = AspireContentProvider.ID + " = ?";
+				HashMap<String, Object> payload = new HashMap<String, Object>();
+				LogManager.getInstance(this).log("fetched_photo", payload);
+
+				String where = AspireContentProvider.ID + " = ?";
             	String[] args = { "" + this.currentCardId() };
             	
             	ContentValues values = new ContentValues();
@@ -183,6 +198,10 @@ public class MainActivity extends ConsentedActivity
 			final TextView name = (TextView) this.findViewById(R.id.card_name);
 			TextView description = (TextView) this.findViewById(R.id.card_description);
 			
+			HashMap<String, Object> payload = new HashMap<String, Object>();
+			payload.put("virtue", name.getText().toString());
+			LogManager.getInstance(this).log("showed_virtue", payload);
+
 			String where = AspireContentProvider.ID + " = ?";
 			String[] args = { "" + cardId };
 			
@@ -250,7 +269,7 @@ public class MainActivity extends ConsentedActivity
 						pathIds.add(c.getLong(c.getColumnIndex(AspireContentProvider.ID)));
 					}
 					
-					String[] pathArray = new String[paths.size()];
+					final String[] pathArray = new String[paths.size()];
 					boolean[] selected = new boolean[paths.size()];
 
 					Calendar cal = Calendar.getInstance();
@@ -288,6 +307,10 @@ public class MainActivity extends ConsentedActivity
 							
 							me.getContentResolver().delete(AspireContentProvider.ASPIRE_TASK_URI, where, args);
 
+							HashMap<String, Object> payload = new HashMap<String, Object>();
+							payload.put("virtue", name.getText().toString());
+							payload.put("path", pathArray[which]);
+
 							if (checked)
 							{
 								ContentValues values = new ContentValues();
@@ -297,7 +320,11 @@ public class MainActivity extends ConsentedActivity
 								values.put(AspireContentProvider.TASK_DAY, cal.get(Calendar.DAY_OF_MONTH));
 								
 								me.getContentResolver().insert(AspireContentProvider.ASPIRE_TASK_URI, values);
+
+								LogManager.getInstance(me).log("selected_path", payload);
 							}
+							else
+								LogManager.getInstance(me).log("deselected_path", payload);
 						}
 					});
 					
@@ -320,6 +347,14 @@ public class MainActivity extends ConsentedActivity
 	protected void onResume()
 	{
 		super.onResume();
+		
+		CrashManager.register(this, "6eacc0dcfbc01f632146cae8b602f5c5", new CrashManagerListener() 
+		{
+			public boolean shouldAutoUploadCrashes() 
+			{
+				    return true;
+			}
+		});
 		
 		final MainActivity me = this;
 		
@@ -361,8 +396,19 @@ public class MainActivity extends ConsentedActivity
 		}
 		
 		c.close();
-		
+
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("opened_main", payload);
+
 		this.updateWeek();
+	}
+	
+	protected void onPause()
+	{
+		super.onPause();
+
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("closed_main", payload);
 	}
 	
 	private void updateWeek() 
@@ -443,7 +489,13 @@ public class MainActivity extends ConsentedActivity
 					
 					java.text.DateFormat formatter = DateFormat.getLongDateFormat(me);
 					builder.setTitle(formatter.format(new Date(timestamp)));
-					
+
+					HashMap<String, Object> payload = new HashMap<String, Object>();
+					payload.put("year", "" + year);
+					payload.put("month", "" + month);
+					payload.put("year", "" + day);
+					LogManager.getInstance(me).log("tapped_date", payload);
+
 					if (cursor.getCount() > 0)
 					{
 	    				LayoutInflater inflater = LayoutInflater.from(me);
