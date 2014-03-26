@@ -253,4 +253,32 @@ public class CopeContentProvider extends ContentProvider
 
 		return list;
 	}
+
+	public static String[] getCategories(Context context) 
+	{
+		ArrayList<String> categories = new ArrayList<String>();
+		
+		Cursor c = context.getContentResolver().query(CopeContentProvider.CARD_URI, null, null, null, null);
+		
+		while (c.moveToNext())
+		{
+			String category = c.getString(c.getColumnIndex(CopeContentProvider.CARD_TYPE)).trim();
+			
+			if (categories.contains(category) == false)
+				categories.add(category);
+		}
+
+		c.close();
+		
+		Collections.sort(categories);
+		
+		String[] categoriesArray = new String[categories.size()];
+		
+		for (int i = 0; i < categories.size(); i++)
+		{
+			categoriesArray[i] = categories.get(i);
+		}
+
+		return categoriesArray;
+	}
 }

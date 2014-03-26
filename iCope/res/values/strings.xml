@@ -10,6 +10,9 @@
     <string name="action_not_helpful">Not Helpful</string>
     <string name="action_yes">Yes</string>
     <string name="action_no">No</string>
+    <string name="action_filter">Filter Cards</string>
+
+    <string name="title_filter">Filter Cards</string>
     
     <string name="subtitle_today_messages">%d upcoming cards</string>
     <string name="message_no_reminders">No upcoming reminders.\n\nTap a button above to add a new card and reminder, or to reschedule an existing card.</string>
