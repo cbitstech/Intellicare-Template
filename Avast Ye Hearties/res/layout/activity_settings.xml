@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<ListPreference android:title="@string/pref_min_distance" 
+	    android:summary="@string/summary_min_distance"
+	    android:key="settings_min_distance"
+	    android:entries="@array/label_distances"
+	    android:entryValues="@array/value_distances" 
+	    android:defaultValue="400" />
 	<Preference android:title="@string/pref_install_foursquare" android:key="settings_install_foursquare" />
-    <PreferenceCategory android:title="@string/settings_group_credits">
-<!-- 	<Preference android:title="@string/creator_jxd" android:summary="@string/role_clinical_lead" />
-   		<Preference android:title="@string/creator_gab" android:summary="@string/role_tech_lead" />
+	<PreferenceCategory android:title="@string/settings_group_credits">
+	 	<Preference android:title="@string/creator_mxb" android:summary="@string/role_clinical_lead" />
+   		<Preference android:title="@string/creator_sms" android:summary="@string/role_clinical_lead" />
+		<Preference android:title="@string/creator_cjk" android:summary="@string/role_tech_lead" />
 		<Preference android:title="@string/creator_smk" android:summary="@string/role_project_manager" />
    		<Preference android:title="@string/creator_dcm" android:summary="@string/role_clinical_consultant" />
-   		<Preference android:title="@string/creator_sms" android:summary="@string/role_clinical_consultant" />
    		<Preference android:title="@string/creator_cjk" android:summary="@string/role_tech_consultant" />
- -->
 		<Preference android:title="@string/copy_disclaimer" android:key="copyright_statement" />
 	</PreferenceCategory>
 </PreferenceScreen>

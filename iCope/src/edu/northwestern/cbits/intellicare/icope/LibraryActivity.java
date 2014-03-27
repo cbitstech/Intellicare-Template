@@ -1,11 +1,13 @@
 package edu.northwestern.cbits.intellicare.icope;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -23,6 +25,8 @@ import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class LibraryActivity extends ConsentedActivity 
 {
+	private HashSet<String> _selectedCategories = new HashSet<String>();
+
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
@@ -51,14 +55,37 @@ public class LibraryActivity extends ConsentedActivity
 		LogManager.getInstance(this).log("closed_library", payload);
 	}
 	
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({ "deprecation", "unused" })
 	private void refreshList()
 	{
 		final LibraryActivity me = this;
 		
 		ListView list = (ListView) this.findViewById(R.id.cards_list);
 		
-		Cursor c = this.getContentResolver().query(CopeContentProvider.CARD_URI, null, null, null, null);
+		Cursor c = null;
+		
+		if (this._selectedCategories.size() == 0)
+		{
+			c = this.getContentResolver().query(CopeContentProvider.CARD_URI, null, null, null, null);
+		}
+		else
+		{
+			String[] args = this._selectedCategories.toArray(new String[0]);
+			
+			StringBuffer sb = new StringBuffer();
+			
+			for (String category : this._selectedCategories)
+			{
+				if (sb.length() > 0)
+					sb.append(" OR ");
+				
+				sb.append(CopeContentProvider.CARD_TYPE + " = ?");
+			}
+			
+			String where = sb.toString();
+
+			c = this.getContentResolver().query(CopeContentProvider.CARD_URI, null, where, args, null);
+		}
 		
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.row_card, c, new String[0], new int[0])
 		{
@@ -175,6 +202,8 @@ public class LibraryActivity extends ConsentedActivity
 	
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
+		final LibraryActivity me = this;
+		
 		int itemId = item.getItemId();
 		
 		switch (itemId)
@@ -183,6 +212,43 @@ public class LibraryActivity extends ConsentedActivity
 				Intent addIntent = new Intent(this, AddCardActivity.class);
 				this.startActivity(addIntent);
 				
+				break;
+			case R.id.action_filter:
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				
+				builder.setTitle(R.string.title_filter);
+				
+				final String[] categories = CopeContentProvider.getCategories(this);
+				boolean[] selected = new boolean[categories.length];
+				
+				for (int i = 0; i < categories.length; i++)
+				{
+					selected[i] = this._selectedCategories.contains(categories[i]);
+				}
+				
+				builder.setMultiChoiceItems(categories, selected, new OnMultiChoiceClickListener()
+				{
+					public void onClick(DialogInterface arg0, int position, boolean clicked) 
+					{
+						if (clicked)
+							me._selectedCategories.add(categories[position]);
+						else
+							me._selectedCategories.remove(categories[position]);
+						
+						me.refreshList();
+					}
+				});
+				
+				builder.setPositiveButton(R.string.action_close, new OnClickListener()
+				{
+					public void onClick(DialogInterface arg0, int arg1) 
+					{
+
+					}
+				});
+				
+				builder.create().show();
+
 				break;
 			default:
 				break;

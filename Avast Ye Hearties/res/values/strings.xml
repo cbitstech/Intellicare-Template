@@ -3,7 +3,6 @@
     <string name="app_name">Avast Ye Hearties!</string>
     <string name="action_settings">Settings</string>
     <string name="coming_soon">App coming soon. Stay tuned!</string>
-    <string name="coming_soon">App coming soon. Stay tuned!</string>
     <string name="fs_client_id">E1ELOBJ2KCTNYWU4RYPFQMMGGRHRVAC5S1RGP1VD1WO4Q5ZU</string>
     <string name="fs_client_secret">KA230JV5UB35VSP4DZDLCX5MRNQUUPJC23JYAVAAH3XRHCCX</string>
     
@@ -29,7 +28,6 @@
     <string name="title_venue_type_picker">Choose Destinations</string>
     <string name="message_venue_type_picker">Search or browse this list to find the kinds of places that you enjoy or help you relax. </string>
 
-    <string name="title_location_picker">Your Places</string>
     <string name="message_location_picker">Navigate to the places where you spend time (home, work, relative\'s, etc.).\n\nWhen the map is centered on such a place, tap the pin icon in the upper-right to save it. After you have saved all your places, tap the "Next" button to continue.</string>
 
     <string name="title_location_picker_prompt">What is this?</string>
@@ -63,7 +61,21 @@
         <item>More information&#8230;</item>
         <item>Check in&#8230;</item>
     </string-array>
+
+	<string-array name="label_distances">
+        <item>200 meters</item>
+        <item>400 meters (Quarter mile)</item>
+        <item>800 meters (Half mile)</item>
+        <item>1600 meters (Mile)</item>
+    </string-array>
     
+	<string-array name="value_distances">
+        <item>200</item>
+        <item>400</item>
+        <item>800</item>
+        <item>1600</item>
+    </string-array>
+	
     <string name="title_checkin">Check In</string>
 	<string name="title_filter_places">Filter Places</string>
 
@@ -81,21 +93,25 @@
 
 	<string name="label_very_bored">Very Bored</string>
 	<string name="label_bored">Bored</string>
-	<string name="label_normal">Normal</string>
 	<string name="label_entertained">Entertained</string>
 	<string name="label_very_entertained">Very Entertained</string>
-		
 	
-	<string name="instructions_checkin">Please log when and how much you enjoyed your visit.</string>
-	<string name="instructions_checkin">Please log when and how much you enjoyed your visit.</string>
-
 	<string name="title_my_venues">My Venues</string>
 	<string name="subtitle_my_venues_single">1 venue</string>
 	<string name="subtitle_my_venues" formatted="false">%d venues</string>
 	<string name="message_delete_venue">Delete this place from your list of venues?</string>
 
 	<string name="label_distance" formatted="false">Distance: %.1f mi.</string>
-						
+	
+	<string name="title_nearby_single">Ahoy! Nearby venue!</string>
+	<string name="message_nearby_single">Avast, we find ourselves near one of our treasured places!</string>
+
+	<string name="title_nearby" formatted="false">Ahoy! %d nearby venues!</string>
+	<string name="message_nearby" formatted="false">Yo! Ho, Ho! We find ourselves near %d of our treasured places!</string>
+								
+	<string name="pref_min_distance">Distance to venue</string>
+	<string name="summary_min_distance">Emit an alert when a venue becomes closer than this distance.</string>
+
 	<!-- Databases -->
     
     <string name="db_create_venue_types_table">CREATE TABLE IF NOT EXISTS venue_types(_id INTEGER PRIMARY KEY, name TEXT, foursquare_id TEXT, parent_id TEXT, enabled INTEGER DEFAULT 1);</string>

@@ -4,6 +4,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.CrashManagerListener;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -13,6 +16,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
@@ -49,6 +53,7 @@ public class MainActivity extends ConsentedActivity
 {
 	private static final String LAST_LATITUDE = "last_known_latitude";
 	private static final String LAST_LONGITUDE = "last_known_longitude";
+	public static final Uri URI = Uri.parse("intellicare://avast/home");
 	
 	private HashSet<Marker> _venueMarkers = new HashSet<Marker>();
 	private HashSet<Venue> _myVenues = new HashSet<Venue>();
@@ -58,9 +63,11 @@ public class MainActivity extends ConsentedActivity
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-	
 		this.setContentView(R.layout.activity_main);
-		
+
+		AvastVenuesManager manager = AvastVenuesManager.getInstance(this);
+		manager.setup();
+
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		double latitude = (double) prefs.getFloat(MainActivity.LAST_LATITUDE, Float.MAX_VALUE);
@@ -92,6 +99,14 @@ public class MainActivity extends ConsentedActivity
 	{
 		super.onResume();
 		
+		CrashManager.register(this, "98bee775b937c15ddc62062006394cb0", new CrashManagerListener() 
+		{
+			public boolean shouldAutoUploadCrashes() 
+			{
+				    return true;
+			}
+		});
+
 		final MainActivity me = this;
 
 		MapFragment fragment = (MapFragment) this.getFragmentManager().findFragmentById(R.id.map);
@@ -191,6 +206,11 @@ public class MainActivity extends ConsentedActivity
 				me.selectLocation(id);
 			}
 		});
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		Editor e = prefs.edit();
+		e.remove(AvastVenuesManager.LAST_TITLE);
+		e.commit();
 	}
 
 	protected static void showOptions(final Activity activity, final Venue venue) 

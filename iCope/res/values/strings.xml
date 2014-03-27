@@ -10,6 +10,9 @@
     <string name="action_not_helpful">Not Helpful</string>
     <string name="action_yes">Yes</string>
     <string name="action_no">No</string>
+    <string name="action_filter">Filter Cards</string>
+
+    <string name="title_filter">Filter Cards</string>
     
     <string name="subtitle_today_messages">%d upcoming cards</string>
     <string name="message_no_reminders">No upcoming reminders.\n\nTap a button above to add a new card and reminder, or to reschedule an existing card.</string>
@@ -28,6 +31,8 @@
 
     <string name="title_confirm_delete">Remove Card?</string>
     <string name="message_confirm_delete">Are you sure that you want to remove this card?</string>
+
+    <string name="title_settings">Settings</string>
     
     <string name="title_card_library">Card Library</string>
     <string name="subtitle_library" formatted="false">%d cards</string>
