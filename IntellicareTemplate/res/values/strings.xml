@@ -203,5 +203,13 @@
 	
 	<string name="confirm_title">Are you sure?</string>
 	<string name="confirm_message">Your answers to these questions are very important and are used improve Intellicare apps.\n\nAre you sure that you want to skip them?</string>
+	
+	<string name="auth_success_title">Great Work!</string>
+	<string name="auth_success_message">You have successfully connected the app to your online account.</string>
+	<string name="auth_success_close">Continue&#8230;</string>
+    <string name="error_missing_uri">Missing or invalid URL. Closing&#8230;</string>
+    <string name="menu_close">Close</string>
+    <string name="menu_browser">Browser</string>
+    		
 				
 </resources>
