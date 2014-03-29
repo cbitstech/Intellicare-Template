@@ -12,6 +12,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 import android.widget.ProgressBar;
 import edu.northwestern.cbits.intellicare.mantra.activities.SharedUrlActivity;
 
@@ -38,13 +39,16 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 	private static final String CN = "GetImageListAndSizesTask";
 	public Activity activity;
 
-	private final ProgressBar progress; 
+	private final ProgressBar progressBar;
+	private final View progressBarView;
 		
 //	public GetImageListAndSizesTask(SharedUrlActivity sua, ProgressBar p) {
-	public GetImageListAndSizesTask(Activity sua, ProgressBar p) {
+	public GetImageListAndSizesTask(Activity sua, ProgressBar p, View pbv) {
 //		public GetImageListAndSizesTask(ProgressBar p) {
 		activity = sua;
-		progress = p;
+		progressBar = p;
+		Log.d(CN+".GetImageListAndSizesTask", "pbv == null = " + (pbv == null));
+		progressBarView = pbv;
 	}
 		
 
@@ -65,6 +69,7 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 						", getImageList (ms) = " + ((double)(imageListTime - startTime)) + 
 						", getRemoteContentLength (ms) = " + ((double)(endTime - imageListTime))
 						);
+		        publishProgress();
 				
 				// heuristically determine the set of images to download 
 				Map<String,Integer> imagesToDownload = new HashMap<String, Integer>();
@@ -96,7 +101,7 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 		for(int i=0;i<values.length;i++) {
 			Log.d(CN+".onProgressUpdate", values[i].toString());
 		}
-//		progress.incrementProgressBy(1);
+		progressBar.incrementProgressBy(1);
 //		currentProgressBarValue++;
 	}
 
@@ -113,8 +118,9 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 //		}
 
 		// fetch the selected images from their URLs and save to the temp folder
-		new GetImagesTask().execute(
-				new GetImagesTaskParams(backgroundRet.imagesToDownload, activity, progress)
+		Log.d(CN+".onPostExecute", "progressBarView == null = " + (progressBarView == null));
+		new GetImagesTask(progressBar).execute(
+				new GetImagesTaskParams(backgroundRet.imagesToDownload, activity, progressBar, progressBarView)
 			);
 	}
 
