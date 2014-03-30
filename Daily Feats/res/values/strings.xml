@@ -151,4 +151,15 @@
 	<string name="prefs_reminder_time">Daily Reminder Time</string>
 	<string name="prefs_full_mode">Mode A</string>
 	<string name="title_settings">Daily Feats Settings</string>
+	
+	<string name="settings_automatic_feats">Automatic Feats</string>
+
+	<string name="prefs_fitbit_feat">Fitbit</string>
+	<string name="prefs_enable_fitbit">Enable Fitbit</string>
+	<string name="prefs_fitbit_login">Sign in to Fitbit</string>
+					
+	<string name="prefs_github_feat">GitHub</string>
+	<string name="prefs_enable_github">Enable GitHub</string>
+	<string name="prefs_github_login">Sign in to GitHub</string>
+		
 </resources>

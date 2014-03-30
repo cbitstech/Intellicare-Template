@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -51,6 +52,13 @@ public class SettingsActivity extends PreferenceActivity
 		{
 			
 		}
+		else if (key.equals("settings_fitbit_login"))
+		{
+			this.fetchFitbitAuth();
+			
+//			screen.addPreference(logoutPreference);
+//			screen.removePreference(authPreference);
+		}
 		else if (key.equals("settings_reminder_time"))
 		{
 			final SettingsActivity me = this;
@@ -87,5 +95,17 @@ public class SettingsActivity extends PreferenceActivity
 		return super.onPreferenceTreeClick(screen, preference);
 	}
 
+	private void fetchFitbitAuth() 
+	{
+        Intent intent = new Intent(context, OAuthActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		
+		intent.putExtra(OAuthActivity.CONSUMER_KEY, CONSUMER_KEY);
+		intent.putExtra(OAuthActivity.CONSUMER_SECRET, CONSUMER_SECRET);
+		intent.putExtra(OAuthActivity.REQUESTER, "fitbit");
+		intent.putExtra(OAuthActivity.CALLBACK_URL, "http://pr-oauth/oauth/fitbit");
+		
+		this.startActivity(intent);
+	}
 }
 
