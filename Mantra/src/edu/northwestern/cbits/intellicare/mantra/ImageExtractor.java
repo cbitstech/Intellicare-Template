@@ -7,12 +7,15 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import android.util.Log;
+
 import edu.northwestern.cbits.intellicare.mantra.tests.ImageExtractorTest;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -107,11 +110,14 @@ public class ImageExtractor
 	 */
 	public static int getRemoteContentLength(String url) throws MalformedURLException, IOException {
 		log("getRemoteContentLength", "entered; url = " + url);
-		URLConnection conn = (new URL(url)).openConnection();
-//		return conn.getContentLength();
-		String len = conn.getHeaderField("Content-Length");
-		log("getRemoteContentLength", "exiting; len = " + len);
-		return len != null ? Integer.parseInt(len) : -1;
+		URLConnection oldConn = (new URL(url)).openConnection();
+		HttpURLConnection conn = ((HttpURLConnection) oldConn);
+		conn.setRequestMethod("HEAD");
+		
+		return conn.getContentLength();
+//		String len = conn.getHeaderField("Content-Length");
+//		log("getRemoteContentLength", "exiting; len = " + len);
+//		return len != null ? Integer.parseInt(len) : -1;
 	}
 	
 	/**

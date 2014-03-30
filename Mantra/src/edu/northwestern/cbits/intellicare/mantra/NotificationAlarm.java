@@ -164,8 +164,10 @@ public class NotificationAlarm extends BroadcastReceiver
 		 
 		 while(imagesMediaCursor.moveToNext()) {
 			 long imageDateTaken = imagesMediaCursor.getLong(imagesMediaCursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));
+			 String imageSourceType = imagesMediaCursor.getString(imagesMediaCursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
 			 
-			 if(sinceDate.getTime() <= imageDateTaken) {
+			 // image must be newer than the last scan time AND from the camera
+			 if(sinceDate.getTime() <= imageDateTaken && imageSourceType.equalsIgnoreCase("Camera")) {
 				 ids.add(imagesMediaCursor.getString(imagesMediaCursor.getColumnIndex(MediaStore.Images.Media._ID)));
 			 }
 		 }

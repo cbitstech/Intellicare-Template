@@ -1,10 +1,12 @@
 package edu.northwestern.cbits.intellicare.mantra;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.zip.Inflater;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,7 +16,9 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.mantra.activities.SharedUrlActivity;
 
 
@@ -37,17 +41,26 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 	public static final int RESULT_LOAD_IMAGE = 1;
 //	public static final String INTENT_KEY_ORIGINATING_ACTIVITY = "originatingActivity";
 	private ProgressBar progress;
-	private int maxProgressBarValue = -1;
-//	private int currentProgressBarValue = 0;
+	private String currentProgressActionTextValue;
+	private TextView currentProgressActionText = null;
+	private View progressBarView;
+
+	
+	public GetImagesTask(ProgressBar p) {
+		progress = p;
+	}
 
 	
 	@Override
 	protected Object doInBackground(GetImagesTaskParams... arg0) {
 		final Activity activity = arg0[0].activity;
 		Map<String, Integer> imagesToDownload = arg0[0].imagesToDownload;
-		progress = arg0[0].progress;
-//		progress = new ProgressBar(activity);
+//		progress = arg0[0].progress;
+		progressBarView = arg0[0].progressBarView;
 		
+		currentProgressActionText = (TextView) progressBarView.findViewById(R.id.currentProgressAction);
+		Log.d(CN+".doInBackground", "currentProgressActionText = " + currentProgressActionText);
+				
 		int count = imagesToDownload.keySet().size();
 		int totalSize = 0;
 
@@ -67,8 +80,9 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 		Log.d(CN+".doInBackground", "imageCount = " + imageCount);
 
 		// set the max progress bar value
-		maxProgressBarValue = imageCount;
-		progress.setMax(maxProgressBarValue);
+		progress.setMax(imageCount + 1);	// +1 for the image-size download
+		currentProgressActionTextValue = "Getting image file sizes...;";
+		publishProgress();
 
 		String[] fullFilePathsToScan = new String[imageCount];
 		Thread thread = null;
@@ -77,7 +91,7 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 	        
 			int imageSize = imagesToDownload.get(url);
 			totalSize += imageSize;
-//	        publishProgress((int) ((imageSize / (float) count) * 100));
+			currentProgressActionTextValue = "(" + imageSize + " bytes) Downloading: " + url;
 	        publishProgress();
 	        // Escape early if cancel() is called
 	        if (isCancelled()) break;
@@ -108,19 +122,12 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 	protected void onProgressUpdate(Void... values) {
 		super.onProgressUpdate(values);
 		Log.d(CN+".onProgressUpdate", "entered");
-//		for(int i=0;i<values.length;i++) {
-//			Log.d(CN+".onProgressUpdate", values[i].toString());
-//		}
-//		progress.incrementProgressBy(values);
 
 		progress.incrementProgressBy(1);
-//		currentProgressBarValue++;
+		Log.d(CN+".onProgressUpdate", "Should set progress bar text to: " + currentProgressActionTextValue);
+		currentProgressActionText.setText(currentProgressActionTextValue);
+//		currentProgressActionText.endBatchEdit();
+//		currentProgressActionText.invalidate();
 	}
 
-	
-
-//	private void publishProgress(int i) {
-//		Log.d(CN+".publishProgress", "progress: i = " + i);
-//	}
-//
 }
