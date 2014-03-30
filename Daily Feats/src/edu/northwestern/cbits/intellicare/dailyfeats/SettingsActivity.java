@@ -4,9 +4,11 @@ import java.util.HashMap;
 
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -20,7 +22,7 @@ import edu.northwestern.cbits.intellicare.oauth.FitbitApi;
 import edu.northwestern.cbits.intellicare.oauth.GitHubApi;
 import edu.northwestern.cbits.intellicare.oauth.OAuthActivity;
 
-public class SettingsActivity extends PreferenceActivity 
+public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener 
 {
 	@SuppressWarnings("deprecation")
 	public void onCreate(Bundle savedInstanceState)
@@ -39,6 +41,9 @@ public class SettingsActivity extends PreferenceActivity
 		this.refreshItems();
 		
 		LogManager.getInstance(this).log("opened_settings", null);
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		prefs.registerOnSharedPreferenceChangeListener(this);
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -102,11 +107,14 @@ public class SettingsActivity extends PreferenceActivity
 	{
 		LogManager.getInstance(this).log("closed_settings", null);
 		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		prefs.unregisterOnSharedPreferenceChangeListener(this);
+
 		super.onPause();
 	}
 
 	@SuppressWarnings("deprecation")
-	public boolean onPreferenceTreeClick (PreferenceScreen screen, Preference preference)
+	public boolean onPreferenceTreeClick(PreferenceScreen screen, Preference preference)
 	{
 		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
@@ -130,6 +138,10 @@ public class SettingsActivity extends PreferenceActivity
 			e.commit();
 			
 			this.refreshItems();
+		}
+		else if (key.equals("settings_fitbit_login"))
+		{
+			
 		}
 		else if (key.equals("settings_github_login"))
 		{
@@ -204,6 +216,30 @@ public class SettingsActivity extends PreferenceActivity
 		intent.putExtra(OAuthActivity.CALLBACK_URL, "http://tech.cbits.northwestern.edu/oauth/fitbit");
 		
 		this.startActivity(intent);
+	}
+
+	public void onSharedPreferenceChanged(SharedPreferences preferences, String key) 
+	{
+		if ("settings_fitbit_enabled".equalsIgnoreCase(key))
+		{
+			String where = "(feat_name = ? OR feat_name = ? OR feat_name = ?) AND feat_level = 99";
+			String[] args = { this.getString(R.string.feat_fitbit_minutes), this.getString(R.string.feat_fitbit_distance), this.getString(R.string.feat_fitbit_steps) };
+			
+			ContentValues values = new ContentValues();
+			values.put("enabled", preferences.getBoolean("settings_fitbit_enabled", false));
+			
+			this.getContentResolver().update(FeatsProvider.FEATS_URI, values, where, args);
+		}
+		else if ("settings_github_enabled".equalsIgnoreCase(key))
+		{
+			String where = "feat_name = ? AND feat_level = 99";
+			String[] args = { this.getString(R.string.feat_github_checkin) };
+			
+			ContentValues values = new ContentValues();
+			values.put("enabled", preferences.getBoolean("settings_github_enabled", false));
+			
+			this.getContentResolver().update(FeatsProvider.FEATS_URI, values, where, args);
+		}
 	}
 }
 

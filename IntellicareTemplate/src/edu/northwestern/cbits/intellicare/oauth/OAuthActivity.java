@@ -23,7 +23,6 @@ import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import edu.northwestern.cbits.ic_template.R;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 
@@ -89,8 +88,6 @@ public class OAuthActivity extends Activity
 									
 									String url = api.getAuthorizationUrl(config);
 									
-									Log.e("IT", "AUTH URL: " + url);
-									
 									Intent intent = new Intent(me, OAuthWebActivity.class);
 									intent.setData(Uri.parse(url));
 									
@@ -148,8 +145,6 @@ public class OAuthActivity extends Activity
     	{
     		Uri incomingUri = this.getIntent().getData();
 
-    		Log.e("IT", "INCOMING URI: " + incomingUri);
-    		
         	if ("http".equals(incomingUri.getScheme()))
         	{
         		List<String> segments = incomingUri.getPathSegments();
@@ -161,8 +156,6 @@ public class OAuthActivity extends Activity
         			if ("github".equals(requester))
         			{
             			String access = incomingUri.getQueryParameter("access_token");
-            			
-            			Log.e("IC", "ACCESS: " + access);
             			
             			if (access != null)
             			{
@@ -257,8 +250,6 @@ public class OAuthActivity extends Activity
 									public void run() 
 									{
 					                	Token accessToken = service.getAccessToken(null, v);
-					                	
-					                	Log.e("IT", "GOT AUTH TOKEN " + accessToken + " FOR " + requester);
 					                	
 					                	Editor e = prefs.edit();
 					                	e.putString("oauth_" + requester + "_secret", accessToken.getSecret());

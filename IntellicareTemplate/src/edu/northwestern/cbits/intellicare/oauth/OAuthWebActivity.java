@@ -27,25 +27,22 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
-import edu.northwestern.cbits.ic_template.R;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.net.http.AndroidHttpClient;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
+import edu.northwestern.cbits.ic_template.R;
 
 public class OAuthWebActivity extends ActionBarActivity
 {
@@ -103,8 +100,6 @@ public class OAuthWebActivity extends ActionBarActivity
         		
     			public boolean shouldOverrideUrlLoading (final WebView view, final String url)
         		{
-    				Log.e("IT", "URL: " + url);
-    				
         			boolean oauth = false;
         			
         			if (url.toLowerCase(Locale.getDefault()).startsWith("http://purple.robot.com/oauth"))
@@ -195,8 +190,6 @@ public class OAuthWebActivity extends ActionBarActivity
         			
         			if (oauth)
         			{
-        				Log.e("IC", "USING URL " + url);
-        				
         				Intent intent = new Intent(me, OAuthActivity.class);
         				intent.setData(Uri.parse(url));
         				intent.putExtras(new Bundle());
@@ -208,13 +201,6 @@ public class OAuthWebActivity extends ActionBarActivity
         			
         			return oauth;
         		}
-    			
-    			public WebResourceResponse shouldInterceptRequest (WebView view, String url)
-    			{
-    				Log.e("IC", "REQUEST: " + url);
-    				
-    				return null;
-    			}
         	});
 
             webView.loadUrl(uri.toString());
