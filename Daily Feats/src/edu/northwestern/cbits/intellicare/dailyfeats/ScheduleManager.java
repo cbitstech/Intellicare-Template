@@ -38,6 +38,8 @@ public class ScheduleManager
 	private static ScheduleManager _instance = null;
 
 	private Context _context = null;
+	
+	private long _lastGitHubCheck = 0;
 
 	public ScheduleManager(Context context) 
 	{
@@ -138,13 +140,23 @@ public class ScheduleManager
 			e.commit();
 		}
 		
-		try 
+		final ScheduleManager me = this;
+		
+		if (now - this._lastGitHubCheck > 1800000)
 		{
-			Log.e("DF", "COMMITS: " + this.todayCommits().toString(2));
-		} 
-		catch (JSONException e) 
-		{
-			e.printStackTrace();
+			Runnable r = new Runnable()
+			{
+				public void run() 
+				{
+					Log.e("DF", "COMMITS: " + me.todayCommits().length());
+				}
+			};
+			
+			Thread t = new Thread(r);
+			t.start();
+			
+			
+			this._lastGitHubCheck = now;
 		}
 	}
 	
@@ -156,12 +168,12 @@ public class ScheduleManager
 
 		if (prefs.getBoolean("settings_github_enabled", false))
 		{
-			if (prefs.contains("oauth_fitbit_token"))
+			if (prefs.contains("oauth_github_token"))
 			{
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				String today = sdf.format(new Date());
 				
-				String token = prefs.getString("oauth_fitbit_token", "");
+				String token = prefs.getString("oauth_github_token", "");
 				
 				String userUri = "https://api.github.com/user?access_token=" + token;
 				
@@ -186,6 +198,8 @@ public class ScheduleManager
 			        
 			        String username = userInfo.getString("login");
 			        
+			        Log.e("DF","USERNAME: " + username);
+			        
 			        if (username != null)
 			        {
 			        	url = new URL("https://api.github.com/users/" + username + "/events?access_token=" + token);
@@ -207,6 +221,8 @@ public class ScheduleManager
 				        for (int i = 0; i < events.length(); i++)
 				        {
 				        	JSONObject event = events.getJSONObject(i);
+				        	
+//				        	Log.e("DF", "EVENT: " + event.toString(2));
 				        	
 				        	if ("PushEvent".equalsIgnoreCase(event.getString("type")))
 				        	{
