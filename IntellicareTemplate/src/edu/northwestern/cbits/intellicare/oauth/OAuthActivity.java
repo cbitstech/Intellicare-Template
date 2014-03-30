@@ -7,18 +7,12 @@ import java.util.List;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.DefaultApi10a;
 import org.scribe.builder.api.DefaultApi20;
-import org.scribe.builder.api.Foursquare2Api;
-import org.scribe.builder.api.LinkedInApi;
-import org.scribe.builder.api.TwitterApi;
 import org.scribe.exceptions.OAuthConnectionException;
 import org.scribe.exceptions.OAuthException;
 import org.scribe.model.OAuthConfig;
 import org.scribe.model.Token;
 import org.scribe.model.Verifier;
 import org.scribe.oauth.OAuthService;
-
-import edu.northwestern.cbits.ic_template.R;
-import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -29,6 +23,9 @@ import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
+import edu.northwestern.cbits.ic_template.R;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class OAuthActivity extends Activity
 {
@@ -59,14 +56,8 @@ public class OAuthActivity extends Activity
         	
         	if ("fitbit".equals(requester))
         		api = FitbitApi.class;
-        	else if ("twitter".equals(requester))
-        		api = TwitterApi.SSL.class;
-        	else if ("instagram".equalsIgnoreCase(requester))
-        		api = InstagramApi.class;
-        	else if ("linkedin".equalsIgnoreCase(requester))
-        		api = LinkedInApi.class;
-        	else if ("foursquare".equalsIgnoreCase(requester))
-        		api = Foursquare2Api.class;
+        	else if ("github".equals(requester))
+        		api = GitHubApi.class;
         	
         	final Class apiClass = api;
 
@@ -97,6 +88,8 @@ public class OAuthActivity extends Activity
 									DefaultApi20 api = (DefaultApi20) constructor.newInstance();
 									
 									String url = api.getAuthorizationUrl(config);
+									
+									Log.e("IT", "AUTH URL: " + url);
 									
 									Intent intent = new Intent(me, OAuthWebActivity.class);
 									intent.setData(Uri.parse(url));
@@ -155,6 +148,8 @@ public class OAuthActivity extends Activity
     	{
     		Uri incomingUri = this.getIntent().getData();
 
+    		Log.e("IT", "INCOMING URI: " + incomingUri);
+    		
         	if ("http".equals(incomingUri.getScheme()))
         	{
         		List<String> segments = incomingUri.getPathSegments();
@@ -162,12 +157,38 @@ public class OAuthActivity extends Activity
         		if (segments.get(0).equals("oauth"))
         		{
         			final String requester = segments.get(1);
-        					
+
+        			if ("github".equals(requester))
+        			{
+            			String access = incomingUri.getQueryParameter("access_token");
+            			
+            			Log.e("IC", "ACCESS: " + access);
+            			
+            			if (access != null)
+            			{
+		                	Editor e = prefs.edit();
+		                	e.putString("oauth_" + requester + "_secret", "");
+		                	e.putString("oauth_" + requester + "_token", access);
+		                	
+		                	e.commit();
+		                	
+		                	me.runOnUiThread(new Runnable()
+		                	{
+								public void run() 
+								{
+				                	me.authSuccess();
+								}
+		                	});
+		                	
+		                	return;
+            			}
+        			}
+
         			String verifier = incomingUri.getQueryParameter("oauth_verifier");
         			
         			if (verifier == null)
         				verifier = incomingUri.getQueryParameter("code");
-
+        			
         			if (verifier != null)
         			{
 	        			final Token requestToken = new Token(prefs.getString("request_token_" + requester, ""), prefs.getString("request_secret_" + requester, ""));
@@ -177,15 +198,15 @@ public class OAuthActivity extends Activity
 	        			Class apiClass = null;
 	        			String consumerKey = null;
 	        			String consumerSecret = null;
-	        			String callback = null;
+//	        			String callback = null;
 	        			
-	        			/*
 	        			if ("fitbit".equals(requester))
 	        			{
 	            			apiClass = FitbitApi.class;
-	            			consumerKey = FitbitApiFeature.CONSUMER_KEY;
-	            			consumerSecret = FitbitApiFeature.CONSUMER_SECRET;
+	            			consumerKey = FitbitApi.CONSUMER_KEY;
+	            			consumerSecret = FitbitApi.CONSUMER_SECRET;
 	        			}
+	        			/*
 	        			else if ("twitter".equals(requester))
 	        			{
 	            			apiClass = TwitterApi.SSL.class;
@@ -222,8 +243,8 @@ public class OAuthActivity extends Activity
 			            	builder = builder.apiKey(consumerKey);
 			            	builder = builder.apiSecret(consumerSecret);
 			            	
-			            	if (callback != null)
-			            		builder = builder.callback(callback);
+//			            	if (callback != null)
+//			            		builder = builder.callback(callback);
 			            	
 			            	final OAuthService service = builder.build();
 	
@@ -236,6 +257,8 @@ public class OAuthActivity extends Activity
 									public void run() 
 									{
 					                	Token accessToken = service.getAccessToken(null, v);
+					                	
+					                	Log.e("IT", "GOT AUTH TOKEN " + accessToken + " FOR " + requester);
 					                	
 					                	Editor e = prefs.edit();
 					                	e.putString("oauth_" + requester + "_secret", accessToken.getSecret());

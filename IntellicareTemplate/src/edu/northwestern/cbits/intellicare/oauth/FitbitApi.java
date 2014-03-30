@@ -5,6 +5,9 @@ import org.scribe.model.Token;
 
 public class FitbitApi extends DefaultApi10a 
 {
+	public static final String CONSUMER_KEY = "942cc901ff16414a81a599668a1987d6";
+	public static final String CONSUMER_SECRET = "8182965179ef4494ba6294ff77602b3c";
+
 	public FitbitApi()
 	{
 		super();

@@ -1,7 +1,18 @@
 package edu.northwestern.cbits.intellicare.dailyfeats;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -10,7 +21,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import edu.northwestern.cbits.intellicare.StatusNotificationManager;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 
@@ -124,5 +137,107 @@ public class ScheduleManager
 			e.putLong(ScheduleManager.LAST_NOTIFICATION, now);
 			e.commit();
 		}
+		
+		try 
+		{
+			Log.e("DF", "COMMITS: " + this.todayCommits().toString(2));
+		} 
+		catch (JSONException e) 
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	private JSONArray todayCommits()
+	{
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
+
+        JSONArray commits = new JSONArray();
+
+		if (prefs.getBoolean("settings_github_enabled", false))
+		{
+			if (prefs.contains("oauth_fitbit_token"))
+			{
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				String today = sdf.format(new Date());
+				
+				String token = prefs.getString("oauth_fitbit_token", "");
+				
+				String userUri = "https://api.github.com/user?access_token=" + token;
+				
+				try 
+				{
+					URL url = new URL(userUri);
+					
+			        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+
+			        String inputLine = null;
+			        StringBuffer all = new StringBuffer();
+			        
+			        while ((inputLine = in.readLine()) != null)
+			        {
+			        	all.append(inputLine);
+			        	all.append("\n");
+			        }
+
+			        in.close();
+			        
+			        JSONObject userInfo = new JSONObject(all.toString());
+			        
+			        String username = userInfo.getString("login");
+			        
+			        if (username != null)
+			        {
+			        	url = new URL("https://api.github.com/users/" + username + "/events?access_token=" + token);
+
+				        in = new BufferedReader(new InputStreamReader(url.openStream()));
+
+				        all = new StringBuffer();
+				        
+				        while ((inputLine = in.readLine()) != null)
+				        {
+				        	all.append(inputLine);
+				        	all.append("\n");
+				        }
+
+				        in.close();
+				        
+				        JSONArray events = new JSONArray(all.toString());
+				        
+				        for (int i = 0; i < events.length(); i++)
+				        {
+				        	JSONObject event = events.getJSONObject(i);
+				        	
+				        	if ("PushEvent".equalsIgnoreCase(event.getString("type")))
+				        	{
+				        		if (event.getString("created_at").startsWith(today))
+				        		{
+				        			JSONArray commitObjects = event.getJSONObject("payload").getJSONArray("commits");
+				        			
+				        			for (int j = 0; j < commitObjects.length(); j++)
+				        			{
+				        				commits.put(commitObjects.getJSONObject(j));
+				        			}
+				        		}
+				        	}
+				        }
+			        }
+				} 
+				catch (MalformedURLException e) 
+				{
+					LogManager.getInstance(this._context).logException(e);
+				} 
+				catch (IOException e) 
+				{
+					LogManager.getInstance(this._context).logException(e);
+				} 
+				catch (JSONException e) 
+				{
+					LogManager.getInstance(this._context).logException(e);
+				}
+			}
+		}
+		
+		return commits;
 	}
 }

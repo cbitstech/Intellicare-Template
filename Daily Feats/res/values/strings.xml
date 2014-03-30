@@ -23,7 +23,6 @@
 
     <string name="subtitle_next_reminder" formatted="false">Next check-in: %s</string>
     
-    
     <!-- Setup -->
     <string name="setup_name">Daily Feats Setup</string>
     <string name="action_settings">Settings</string>
@@ -157,9 +156,11 @@
 	<string name="prefs_fitbit_feat">Fitbit</string>
 	<string name="prefs_enable_fitbit">Enable Fitbit</string>
 	<string name="prefs_fitbit_login">Sign in to Fitbit</string>
-					
+	<string name="prefs_fitbit_logout">Sign out of Fitbit</string>
+						
 	<string name="prefs_github_feat">GitHub</string>
 	<string name="prefs_enable_github">Enable GitHub</string>
 	<string name="prefs_github_login">Sign in to GitHub</string>
-		
+	<string name="prefs_github_logout">Sign out of GitHub</string>
+			
 </resources>
