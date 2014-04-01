@@ -1,7 +1,27 @@
 package edu.northwestern.cbits.intellicare.dailyfeats;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.scribe.builder.ServiceBuilder;
+import org.scribe.exceptions.OAuthException;
+import org.scribe.model.OAuthRequest;
+import org.scribe.model.Response;
+import org.scribe.model.Token;
+import org.scribe.model.Verb;
+import org.scribe.oauth.OAuthService;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -11,8 +31,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+
 import edu.northwestern.cbits.intellicare.StatusNotificationManager;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
+import edu.northwestern.cbits.intellicare.oauth.FitbitApi;
 
 public class ScheduleManager
 {
@@ -25,6 +47,9 @@ public class ScheduleManager
 	private static ScheduleManager _instance = null;
 
 	private Context _context = null;
+	
+	private long _lastGitHubCheck = 0;
+	private long _lastFitbitCheck = 0;
 
 	public ScheduleManager(Context context) 
 	{
@@ -51,7 +76,7 @@ public class ScheduleManager
 	
 	public void updateSchedule()
 	{
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
+		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
 		
 		long lastNotification = prefs.getLong(ScheduleManager.LAST_NOTIFICATION, 0);
 		long now = System.currentTimeMillis();
@@ -124,5 +149,238 @@ public class ScheduleManager
 			e.putLong(ScheduleManager.LAST_NOTIFICATION, now);
 			e.commit();
 		}
+		
+		final ScheduleManager me = this;
+		
+		if (now - this._lastGitHubCheck > 1800000 && prefs.getBoolean("settings_github_enabled", false))
+		{
+			Runnable r = new Runnable()
+			{
+				public void run() 
+				{
+					JSONArray commits = me.todayCommits();
+					
+					int level = prefs.getInt(FeatsProvider.DEPRESSION_LEVEL, 2);
+
+					String feat = me._context.getString(R.string.feat_github_checkin);
+
+					FeatsProvider.clearFeats(me._context, feat, new Date());
+					
+					if (commits.length() > 0)
+						FeatsProvider.createFeat(me._context, feat, level);
+				}
+			};
+			
+			Thread t = new Thread(r);
+			t.start();
+			
+			this._lastGitHubCheck = now;
+		}
+
+		if (now - this._lastFitbitCheck > 1800000 && prefs.getBoolean("settings_fitbit_enabled", false))
+		{
+			Runnable r = new Runnable()
+			{
+				public void run() 
+				{
+					Set<String> goals = me.todayFitbitGoals();
+
+					int level = prefs.getInt(FeatsProvider.DEPRESSION_LEVEL, 2);
+
+					for (String feat : goals)
+					{
+						FeatsProvider.clearFeats(me._context, feat, new Date());
+						
+						FeatsProvider.createFeat(me._context, feat, level);
+					}
+				}
+			};
+			
+			Thread t = new Thread(r);
+			t.start();
+			
+			this._lastFitbitCheck  = now;
+		}
+	}
+	
+	private Set<String> todayFitbitGoals()
+	{
+		Set<String> metGoals = new HashSet<String>();
+		
+		final ScheduleManager me = this;
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
+
+		if (prefs.getBoolean("settings_fitbit_enabled", false))
+		{
+        	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        	String dateString = sdf.format(new Date());
+        	
+			String token = prefs.getString("oauth_fitbit_token", "");
+			String secret = prefs.getString("oauth_fitbit_secret", "");
+
+			Token accessToken = new Token(token, secret);
+        	
+			final OAuthRequest request = new OAuthRequest(Verb.GET, "https://api.fitbit.com/1/user/-/activities/date/" + dateString + ".json");
+
+        	ServiceBuilder builder = new ServiceBuilder();
+        	builder = builder.provider(FitbitApi.class);
+        	builder = builder.apiKey(FitbitApi.CONSUMER_KEY);
+        	builder = builder.apiSecret(FitbitApi.CONSUMER_SECRET);
+
+        	final OAuthService service = builder.build();
+
+			service.signRequest(accessToken, request);
+
+			try
+			{
+				Response response = request.send();
+
+				JSONObject body = new JSONObject(response.getBody());
+				JSONObject summary = body.getJSONObject("summary");
+
+				long veryActive = summary.getLong("veryActiveMinutes");
+				long fairlyActive = summary.getLong("fairlyActiveMinutes");
+				long lightlyActive = summary.getLong("lightlyActiveMinutes");
+
+				long active = veryActive + fairlyActive + lightlyActive;
+
+				long steps = summary.getLong("steps");
+
+				JSONArray activities = summary.getJSONArray("distances");
+
+				long distance = 0;
+
+				for (int i = 0; i < activities.length(); i++)
+				{
+					JSONObject activity = activities.getJSONObject(i);
+
+					if ("total".equals(activity.getString("activity")))
+						distance = activity.getLong("distance");
+				}
+
+				JSONObject goals = body.getJSONObject("goals");
+
+				long goalDistance = goals.getLong("distance");
+				long goalSteps = goals.getLong("steps");
+				long goalMinutes = goals.getLong("activeMinutes");
+				
+				if (distance >= goalDistance)
+					metGoals.add(this._context.getString(R.string.feat_fitbit_distance));
+
+				if (steps >= goalSteps)
+					metGoals.add(this._context.getString(R.string.feat_fitbit_steps));
+
+				if (active >= goalMinutes)
+					metGoals.add(this._context.getString(R.string.feat_fitbit_minutes));
+			} 
+			catch (JSONException e) 
+			{
+     			LogManager.getInstance(me._context).logException(e);
+			}
+			catch (OAuthException e)
+			{
+     			LogManager.getInstance(me._context).logException(e);
+			}
+			catch (IllegalArgumentException e)
+			{
+     			LogManager.getInstance(me._context).logException(e);
+			}
+		}
+		
+		return metGoals;
+	}
+	
+	private JSONArray todayCommits()
+	{
+        JSONArray commits = new JSONArray();
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
+
+		if (prefs.getBoolean("settings_github_enabled", false))
+		{
+			if (prefs.contains("oauth_github_token"))
+			{
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				String today = sdf.format(new Date());
+				
+				String token = prefs.getString("oauth_github_token", "");
+				
+				String userUri = "https://api.github.com/user?access_token=" + token;
+				
+				try 
+				{
+					URL url = new URL(userUri);
+					
+			        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+
+			        String inputLine = null;
+			        StringBuffer all = new StringBuffer();
+			        
+			        while ((inputLine = in.readLine()) != null)
+			        {
+			        	all.append(inputLine);
+			        	all.append("\n");
+			        }
+
+			        in.close();
+			        
+			        JSONObject userInfo = new JSONObject(all.toString());
+			        
+			        String username = userInfo.getString("login");
+			        
+			        if (username != null)
+			        {
+			        	url = new URL("https://api.github.com/users/" + username + "/events?access_token=" + token);
+
+				        in = new BufferedReader(new InputStreamReader(url.openStream()));
+
+				        all = new StringBuffer();
+				        
+				        while ((inputLine = in.readLine()) != null)
+				        {
+				        	all.append(inputLine);
+				        	all.append("\n");
+				        }
+
+				        in.close();
+				        
+				        JSONArray events = new JSONArray(all.toString());
+				        
+				        for (int i = 0; i < events.length(); i++)
+				        {
+				        	JSONObject event = events.getJSONObject(i);
+				        	
+				        	if ("PushEvent".equalsIgnoreCase(event.getString("type")))
+				        	{
+				        		if (event.getString("created_at").startsWith(today))
+				        		{
+				        			JSONArray commitObjects = event.getJSONObject("payload").getJSONArray("commits");
+				        			
+				        			for (int j = 0; j < commitObjects.length(); j++)
+				        			{
+				        				commits.put(commitObjects.getJSONObject(j));
+				        			}
+				        		}
+				        	}
+				        }
+			        }
+				} 
+				catch (MalformedURLException e) 
+				{
+					LogManager.getInstance(this._context).logException(e);
+				} 
+				catch (IOException e) 
+				{
+					LogManager.getInstance(this._context).logException(e);
+				} 
+				catch (JSONException e) 
+				{
+					LogManager.getInstance(this._context).logException(e);
+				}
+			}
+		}
+		
+		return commits;
 	}
 }

@@ -1,0 +1,13 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical">
+	<ListView android:id="@+id/list_view"
+	    android:layout_height="match_parent"
+	    android:layout_width="match_parent" />
+    <WebView android:id="@+id/cloud_view" 
+        android:background="#ffffff"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+</LinearLayout>

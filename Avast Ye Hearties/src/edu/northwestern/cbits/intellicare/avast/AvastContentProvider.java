@@ -29,7 +29,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 public class AvastContentProvider extends ContentProvider 
 {
@@ -118,6 +117,9 @@ public class AvastContentProvider extends ContentProvider
 	protected static final String VENUE_CATEGORY_ID = "type_id";
 	protected static final String VENUE_LATITUDE = "latitude";
 	protected static final String VENUE_LONGITUDE = "longitude";
+
+	public static final String PREF_DISTANCE = "settings_min_distance";
+	public static final String PREF_DISTANCE_DEFAULT = "400";
 
     private UriMatcher _matcher = new UriMatcher(UriMatcher.NO_MATCH);
 	private SQLiteDatabase _db = null;
@@ -303,8 +305,6 @@ public class AvastContentProvider extends ContentProvider
 					for (int i = 0; i < venues.length(); i++)
 					{
 						JSONObject venue = venues.getJSONObject(i);
-						
-						Log.e("AYH", "VENUE: " + venue.toString(2));
 						
 						Venue v = new Venue();
 						v.name = venue.getString("name");

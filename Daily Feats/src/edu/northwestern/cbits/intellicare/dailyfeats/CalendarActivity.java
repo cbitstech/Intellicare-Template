@@ -20,7 +20,6 @@ import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -119,7 +118,6 @@ public class CalendarActivity extends ConsentedActivity
 		super.onPause();
 	}
 
-	
 	@SuppressWarnings("deprecation")
 	protected void reloadList() 
 	{
@@ -143,8 +141,6 @@ public class CalendarActivity extends ConsentedActivity
 			
 			if (prefs.getBoolean("settings_full_mode", true) == false)
 			{
-				Log.e("DF", "IN TEST MODE");
-
 				int level = prefs.getInt(FeatsProvider.DEPRESSION_LEVEL, 2);
 
 				args[0] = "3";
@@ -232,10 +228,17 @@ public class CalendarActivity extends ConsentedActivity
 					else
 						levelLabel.setVisibility(View.GONE);
 
-					if (featLevel != 0)
-						categoryLabel.setText(context.getString(R.string.label_category, featLevel));
-					else
+					check.setEnabled(true);
+					
+					if (featLevel == 0)
 						categoryLabel.setText(R.string.label_category_my_feats);
+					else if (featLevel == 99)
+					{
+						categoryLabel.setText(R.string.label_category_automatic);
+						check.setEnabled(false);
+					}
+					else
+						categoryLabel.setText(context.getString(R.string.label_category, featLevel));
 
 					categoryRow.setVisibility(View.GONE);
 

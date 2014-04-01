@@ -1,5 +1,7 @@
 package edu.northwestern.cbits.intellicare.thoughtchallenger;
 
+import java.util.HashMap;
+
 import org.json.JSONArray;
 
 import android.app.AlertDialog;
@@ -15,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class ChangeActivity extends ConsentedActivity 
 {
@@ -60,10 +63,29 @@ public class ChangeActivity extends ConsentedActivity
 				});
 				
 				builder.create().show();
+				
+				HashMap<String, Object> payload = new HashMap<String, Object>();
+				LogManager.getInstance(me).log("showed_examples", payload);
 			}
 		});
 	}
 	
+	protected void onResume()
+	{
+		super.onResume();
+		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("opened_change", payload);
+	}
+
+	protected void onPause()
+	{
+		super.onPause();
+		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("closed_change", payload);
+	}
+
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
 		this.getMenuInflater().inflate(R.menu.menu_change, menu);
@@ -74,6 +96,8 @@ public class ChangeActivity extends ConsentedActivity
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 		int itemId = item.getItemId();
+
+		HashMap<String, Object> payload = new HashMap<String, Object>();
 		
 		switch (itemId)
 		{
@@ -92,7 +116,9 @@ public class ChangeActivity extends ConsentedActivity
 				});
 				
 				builder.create().show();
-				
+	
+				LogManager.getInstance(this).log("showed_help", payload);
+
 				break;
 			case R.id.action_done:
 				String original = this.getIntent().getStringExtra(ChangeActivity.THOUGHT_VALUE);
@@ -106,7 +132,7 @@ public class ChangeActivity extends ConsentedActivity
 					ContentValues values = new ContentValues();
 					values.put(ThoughtContentProvider.PAIR_AUTOMATIC_THOUGHT, original);
 					values.put(ThoughtContentProvider.PAIR_RATIONAL_RESPONSE, promptValue);
-					values.put(ThoughtContentProvider.PAIR_DISTORTIONS, (new JSONArray()).toString());
+					values.put(ThoughtContentProvider.PAIR_DISTORTIONS, "");
 					values.put(ThoughtContentProvider.PAIR_TAGS, (new JSONArray()).toString());
 					
 					this.getContentResolver().insert(ThoughtContentProvider.THOUGHT_PAIR_URI, values);
@@ -114,6 +140,9 @@ public class ChangeActivity extends ConsentedActivity
 					Intent intent = new Intent(this, MainActivity.class);
 					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					this.startActivity(intent);
+					
+					payload.put("response", promptValue);
+					LogManager.getInstance(this).log("selected_response", payload);
 				}
 				else
 					Toast.makeText(this, R.string.step_three_continue, Toast.LENGTH_LONG).show();

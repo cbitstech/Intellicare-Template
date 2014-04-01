@@ -38,7 +38,7 @@ public class FeatsProvider extends android.content.ContentProvider
     private UriMatcher mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     private SQLiteDatabase mDb = null;
 
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 	private static final long DAY_LENGTH = 1000 * 3600 * 24;
 	protected static final String START_FEATS_DATE = "start_feats_date";
 	private static final long STREAK_LENGTH = 3;
@@ -235,6 +235,30 @@ public class FeatsProvider extends android.content.ContentProvider
 	    		        feat.put("feat_name", context.getString(R.string.feat_4_2));
 	    		        feat.put("feat_level", 4);
 	    		        db.insert(FEATS_TABLE, null, feat);
+                    case 3: 
+	    		        ContentValues autoFeat = new ContentValues();
+	    		        autoFeat.put("feat_name", context.getString(R.string.feat_github_checkin));
+	    		        autoFeat.put("feat_level", 99);
+	    		        autoFeat.put("enabled", false);
+	    		        db.insert(FEATS_TABLE, null, autoFeat);
+
+	    		        autoFeat = new ContentValues();
+	    		        autoFeat.put("feat_name", context.getString(R.string.feat_fitbit_minutes));
+	    		        autoFeat.put("feat_level", 99);
+	    		        autoFeat.put("enabled", false);
+	    		        db.insert(FEATS_TABLE, null, autoFeat);
+	    		        
+	    		        autoFeat = new ContentValues();
+	    		        autoFeat.put("feat_name", context.getString(R.string.feat_fitbit_distance));
+	    		        autoFeat.put("feat_level", 99);
+	    		        autoFeat.put("enabled", false);
+	    		        db.insert(FEATS_TABLE, null, autoFeat);
+
+	    		        autoFeat = new ContentValues();
+	    		        autoFeat.put("feat_name", context.getString(R.string.feat_fitbit_steps));
+	    		        autoFeat.put("feat_level", 99);
+	    		        autoFeat.put("enabled", false);
+	    		        db.insert(FEATS_TABLE, null, autoFeat);
                     default:
                     	break;
                 }

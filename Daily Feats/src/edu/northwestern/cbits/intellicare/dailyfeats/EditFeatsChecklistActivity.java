@@ -106,7 +106,9 @@ public class EditFeatsChecklistActivity extends ConsentedActivity
 				});
 				
 				int featLevel = cursor.getInt(cursor.getColumnIndex("feat_level"));
-				
+
+				item.setEnabled(true);
+
 				if (featLevel == 0)
 				{
 					item.setOnLongClickListener(new OnLongClickListener()
@@ -155,6 +157,11 @@ public class EditFeatsChecklistActivity extends ConsentedActivity
 						}
 					});
 				}
+				else if (featLevel == 99)
+				{
+					item.setOnLongClickListener(null);
+					item.setEnabled(false);
+				}
 				else
 					item.setOnLongClickListener(null);
 
@@ -164,10 +171,12 @@ public class EditFeatsChecklistActivity extends ConsentedActivity
 
 				TextView categoryLabel = (TextView) view.findViewById(R.id.label_category_name);
 				
-				if (featLevel != 0)
-					categoryLabel.setText(context.getString(R.string.label_category, featLevel));
-				else
+				if (featLevel == 0)
 					categoryLabel.setText(R.string.label_category_my_feats);
+				else if (featLevel == 99)
+					categoryLabel.setText(R.string.label_category_automatic);
+				else
+					categoryLabel.setText(context.getString(R.string.label_category, featLevel));
 
 				categoryRow.setVisibility(View.GONE);
 

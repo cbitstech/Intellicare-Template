@@ -3,25 +3,24 @@ package edu.northwestern.cbits.intellicare.icope;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-
-import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.DialogInterface.OnShowListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class ViewCardActivity extends Activity 
 {
@@ -78,12 +77,8 @@ public class ViewCardActivity extends Activity
 				DateFormat dateFormat = android.text.format.DateFormat.getLongDateFormat(this);
 
 				Calendar c = Calendar.getInstance();
-				c.set(Calendar.YEAR, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_YEAR)));
-				c.set(Calendar.MONTH, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_MONTH)));
-				c.set(Calendar.DAY_OF_MONTH, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_DAY)));
 				c.set(Calendar.HOUR_OF_DAY, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_HOUR)));
 				c.set(Calendar.MINUTE, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_MINUTE)));
-				c.set(Calendar.SECOND, cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_SECOND)));
 
 				Date date = c.getTime();
 				
@@ -105,13 +100,22 @@ public class ViewCardActivity extends Activity
 					event.setText(cardCursor.getString(cardCursor.getColumnIndex(CopeContentProvider.CARD_EVENT)));
 					reminder.setText(cardCursor.getString(cardCursor.getColumnIndex(CopeContentProvider.CARD_REMINDER)));
 					type.setText(cardCursor.getString(cardCursor.getColumnIndex(CopeContentProvider.CARD_TYPE)));
+
+					HashMap<String, Object> payload = new HashMap<String, Object>();
+					payload.put("reminder", reminder.getText().toString());
+					LogManager.getInstance(me).log("viewed_card", payload);
 				}
+				
+				cardCursor.close();
 				
 				builder.setPositiveButton(R.string.action_helpful, new OnClickListener()
 				{
 					public void onClick(DialogInterface arg0, int arg1) 
 					{
-						Log.e("IC", "TODO: LOG POSITIVE");
+						HashMap<String, Object> payload = new HashMap<String, Object>();
+						LogManager.getInstance(me).log("positive_response", payload);
+
+						me.finish();
 					}
 				});
 
@@ -119,14 +123,20 @@ public class ViewCardActivity extends Activity
 				{
 					public void onClick(DialogInterface arg0, int arg1) 
 					{
-						Log.e("IC", "TODO: LOG NEGATIVE");
+						HashMap<String, Object> payload = new HashMap<String, Object>();
+						LogManager.getInstance(me).log("negative_response", payload);
+
+						me.finish();
 					}
 				});
 				
-				builder.setOnDismissListener(new OnDismissListener()
+				builder.setOnCancelListener(new OnCancelListener()
 				{
-					public void onDismiss(DialogInterface arg0) 
+					public void onCancel(DialogInterface arg0) 
 					{
+						HashMap<String, Object> payload = new HashMap<String, Object>();
+						LogManager.getInstance(me).log("cancelled_response", payload);
+
 						me.finish();
 					}
 				});

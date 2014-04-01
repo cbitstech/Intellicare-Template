@@ -2,7 +2,17 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 	<Preference android:title="@string/prefs_reminder_time" android:key="settings_reminder_time" />
 	<CheckBoxPreference android:title="@string/prefs_full_mode" android:defaultValue="true" android:key="settings_full_mode" />
-    <PreferenceCategory android:title="@string/settings_group_credits">
+    <PreferenceCategory android:title="@string/settings_automatic_feats">
+		<PreferenceScreen android:title="@string/prefs_fitbit_feat">
+			<CheckBoxPreference android:title="@string/prefs_enable_fitbit" android:key="settings_fitbit_enabled" />
+			<Preference android:title="@string/prefs_fitbit_login" android:key="settings_fitbit_login" />
+	    </PreferenceScreen>
+		<PreferenceScreen android:title="@string/prefs_github_feat">
+			<CheckBoxPreference android:title="@string/prefs_enable_github" android:key="settings_github_enabled" />
+			<Preference android:title="@string/prefs_github_login" android:key="settings_github_login" />
+	    </PreferenceScreen>
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/settings_group_credits">
   		<Preference android:title="@string/creator_jxd" android:summary="@string/role_clinical_lead" />
    		<Preference android:title="@string/creator_gab" android:summary="@string/role_tech_lead" />
 		<Preference android:title="@string/creator_smk" android:summary="@string/role_project_manager" />

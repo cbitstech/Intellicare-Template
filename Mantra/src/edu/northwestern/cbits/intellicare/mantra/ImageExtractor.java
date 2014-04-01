@@ -7,17 +7,22 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import android.util.Log;
+
 import edu.northwestern.cbits.intellicare.mantra.tests.ImageExtractorTest;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -75,27 +80,26 @@ public class ImageExtractor
 	 * @return
 	 * @throws IOException
 	 */
-	public static Set<String> getImageList(String url, boolean returnRelativePaths) throws IOException {
+	public static Set<String> getImageList(String url, boolean returnRelativePaths) throws SocketTimeoutException, UnknownHostException, IOException {
 		Set<String> ret = new HashSet<String>();
-		
-		Document doc = Jsoup.connect(url).get();
-		Elements links = doc.select("img");
-
-		// TODO: is there a less memory-intensive (e.g. Jsoup-internal) way to convert this to a standard Java datatype? 
-		for (Element e : links) { 
-			ret.add(
-				// if a relative path is requested, then return it...
-				returnRelativePaths
-				? e.attr("src")
-						// ...else, an absolute path is requested, so let's determine whether the image source already contains an absolute path, and return it if so, else prepend the base URL and return.
-						// no idea why regexes (dynamically-compiled and pre-compiled, respectively) above weren't working, but the following works, and should use fewer resources. 
-						: (e.attr("src").startsWith("http://") || e.attr("src").startsWith("https://") || e.attr("src").startsWith("HTTP://") || e.attr("src").startsWith("HTTPS://"))
-							? e.attr("src")
-							: e.baseUri() + e.attr("src") 
-				);
-		}
-		
-		return ret;
+			Document doc = Jsoup.connect(url).get();
+			Elements links = doc.select("img");
+	
+			// TODO: is there a less memory-intensive (e.g. Jsoup-internal) way to convert this to a standard Java datatype? 
+			for (Element e : links) { 
+				ret.add(
+					// if a relative path is requested, then return it...
+					returnRelativePaths
+					? e.attr("src")
+							// ...else, an absolute path is requested, so let's determine whether the image source already contains an absolute path, and return it if so, else prepend the base URL and return.
+							// no idea why regexes (dynamically-compiled and pre-compiled, respectively) above weren't working, but the following works, and should use fewer resources. 
+							: (e.attr("src").startsWith("http://") || e.attr("src").startsWith("https://") || e.attr("src").startsWith("HTTP://") || e.attr("src").startsWith("HTTPS://"))
+								? e.attr("src")
+								: e.baseUri() + e.attr("src") 
+					);
+			}
+			return ret;
+//		}
 	}
 	
 	/**
@@ -107,11 +111,14 @@ public class ImageExtractor
 	 */
 	public static int getRemoteContentLength(String url) throws MalformedURLException, IOException {
 		log("getRemoteContentLength", "entered; url = " + url);
-		URLConnection conn = (new URL(url)).openConnection();
-//		return conn.getContentLength();
-		String len = conn.getHeaderField("Content-Length");
-		log("getRemoteContentLength", "exiting; len = " + len);
-		return len != null ? Integer.parseInt(len) : -1;
+		URLConnection oldConn = (new URL(url)).openConnection();
+		HttpURLConnection conn = ((HttpURLConnection) oldConn);
+		conn.setRequestMethod("HEAD");
+		
+		return conn.getContentLength();
+//		String len = conn.getHeaderField("Content-Length");
+//		log("getRemoteContentLength", "exiting; len = " + len);
+//		return len != null ? Integer.parseInt(len) : -1;
 	}
 	
 	/**

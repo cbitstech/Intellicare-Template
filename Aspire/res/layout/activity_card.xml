@@ -1,0 +1,47 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical">
+	<LinearLayout android:orientation="vertical"
+	    android:layout_height="0dp"
+	    android:layout_weight="4"
+	    android:layout_width="match_parent"
+	    android:background="@drawable/card_background"
+	    android:layout_margin="24dp"
+	    android:padding="16dp">
+        <TextView android:id="@+id/card_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:gravity="center"
+            android:textStyle="bold" 
+            android:layout_marginBottom="24dp" />
+        <TextView android:id="@+id/card_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:gravity="center" />
+    </LinearLayout>
+	<View android:layout_height="0dp"
+	    android:layout_width="match_parent"
+	    android:layout_weight="1" />
+    <LinearLayout android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_margin="24dp">
+        <ImageView android:id="@+id/button_previous"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_action_goleft"
+            android:scaleType="centerInside" />
+		<View android:layout_height="48dp"
+	    	android:layout_width="0dp"
+	    	android:layout_weight="1" />
+        <ImageView android:id="@+id/button_next"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_action_goright"
+            android:scaleType="centerInside" />
+    </LinearLayout>
+</LinearLayout>

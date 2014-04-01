@@ -1,8 +1,15 @@
 package edu.northwestern.cbits.intellicare.icope;
 
 import java.text.DateFormat;
+import java.util.HashMap;
 import java.util.List;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.CrashManagerListener;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -14,11 +21,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.icope.CopeContentProvider.Reminder;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class MainActivity extends ConsentedActivity 
 {
@@ -34,13 +43,44 @@ public class MainActivity extends ConsentedActivity
 	{
 		super.onResume();
 		
+		CrashManager.register(this, "ba2344cc1da5b5500fc9b80b5d6abf77", new CrashManagerListener() 
+		{
+			public boolean shouldAutoUploadCrashes() 
+			{
+				    return true;
+			}
+		});
+
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("opened_main", payload);
+
+		this.refresh();
+	}
+	
+	protected void onPause()
+	{
+		super.onPause();
+		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("closed_main", payload);
+	}
+	
+	private void refresh()
+	{
 		ListView list = (ListView) this.findViewById(R.id.cards_list);
 		
 		final List<Reminder> reminders = CopeContentProvider.listUpcomingReminders(this);
 		
 		final MainActivity me = this;
 		
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row_reminder, new String[2])
+		String[] items = new String[2];
+		
+		if (reminders.size() == 1)
+			items = new String[1];
+		else if (reminders.size() == 0)
+			items = new String[0];
+		
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row_reminder, items)
 		{
 			public View getView(int position, View convertView, ViewGroup parent)
 			{
@@ -119,8 +159,56 @@ public class MainActivity extends ConsentedActivity
 					Intent intent = new Intent(me, ViewCardActivity.class);
 					intent.putExtra(ViewCardActivity.REMINDER_ID, r.reminderId);
 					
+					HashMap<String, Object> payload = new HashMap<String, Object>();
+					payload.put("reminder_id", r.reminderId);
+					LogManager.getInstance(me).log("viewed_reminder", payload);
+					
 					me.startActivity(intent);
 				}
+			}
+		});
+		
+		list.setOnItemLongClickListener(new OnItemLongClickListener()
+		{
+			public boolean onItemLongClick(AdapterView<?> arg0, View view, final int position, long id)
+			{
+				if (position == 0)
+				{
+					AlertDialog.Builder builder = new AlertDialog.Builder(me);
+					builder.setTitle(R.string.title_delete_reminder);
+					builder.setMessage(R.string.message_delete_reminder);
+					
+					builder.setPositiveButton(R.string.action_yes, new OnClickListener()
+					{
+						public void onClick(DialogInterface arg0, int arg1) 
+						{
+							Reminder r = reminders.get(position);
+							
+							String where = CopeContentProvider.ID + " = ?";
+							String[] args = { "" + r.reminderId };
+							
+							me.getContentResolver().delete(CopeContentProvider.REMINDER_URI, where, args);
+
+							HashMap<String, Object> payload = new HashMap<String, Object>();
+							payload.put("reminder_id", r.reminderId);
+							LogManager.getInstance(me).log("deleted_reminder", payload);
+
+							me.refresh();
+						}
+					});
+					
+					builder.setNegativeButton(R.string.action_no, new OnClickListener()
+					{
+						public void onClick(DialogInterface arg0, int arg1) 
+						{
+
+						}
+					});
+					
+					builder.create().show();
+				}
+				
+				return true;
 			}
 		});
 		
@@ -148,6 +236,11 @@ public class MainActivity extends ConsentedActivity
 			case R.id.action_view_messages:
 				Intent libraryIntent = new Intent(this, LibraryActivity.class);
 				this.startActivity(libraryIntent);
+				
+				break;
+			case R.id.action_settings:
+				Intent settingsIntent = new Intent(this, SettingsActivity.class);
+				this.startActivity(settingsIntent);
 				
 				break;
 			default:

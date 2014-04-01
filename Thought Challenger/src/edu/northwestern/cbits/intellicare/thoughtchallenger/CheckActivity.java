@@ -1,10 +1,13 @@
 package edu.northwestern.cbits.intellicare.thoughtchallenger;
 
+import java.util.HashMap;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class CheckActivity extends ConsentedActivity 
 {
@@ -22,6 +25,22 @@ public class CheckActivity extends ConsentedActivity
 		this.getMenuInflater().inflate(R.menu.menu_check, menu);
 
 		return true;
+	}
+	
+	protected void onResume()
+	{
+		super.onResume();
+		
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("opened_check", payload);
+	}
+	
+	protected void onPause()
+	{
+		super.onPause();
+
+		HashMap<String, Object> payload = new HashMap<String, Object>();
+		LogManager.getInstance(this).log("closed_check", payload);
 	}
 	
 	public boolean onOptionsItemSelected(MenuItem item)

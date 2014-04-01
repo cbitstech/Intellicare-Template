@@ -23,7 +23,6 @@
 
     <string name="subtitle_next_reminder" formatted="false">Next check-in: %s</string>
     
-    
     <!-- Setup -->
     <string name="setup_name">Daily Feats Setup</string>
     <string name="action_settings">Settings</string>
@@ -118,7 +117,8 @@
 
 	<string name="label_category" formatted="false">Level %d</string>
 	<string name="label_category_my_feats">My Feats</string>
-		
+	<string name="label_category_automatic">Automatic Feats</string>
+			
 	<string name="action_edit_feats">Edit Feats List</string>
 	<string name="tool_edit_feats_checklist">Edit Feats Checklist</string>
 	<string name="subtitle_edit_feats_checklist">Uncheck feats to hide</string>
@@ -151,4 +151,22 @@
 	<string name="prefs_reminder_time">Daily Reminder Time</string>
 	<string name="prefs_full_mode">Mode A</string>
 	<string name="title_settings">Daily Feats Settings</string>
+	
+	<string name="settings_automatic_feats">Automatic Feats</string>
+
+	<string name="prefs_fitbit_feat">Fitbit</string>
+	<string name="prefs_enable_fitbit">Enable Fitbit</string>
+	<string name="prefs_fitbit_login">Sign in to Fitbit</string>
+	<string name="prefs_fitbit_logout">Sign out of Fitbit</string>
+						
+	<string name="prefs_github_feat">GitHub</string>
+	<string name="prefs_enable_github">Enable GitHub</string>
+	<string name="prefs_github_login">Sign in to GitHub</string>
+	<string name="prefs_github_logout">Sign out of GitHub</string>
+
+	<string name="feat_github_checkin">Contributed to a GitHub repository.</string>
+	<string name="feat_fitbit_minutes">Achieved Fitbit daily active time goal.</string>
+	<string name="feat_fitbit_distance">Achieved Fitbit daily distance goal.</string>
+	<string name="feat_fitbit_steps">Achieved Fitbit daily steps goal.</string>
+								
 </resources>

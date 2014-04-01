@@ -1,0 +1,3 @@
+include ':appcompat'
+include ':IntellicareTemplate'
+include ':Purple Chill'
