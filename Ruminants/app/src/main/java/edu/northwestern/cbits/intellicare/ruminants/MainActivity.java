@@ -2,21 +2,10 @@ package edu.northwestern.cbits.intellicare.ruminants;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -26,9 +15,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.LogManager;
 
 public class MainActivity extends Activity
 {
@@ -102,10 +88,10 @@ public class MainActivity extends Activity
        ArrayList<Tool> tools = new ArrayList<Tool>();
 
 
-       tools.add(new Tool(this.getResources().getString(R.string.tool_chooser_name), this.getString(R.string.desc_tool_chooser), R.drawable.clock_question_dark, new Intent(this, ToolChooserActivity.class)));
-       tools.add(new Tool(this.getString(R.string.tool_use_log), this.getString(R.string.desc_tool_chooser_log), R.drawable.clock_checklist_dark, new Intent(this, ToolTrackerActivity.class)));
-       tools.add(new Tool(this.getString(R.string.profile_wizard), this.getString(R.string.desc_profile_wizard), R.drawable.clock_checklist_dark, new Intent(this, ProfileActivity.class)));
-       tools.add(new Tool(this.getResources().getString(R.string.tool_replay_intro), this.getString(R.string.desc_replay_intro), R.drawable.clock_question_dark, introIntent));
+       tools.add(new Tool(this.getResources().getString(R.string.tool_chooser_name), this.getString(R.string.desc_tool_chooser), R.drawable.ic_action_star, new Intent(this, ToolChooserActivity.class)));
+       tools.add(new Tool(this.getString(R.string.tool_use_log), this.getString(R.string.desc_tool_chooser_log), R.drawable.ic_action_view_as_list, new Intent(this, ToolTrackerActivity.class)));
+       tools.add(new Tool(this.getString(R.string.profile_wizard), this.getString(R.string.desc_profile_wizard), R.drawable.ic_action_chat, new Intent(this, ProfileActivity.class)));
+       tools.add(new Tool(this.getResources().getString(R.string.tool_replay_intro), this.getString(R.string.desc_replay_intro), R.drawable.ic_action_replay, introIntent));
 
         ListView toolsList = (ListView) this.findViewById(R.id.list_tools);
 

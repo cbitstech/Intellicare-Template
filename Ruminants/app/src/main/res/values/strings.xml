@@ -7,43 +7,71 @@
     <string name="next">Next</string>
     <string name="previous">Back</string>
 
-    <string name="worry_tool_title">Worry Practice</string>
+    <!-- Profile Questions -->
+    <string name="question_ruminating_lately">Have you been ruminating lately?</string> <!-- x it -->
+    <string name="question_rumination_content">What have you been ruminating about?</string> <!-- store in database -->
+    <string name="question_help_frequency">How often would you like help?</string> <!-- add note that this is notification -->
+    <string name="times_per_day">time(s) per day</string>
 
-    <string name="question_rumination_bool">Are you ruminating?</string>
-    <string name="question_rumination_trigger">What happened before the rumination started?</string>
-    <string name="question_pre_rumination_feeling">How did you feel at the time?</string>
-    <string name="emo_one">Emo1</string>
-    <string name="emo_two">Emo2</string>
-    <string name="emo_three">Emo3</string>
-    <string name="question_rumination_duration">How long did the rumination last?</string>
-    <string name="question_rumination_strategy">What did you try?</string>
-    <string name="question_strategy_success">What stopped the rumination?</string>
+    <string name="action_save_profile">Save Profile</string>
+    <string name="toast_profile_recorded">Your profile has been saved.</string>
 
+    <string name="title_settings">Settings</string>
+
+    <!-- Notification text -->
+    <string name="profile_note_title">Update your profile</string>
+    <string name="profile_note_message">If you\'ve been ruminating, let us know.</string>
+
+    <string name="help_note_title">ru-MOO-nating?</string>
+    <string name="help_note_message">Try a rumination tool.</string>
+
+    <!-- Main menu -->
+    <string name="tool_didactic_content">Strategies</string>
+    <string name="desc_didactic_content">Learn how to manage worries</string>
+    <string name="survey_wizard_title">Logging</string>
+    <string name="desc_survey_wizard">Describe your worries</string>
+    <string name="tool_worry_practice">Worry Practice Tool</string>
+    <string name="desc_worry_practice">Control when you worry.</string>
+    <string name="tool_replay_intro">Replay Intro</string>
+    <string name="desc_replay_intro"></string> <!-- Mark -->
+    <string name="profile_wizard">Profile</string>
+    <string name="desc_profile_wizard">Your worry settings.</string>
+    <string name="main_activity_title">Cows Are Ruminants</string>
+
+    <string name="hint_comments">One thing you\'ve worried about lately.</string>
+
+    <!-- Worry Practice Tool Details -->
+    <string name="wpt_instructions_title">Using the Worry Practice Tool</string>
+    <string name="wpt_instructions">Press \"Start\" to begin the timer; then concentrate exclusively on your worries. When the timer stops, M00-ve on to something else.</string>
+
+    <string name="time_picker_title">Set practice length:</string>
+
+    <!-- WPT Timer Text -->
     <string name="timer_title">Time Remaining:</string>
     <string name="reset_wpt">Reset</string>
     <string name="start_wpt">Start</string>
     <string name="stop_wpt">Stop</string>
-    <string name="timeup">Done!</string>
-    <string name="show_help">Learn about Rumination</string>
+    <string name="timeup">MOO!</string> <!-- Trigger moo sound -->
+    <string name="ok">OK</string>
 
-    <string name="question_ruminating">Ruminating? Click here!</string>
+    <!-- Timer alternative -->
+    <string name="show_help">Skip this and learn strategies.</string>
 
-    <string name="tool_didactic_content">Strategies</string>
-    <string name="desc_didactic_content">Learn how to manage worries</string>
-    <string name="tool_survey_wizard">Rumination Diary</string>
-    <string name="desc_survey_wizard">Describe your worries</string>
-    <string name="tool_worry_practice">Worry Practice Tool</string>
-    <string name="desc_worry_practice">A technique to exhaust rumination</string>
-    <string name="tool_replay_intro">Replay Intro</string>
-    <string name="desc_replay_intro">Replay the introduction to Bessie.</string>
+    <string-array name="time_choices_wpt">
+        <item>8 minutes</item>
+        <item>5 minutes</item>
+        <item>3 minutes</item>
+    </string-array>
 
-    <string name="wizards_button">Wizards</string>
-    <string name="replay_intro_button">Replay Intro</string>
-    <string name="replay_intro">Replay Intro</string>
-    <string name="survey_wizard_title">Logging</string>
+    <!-- Time values in second for timer -->
+    <string-array name="time_intervals_wpt">
+        <item>480</item> // 8 minutes
+        <item>300</item> // 5 minutes
+        <item>180</item> // 3 minutes
+    </string-array>
 
-    <string name="hint_comments">It\'s ok to be general</string>
 
+    <!-- Wizard One / Logging Values -->
     <string name="label_no">No</string>
     <string name="label_yes">Yes</string>
     <string name="label_a_few_min">A Few Minutes</string>
@@ -51,22 +79,50 @@
     <string name="label_an_hour">An Hour</string>
     <string name="label_a_few_hours">A Few Hours</string>
     <string name="label_all_day">All Day</string>
+    <string name="action_save_wizard_one">Submit</string>
 
-    <string name="action_save_survey">Submit</string>
-    <string name="action_save_recall">Submit</string>
 
+    <!-- Wizard One / Rumination Diary Questions -->
+    <string name="question_rumination_bool">Are you ruminating?</string>
+    <string name="question_rumination_trigger">What happened before the rumination started?</string>
+    <string name="question_pre_rumination_feeling">How did you feel at the time?</string>
+    <string name="question_rumination_duration">How long did the rumination last?</string>
+    <string name="question_rumination_strategy">What did you try?</string>
+    <string name="question_strategy_success">What stopped the rumination?</string>
+
+    <!-- Wizard One Completion Prompts -->
     <string name="message_complete_rum">Record if you are ruminating now to continue.</string>
     <string name="message_complete_rum_duration">Answer how long your rumination lasted.</string>
-    <string name="message_complete_helpful">Record if the rumination was helpful.</string>
-    <string name="message_complete_better">Record if the rumination made you feel better.</string>
-
+    <string name="message_complete_helpful">Respond if the rumination was helpful.</string>
+    <string name="message_complete_better">Identify if the rumination made you feel better.</string>
     <string name="toast_survey_wizard_recorded">Successfully submitted.</string>
-    <string name="toast_recall_wizard_recorded">Successfully submitted.</string>
-    <string name="wpt_instructions">Press \"Start\" to begin the timer; then concentrate exclusively on your worries. When the timer stops, stop concentrating.</string>
-    <string name="message_complete_emo">Select an emotion</string>
-    <string name="timer">wpt countdown</string>
 
-   <string-array name="intro_titles">
+    <!-- Wizard One emotions list -->
+    <string-array name="emotions">
+        <item>Joy</item>
+        <item>Contentment</item>
+        <item>Pride</item>
+        <item>Optimism</item>
+        <item>Enthrallment</item>
+        <item>Relief</item>
+        <item>Surprise</item>
+        <item>Anger</item>
+        <item>Exasperation</item>
+        <item>Rage</item>
+        <item>Disgust</item>
+        <item>Envy</item>
+        <item>Torment</item>
+        <item>Sadness</item>
+        <item>Disappointment</item>
+        <item>Shame</item>
+        <item>Neglect</item>
+        <item>Sympathy</item>
+        <item>Fear</item>
+        <item>Nervousness</item>
+    </string-array>
+
+    <!-- Probably need to just delete; have to refactor activity. -->
+    <string-array name="intro_titles">
         <item>Meet Bessie</item>
         <item>Bessie is our friend</item>
         <item>3</item>
@@ -97,8 +153,8 @@
         <item>herd about worry practice?</item>
         <item>let thoughts range free</item>
         <item>hoof it towards happiness</item>
+        <!-- Pretty sure no one sees this one. -->
         <item>empty your fourth stomach</item>
-        <item>It works!</item>
     </string-array>
 
     <string-array name="intro_content">
@@ -115,18 +171,21 @@
         <item>Now… let’s begin.</item>
     </string-array>
 
+    <!-- Prompt to finish intro -->
+    <string name="nope">Talk to bessie more.</string>
+
     <string-array name="didactic_content1">
-        <item>Distract with books, movies, magazines, museums, a busy street or bustling park. Force yourself to take these aspects of life or culture in even if you don’t feel like it. Once you are involved your mind has a chance to take another path.</item>
+        <item>Distract with books, movies, magazines, museums, a busy street or bustling park.</item>
+        <item>Force yourself to take these aspects of life or culture in even if you don’t feel like it.</item>
+        <item>Once you are involved your mind has a chance to take another path.</item>
         <item>Repeat the saying: “Grant me the serenity to accept the things I cannot change; change the things I can and wisdom to know the difference.”</item>
         <item>Repeat a comforting phrase, an affirmation, a prayer, a poem or a song to yourself. </item>
-        <item>Exercise or walk. Moving your body can move the content in your head. Notice aspects of nature or humanity that are larger than your conundrum. Try to focus on what is outside of you rather than inside of you.</item>
-        <item>If you are “catastrophizing” or “awfulizing,” think of all the times you were sure a horror would happen and it didn’t. Turning a hysterical assumption into an objective assessment can take away pain and calm you. Write down what you fear, the worst thing that can happen, and then write down three more positive outcomes. Try to figure out what is most realistic. Try to be measured.        </item>
     </string-array>
 
 
     <string-array name="didactic_content2">
         <item>Count your blessings instead of sheep, in the words of composer Irving Berlin. Research shows that a grateful person is a happy person.</item>
-        <item>Listen to music that has meaning for you or provides comfort, from your childhood or current times. Get swept up. Sing, dance or clean the car with the radio blasting Rolling Stones. Whatever.        </item>
+        <item>Listen to music that has meaning for you or provides comfort, from your childhood or current times. Get swept up. Sing, dance or clean the car with the radio blasting Rolling Stones. Whatever. </item>
         <item>Listen to radio programs that tells compelling stories about people who have undergone unusual struggles and triumphs. Watch a comedy channel.</item>
         <item>Make arrangements to meet a good friend who can be relied upon to have a sensitive response or to make you laugh.</item>
         <item>Trade heaviness for lightness even if that somehow feels wrong or unnatural or strange.</item>
@@ -135,67 +194,81 @@
     <string-array name="didactic_content3">
         <item>Re-write the narrative. Sometimes if we can find a way to soften the story, minimize the blows, tell ourselves that the injury is really not going to damage us, it restores a sense of empowerment and equilibrium. It also removes power from the perpetrator.</item>
         <item>Say, “Don’t think, don’t think, don’t think…” and then DO something: cook, scrub, fix, run, go somewhere and be around other people. Do a small project.</item>
-        <item>Gear up into high action: Accomplish more that you think you can, want to, or than you need. Get five things done instead of three. It might give you a rush. Get a little manic, in a good way.        </item>
         <item>Think about someone you know who is suffering and feel compassion. Call them or send them a message.</item>
     </string-array>
 
-
     <string-array name="didactic_content4">
-        <item>Take a boxing class if meditation does not work for you. Some people need to punch it out. My friend Betty wears pink boxing gloves to support breast cancer research.</item>
-        <item>Don’t hang out with a demon filled head.</item>
-        <item>1</item>
-        <item>3</item>
-        <item>5</item>
+        <item>Try to focus on what is outside of you rather than inside of you.</item>
+        <item>If you are “catastrophizing” or “awfulizing,” think of all the times you were sure a horror would happen and it didn’t.</item>
+        <item>Turning a hysterical assumption into an objective assessment can take away pain and calm you.</item>
+        <item>Write down what you fear, the worst thing that can happen, and then write down three more positive outcomes.</item>
+        <item>Try to figure out what is most realistic. Try to be measured.</item>
     </string-array>
 
     <string-array name="didactic_content5">
-        <item>Re-write the narrative. Sometimes if we can find a way to soften the story, minimize the blows, tell ourselves that the injury is really not going to damage us, it restores a sense of empowerment and equilibrium. It also removes power from the perpetrator.</item>
-        <item>Say, “Don’t think, don’t think, don’t think…” and then DO something: cook, scrub, fix, run, go somewhere and be around other people. Do a small project.</item>
-        <item>Gear up into high action: Accomplish more that you think you can, want to, or than you need. Get five things done instead of three. It might give you a rush. Get a little manic, in a good way.        </item>
-        <item>Think about someone you know who is suffering and feel compassion. Call them or send them a message.</item>
+        <item>Re-write the narrative.</item>
+        <item>Sometimes if we can find a way to soften the story, minimize the blows,</item>
+        <item>tell ourselves that the injury is really not going to damage us, it restores a sense of empowerment and equilibrium. </item>
+        <item>It also removes power from the perpetrator.</item>
     </string-array>
 
     <string-array name="didactic_content6">
-        <item>Re-write the narrative. Sometimes if we can find a way to soften the story, minimize the blows, tell ourselves that the injury is really not going to damage us, it restores a sense of empowerment and equilibrium. It also removes power from the perpetrator.</item>
-        <item>Say, “Don’t think, don’t think, don’t think…” and then DO something: cook, scrub, fix, run, go somewhere and be around other people. Do a small project.</item>
-        <item>Gear up into high action: Accomplish more that you think you can, want to, or than you need. Get five things done instead of three. It might give you a rush. Get a little manic, in a good way.        </item>
+        <item>Exercise or walk. Moving your body can move the content in your head.</item>
+        <item>Notice aspects of nature or humanity that are larger than your conundrum.</item>
         <item>Think about someone you know who is suffering and feel compassion. Call them or send them a message.</item>
     </string-array>
 
     <string-array name="didactic_content7">
-        <item>Re-write the narrative. Sometimes if we can find a way to soften the story, minimize the blows, tell ourselves that the injury is really not going to damage us, it restores a sense of empowerment and equilibrium. It also removes power from the perpetrator.</item>
-        <item>Say, “Don’t think, don’t think, don’t think…” and then DO something: cook, scrub, fix, run, go somewhere and be around other people. Do a small project.</item>
-        <item>Gear up into high action: Accomplish more that you think you can, want to, or than you need. Get five things done instead of three. It might give you a rush. Get a little manic, in a good way.        </item>
-        <item>Think about someone you know who is suffering and feel compassion. Call them or send them a message.</item>
+    <item>Gear up into high action.</item>
+    <item>Accomplish more that you think you can, want to, or than you need.</item>
+    <item>Get five things done instead of three. It might give you a rush. Get a little manic, in a good way. </item>
     </string-array>
 
     <string-array name="didactic_content8">
-        <item>Re-write the narrative. Sometimes if we can find a way to soften the story, minimize the blows, tell ourselves that the injury is really not going to damage us, it restores a sense of empowerment and equilibrium. It also removes power from the perpetrator.</item>
-        <item>Say, “Don’t think, don’t think, don’t think…” and then DO something: cook, scrub, fix, run, go somewhere and be around other people. Do a small project.</item>
-        <item>Gear up into high action: Accomplish more that you think you can, want to, or than you need. Get five things done instead of three. It might give you a rush. Get a little manic, in a good way.        </item>
-        <item>Think about someone you know who is suffering and feel compassion. Call them or send them a message.</item>
+        <item>Gear up into high action: </item>
+        <item>Accomplish more that you think you can, want to, or than you need.</item>
+        <item>Get five things done instead of three. It might give you a rush.</item>
+        <item>Get a little manic, in a good way.</item>
     </string-array>
 
     <string-array name="didactic_content9">
-        <item>Re-write the narrative. Sometimes if we can find a way to soften the story, minimize the blows, tell ourselves that the injury is really not going to damage us, it restores a sense of empowerment and equilibrium. It also removes power from the perpetrator.</item>
-        <item>Say, “Don’t think, don’t think, don’t think…” and then DO something: cook, scrub, fix, run, go somewhere and be around other people. Do a small project.</item>
-        <item>Gear up into high action: Accomplish more that you think you can, want to, or than you need. Get five things done instead of three. It might give you a rush. Get a little manic, in a good way.        </item>
-        <item>Think about someone you know who is suffering and feel compassion. Call them or send them a message.</item>
-    </string-array>
-
-    <string-array name="time_intervals_wpt">
-        <item>480</item> // 8 minutes
-        <item>300</item> // 5 minutes
-        <item>180</item> // 3 minutes
-    </string-array>
-
-    <string-array name="time_choices_wpt">
-        <item>8 minutes</item>
-        <item>5 minutes</item>
-        <item>3 minutes</item>
+        <item>Say, “Don’t think, don’t think, don’t think…” and then DO something:</item>
+        <item>...cook, scrub, fix, run, go somewhere and be around other people.</item>
+        <item>Do a small project.</item>
     </string-array>
 
 
+    <!-- Rumination tool menu -->
+    <string name="tool_chooser_name">Tools</string>
+    <string name="desc_tool_chooser">Tools to help you cope with worries</string>
+    <string name="worry_log_subtitle">Concerns you\'ve been working on.</string>
+    <string name="rum_tools_title">Rumination Tools</string>
+
+    <!-- Tool use log -->
+    <string name="wpt_use">Worry Practices: </string>
+    <string name="worry_log_use">Logged Worries: </string>
+    <string name="didactic_content_use">Strategies Viewed:</string>
+    <string name="tool_log_title">Worry Stats</string>
+    <string name="tool_use_log">Stats</string>
+    <string name="desc_tool_chooser_log">The work you\'ve done</string>
+
+    <!-- nudges in tool use log -->
+    <string-array name="practice_prompt">
+        <item>It\'s nice to fence in worry time.</item>
+        <item>Practice Worrying.</item>
+    </string-array>
+
+    <string-array name="log_prompt">
+        <item>Log it and forget it.</item>
+        <item>Log your worries.</item>
+    </string-array>
+
+    <string-array name="didactic_prompt">
+        <item>Bessie knows how to cope with worrying.</item>
+        <item>Learn to cope with worries.</item>
+    </string-array>
+
+    <!-- Database -->
     <string name="db_create_wizard_one_table">CREATE TABLE IF NOT EXISTS wizard_one (
 	_id INTEGER PRIMARY KEY,
 	attempted_stop_method VARCHAR,
@@ -211,8 +284,7 @@
 	_id INTEGER PRIMARY KEY,
 	concerns VARCHAR,
 	help_frequency INTEGER,
-    profile_timestamp INTEGER,
-	ruminating_lately BOOLEAN)
+    profile_timestamp INTEGER)
     </string>
 
     <string name="db_create_wpt_use_table">CREATE TABLE IF NOT EXISTS wpt_use (
@@ -226,83 +298,5 @@
     <string name="db_create_didactic_use_table">CREATE TABLE IF NOT EXISTS didactic_use (
 	_id INTEGER PRIMARY KEY,
     didactic_timestamp INTEGER)</string>
-
-
-    <string name="nope">Talk to bessie more.</string>
-    <string name="question_ruminating_lately">Have you been ruminating lately?</string>
-    <string name="question_rumination_content">What have you been ruminating about?</string>
-    <string name="question_help_frequency">How often would you like help?</string>
-    <string name="times_per_day">time(s) per day</string>
-    <string name="reset">RESET</string>
-    <string name="Stop">Stop</string>
-    <string name="wpt_instructions_title">Using the Worry Practice Tool</string>
-    <string name="ok">OK</string>
-    <string name="time_picker_title">Choose how long you wish to ruminate</string>
-    <string name="wizard_one_title">Rumination Record</string>
-    <string name="profile_title">Create Your Profile</string>
-    <string name="action_save_profile">Save Profile</string>
-    <string name="toast_profile_recorded">Your profile has been saved.</string>
-    <string name="rumination_log_title">Worry Log</string>
-    <string name="profile_wizard">Amend Profile</string>
-    <string name="desc_profile_wizard">Tell Bessie about yourself</string>
-    <string name="tool_rumination_log">Access Log</string>
-    <string name="desc_rumination_log">What\'s been on your mind</string>
-    <string name="title_settings">Settings</string>
-    <string name="profile_note_title">Fill out your profile</string>
-    <string name="profile_note_message">Tell Bessie what is on your mind.</string>
-    <string name="help_note_title">ru-MOO-nating?</string>
-    <string name="help_note_message">Try a rumination tool.</string>
-    <string name="tool_chooser_name">Use tools</string>
-    <string name="desc_tool_chooser">Tools to help you cope with worries</string>
-    <string name="worry_log_subtitle">Concerns you\'ve been working on.</string>
-    <string name="rum_tools_title">Rumination Tools</string>
-    <string name="main_activity_title">Main Paddock</string>
-    <string name="wpt_use">You\'ve used the WPT </string>
-    <string name="worry_log_use">You\'ve used the worry log</string>
-    <string name="didactic_content_use">You\'ve used didactic content</string>
-    <string name="tool_log_title">Worry Battles Fought and Won</string>
-    <string name="tool_use_log">Access Tool Use Stats</string>
-    <string name="desc_tool_chooser_log">The work you\'ve done</string>
-
-
-    <string-array name="practice_prompt">
-        <item>It\'s nice to fence in worry time.</item>
-        <item>Tried the WPT lately?</item>
-
-    </string-array>
-
-    <string-array name="log_prompt">
-        <item>Log it and forget it.</item>
-        <item>Tried the worry logger lately?</item>
-    </string-array>
-
-    <string-array name="didactic_prompt">
-        <item>Bessie knows how to cope with worrying.</item>
-        <item>Try some slide shows to learn to cope with worries.</item>
-    </string-array>
-
-    <string-array name="emotions">
-        <item>Joy</item>
-        <item>Contentment</item>
-        <item>Pride</item>
-        <item>Optimism</item>
-        <item>Entrhallment</item>
-        <item>Relief</item>
-        <item>Surprise</item>
-        <item>Anger</item>
-        <item>Exasperation</item>
-        <item>Rage</item>
-        <item>Disgust</item>
-        <item>Envy</item>
-        <item>Torment</item>
-        <item>Sadness</item>
-        <item>Disappointment</item>
-        <item>Shame</item>
-        <item>Neglect</item>
-        <item>Sympathy</item>
-        <item>Fear</item>
-        <item>Nervousness</item>
-    </string-array>
-
 
 </resources>

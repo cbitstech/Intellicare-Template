@@ -74,6 +74,7 @@ public class ProfileActivity extends Activity {
             ContentValues values = new ContentValues();
             HashMap<String, Object> payload = new HashMap<String, Object>();
 
+            /*
             RadioGroup rumLately = (RadioGroup) this.findViewById(R.id.radios_ruminating_lately);
             int rumChecked = rumLately.getCheckedRadioButtonId();
 
@@ -85,7 +86,7 @@ public class ProfileActivity extends Activity {
 
             values.put(RuminantsContentProvider.PROFILE_RUMINATING_LATELY, (rumChecked == R.id.rum_yes));
 
-            payload.put("ruminating_lately", (rumChecked == R.id.rum_yes));
+            payload.put("ruminating_lately", (rumChecked == R.id.rum_yes)); */
 
             EditText help = (EditText) this.findViewById(R.id.editText_help_frequency);
 
