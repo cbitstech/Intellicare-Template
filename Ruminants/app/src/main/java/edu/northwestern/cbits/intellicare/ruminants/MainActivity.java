@@ -16,7 +16,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class MainActivity extends Activity
+import edu.northwestern.cbits.intellicare.ConsentedActivity;
+
+public class MainActivity extends ConsentedActivity
 {
     public static final String RUNBEFORE = "runBefore";
 

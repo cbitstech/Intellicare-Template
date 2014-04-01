@@ -8,11 +8,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
 
 import java.util.Calendar;
+
+import edu.northwestern.cbits.intellicare.StatusNotificationManager;
 
 /**
  * Created by Gwen on 3/14/14.
@@ -21,8 +24,8 @@ public class ScheduleManager {
 //    public static final String REMINDER_HOUR = "preferred_hour";
 //    public static final String REMINDER_MINUTE = "preferred_minutes";
 
-    public static final int DEFAULT_PROFILE_HOUR = 9;
-    public static final int DEFAULT_PROFILE_MINUTE = 00;
+    public static final int DEFAULT_PROFILE_HOUR = 16;
+    public static final int DEFAULT_PROFILE_MINUTE = 35;
 
 //    private static final String LAST_PROFILE_NOTIFICATION = "last_notification";
 //    private static final String LAST_PROFILE_NOTIFICATION = "last_notification";
@@ -131,11 +134,14 @@ public class ScheduleManager {
             Intent intent = new Intent(this._context, ToolChooserActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
+            String title = this._context.getString(R.string.help_note_title);
+            String message = this._context.getString(R.string.help_note_message);
+
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this._context);
             builder.setContentIntent(pendingIntent);
             builder.setAutoCancel(true);
-            builder.setContentTitle(this._context.getString(R.string.help_note_title));
-            builder.setContentText(this._context.getString(R.string.help_note_message));
+            builder.setContentTitle(title);
+            builder.setContentText(message);
             builder.setTicker(this._context.getString(R.string.help_note_message));
             builder.setSmallIcon(R.drawable.ic_action_star);
 
@@ -143,6 +149,10 @@ public class ScheduleManager {
 
             NotificationManager noteManager = (NotificationManager) this._context.getSystemService(android.content.Context.NOTIFICATION_SERVICE);
             noteManager.notify(ScheduleManager.HELPER_NOTIFICATION_ID, note);
+
+            Uri u = Uri.parse("intellicare://ruminants/tool-chooser");
+
+            StatusNotificationManager.getInstance(this._context).notifyBigText(ScheduleManager.HELPER_NOTIFICATION_ID, R.drawable.ic_action_star, title, message, pendingIntent, u);
         }
     }
 }

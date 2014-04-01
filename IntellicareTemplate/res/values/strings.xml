@@ -165,8 +165,7 @@
 	
 	<string name="title_beta_testing">Pardon our dust</string>
 	<string name="message_beta_testing">We appreciate that you downloaded and will be using this app.\n\nPlease keep in mind that it\'s still under active development. If you experience an issue, please let us know by sending an e-mail from the Feedback item in the Options menu.</string>
-	<string name="button_continue">Continue</string>
-	
+
 	<string name="email_feedback_address">c-karr@northwestern.edu</string>
 	<string name="email_feedback_subject" formatted="false">Feedback: %s</string>
 	<string name="email_feedback_body" formatted="false">Have thoughts about %s? Let us know!</string>
