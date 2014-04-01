@@ -2,6 +2,7 @@ package edu.northwestern.cbits.intellicare.mantra.activities;
 
 import java.util.Date;
 
+import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.mantra.NotificationAlarm;
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusBoardCursor;
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusImageCursor;
@@ -54,7 +55,7 @@ import android.widget.GridView;
  * @author mohrlab
  *
  */
-public class NoFragmentsHomeActivity extends ActionBarActivity {
+public class NoFragmentsHomeActivity extends ConsentedActivity {
 	
 	private static final String CN = "NoFragmentsHomeActivity";
 	
