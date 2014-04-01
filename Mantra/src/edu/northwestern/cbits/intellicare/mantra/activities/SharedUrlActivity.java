@@ -111,7 +111,7 @@ public class SharedUrlActivity extends Activity {
 		// setup external intent-handler
 		handleExternalIntents();
 	}
-
+	
 	
 	/**
 	 * Handles the response from the image gallery activity.
@@ -173,6 +173,8 @@ public class SharedUrlActivity extends Activity {
 		        	intent.putExtra(ProgressActivity.INTENT_KEY_TYPE_GETIMAGESANDSIZES, ProgressActivity.INTENT_VAL_TYPE_GETIMAGESANDSIZES);
 		        	intent.putExtra("url", url);
 		        	startActivity(intent);
+//		        	self.finish();		// TODO: eliminates the stale SUA instance, but prevents MediaScannerService from broadcasting to this activity... what to do?
+//		        	self.moveTaskToBack(true);		// bad idea (progress bar doesn't display) from: http://stackoverflow.com/questions/6339420/hide-activity-without-finish
 		            break;
 
 		        case DialogInterface.BUTTON_NEGATIVE:
