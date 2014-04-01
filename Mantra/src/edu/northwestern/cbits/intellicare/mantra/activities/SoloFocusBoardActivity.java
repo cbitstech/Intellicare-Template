@@ -88,9 +88,7 @@ public class SoloFocusBoardActivity extends ActionBarActivity {
 			e.printStackTrace();
 		}
 
-		
 		attachGridView();
-
 	}
 	
 	/**

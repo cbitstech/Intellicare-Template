@@ -75,9 +75,11 @@ public class ScheduleManager {
 
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
+        int day = c.get(Calendar.DAY_OF_WEEK);
 
         // Profile notification...
-        if (hour == ScheduleManager.DEFAULT_PROFILE_HOUR && minute == ScheduleManager.DEFAULT_PROFILE_MINUTE)
+        if (hour == ScheduleManager.DEFAULT_PROFILE_HOUR && minute == ScheduleManager.DEFAULT_PROFILE_MINUTE &&
+                Calendar.MONDAY == day)
         {
             Intent intent = new Intent(this._context, ProfileActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
@@ -88,7 +90,7 @@ public class ScheduleManager {
             builder.setContentTitle(this._context.getString(R.string.profile_note_title));
             builder.setContentText(this._context.getString(R.string.profile_note_message));
             builder.setTicker(this._context.getString(R.string.profile_note_message));
-            builder.setSmallIcon(R.drawable.clock_checklist_dark);
+            builder.setSmallIcon(R.drawable.ic_action_chat);
 
             Notification note = builder.build();
 
@@ -135,7 +137,7 @@ public class ScheduleManager {
             builder.setContentTitle(this._context.getString(R.string.help_note_title));
             builder.setContentText(this._context.getString(R.string.help_note_message));
             builder.setTicker(this._context.getString(R.string.help_note_message));
-            builder.setSmallIcon(R.drawable.clock_checklist_dark);
+            builder.setSmallIcon(R.drawable.ic_action_star);
 
             Notification note = builder.build();
 

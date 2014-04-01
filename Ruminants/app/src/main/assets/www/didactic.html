@@ -10,24 +10,10 @@
 <script type="text/javascript" src="js/bootstrap-progressbar.js"></script>
 <script type="text/javascript" src="js/bootstrap.js"></script>
 <script>
-	
+
 	$( document ).ready(function() {
 		$('.pun').corner("30px");
-		$('.progress .progress-bar').progressbar();
 });
-
-    Progressbar.defaults = {
-        transition_delay: 200,
-        refresh_speed: 50,
-        display_text: 'none',
-        use_percentage: true,
-        percent_format: function(percent) { return percent + '%'; },
-        amount_format: function(amount_part, amount_total) { return amount_part + ' / ' + amount_total; },
-        update: $.noop,
-        done: $.noop,
-        fail: $.noop
-    };
-
 </script>
 </head>
 
@@ -38,14 +24,12 @@
     <img id="bessie" src="bessie.png" />
 </div>
 
-<div id="field">
-    <h2>Bessie sez:</h2>
-    <div class="pun"><p>'{{pun}}'</p></div>
-    <h2> {{page}} </h2>
-    <div class="progress progress-striped">
-        <div class="progress progress-bar" role="progressbar" aria-valuetransitiongoal="{{progress}}"></div>
+    <div id="field">
+        <h2>Bessie thinks:</h2>
+        <div class="pun"><p>'{{pun}}'</p></div>
+        <h1> {{page}} </h1>
+
     </div>
-</div>
 </div>
 </body>
 </html>

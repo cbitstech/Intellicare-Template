@@ -10,10 +10,12 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +24,7 @@ public class WizardOneActivity extends Activity
 
     private static final String SELECTED_RADIO_ISRUM = "selected_radio_isrum";
     private static final String SELECTED_RUM_TRIGGER = "selected_trigger";
-    private static final String SELECTED_RADIO_EMO = "selected_radio_emo";
+    private static final String SELECTED_SPINNER_EMO = "selected_spinner_emo";
     private static final String SELECTED_RUM_DURATION = "selected_rum_duration";
     private static final String SELECTED_RUM_ATTEMPTED_STOP_METHODS = "attempted_stop_methods";
     //private static final String SELECTED_RUM_CONTENT = "rumination_content";
@@ -42,11 +44,8 @@ public class WizardOneActivity extends Activity
         if (rumChecked != -1)
             outState.putInt(WizardOneActivity.SELECTED_RADIO_ISRUM, rumChecked);
 
-        RadioGroup emoRadios = (RadioGroup) this.findViewById(R.id.radios_emotion);
-        int emoChecked = emoRadios.getCheckedRadioButtonId();
-
-        if (emoChecked != -1)
-            outState.putInt(WizardOneActivity.SELECTED_RADIO_EMO, rumChecked);
+        /*RadioGroup emoRadios = (RadioGroup) this.findViewById(R.id.radios_emotion);
+        int emoChecked = emoRadios.getCheckedRadioButtonId(); */
 
         if (this._rumDuration != -1)
             outState.putInt(WizardOneActivity.SELECTED_RUM_DURATION, this._rumDuration);
@@ -72,6 +71,15 @@ public class WizardOneActivity extends Activity
         //this.getSupportActionBar().setTitle(R.string.wizard_one_title);
 
         final WizardOneActivity me = this;
+
+        Spinner spinner = (Spinner) findViewById(R.id.emotion_spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.emotions, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
 
         final TextView duration = (TextView) this.findViewById(R.id.label_rumination_duration);
 
@@ -125,11 +133,9 @@ public class WizardOneActivity extends Activity
             {
 
             }
+
         });
 
-        RadioGroup preEmo = (RadioGroup) this.findViewById(R.id.radios_emotion);
-        if (savedInstanceState.containsKey(WizardOneActivity.SELECTED_RADIO_EMO))
-            preEmo.check(savedInstanceState.getInt(WizardOneActivity.SELECTED_RADIO_EMO));
 
         RadioGroup rumination = (RadioGroup) this.findViewById(R.id.radios_ruminating);
         if (savedInstanceState.containsKey(WizardOneActivity.SELECTED_RADIO_ISRUM))
@@ -182,8 +188,9 @@ public class WizardOneActivity extends Activity
                 return true;
             }
 
-            RadioGroup emoRadios = (RadioGroup) this.findViewById(R.id.radios_emotion);
-            int emoChecked = emoRadios.getCheckedRadioButtonId();
+            /*
+            Spinner emotionSpinner = (Spinner) this.findViewById(R.id.emotion_spinner);
+            int emoChecked = emotionSpinner.getSelectedItem();
 
             if (emoChecked == -1)
             {
@@ -193,7 +200,7 @@ public class WizardOneActivity extends Activity
 
             // ??
             values.put(RuminantsContentProvider.WIZARD_ONE_EMOTION, (emoChecked == R.id.emotion_one));
-            payload.put("emotion", (emoChecked == R.id.emotion_one));
+            payload.put("emotion", (emoChecked == R.id.emotion_one)); */
 
 
             // toast required if not completed

@@ -2,26 +2,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="12dp">
-    <LinearLayout android:orientation="vertical"
-        android:layout_width="0dp"
+    android:orientation="vertical"
+    android:padding="4dp"
+    android:gravity="bottom"
+    android:weightSum="1"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp">
+
+    <TextView android:id="@+id/tool_use"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="20sp"
+        android:layout_margin="6dp"
+        android:textStyle="italic" />
+
+    <LinearLayout android:id="@+id/goto_tool"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1">
-        <TextView android:id="@+id/tool_use"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="22sp" />
+        android:weightSum="1"
+        android:layout_weight="2.35"
+        android:minHeight="72dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp">
+
         <TextView android:id="@+id/tool_prompt"
-            android:layout_width="match_parent"
+            android:layout_width="260dp"
+            android:layout_height="match_parent"
+            android:textSize="24sp"
+            android:layout_gravity="top"
+            android:layout_marginRight="6dp"
+            android:layout_marginLeft="6dp"
+            android:gravity="left" />
+
+        <ImageView android:id="@+id/tool_icon"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp" />
+            android:src="@drawable/clock_checklist_dark"
+            layout_width="wrap_content"
+            android:layout_gravity="right"
+            android:minWidth="48dp"
+            android:minHeight="48dp" />
+
     </LinearLayout>
-    <ImageView android:id="@+id/tool_icon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginRight="8dp"
-        android:src="@drawable/clock_checklist_dark"
-        android:layout_gravity="top"
-        layout_width="wrap_content" />
+
 </LinearLayout>

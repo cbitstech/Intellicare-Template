@@ -160,7 +160,7 @@ public class NotificationAlarm extends BroadcastReceiver
 				 };
 		 Cursor imagesMediaCursor = context.getContentResolver().query(mediaImagesUri, imagesMediaProjection, null, null, null);
 		 ArrayList<String> ids = new ArrayList<String>();
-		 Util.logCursor(imagesMediaCursor);
+//		 Util.logCursor(imagesMediaCursor);
 		 
 		 while(imagesMediaCursor.moveToNext()) {
 			 long imageDateTaken = imagesMediaCursor.getLong(imagesMediaCursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));

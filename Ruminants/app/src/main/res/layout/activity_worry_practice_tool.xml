@@ -3,7 +3,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff">
+    android:background="#fff"
+    android:weightSum="1">
 
     <TextView
         android:layout_width="fill_parent"
@@ -73,8 +74,7 @@
             android:background="#7cbc6e"
             android:padding="12dp"
             android:layout_marginRight="6dp"
-            android:singleLine="false"
-            android:shadowColor="#636363" />
+            android:singleLine="false" />
 
         <Button
             android:layout_width="wrap_content"
@@ -106,10 +106,10 @@
         android:shadowColor="#636363" />
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="276dp"
+        android:layout_height="match_parent"
         android:id="@+id/imageView"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/bessie" />
+        android:src="@drawable/exercising" />
 
 </LinearLayout>

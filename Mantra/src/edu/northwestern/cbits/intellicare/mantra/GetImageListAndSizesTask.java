@@ -43,9 +43,9 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 	private final View progressBarView;
 		
 //	public GetImageListAndSizesTask(SharedUrlActivity sua, ProgressBar p) {
-	public GetImageListAndSizesTask(Activity sua, ProgressBar p, View pbv) {
+	public GetImageListAndSizesTask(Activity a, ProgressBar p, View pbv) {
 //		public GetImageListAndSizesTask(ProgressBar p) {
-		activity = sua;
+		activity = a;
 		progressBar = p;
 		Log.d(CN+".GetImageListAndSizesTask", "pbv == null = " + (pbv == null));
 		progressBarView = pbv;
@@ -82,16 +82,16 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 				}
 				
 				// process the set of images to download
-//				GetImageListAndSizesTaskBackgroundReturn ret = new GetImageListAndSizesTaskBackgroundReturn(url, imageUrlsAndSizes);
 				GetImageListAndSizesTaskBackgroundReturn ret = new GetImageListAndSizesTaskBackgroundReturn(url, imagesToDownload);
 				return ret;
 			}
-			catch(SocketTimeoutException e) { displayNetworkExceptionMessage(url, e); }
-			catch(UnknownHostException e) { displayNetworkExceptionMessage(url, e); }
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
+			catch(RuntimeException e) { System.out.println("1"); e.printStackTrace(); }
+			catch(SocketTimeoutException e) { System.out.println("2W");displayNetworkExceptionMessage(url, e); }
+			catch(UnknownHostException e) { System.out.println("3");displayNetworkExceptionMessage(url, e); }
+			catch (IOException e) { System.out.println("4");displayNetworkExceptionMessage(url, e); }
+		} 
+		catch (Exception e) {System.out.println("5"); e.printStackTrace(); }
+
 		return null;
 	}
 	
@@ -107,18 +107,11 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 
 	@Override
 	protected void onPostExecute(GetImageListAndSizesTaskBackgroundReturn backgroundRet) {
-		// select the set of images to download, using some heuristic function
-//		Map<String, Integer> imagesToDownload = new HashMap<String, Integer>();
-//		for(String key : backgroundRet.imageUrlsAndSizes.keySet()) {
-//			int sz = backgroundRet.imageUrlsAndSizes.get(key);
-//			Log.d(CN + ".onPostExecute", "size = " + sz + " for image " + key);
-//			if(SharedUrlActivity.shouldDownloadImage(sz)) {
-//				imagesToDownload.put(key, sz);
-//			}
-//		}
-
 		// fetch the selected images from their URLs and save to the temp folder
 		Log.d(CN+".onPostExecute", "progressBarView == null = " + (progressBarView == null));
+		if(backgroundRet == null) { 
+			return;
+		}
 		new GetImagesTask(progressBar).execute(
 				new GetImagesTaskParams(backgroundRet.imagesToDownload, activity, progressBar, progressBarView)
 			);
@@ -128,16 +121,24 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 	 * @param url
 	 * @param e 
 	 */
-	private void displayNetworkExceptionMessage(String url, IOException e) {
+	private void displayNetworkExceptionMessage(final String url, final IOException e) {
 		e.printStackTrace();
-		AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this.activity);
-		dlgAlert.setMessage("Network error. Are you connected to the Internet? Error message for URL (" + url + "): " + e.getMessage());
-		dlgAlert.setPositiveButton("OK",
-			    new DialogInterface.OnClickListener() {
-			        public void onClick(DialogInterface dialog, int which) {
-			          //dismiss the dialog  
-			        }
-			    });
+		activity.runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(activity);
+				dlgAlert.setMessage("Network error. Are you connected to the Internet? Error message for URL (" + url + "): " + e.getMessage());
+				dlgAlert.setPositiveButton("OK",
+					    new DialogInterface.OnClickListener() {
+					        public void onClick(DialogInterface dialog, int which) {
+					          activity.finish();
+					        	//dismiss the dialog  
+					        }
+					    });
+				dlgAlert.create().show();
+			}
+		});
 	}
 	
 }

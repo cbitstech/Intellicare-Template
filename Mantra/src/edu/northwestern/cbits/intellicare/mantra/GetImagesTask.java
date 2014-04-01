@@ -92,7 +92,14 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 			int imageSize = imagesToDownload.get(url);
 			totalSize += imageSize;
 			currentProgressActionTextValue = "(" + imageSize + " bytes) Downloading: " + url;
-	        publishProgress();
+	        activity.runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					publishProgress();
+				}
+			});
+			
 	        // Escape early if cancel() is called
 	        if (isCancelled()) break;
 			

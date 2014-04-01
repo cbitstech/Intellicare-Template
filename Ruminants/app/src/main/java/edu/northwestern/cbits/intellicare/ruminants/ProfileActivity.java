@@ -23,25 +23,6 @@ public class ProfileActivity extends Activity {
     private static final String SELECTED_HELP_FREQUENCY = "help_frequency";
     private static final String SELECTED_ISSUES = "commonly_encountered_issues";
 
-
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        ContentValues values = new ContentValues();
-
-        RadioGroup rumLately = (RadioGroup) this.findViewById(R.id.radios_ruminating_lately);
-        int rumChecked = rumLately.getCheckedRadioButtonId();
-
-        if (rumChecked != -1)
-            outState.putInt(ProfileActivity.SELECTED_RADIO_RUMINATING_LATELY, rumChecked);
-
-        EditText help = (EditText) this.findViewById(R.id.editText_help_frequency);
-        outState.putString(ProfileActivity.SELECTED_HELP_FREQUENCY, help.getEditableText().toString());
-
-        EditText issues = (EditText) this.findViewById(R.id.field_rumination_content);
-        outState.putString(ProfileActivity.SELECTED_ISSUES, issues.getEditableText().toString());
-    }
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -80,9 +61,20 @@ public class ProfileActivity extends Activity {
     {
         if (item.getItemId() == R.id.action_profile_save)
         {
+/*            RadioGroup rumLately = (RadioGroup) this.findViewById(R.id.radios_ruminating_lately);
+            int rumChecked = rumLately.getCheckedRadioButtonId();
+
+            if (rumChecked != -1)
+                outState.putInt(ProfileActivity.SELECTED_RADIO_RUMINATING_LATELY, rumChecked);
+
+
+            EditText issues = (EditText) this.findViewById(R.id.field_rumination_content);
+            outState.putString(ProfileActivity.SELECTED_ISSUES, issues.getEditableText().toString());
+*/
             ContentValues values = new ContentValues();
             HashMap<String, Object> payload = new HashMap<String, Object>();
 
+            /*
             RadioGroup rumLately = (RadioGroup) this.findViewById(R.id.radios_ruminating_lately);
             int rumChecked = rumLately.getCheckedRadioButtonId();
 
@@ -94,10 +86,13 @@ public class ProfileActivity extends Activity {
 
             values.put(RuminantsContentProvider.PROFILE_RUMINATING_LATELY, (rumChecked == R.id.rum_yes));
 
-            payload.put("ruminating_lately", (rumChecked == R.id.rum_yes));
+            payload.put("ruminating_lately", (rumChecked == R.id.rum_yes)); */
 
+            EditText help = (EditText) this.findViewById(R.id.editText_help_frequency);
 
-            values.put(RuminantsContentProvider.PROFILE_HELP_FREQUENCY, SELECTED_HELP_FREQUENCY);
+            int n = Integer.parseInt(help.getEditableText().toString());
+
+            values.put(RuminantsContentProvider.PROFILE_HELP_FREQUENCY, n);
             payload.put("help_frequency", SELECTED_HELP_FREQUENCY);
 
             // toast required if not completed

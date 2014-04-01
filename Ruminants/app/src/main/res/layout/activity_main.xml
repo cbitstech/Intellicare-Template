@@ -4,19 +4,6 @@
     android:orientation="vertical"
     android:background="#ffffff">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/main_activity_title"
-        android:id="@+id/textView"
-        android:layout_weight="3"
-        android:layout_gravity="center_horizontal"
-        android:gravity="fill_horizontal"
-        android:padding="12dp"
-        android:textStyle="bold"
-        android:textSize="28sp" />
-
     <ListView android:id="@+id/list_tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,10 +12,11 @@
         android:layout_marginRight="6dp" />
 
     <ImageView
-        android:layout_width="144dp"
-        android:layout_height="144dp"
+        android:layout_width="181dp"
+        android:layout_height="175dp"
         android:id="@+id/imageView"
         android:baselineAlignBottom="true"
-        android:src="@drawable/bessie_placeholder"
-        android:layout_gravity="center_horizontal" />
+        android:src="@drawable/distracted"
+        android:layout_gravity="center_horizontal"
+        android:minHeight="150dp" />
 </LinearLayout>
