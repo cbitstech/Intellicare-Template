@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.zip.Inflater;
 
+import edu.northwestern.cbits.intellicare.mantra.activities.ProgressActivity;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaScannerConnection;
@@ -19,13 +21,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import edu.northwestern.cbits.intellicare.mantra.activities.SharedUrlActivity;
 
 
 class GetImagesTaskBackgroundRet {
 	String saveFolderPath;
-	SharedUrlActivity activity;
-	public GetImagesTaskBackgroundRet(String p, SharedUrlActivity a) { saveFolderPath = p; activity = a; }
+	ProgressActivity activity;
+	public GetImagesTaskBackgroundRet(String p, ProgressActivity a) { saveFolderPath = p; activity = a; }
 }
 
 
@@ -55,7 +56,6 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 	protected Object doInBackground(GetImagesTaskParams... arg0) {
 		final Activity activity = arg0[0].activity;
 		Map<String, Integer> imagesToDownload = arg0[0].imagesToDownload;
-//		progress = arg0[0].progress;
 		progressBarView = arg0[0].progressBarView;
 		
 		currentProgressActionText = (TextView) progressBarView.findViewById(R.id.currentProgressAction);
@@ -117,7 +117,7 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 		mediaScannerIntent.putExtra(MediaScannerService.INTENT_KEY_FILE_PATHS_TO_SCAN, fullFilePathsToScan);
 		activity.startService(mediaScannerIntent);
 		
-		activity.finish();
+//		activity.finish();
 		
 		long endTime = System.currentTimeMillis();
 		Log.d(CN+".GetImagesTask.doInBackground", "exiting; ELAPSED TIME (ms) = " + ((double)endTime - startTime));

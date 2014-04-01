@@ -14,18 +14,16 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
-import edu.northwestern.cbits.intellicare.mantra.activities.SharedUrlActivity;
+import edu.northwestern.cbits.intellicare.mantra.activities.ProgressActivity;
 
 /**** Async tasks *****/
 
 
 class GetImageListAndSizesTaskBackgroundReturn {
 	protected String url;
-//	protected Map<String, Integer> imageUrlsAndSizes;
 	public Map<String, Integer> imagesToDownload;
 	public GetImageListAndSizesTaskBackgroundReturn(String u, Map<String, Integer> m) {
 		url = u;
-//		imageUrlsAndSizes = m;
 		imagesToDownload = m;
 	}
 }
@@ -44,7 +42,6 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 		
 //	public GetImageListAndSizesTask(SharedUrlActivity sua, ProgressBar p) {
 	public GetImageListAndSizesTask(Activity a, ProgressBar p, View pbv) {
-//		public GetImageListAndSizesTask(ProgressBar p) {
 		activity = a;
 		progressBar = p;
 		Log.d(CN+".GetImageListAndSizesTask", "pbv == null = " + (pbv == null));
@@ -76,7 +73,7 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 				for(String key : imageUrlsAndSizes.keySet()) {
 					int sz = imageUrlsAndSizes.get(key);
 					Log.d(CN + ".onPostExecute", "size = " + sz + " for image " + key);
-					if(SharedUrlActivity.shouldDownloadImage(sz)) {
+					if(ProgressActivity.shouldDownloadImage(sz)) {
 						imagesToDownload.put(key, sz);
 					}
 				}
@@ -102,7 +99,6 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 			Log.d(CN+".onProgressUpdate", values[i].toString());
 		}
 		progressBar.incrementProgressBy(1);
-//		currentProgressBarValue++;
 	}
 
 	@Override

@@ -37,23 +37,6 @@
         <receiver android:name="edu.northwestern.cbits.intellicare.mantra.NotificationAlarm" >
         </receiver>
 
-        <!--
-        <activity
-            android:name="edu.northwestern.cbits.intellicare.mantra.activities.HomeActivity"
-            android:label="@string/app_name"
-            android:uiOptions="splitActionBarWhenNarrow" >
-            <meta-data
-                android:name="android.support.UI_OPTIONS"
-                android:value="splitActionBarWhenNarrow" />
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        -->
-
         <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.NoFragmentsHomeActivity"
             android:label="@string/app_name" >
@@ -82,43 +65,8 @@
         <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.SharedUrlActivity"
             android:label="@string/title_activity_shared_url" >
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:mimeType="text/plain" />
-            </intent-filter>
         </activity>
-        <!--
-        <activity
-            android:name="edu.northwestern.cbits.intellicare.mantra.activities.FocusBoardActivity"
-            android:label="@string/focus_board_label"
-            android:parentActivityName=".activities.HomeActivity"
-            android:uiOptions="splitActionBarWhenNarrow" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.HomeActivity" />
-            <meta-data
-                android:name="android.support.UI_OPTIONS"
-                android:value="splitActionBarWhenNarrow" />
-        </activity>
-        -->
-        <!--
-        <activity
-            android:name="edu.northwestern.cbits.intellicare.mantra.activities.SoloFocusBoardActivity"
-            android:label="@string/focus_board_label"
-            android:parentActivityName=".activities.HomeActivity"
-            android:uiOptions="splitActionBarWhenNarrow" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.HomeActivity" />
-            <meta-data
-                android:name="android.support.UI_OPTIONS"
-                android:value="splitActionBarWhenNarrow" />
-        </activity>
-        -->
+ 
         <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.SoloFocusBoardActivity"
             android:label="@string/focus_board_label"
@@ -126,11 +74,7 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.NoFragmentsHomeActivity" />
-            <!--
-                 <meta-data
-                android:name="android.support.UI_OPTIONS"
-                android:value="false" />
-            -->
+
         </activity>
         <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.SettingsActivity"
@@ -151,6 +95,16 @@
         <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.ProgressActivity"
             android:label="@string/title_activity_progress" >
+            
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            
         </activity>
     </application>
 
