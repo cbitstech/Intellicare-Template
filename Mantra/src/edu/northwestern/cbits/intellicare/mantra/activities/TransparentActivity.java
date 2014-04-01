@@ -23,7 +23,6 @@ public class TransparentActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.activity_transparent);
 		
 		if(getIntent().getExtras().getBoolean(INTENT_IMAGES_FOUND)) {
 			displayImagesFoundDialog(this);
@@ -46,9 +45,9 @@ public class TransparentActivity extends Activity {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				Log.d(CN+".dialogOnNewPhotos", "yes path");
-	    		Intent sua = new Intent(activity, SharedUrlActivity.class);
-	    		sua.putExtra(MediaScannerService.INTENT_KEY_TO_RECEIVER_STRINGARRAY, true);
-	    		activity.startActivity(sua);
+	    		Intent pa = new Intent(activity, ProgressActivity.class);
+	    		pa.putExtra(MediaScannerService.INTENT_KEY_TO_RECEIVER_STRINGARRAY, true);
+	    		activity.startActivity(pa);
 			}
 		});
 		dlg1.setNegativeButton("No", new OnClickListener() {

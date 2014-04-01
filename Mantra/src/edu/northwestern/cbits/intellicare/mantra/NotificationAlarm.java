@@ -7,7 +7,6 @@ import java.util.Date;
 
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusBoardCursor;
 import edu.northwestern.cbits.intellicare.mantra.activities.ReviewActivity;
-import edu.northwestern.cbits.intellicare.mantra.activities.SharedUrlActivity;
 import edu.northwestern.cbits.intellicare.mantra.activities.TransparentActivity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;

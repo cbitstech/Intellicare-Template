@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import edu.northwestern.cbits.intellicare.mantra.activities.SharedUrlActivity;
 
 /**
  * DTO containing image-fetching async task params.
