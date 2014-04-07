@@ -49,7 +49,7 @@ public class WorryPracticeActivity extends Activity  {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         final WorryPracticeActivity me = this;
 
-        int selectedDuration = prefs.getInt(WorryPracticeActivity.LAST_SELECTED_DURATION, -1);
+        int selectedDuration = prefs.getInt(WorryPracticeActivity.LAST_SELECTED_DURATION, 0);
 
         // time choices are 8, 5 and 3 min expressed as seconds
         builder.setSingleChoiceItems(R.array.time_choices_wpt, selectedDuration, new DialogInterface.OnClickListener()
@@ -67,7 +67,7 @@ public class WorryPracticeActivity extends Activity  {
         {
             public void onClick(DialogInterface dialog, int id)
             {
-                int index = prefs.getInt(WorryPracticeActivity.LAST_SELECTED_DURATION, -1);
+                int index = prefs.getInt(WorryPracticeActivity.LAST_SELECTED_DURATION, 0);
 
                 me.startTime = Integer.parseInt(me.getResources().getStringArray(R.array.time_intervals_wpt)[index]) * 1000;
 

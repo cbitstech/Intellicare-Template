@@ -1,30 +1,23 @@
 package edu.northwestern.cbits.intellicare.ruminants;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.webkit.WebView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Random;
+import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 /**
  * Created by Gwen on 2/26/14.
  */
-public class IntroActivity extends Activity {
+public class IntroActivity extends ConsentedActivity {
 
     public static final String RUNBEFORE = "runBefore";
 
@@ -36,10 +29,8 @@ public class IntroActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        super.onCreate(savedInstanceState);
-
-
-      /*  SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+       super.onCreate(savedInstanceState);
+       SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         boolean skipCheck = this.getIntent().getBooleanExtra("skipCheck", false);
 
@@ -52,9 +43,9 @@ public class IntroActivity extends Activity {
             this.startActivity(launchIntent);
 
             return;
-        } */
+        }
 
-        this.setContentView(R.layout.activity_intro);
+        this.setContentView(R.layout.activity_content);
     }
 
     private int mCurrentPage = -1;
@@ -67,9 +58,23 @@ public class IntroActivity extends Activity {
         this.goTo(this.mCurrentPage);
     }
 
-    private void goTo(int page) {
+    private void generateIntro(Context context, int index)
+    {
+        String[] contentValues = IntroActivity.contentValues(context, false);
+        TextView content = (TextView) this.findViewById(R.id.content);
+        TextView pageNumber = (TextView) this.findViewById(R.id.pageNumber);
 
-        String[] titleValues = IntroActivity.titleValues(this, false);
+        content.setText(contentValues[index]);
+        pageNumber.setText((index + 1) + " of " + contentValues.length);
+
+    }
+
+    public static String[] contentValues(Context context, boolean includeAll)
+    {
+        return context.getResources().getStringArray(R.array.intro_content);
+    }
+
+    private void goTo(int page) {
 
         ActivityManager am = (ActivityManager)this.getSystemService(Context.ACTIVITY_SERVICE);
 
@@ -77,7 +82,8 @@ public class IntroActivity extends Activity {
 
         Log.e("Cows", "sizeStack = "+sizeStack );
 
-        if (page >= titleValues.length)
+        // fix reference to index
+        if (page >= 12)
         {
             Intent launchIntent = new Intent(this, MainActivity.class);
             this.startActivity(launchIntent);
@@ -98,15 +104,9 @@ public class IntroActivity extends Activity {
                 }
         }
 
-        WebView introView = (WebView) this.findViewById(R.id.intro);
-
-        introView.getSettings().setJavaScriptEnabled(true);
-
-        Log.e("COWS", "IN onCreate, about to call HTML generator...");
-
-        introView.loadDataWithBaseURL("file:///android_asset/www/", IntroActivity.generateIntro(this, page), "text/html", "utf-8", null);
-
         this.mCurrentPage = page;
+
+        this.generateIntro(this, page);
 
     }
 
@@ -138,75 +138,4 @@ public class IntroActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-
-    private static String generateIntro(Context context, int index)
-    {
-        StringBuilder buffer = new StringBuilder();
-
-        try
-        {
-            InputStream html = context.getAssets().open("www/intro.html");
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(html));
-
-            String str = null;
-
-            while ((str=in.readLine()) != null)
-            {
-                buffer.append(str);
-            }
-
-            in.close();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        String htmlString = buffer.toString();
-
-        String[] titleValues = IntroActivity.titleValues(context, false);
-        String[] punValues = IntroActivity.punValues(context);
-        String[] contentValues = IntroActivity.contentValues(context, false);
-
-        int max = contentValues.length;
-
-        htmlString = htmlString.replace("{{title}}", titleValues[index]);
-        htmlString = htmlString.replace("{{pun}}", punValues[index]);
-        htmlString = htmlString.replace("{{content}}", contentValues[index]);
-        htmlString = htmlString.replace("{{progress}}", "" + (((index + 1) * 100) / max));
-        htmlString = htmlString.replace("{{page}}", (index + 1) + " of " + max);
-
-        Log.e("COWS", "HTML: " + htmlString);
-        Log.e("COWS", "CONTENT=" + contentValues[index]);
-
-        return htmlString;
-    }
-
-    public static String[] titleValues(Context context, boolean includeAll)
-    {
-        return context.getResources().getStringArray(R.array.intro_titles);
-    }
-    private static String[] punValues(Context context)
-    {
-        // select the size of the pun sub-array to show based on the number of slides with content
-        int punNumber = IntroActivity.titleValues(context, false).length;
-        String[] punValues = new String[punNumber];
-        String[] punBank = context.getResources().getStringArray(R.array.pun_bank);
-
-        /* want to pick a subset of puns */
-        int max = punBank.length;
-        Random random = new Random();
-        int randomNum = random.nextInt(4);
-
-        // Arguments are: sourceArray, sourceStartIndex, destinationArray, destinationStartIndex, numElementsToCopy
-        System.arraycopy( punBank, randomNum, punValues, 0, punNumber );
-
-        return punValues;
-    }
-
-    private static String[] contentValues(Context context, boolean includeAll)
-    {
-        return context.getResources().getStringArray(R.array.intro_content);
-    }
 }

@@ -96,12 +96,7 @@ public class ToolChooserActivity extends Activity {
      });
     }
 
-   /* public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        this.getMenuInflater().inflate(R.menu.menu_activity_main, menu);
 
-        return true;
-    } */
     protected void onPause()
     {
         super.onPause();

@@ -1,6 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-
-
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:robot="http://schemas.android.com/apk/res-auto"  xmlns:ic="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_replay_intro"
+        android:showAsAction="always"
+        android:title="@string/tool_replay_intro"
+        ic:title="@string/tool_replay_intro"
+        ic:showAsAction="always"/>
 </menu>
