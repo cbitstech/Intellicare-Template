@@ -106,11 +106,17 @@ public class DidacticActivity extends ConsentedActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
+
             case R.id.action_previous:
                 // Go to the previous step in the wizard. If there is no previous step,
                 // setCurrentItem will do nothing.
-                this.goTo(this.mCurrentPage - 1);
-                return true;
+                if (this.mCurrentPage == 0) {
+                    return super.onOptionsItemSelected(item);
+                }
+                else {
+                    this.goTo(this.mCurrentPage - 1);
+                    return true;
+                }
 
             case R.id.action_next:
                 // Advance to the next step in the wizard. If there is no next step, setCurrentItem

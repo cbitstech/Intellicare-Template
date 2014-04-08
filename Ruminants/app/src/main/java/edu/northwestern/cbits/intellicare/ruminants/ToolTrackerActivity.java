@@ -122,7 +122,7 @@ public class ToolTrackerActivity extends Activity {
 
         toolLogs.add(new toolLog(this.getString(R.string.wpt_use) + " " + RuminantsContentProvider.WPT_COUNT, practicePrompt(this), R.drawable.ic_action_alarms, new Intent(this, WorryPracticeActivity.class)));
         toolLogs.add(new toolLog(this.getResources().getString(R.string.worry_log_use) + " " + RuminantsContentProvider.LOG_COUNT, wizardOnePrompt(this), R.drawable.ic_action_keyboard, new Intent(this, WizardOneActivity.class)));
-        toolLogs.add(new toolLog(this.getString(R.string.didactic_content_use) + " " + RuminantsContentProvider.DIDACTIC_COUNT , didacticPrompt(this), R.drawable.ic_action_slideshow, new Intent(this, DidacticActivity.class)));
+        toolLogs.add(new toolLog(this.getString(R.string.didactic_content_use) + " " + RuminantsContentProvider.DIDACTIC_COUNT, didacticPrompt(this), R.drawable.ic_action_slideshow, new Intent(this, DidacticActivity.class)));
 
         ListView toolList = (ListView) this.findViewById(R.id.tool_use_log);
 
@@ -143,22 +143,26 @@ public class ToolTrackerActivity extends Activity {
 
                 ImageView icon = (ImageView) convertView.findViewById(R.id.tool_icon);
 
-                if (t.icon != 0) {
+                if (t.icon != 0)
                     icon.setImageDrawable(me.getResources().getDrawable(t.icon));
 
-                    icon.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View view) {
-                            if (t.launchIntent != null)
-                                me.startActivity(t.launchIntent);
-                        }
-                    });
-                }
                 return convertView;
             }
         };
 
         toolList.setAdapter(adapter);
-    }
+
+        toolList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int which, long id) {
+                toolLog t = adapter.getItem(which);
+
+                if (t.launchIntent != null)
+                    me.startActivity(t.launchIntent);
+            }
+        });
+
+    };
+
 
     protected void onPause()
     {
