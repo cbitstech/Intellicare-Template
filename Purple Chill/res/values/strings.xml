@@ -369,4 +369,7 @@
         <item>http://intellicare.cbits.northwestern.edu/static/audio/muscle/04_pmr.mp3</item>
         <item>http://intellicare.cbits.northwestern.edu/static/audio/muscle/03_pmr.mp3</item>
    	</string-array>
+   	
+	<string name="title_download_queue">Audio Downloads</string>
+	<string name="subtitle_download_queue">Files to fetch before we can proceed&#8230;</string>
 </resources>

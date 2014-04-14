@@ -11,7 +11,8 @@ public class HelpActivity extends SequentialPageActivity
 	
 	public void onResume()
 	{
-		DownloadManager.getInstance(this);
+		// TODO: Reenable
+//		DownloadManager.getInstance(this);
 		
 		super.onResume();
 	}

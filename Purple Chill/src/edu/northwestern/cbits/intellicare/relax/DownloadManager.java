@@ -10,6 +10,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -26,15 +27,25 @@ import android.util.Log;
 
 public class DownloadManager
 {
-	public static final String DOWNLOAD_PROGRESS = "chill_download_progress";
-	public static final String DOWNLOAD_SIZE = "chill_download_progress";
-	public static final String DOWNLOAD_URL = "chill_download_url";
+	public static final String DOWNLOAD_UPDATE = "chill_download_update";
 
 	private static DownloadManager _instance = null;
 	private Context _context = null;
 	
-	private ArrayList<String> _toDownload = null;
+	private ArrayList<String> _queue = new ArrayList<String>();
+	private ArrayList<String> _remaining = new ArrayList<String>();
+	
+	HashMap<String, Long> _downloadSizes = new HashMap<String, Long>();
+	HashMap<String, Long> _downloadProgress = new HashMap<String, Long>();
+
 	private boolean _checking = false;
+	
+	public static class DownloadItem
+	{
+		public String url = null;
+		public long size = -1;
+		public long downloaded = -1;
+	}
 
 	public DownloadManager(Context context) 
 	{
@@ -45,7 +56,11 @@ public class DownloadManager
 	
 	public boolean downloadsComplete()
 	{
-		return (this._toDownload != null && this._toDownload.size() == 0);
+		boolean complete = (this._queue.size() > 0 && this._remaining.size() == 0);
+		
+		Log.e("PC", "COMPLETE? " + complete);
+		
+		return complete;
 	}
 
 	private void checkDownloads() 
@@ -65,14 +80,8 @@ public class DownloadManager
 			{
 				File folder = me._context.getFilesDir();
 
-				me._toDownload = new ArrayList<String>();
-				
-				HashMap<String, Long> sizes = new HashMap<String, Long>();
-				
 				for (String url : urls)
 				{
-					Log.e("PC", "URL: " + url);
-
 					try 
 					{
 						Uri uri = Uri.parse(url);
@@ -96,10 +105,12 @@ public class DownloadManager
 						{
 							if ("Content-Length".equalsIgnoreCase(header.getName()))
 							{
-								sizes.put(url, Long.parseLong(header.getValue()));
+								me._downloadSizes.put(url, Long.parseLong(header.getValue()));
+								
+								me._queue.add(url);
 								
 								if (Long.parseLong(header.getValue()) != fileSize)
-									me._toDownload.add(url);
+									me._remaining.add(url);
 							}
 						}
 					} 
@@ -112,14 +123,18 @@ public class DownloadManager
 						e.printStackTrace();
 					}
 				}
-				
+
 				LocalBroadcastManager broadcast = LocalBroadcastManager.getInstance(me._context);
 
-				while (me._toDownload.size() > 0)
+				Intent intent = new Intent(DownloadManager.DOWNLOAD_UPDATE);
+
+				broadcast.sendBroadcast(intent);
+
+				while (me._remaining.size() > 0)
 				{
 					try 
 					{
-						String url = me._toDownload.remove(0);
+						String url = me._remaining.get(0);
 						
 						Uri uri = Uri.parse(url);
 
@@ -133,11 +148,9 @@ public class DownloadManager
 
 						BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(tempFile));
 
-						byte[] buffer = new byte[131072];
+						byte[] buffer = new byte[131072 * 4];
 						int read = 0;
 						
-						long totalSize = sizes.get(url);
-
 						long totalRead = 0;
 
 						while ((read = in.read(buffer, 0, buffer.length)) != -1)
@@ -145,11 +158,8 @@ public class DownloadManager
 							out.write(buffer, 0, read);
 							
 							totalRead += read;
-							
-							Intent intent = new Intent(DownloadManager.DOWNLOAD_PROGRESS);
-							intent.putExtra(DownloadManager.DOWNLOAD_PROGRESS, totalRead);
-							intent.putExtra(DownloadManager.DOWNLOAD_SIZE, totalSize);
-							intent.putExtra(DownloadManager.DOWNLOAD_URL, url);
+
+							me._downloadProgress.put(url, totalRead);
 							
 							broadcast.sendBroadcast(intent);
 						}
@@ -158,6 +168,8 @@ public class DownloadManager
 						out.close();
 
 						tempFile.renameTo(new File(folder, filename));
+						
+						me._remaining.remove(0);
 					} 
 					catch (MalformedURLException e) 
 					{
@@ -181,5 +193,26 @@ public class DownloadManager
 			DownloadManager._instance = new DownloadManager(context.getApplicationContext());
 		
 		return DownloadManager._instance;
+	}
+	
+	public List<DownloadItem> getCurrentDownloads()
+	{
+		ArrayList<DownloadItem> items = new ArrayList<DownloadItem>();
+		
+		for (String url : this._queue)
+		{
+			DownloadItem item = new DownloadItem();
+			item.url = url;
+			
+			if (this._downloadSizes.containsKey(url))
+				item.size = this._downloadSizes.get(url);
+
+			if (this._downloadProgress.containsKey(url))
+				item.downloaded = this._downloadProgress.get(url);
+			
+			items.add(item);
+		}
+		
+		return items;
 	}
 }
