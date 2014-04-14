@@ -12,7 +12,10 @@ import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.CrashManagerListener;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -20,9 +23,12 @@ import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -343,10 +349,12 @@ public class CalendarActivity extends ConsentedActivity
 					
 					TextView categoryLabel = (TextView) view.findViewById(R.id.label_category_name);
 
-					if (featLevel != 0)
-						categoryLabel.setText(context.getString(R.string.label_category, featLevel));
-					else
+					if (featLevel == 0)
 						categoryLabel.setText(R.string.label_category_my_feats);
+					else if (featLevel == 99)
+						categoryLabel.setText(R.string.label_category_automatic);
+					else
+						categoryLabel.setText(context.getString(R.string.label_category, featLevel));
 
 					categoryLabel.setVisibility(View.GONE);
 
@@ -394,6 +402,61 @@ public class CalendarActivity extends ConsentedActivity
 		{
 			Intent editIntent = new Intent(this, EditFeatsChecklistActivity.class);
 			this.startActivity(editIntent);
+		}
+		else if (itemId == R.id.action_active_streaks)
+		{
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(R.string.title_active_streaks);
+			
+			ArrayList<FeatsProvider.FeatCount> feats = FeatsProvider.activeStreaks(this);
+			
+			if (feats.size() > 0)
+			{
+				ListView list = new ListView(this);
+				
+				ArrayAdapter<FeatsProvider.FeatCount> adapter = new ArrayAdapter<FeatsProvider.FeatCount>(this, R.layout.row_feat_counts, feats)
+				{
+		    		public View getView (int position, View convertView, ViewGroup parent)
+		    		{
+		    			Context context = parent.getContext();
+		    			if (convertView == null)
+		    			{
+		    				LayoutInflater inflater = LayoutInflater.from(context);
+		    				convertView = inflater.inflate(R.layout.row_feat_counts, parent, false);
+		    			}
+		    			
+		    			FeatsProvider.FeatCount count = this.getItem(position);
+		    			
+		    			TextView title = (TextView) convertView.findViewById(android.R.id.text1);
+		    			TextView subtitle = (TextView) convertView.findViewById(android.R.id.text2);
+		    			
+		    			title.setText(count.feat);
+		    			
+		    			if (count.count.intValue() == 1)
+		    				subtitle.setText(context.getString(R.string.item_single_streak_count));
+		    			else
+		    				subtitle.setText(context.getString(R.string.item_streak_count, count.count.intValue()));
+
+		    			return convertView;
+		    		}
+				};
+				
+				list.setAdapter(adapter);
+				
+				builder.setView(list);
+			}
+			else
+				builder.setMessage(R.string.message_no_active_streaks);
+			
+			builder.setPositiveButton(R.string.action_close, new OnClickListener()
+			{
+				public void onClick(DialogInterface arg0, int arg1) 
+				{
+
+				}
+			});
+			
+			builder.create().show();
 		}
 		else if (itemId == R.id.action_rules)
 		{

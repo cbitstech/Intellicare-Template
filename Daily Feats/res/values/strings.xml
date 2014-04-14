@@ -143,6 +143,13 @@
 	<string name="action_rules">Help / Rules</string>
 	<string name="title_level_streak" formatted="false">Level %d, Streak: %d</string>
 
+	<string name="action_active_streaks">Streaks</string>
+	<string name="title_active_streaks">Current Streaks</string>
+	<string name="message_no_active_streaks">No active streaks.</string>
+
+	<string name="item_streak_count" formatted="false">%d days</string>
+	<string name="item_single_streak_count">1 day</string>
+				
 	<string name="label_current_level">Current Level</string>
 			
 	<string name="note_title_demoted" formatted="false">Bummer! You\'ve gone more than 5 days without completing at least half of the feats for your current level. New level: %d.</string>

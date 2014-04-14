@@ -67,7 +67,7 @@ public class CalendarView extends LinearLayout
 			DayView dayView = (DayView) this.findViewById(id);
 			dayView.reset();
 		}
-
+		
 		for (int i = weekDay; i < weekDay + dayCount; i++)
 		{
 			int id = CalendarView._dateCells[i];
