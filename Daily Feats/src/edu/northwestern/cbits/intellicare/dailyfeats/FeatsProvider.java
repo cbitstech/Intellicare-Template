@@ -431,7 +431,10 @@ public class FeatsProvider extends android.content.ContentProvider
 		
 		while (c.moveToNext())
 		{
-			feats.add(c.getString(c.getColumnIndex("feat")));
+			String feat = c.getString(c.getColumnIndex("feat"));
+			
+			if (feats.contains(feat) == false)
+				feats.add(feat);
 		}
 		
 		c.close();
@@ -474,31 +477,7 @@ public class FeatsProvider extends android.content.ContentProvider
 
 	public static int featCountForDate(Context context, Date date) 
 	{
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
-		
-		calendar.set(Calendar.HOUR, 0);
-		calendar.set(Calendar.MINUTE, 0);
-		calendar.set(Calendar.MILLISECOND, 0);
-
-		long start = calendar.getTimeInMillis();
-		
-		calendar.set(Calendar.HOUR, 23);
-		calendar.set(Calendar.MINUTE, 59);
-		calendar.set(Calendar.MILLISECOND, 999);
-
-		long end = calendar.getTimeInMillis();
-
-		String selection = "recorded >= ? AND recorded <= ?";
-		String[] args = { "" + start, "" + end };
-		
-		Cursor c = context.getContentResolver().query(FeatsProvider.RESPONSES_URI, null, selection, args, null);
-		
-		int count = c.getCount();
-		
-		c.close();
-		
-		return count;
+		return FeatsProvider.featsForDate(context, date).size();
 	}
 
 	public static void updateLevel(Context context, int level) 
@@ -714,6 +693,8 @@ public class FeatsProvider extends android.content.ContentProvider
 
 		feats.add("");
 		
+		HashSet<String> currentFeats = null;
+		
 		while (feats.size() > 0)
 		{
 			cal.setTimeInMillis(cal.getTimeInMillis() - (24 * 60 * 60 * 1000));
@@ -722,14 +703,37 @@ public class FeatsProvider extends android.content.ContentProvider
 			
 			feats = FeatsProvider.featsForDate(context, day);
 			
+			if (currentFeats == null)
+			{
+				currentFeats = new HashSet<String>();
+
+				for (String feat : feats)
+				{
+					currentFeats.add(feat);
+				}
+			}
+
+			HashSet<String> toRemove = new HashSet<String>();
+			
+			for (String feat : currentFeats)
+			{
+				if (feats.contains(feat) == false)
+					toRemove.add(feat);
+			}
+
+			currentFeats.removeAll(toRemove);
+
 			for (String feat : feats)
 			{
-				Integer count = Integer.valueOf(0);
-				
-				if (counts.containsKey(feat))
-					count = counts.get(feat);
-				
-				counts.put(feat, Integer.valueOf(count.intValue() + 1));
+				if (currentFeats.contains(feat))
+				{
+					Integer count = Integer.valueOf(0);
+					
+					if (counts.containsKey(feat))
+						count = counts.get(feat);
+					
+					counts.put(feat, Integer.valueOf(count.intValue() + 1));
+				}
 			}
 		}
 

@@ -290,6 +290,8 @@ public class CalendarActivity extends ConsentedActivity
 
 			ArrayList<Object[]> rows = new ArrayList<Object[]>();
 			
+			long now = System.currentTimeMillis();
+			
 			while (featsCursor.moveToNext())
 			{
 				String selection = "feat_name = ?";
@@ -299,13 +301,25 @@ public class CalendarActivity extends ConsentedActivity
 				
 				if (itemCursor.moveToNext())
 				{
-					Object[] row = { itemCursor.getLong(itemCursor.getColumnIndex("_id")), itemCursor.getString(itemCursor.getColumnIndex("feat_name")), itemCursor.getInt(itemCursor.getColumnIndex("feat_level")) } ;
+					boolean contains = false;
 					
-					rows.add(row);
+					String featName = itemCursor.getString(itemCursor.getColumnIndex("feat_name"));
+					
+					for (Object[] row : rows)
+					{
+						if (row[1].equals(featName))
+							contains = true;
+					}
+					
+					if (contains == false)
+					{
+						Object[] row = { itemCursor.getLong(itemCursor.getColumnIndex("_id")), featName, itemCursor.getInt(itemCursor.getColumnIndex("feat_level")) } ;
+						rows.add(row);
+					}
 				}
 				else
 				{
-					Object[] row = { System.currentTimeMillis(), selectionArgs[0], 0 } ;
+					Object[] row = { now, selectionArgs[0], 0 } ;
 					
 					rows.add(row);
 				}
