@@ -156,6 +156,14 @@ public class ConsentedActivity extends ActionBarActivity
 		    Toast.makeText(this, R.string.email_toast_no_client, Toast.LENGTH_LONG).show();
 		}
 	}
+	
+	protected void showFaq(String appName)
+	{
+		Intent intent = new Intent(this, FaqActivity.class);
+		intent.putExtra(FaqActivity.APP_NAME, appName);
+		
+		this.startActivity(intent);
+	}
 
 	public static void showCopyrightDialog(Activity activity)
 	{

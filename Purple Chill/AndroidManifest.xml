@@ -40,8 +40,9 @@
 				<action android:name="purple_chill_toggle_playback" />
             </intent-filter>
         </service>
+   		<activity android:theme="@style/Theme.AppCompat.Light" android:name=".DownloadActivity" android:label="@string/app_name" />
    		<activity android:theme="@style/Theme.AppCompat.Light" android:name=".HelpActivity" android:label="@string/app_name" />
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".IntroActivity" android:label="@string/app_name" />
+   		<activity android:theme="@style/Theme.AppCompat.Light" android:name=".IntroActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".GroupActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".SettingsActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.ConsentActivity" android:label="@string/app_name" />

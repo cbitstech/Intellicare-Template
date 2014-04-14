@@ -8,6 +8,13 @@ import edu.northwestern.cbits.intellicare.SequentialPageActivity;
 public class HelpActivity extends SequentialPageActivity 
 {
 	public static final String HELP_COMPLETED = "HELP_COMPLETED";
+	
+	public void onResume()
+	{
+		DownloadManager.getInstance(this);
+		
+		super.onResume();
+	}
 
 	public int pagesSequence() 
 	{

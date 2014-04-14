@@ -210,6 +210,10 @@
     <string name="error_missing_uri">Missing or invalid URL. Closing&#8230;</string>
     <string name="menu_close">Close</string>
     <string name="menu_browser">Browser</string>
-    		
-				
+    
+    <string name="action_faq">Frequently Asked Questions</string>
+    <string name="title_faq">Frequently Asked Questions</string>
+    
+    <string name="title_missing_faq">Missing FAQ</string>
+    <string name="message_missing_faq">The HTML file for the frequently asked questions is not available within this app.</string>
 </resources>

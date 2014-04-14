@@ -349,5 +349,24 @@
 	<string name="reminder_message">Before you can begin relaxing, please check that you\'ve selected a track to play and have rated your current stress level.</string>
 
 	<string name="toast_rate_stress">Please rate your current stress level to proceed&#8230;</string>
-			
+
+	<string-array name="remote_media_urls">
+        <item>http://intellicare.cbits.northwestern.edu/static/audio/autogenic/01_autogenic.mp3</item>
+        <item>http://intellicare.cbits.northwestern.edu/static/audio/sleep/01_sleep.mp3</item>
+        <item>http://intellicare.cbits.northwestern.edu/static/audio/sleep/02_sleep.mp3</item>
+        <item>http://intellicare.cbits.northwestern.edu/static/audio/sleep/03_sleep.mp3</item>
+        <item>http://intellicare.cbits.northwestern.edu/static/audio/deep_breathing/01_deepBreathing.mp3</item>
+        <item>http://intellicare.cbits.northwestern.edu/static/audio/deep_breathing/02_deepBreathing.mp3</item>
+        <item>http://intellicare.cbits.northwestern.edu/static/audio/muscle/01_pmr.mp3</item>
+        <item>http://intellicare.cbits.northwestern.edu/static/audio/mindfulness/02_mindfulness.mp3</item>
+	    <item>http://intellicare.cbits.northwestern.edu/static/audio/mindfulness/01_mindfulness.mp3</item>
+        <item>http://intellicare.cbits.northwestern.edu/static/audio/mindfulness/04_mindfulness.mp3</item>
+        <item>http://intellicare.cbits.northwestern.edu/static/audio/mindfulness/05_mindfulness.mp3</item>
+        <item>http://intellicare.cbits.northwestern.edu/static/audio/deep_breathing/05_deepBreathing.mp3</item>
+        <item>http://intellicare.cbits.northwestern.edu/static/audio/deep_breathing/04_deepBreathing.mp3</item>
+        <item>http://intellicare.cbits.northwestern.edu/static/audio/deep_breathing/03_deepBreathing.mp3</item>
+   	    <item>http://intellicare.cbits.northwestern.edu/static/audio/muscle/02_pmr.mp3</item>
+        <item>http://intellicare.cbits.northwestern.edu/static/audio/muscle/04_pmr.mp3</item>
+        <item>http://intellicare.cbits.northwestern.edu/static/audio/muscle/03_pmr.mp3</item>
+   	</string-array>
 </resources>
