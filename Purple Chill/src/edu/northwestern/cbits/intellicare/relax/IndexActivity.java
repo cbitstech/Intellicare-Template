@@ -59,6 +59,8 @@ public class IndexActivity extends ConsentedActivity
 		{
 			Intent intent = new Intent(this, DownloadActivity.class);
 			this.startActivity(intent);
+			
+			this.finish();
 		}
 		else
 		{
@@ -103,37 +105,37 @@ public class IndexActivity extends ConsentedActivity
 					switch (position)
 					{
 						case 0:
-							playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.deep_breathing_media_urls);
+							playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.deep_breathing_media_files);
 							playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.deep_breathing_media_url_titles);
 							playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.deep_breathing_media_url_times);
 							playerIntent.putExtra(GroupActivity.GROUP_DESCRIPTIONS, R.array.deep_breathing_descs);
 							break;
 						case 1:
-							playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.muscle_media_urls);
+							playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.muscle_media_files);
 							playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.muscle_media_url_titles);
 							playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.muscle_media_url_times);
 							playerIntent.putExtra(GroupActivity.GROUP_DESCRIPTIONS, R.array.muscle_descs);
 							break;
 						case 2:
-							playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.autogenic_media_urls);
+							playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.autogenic_media_files);
 							playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.autogenic_media_url_titles);
 							playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.autogenic_media_url_times);
 							playerIntent.putExtra(GroupActivity.GROUP_DESCRIPTIONS, R.array.autogenic_descs);
 							break;
 						case 3:
-							playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.visualization_media_urls);
+							playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.visualization_media_files);
 							playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.visualization_media_url_titles);
 							playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.visualization_media_url_times);
 							playerIntent.putExtra(GroupActivity.GROUP_DESCRIPTIONS, R.array.visualization_descs);
 							break;
 						case 4:
-							playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.mindfulness_media_urls);
+							playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.mindfulness_media_files);
 							playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.mindfulness_media_url_titles);
 							playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.mindfulness_media_url_times);
 							playerIntent.putExtra(GroupActivity.GROUP_DESCRIPTIONS, R.array.mindfulness_descs);
 							break;
 						case 5:
-							playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.sleep_media_urls);
+							playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.sleep_media_files);
 							playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.sleep_media_url_titles);
 							playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.sleep_media_url_times);
 							playerIntent.putExtra(GroupActivity.GROUP_DESCRIPTIONS, R.array.sleep_descs);
@@ -203,9 +205,9 @@ public class IndexActivity extends ConsentedActivity
 			this.startActivity(settingsIntent);
 		}
 		else if (item.getItemId() == R.id.action_feedback)
-		{
 			this.sendFeedback(this.getString(R.string.app_name));
-		}
+		else if (item.getItemId() == R.id.action_faq)
+			this.showFaq(this.getString(R.string.app_name));
 		
 		return true;
 	}

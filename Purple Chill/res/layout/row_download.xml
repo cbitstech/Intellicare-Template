@@ -7,9 +7,13 @@
     <TextView android:id="@+id/label_url"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:ellipsize="middle"
         android:textSize="18sp" />
-    <TextView android:id="@+id/label_progress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="14sp" />
+    <ProgressBar android:id="@+id/progress"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:indeterminate="false"
+         android:layout_marginTop="8dp"
+         style="@style/Widget.AppCompat.ProgressBar.Horizontal" />
 </LinearLayout>

@@ -9,6 +9,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -23,11 +25,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 public class DownloadManager
 {
 	public static final String DOWNLOAD_UPDATE = "chill_download_update";
+	public static final String DOWNLOAD_ERROR = "chill_download_error";
 
 	private static DownloadManager _instance = null;
 	private Context _context = null;
@@ -57,8 +59,25 @@ public class DownloadManager
 	public boolean downloadsComplete()
 	{
 		boolean complete = (this._queue.size() > 0 && this._remaining.size() == 0);
-		
-		Log.e("PC", "COMPLETE? " + complete);
+
+		if (complete == false && this._queue.size() == 0)
+		{
+			File folder = this._context.getFilesDir();
+
+			final String[] urls = this._context.getResources().getStringArray(R.array.remote_media_urls);
+			
+			for (String url : urls)
+			{
+				Uri u = Uri.parse(url);
+				
+				File f = new File(folder, u.getLastPathSegment());
+				
+				if (f.exists() == false)
+					return false;
+			}
+			
+			return true;
+		}
 		
 		return complete;
 	}
@@ -73,7 +92,9 @@ public class DownloadManager
 		final String[] urls = this._context.getResources().getStringArray(R.array.remote_media_urls);
 		
 		final DownloadManager me = this;
-		
+
+		final LocalBroadcastManager broadcast = LocalBroadcastManager.getInstance(me._context);
+
 		Runnable r = new Runnable()
 		{
 			public void run() 
@@ -123,8 +144,6 @@ public class DownloadManager
 						e.printStackTrace();
 					}
 				}
-
-				LocalBroadcastManager broadcast = LocalBroadcastManager.getInstance(me._context);
 
 				Intent intent = new Intent(DownloadManager.DOWNLOAD_UPDATE);
 
@@ -180,6 +199,8 @@ public class DownloadManager
 						e.printStackTrace();
 					}
 				}
+				
+				me._checking  = false;
 			}
 		};
 		
@@ -212,6 +233,27 @@ public class DownloadManager
 			
 			items.add(item);
 		}
+		
+		Collections.sort(items, new Comparator<DownloadItem>()
+		{
+			public int compare(DownloadItem one, DownloadItem two) 
+			{
+				long oneDiff = one.size - one.downloaded;
+				long twoDiff = two.size - two.downloaded;
+				
+				if (oneDiff == 0 && twoDiff != 0)
+					return -1;
+				else if (oneDiff != 0 && twoDiff == 0)
+					return -2;
+				else if (oneDiff == 0 && twoDiff == 0)
+					return Long.valueOf(two.size).compareTo(Long.valueOf(one.size));
+				
+				double oneRatio = (double) one.size / (double)one.downloaded;
+				double twoRatio = (double) two.size / (double)two.downloaded;
+					
+				return Double.valueOf(twoRatio).compareTo(Double.valueOf(oneRatio));
+			}
+		});
 		
 		return items;
 	}

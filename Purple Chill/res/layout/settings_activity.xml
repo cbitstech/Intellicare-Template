@@ -1,42 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="@string/settings_group_notification">
-        <CheckBoxPreference android:key="config_enable_notifications"
-		    android:title="@string/title_notifications"
-		    android:icon="@drawable/ic_action_alarm"
-		    android:summary="@string/desc_notifications"
-		    android:defaultValue="true" />        
-		<ListPreference android:key="config_notification_hour"
-		    android:title="@string/title_notification_hour"
-		    android:icon="@drawable/ic_action_clock"
-		    android:entries="@array/list_notification_hour"
-		    android:entryValues="@array/list_notification_hour_values"
-		    android:defaultValue="12" />    
-		<PreferenceScreen android:title="@string/title_notification_day"
-   		    android:icon="@drawable/ic_action_calendar_day"
-		    android:key="config_notification_day">
-	        <CheckBoxPreference android:key="config_remind_sunday"
-			    android:title="@string/title_sunday"
-			    android:defaultValue="false" />        
-	        <CheckBoxPreference android:key="config_remind_monday"
-			    android:title="@string/title_monday"
-			    android:defaultValue="false" />        
-	        <CheckBoxPreference android:key="config_remind_tuesday"
-			    android:title="@string/title_tuesday"
-			    android:defaultValue="false" />        
-	        <CheckBoxPreference android:key="config_remind_wednesday"
-			    android:title="@string/title_wednesday"
-			    android:defaultValue="false" />        
-	        <CheckBoxPreference android:key="config_remind_thursday"
-			    android:title="@string/title_thursday"
-			    android:defaultValue="false" />        
-	        <CheckBoxPreference android:key="config_remind_friday"
-			    android:title="@string/title_friday"
-			    android:defaultValue="false" />        
-	        <CheckBoxPreference android:key="config_remind_saturday"
-			    android:title="@string/title_saturday"
-			    android:defaultValue="false" />        
-   		</PreferenceScreen>
+		<Preference android:key="config_notification_time"
+		    android:title="@string/title_schedule_reminder"
+		    android:icon="@drawable/ic_action_clock" />    
 	</PreferenceCategory>
     <PreferenceCategory android:title="@string/settings_group_credits">
 		<Preference android:title="@string/creator_sms" android:summary="@string/role_clinical_lead" />

@@ -8,7 +8,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -236,8 +235,6 @@ public class AudioFileManager implements MediaPlayerControl, OnCompletionListene
 			{
 				String uriString = this._currentTrack.toString();
 				
-				AssetFileDescriptor afd = this._context.getAssets().openFd(uriString.replace("file:///android_asset/", ""));
-
 				if (this._player != null)
 				{
 					this._player.stop();
@@ -248,7 +245,7 @@ public class AudioFileManager implements MediaPlayerControl, OnCompletionListene
 				
 				this._player = new MediaPlayer();
 				this._player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-				this._player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+				this._player.setDataSource(uriString.replace("file://", ""));
 
 				this._player.setOnPreparedListener(listener);
 				this._player.setOnCompletionListener(this);

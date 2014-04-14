@@ -32,7 +32,7 @@ public class ScheduleManager
 		PendingIntent pi = PendingIntent.getBroadcast(this._context, 0, broadcast, PendingIntent.FLAG_UPDATE_CURRENT);
 		
 //		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);
-		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, 60000, pi);
+		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, 45000, pi);
 	}
 
 	public static ScheduleManager getInstance(Context context)
@@ -84,22 +84,24 @@ public class ScheduleManager
 		boolean friday = prefs.getBoolean("config_remind_friday", false);
 		boolean saturday = prefs.getBoolean("config_remind_saturday", false);
 		
-		int hour = Integer.parseInt(prefs.getString("config_notification_hour", "12"));
+		int hour = prefs.getInt("config_notification_hour", 15);
+		int minute = prefs.getInt("config_notification_minute", 0);
 		
 		Calendar calendar = Calendar.getInstance();
 		int thisDay = calendar.get(Calendar.DAY_OF_WEEK);
 		int thisHour = calendar.get(Calendar.HOUR_OF_DAY);
+		int thisMinute = calendar.get(Calendar.MINUTE);
 		
 		long now = System.currentTimeMillis();
 		
-		if (now - lastReminder > (1000 * 60 * 60 * 2))
+		if (now - lastReminder > (1000 * 60))
 		{
 			if (sunday && thisDay == 1 || monday && thisDay == 2 ||
 				tuesday && thisDay == 3 || wednesday && thisDay == 4 ||
 				thursday && thisDay == 5 || friday && thisDay == 6 ||
 				saturday && thisDay == 7)
 			{
-				if (thisHour == hour)
+				if (thisHour == hour && thisMinute == minute)
 					this.remind();
 			}
 		}

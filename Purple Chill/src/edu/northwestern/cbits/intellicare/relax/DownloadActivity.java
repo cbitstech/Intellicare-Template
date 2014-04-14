@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
@@ -24,7 +25,6 @@ public class DownloadActivity extends ConsentedActivity
 
 		this.setContentView(R.layout.activity_download);
 		this.getSupportActionBar().setTitle(R.string.title_download_queue);
-		this.getSupportActionBar().setSubtitle(R.string.subtitle_download_queue);
 
 		DownloadManager.getInstance(this);
 	}
@@ -59,16 +59,39 @@ public class DownloadActivity extends ConsentedActivity
 						DownloadManager.DownloadItem item = this.getItem(position);
 						
 						TextView url = (TextView) convertView.findViewById(R.id.label_url);
-						TextView progress = (TextView) convertView.findViewById(R.id.label_progress);
-						
 						url.setText(item.url);
-						progress.setText(item.downloaded + " / " + item.size);
+						
+						ProgressBar progress = (ProgressBar) convertView.findViewById(R.id.progress);
+						
+						int downloaded = (int) item.downloaded;
+						int size = (int) item.size;
+						
+						progress.setMax(size);
+						progress.setProgress(downloaded);
 						
 						return convertView;
 					}
 				};
 
 				list.setAdapter(adapter);
+				
+				if (DownloadManager.getInstance(me).downloadsComplete())
+				{
+					Intent indexIntent = new Intent(me, IndexActivity.class);
+					me.startActivity(indexIntent);
+					
+					me.finish();
+				}
+
+				int remaining = 0;
+				
+				for (DownloadManager.DownloadItem item : items)
+				{
+					if (item.size != item.downloaded)
+						remaining += 1;
+				}
+				
+				me.getSupportActionBar().setSubtitle(me.getString(R.string.subtitle_download_queue, remaining, items.size()));
 			}
 		}, filter);
 	}
