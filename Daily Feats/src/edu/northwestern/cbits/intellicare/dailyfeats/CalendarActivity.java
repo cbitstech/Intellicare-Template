@@ -483,9 +483,9 @@ public class CalendarActivity extends ConsentedActivity
 			this.startActivity(settingsIntent);
 		}
 		else if (item.getItemId() == R.id.action_feedback)
-		{
 			this.sendFeedback(this.getString(R.string.app_name));
-		}
+		else if (item.getItemId() == R.id.action_faq)
+			this.showFaq(this.getString(R.string.app_name));
 		
 		return true;
 	}

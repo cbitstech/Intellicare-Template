@@ -94,7 +94,8 @@
 	<string name="feat_1_3">I went outside.</string>	
 	<string name="feat_2_0">I interacted with people.</string>	
 	<string name="feat_2_1">I took care of my living space.</string>	
-	<string name="feat_2_2">I went to bed on time last night.</string>	
+	<string name="feat_2_2">I went to bed on time last night.</string>
+
 	<string name="feat_3_0">I accomplished something today.</string>	
 	<string name="feat_3_1">I enjoyed an activity today.</string>	
 	<string name="feat_3_2">I took care of myself.</string>	
@@ -102,8 +103,12 @@
 	<string name="feat_4_0">I overcame a bad habit.</string>
 	<string name="feat_4_1">I strengthened a good habit.</string>
 	<string name="feat_4_2">I faced something I wanted to avoid.</string>
-	<!-- <string name="feat_4_3">I avoided something I wish I had faced.</string> -->
-
+	
+	<string name="feat_2_3">I took time to relax today.</string>
+	<string name="feat_3_4">I did something even though it made me nervous.</string>
+	<string name="feat_4_3">I made a decision I’ve been putting off.</string>
+	<string name="feat_4_4">I faced a fear.</string>
+		
 	<string name="no_feats_yet">No feats completed yet.</string>
 	<string name="recent_feat" formatted="false">%s\n%s</string>
 	

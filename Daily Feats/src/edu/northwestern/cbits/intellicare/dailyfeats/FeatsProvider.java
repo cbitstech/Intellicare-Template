@@ -43,7 +43,7 @@ public class FeatsProvider extends android.content.ContentProvider
     private UriMatcher mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     private SQLiteDatabase mDb = null;
 
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 	private static final long DAY_LENGTH = 1000 * 3600 * 24;
 	protected static final String START_FEATS_DATE = "start_feats_date";
 	private static final long STREAK_LENGTH = 3;
@@ -264,6 +264,28 @@ public class FeatsProvider extends android.content.ContentProvider
 	    		        autoFeat.put("feat_level", 99);
 	    		        autoFeat.put("enabled", false);
 	    		        db.insert(FEATS_TABLE, null, autoFeat);
+                    case 4:
+	    		        ContentValues newFeat = new ContentValues();
+
+	    		        newFeat = new ContentValues();
+	    		        newFeat.put("feat_name", context.getString(R.string.feat_2_3));
+	    		        newFeat.put("feat_level", 2);
+	    		        db.insert(FEATS_TABLE, null, newFeat);
+
+	    		        newFeat = new ContentValues();
+	    		        newFeat.put("feat_name", context.getString(R.string.feat_3_4));
+	    		        newFeat.put("feat_level", 3);
+	    		        db.insert(FEATS_TABLE, null, newFeat);
+
+	    		        newFeat = new ContentValues();
+	    		        newFeat.put("feat_name", context.getString(R.string.feat_4_3));
+	    		        newFeat.put("feat_level", 4);
+	    		        db.insert(FEATS_TABLE, null, newFeat);
+
+	    		        newFeat = new ContentValues();
+	    		        newFeat.put("feat_name", context.getString(R.string.feat_4_4));
+	    		        newFeat.put("feat_level", 4);
+	    		        db.insert(FEATS_TABLE, null, newFeat);
                     default:
                     	break;
                 }
