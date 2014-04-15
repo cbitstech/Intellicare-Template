@@ -13,6 +13,7 @@ import edu.northwestern.cbits.intellicare.mantra.FocusImage;
 import edu.northwestern.cbits.intellicare.mantra.PictureUtils;
 import edu.northwestern.cbits.intellicare.mantra.R;
 import edu.northwestern.cbits.intellicare.mantra.Util;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
@@ -61,6 +62,7 @@ public class NoFragmentsHomeActivity extends ConsentedActivity {
 	
 	private final NoFragmentsHomeActivity self = this;
 	
+	private boolean displayedMantraAttachToast = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,15 +77,8 @@ public class NoFragmentsHomeActivity extends ConsentedActivity {
 		Log.d(CN+".onResume", "entered");
 		
 		// create, bind, and fill the main view for this activity
-		attachGridView();
+		attachGridView(self);
 
-		// if this activity was opened by a response to the image gallery,
-		// then inform the user they need to tap on a mantra with which they wish to associate an image.
-		if(getIntent().getData() != null) {
-			Toast.makeText(this, "Now tap on a mantra to attach your selected image to it!", Toast.LENGTH_LONG).show();
-		}
-
-		
 		// schedule the notifications, if not already done
 		// src: http://stackoverflow.com/questions/4459058/alarm-manager-example
 		Log.d(CN+".onResume","setting an alarm");
@@ -92,20 +87,27 @@ public class NoFragmentsHomeActivity extends ConsentedActivity {
 		
 		// DBG/TEST remove...
 //		NotificationAlarm.dialogOnNewPhotos(this, NotificationAlarm.getCameraImagesSinceDate(this, new Date(System.currentTimeMillis() - 300 * 1000)));
+
+		// if this activity was opened by a response to the image gallery,
+		// then inform the user they need to tap on a mantra with which they wish to associate an image.
+		if(!displayedMantraAttachToast && getIntent().getData() != null) {
+			Toast.makeText(this, "Now tap on a mantra to attach your selected image to it!", Toast.LENGTH_LONG).show();
+			displayedMantraAttachToast = true;
+		}
 	}
 
 	/**
 	 * Creates, binds to data, and fills the main view for this activity.
 	 */
-	private void attachGridView() {
-		setContentView(R.layout.no_fragments_home_activity);
-		final GridView gv = (GridView) this.findViewById(R.id.gridview);
+	private static void attachGridView(final Activity self) {
+		self.setContentView(R.layout.no_fragments_home_activity);
+		final GridView gv = (GridView) self.findViewById(R.id.gridview);
 
-		FocusBoardCursor mantraItemCursor = FocusBoardManager.get(this).queryFocusBoards();
+		FocusBoardCursor mantraItemCursor = FocusBoardManager.get(self).queryFocusBoards();
 //		Util.logCursor(mantraItemCursor);
 		
 		@SuppressWarnings("deprecation")
-		CursorAdapter adapter = new CursorAdapter(this, mantraItemCursor) {
+		CursorAdapter adapter = new CursorAdapter(self, mantraItemCursor) {
 
 			@Override
 			public void bindView(View mantraItemView, Context homeActivity, Cursor focusBoardCursor) {
@@ -148,13 +150,14 @@ public class NoFragmentsHomeActivity extends ConsentedActivity {
 				Intent intent = new Intent(self, SoloFocusBoardActivity.class);
 				intent.putExtra(NewFocusBoardActivity.FOCUS_BOARD_ID, id);
 				
-				Uri uri = getIntent().getData();
+				Uri uri = self.getIntent().getData();
 				if(uri != null) {
 					Log.d(CN+".onItemClick", "uri.toString() = " + uri.toString());
 					intent.setData(uri);
+					self.setIntent(new Intent());	// wipe the URI-passing intent that called this so we don't tell the user to attach the image to a Mantra board later
 				}
 				
-				startActivity(intent);
+				self.startActivity(intent);
 			}
 		});
 		
@@ -181,32 +184,7 @@ public class NoFragmentsHomeActivity extends ConsentedActivity {
 							case 0:
 								Log.d(CN+".onItemLongClick....onClick", "You chose " + optionItems[which]);
 								
-								// get the current caption
-								// v2: via database
-								final View v = self.getLayoutInflater().inflate(R.layout.edit_text_field, null);
-								FocusBoard fb = FocusBoardManager.get(self).getFocusBoard(id);
-								((EditText) v.findViewById(R.id.text_dialog)).setText(fb.getMantra());
-
-								AlertDialog.Builder editTextDlg = new AlertDialog.Builder(self);
-								editTextDlg.setMessage("Edit the text");
-								editTextDlg.setPositiveButton("OK", new OnClickListener() {
-									
-									@Override
-									public void onClick(DialogInterface dialog, int which) {
-										// update the selected mantra's text
-										Toast.makeText(self, "Mantra text should change.", Toast.LENGTH_SHORT).show();
-										String newMantra = ((EditText) v.findViewById(R.id.text_dialog)).getText().toString();
-										FocusBoard fb = FocusBoardManager.get(self).getFocusBoard(id);
-										fb.setMantra(newMantra);
-										long updateRet = FocusBoardManager.get(self).setFocusBoard(fb);
-										Log.d(CN+".onItemLongClick....onClick", "updateRet = " + updateRet);
-										attachGridView();
-									}
-								});
-
-								editTextDlg.setView(v);
-								AlertDialog dlg = editTextDlg.create();
-								dlg.show();
+								((NoFragmentsHomeActivity) self).editSelectedMantraCaption(self, id);
 								break;
 
 							case 1:
@@ -220,7 +198,7 @@ public class NoFragmentsHomeActivity extends ConsentedActivity {
 									@Override
 									public void onClick(DialogInterface dialog, int which) {
 										int rowsDeleted = FocusBoardManager.get(self).deleteFocusBoard(id);
-										attachGridView();
+										((NoFragmentsHomeActivity) self).attachGridView(self);
 										Log.d(CN+".onItemLongClick....onClick", "deleted row = " + id + "; deleted row count = " + rowsDeleted);
 									}
 								});
@@ -280,5 +258,40 @@ public class NoFragmentsHomeActivity extends ConsentedActivity {
 			}
 		}
 		startActivity(intent);
+	}
+	
+	
+	/**
+	 * @param id
+	 */
+	public static void editSelectedMantraCaption(final Activity self, final long id) {
+		Log.d(CN+".editSelectedMantraCaption", "entered");
+		// get the current caption
+		// v2: via database
+		final View v = self.getLayoutInflater().inflate(R.layout.edit_text_field, null);
+		FocusBoard fb = FocusBoardManager.get(self).getFocusBoard(id);
+		((EditText) v.findViewById(R.id.text_dialog)).setText(fb.getMantra());
+
+		AlertDialog.Builder editTextDlg = new AlertDialog.Builder(self);
+		editTextDlg.setMessage("Edit the text");
+		editTextDlg.setPositiveButton("OK", new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// update the selected mantra's text
+				Toast.makeText(self, "Mantra text should change.", Toast.LENGTH_SHORT).show();
+				String newMantra = ((EditText) v.findViewById(R.id.text_dialog)).getText().toString();
+				FocusBoard fb = FocusBoardManager.get(self).getFocusBoard(id);
+				fb.setMantra(newMantra);
+				long updateRet = FocusBoardManager.get(self).setFocusBoard(fb);
+				Log.d(CN+".onItemLongClick....onClick", "updateRet = " + updateRet);
+				attachGridView(self);
+			}
+		});
+
+		editTextDlg.setView(v);
+		AlertDialog dlg = editTextDlg.create();
+		Log.d(CN+".editSelectedMantraCaption", "showing dialog");
+		dlg.show();
 	}
 }
