@@ -1,5 +1,6 @@
 package edu.northwestern.cbits.intellicare.relax;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -13,7 +14,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -83,15 +83,15 @@ public class GroupActivity extends ConsentedActivity
 
         if (titlesId != -1 && mediaId != -1 && timesId != -1)
         {
-            String[] mediaUrls = this.getResources().getStringArray(mediaId);
+            String[] mediaFiles = this.getResources().getStringArray(mediaId);
             String[] mediaTitles = this.getResources().getStringArray(titlesId);
             String[] mediaTimes = this.getResources().getStringArray(timesId);
             String[] mediaDescs = this.getResources().getStringArray(groupsId);
             
-            for (int i = 0; i < mediaUrls.length; i++)
+            for (int i = 0; i < mediaFiles.length; i++)
             {
                 titles.add(mediaTitles[i]);
-                recordings.add(mediaUrls[i]);
+                recordings.add(mediaFiles[i]);
                 times.add(GroupActivity.formatTime(mediaTimes[i]));
                 descriptions.add(mediaDescs[i]);
             }
@@ -175,14 +175,27 @@ public class GroupActivity extends ConsentedActivity
 	                		HashMap<String,Object> payload = new HashMap<String, Object>();
 	                		payload.put(GroupActivity.STRESS_RATING, stressLevel);
 	                		LogManager.getInstance(me).log("rated_stress", payload);
+	                		
+	                		String filename = recordings.get(i);
+	                		
+	                		if (filename.endsWith(".html"))
+	                		{
+	                			Intent htmlIntent = new Intent(me, HtmlActivity.class);
+	                			htmlIntent.putExtra(HtmlActivity.FILENAME, filename);
+	                			
+	                			me.startActivity(htmlIntent);
+	                		}
+	                		else
+	                		{
+		                		File f = new File(me.getFilesDir(), filename);
+		                		
+								Uri u = Uri.fromFile(f);
+								
+								String title = titles.get(i);
+								String description = descriptions.get(i);
 	
-							Uri u = Uri.parse(recordings.get(i));
-							String title = titles.get(i);
-							String description = descriptions.get(i);
-
-							Log.e("PC", "U: " + u + " -- T: " + title + " D: " + description);
-							
-							me.startActivity(AudioFileManager.getInstance(me).launchIntentForUri(u, title, description));
+								me.startActivity(AudioFileManager.getInstance(me).launchIntentForUri(u, title, description));
+	                		}
 						}
 						catch (NumberFormatException e)
 						{

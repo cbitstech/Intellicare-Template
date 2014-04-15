@@ -1,7 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:robot="http://schemas.android.com/apk/res-auto">
+    xmlns:robot="http://schemas.android.com/apk/res-auto" xmlns:ic="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/action_save"
         android:showAsAction="always"
-        android:title="@string/action_save_wizard_one" />
+        android:title="@string/action_save_wizard_one"
+        ic:title="@string/action_save_wizard_one"/>
 </menu>

@@ -90,6 +90,26 @@ public class TaskActivity extends RatingActivity
 		payload.put("task", this.getIntent().getStringExtra(TaskActivity.MESSAGE));
 		
 		LogManager.getInstance(this).log("task_rated", payload);
+		
+		Intent intent = this.getIntent();
+
+		Uri u = intent.getData();
+		
+		if (u != null)
+		{
+			int currentLesson = Integer.parseInt(u.getPathSegments().get(1));
+			int index = Integer.parseInt(u.getPathSegments().get(2));
+			
+			Message msg = ScheduleManager.getInstance(this).getMessage(currentLesson, index);
+
+			String key = "response_" + msg.lessonId + "_" + msg.index;
+			
+			if (prefs.contains(key) == false)
+			{
+				e.putLong(key, System.currentTimeMillis());
+				e.commit();
+			}
+		}
 
 		this.finish();
 	}
@@ -120,6 +140,9 @@ public class TaskActivity extends RatingActivity
 			
 			String contents = bout.toString();
 			bout.close();
+			
+			if (imageUrl.endsWith(".jpg") == false)
+				imageUrl = imageUrl + ".jpg";
 			
 			contents = contents.replace("[[ CONTENT ]]", content);
 			contents = contents.replace("[[ IMAGE ]]", imageUrl);

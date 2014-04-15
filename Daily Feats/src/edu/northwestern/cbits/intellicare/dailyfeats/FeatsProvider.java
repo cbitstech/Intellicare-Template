@@ -5,7 +5,12 @@ package edu.northwestern.cbits.intellicare.dailyfeats;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -38,10 +43,13 @@ public class FeatsProvider extends android.content.ContentProvider
     private UriMatcher mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     private SQLiteDatabase mDb = null;
 
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 	private static final long DAY_LENGTH = 1000 * 3600 * 24;
 	protected static final String START_FEATS_DATE = "start_feats_date";
 	private static final long STREAK_LENGTH = 3;
+
+	private static final String MIN_FEAT_COUNT = "min_feat_count";
+	private static final int DEFAULT_MIN_FEAT_COUNT = 2;
     
     public FeatsProvider()
     {
@@ -259,6 +267,28 @@ public class FeatsProvider extends android.content.ContentProvider
 	    		        autoFeat.put("feat_level", 99);
 	    		        autoFeat.put("enabled", false);
 	    		        db.insert(FEATS_TABLE, null, autoFeat);
+                    case 4:
+	    		        ContentValues newFeat = new ContentValues();
+
+	    		        newFeat = new ContentValues();
+	    		        newFeat.put("feat_name", context.getString(R.string.feat_2_3));
+	    		        newFeat.put("feat_level", 2);
+	    		        db.insert(FEATS_TABLE, null, newFeat);
+
+	    		        newFeat = new ContentValues();
+	    		        newFeat.put("feat_name", context.getString(R.string.feat_3_4));
+	    		        newFeat.put("feat_level", 3);
+	    		        db.insert(FEATS_TABLE, null, newFeat);
+
+	    		        newFeat = new ContentValues();
+	    		        newFeat.put("feat_name", context.getString(R.string.feat_4_3));
+	    		        newFeat.put("feat_level", 4);
+	    		        db.insert(FEATS_TABLE, null, newFeat);
+
+	    		        newFeat = new ContentValues();
+	    		        newFeat.put("feat_name", context.getString(R.string.feat_4_4));
+	    		        newFeat.put("feat_level", 4);
+	    		        db.insert(FEATS_TABLE, null, newFeat);
                     default:
                     	break;
                 }
@@ -399,7 +429,44 @@ public class FeatsProvider extends android.content.ContentProvider
 		
 		return hasFeat;
 	}
-	
+
+	public static Collection<String> featsForDate(Context context, Date date) 
+	{
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		
+		calendar.set(Calendar.HOUR, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+
+		long start = calendar.getTimeInMillis();
+		
+		calendar.set(Calendar.HOUR, 23);
+		calendar.set(Calendar.MINUTE, 59);
+		calendar.set(Calendar.MILLISECOND, 999);
+
+		long end = calendar.getTimeInMillis();
+
+		String selection = "recorded >= ? AND recorded <= ?";
+		String[] args = { "" + start, "" + end };
+		
+		HashSet<String> feats = new HashSet<String>();
+		
+		Cursor c = context.getContentResolver().query(FeatsProvider.RESPONSES_URI, null, selection, args, null);
+		
+		while (c.moveToNext())
+		{
+			String feat = c.getString(c.getColumnIndex("feat"));
+			
+			if (feats.contains(feat) == false)
+				feats.add(feat);
+		}
+		
+		c.close();
+		
+		return feats;
+	}
+
 	public static void clearFeats(Context context, String featName, Date date)
 	{
 		Calendar calendar = Calendar.getInstance();
@@ -435,31 +502,7 @@ public class FeatsProvider extends android.content.ContentProvider
 
 	public static int featCountForDate(Context context, Date date) 
 	{
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
-		
-		calendar.set(Calendar.HOUR, 0);
-		calendar.set(Calendar.MINUTE, 0);
-		calendar.set(Calendar.MILLISECOND, 0);
-
-		long start = calendar.getTimeInMillis();
-		
-		calendar.set(Calendar.HOUR, 23);
-		calendar.set(Calendar.MINUTE, 59);
-		calendar.set(Calendar.MILLISECOND, 999);
-
-		long end = calendar.getTimeInMillis();
-
-		String selection = "recorded >= ? AND recorded <= ?";
-		String[] args = { "" + start, "" + end };
-		
-		Cursor c = context.getContentResolver().query(FeatsProvider.RESPONSES_URI, null, selection, args, null);
-		
-		int count = c.getCount();
-		
-		c.close();
-		
-		return count;
+		return FeatsProvider.featsForDate(context, date).size();
 	}
 
 	public static void updateLevel(Context context, int level) 
@@ -646,15 +689,113 @@ public class FeatsProvider extends android.content.ContentProvider
 		
 		cursor.close();
 		
+		/*
 		String featsWhere = "feat_level = ?";
 		String[] featsArgs = { "" + level };
 		
 		cursor = context.getContentResolver().query(FeatsProvider.FEATS_URI, null, featsWhere, featsArgs, null);
-		
-		final int minFeatCount = (cursor.getCount() / 2) + 1;
-		
+
 		cursor.close();
+		*/
+
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		
+		int minFeatCount = prefs.getInt(FeatsProvider.MIN_FEAT_COUNT, FeatsProvider.DEFAULT_MIN_FEAT_COUNT); // (cursor.getCount() / 2) + 1;
 		
 		return (count >= minFeatCount);
+	}
+
+	public static ArrayList<FeatCount> activeStreaks(Context context) 
+	{
+		HashMap<String, Integer> counts = new HashMap<String, Integer>();
+		
+		Calendar cal = Calendar.getInstance();
+		
+		Date today = cal.getTime();
+		
+		Collection<String> feats = FeatsProvider.featsForDate(context, today);
+		
+		for (String feat : feats)
+		{
+			counts.put(feat, Integer.valueOf(1));
+		}
+
+		feats.add("");
+		
+		HashSet<String> currentFeats = null;
+		
+		while (feats.size() > 0)
+		{
+			cal.setTimeInMillis(cal.getTimeInMillis() - (24 * 60 * 60 * 1000));
+			
+			Date day = cal.getTime();
+			
+			feats = FeatsProvider.featsForDate(context, day);
+			
+			if (currentFeats == null)
+			{
+				currentFeats = new HashSet<String>();
+
+				for (String feat : feats)
+				{
+					currentFeats.add(feat);
+				}
+			}
+
+			HashSet<String> toRemove = new HashSet<String>();
+			
+			for (String feat : currentFeats)
+			{
+				if (feats.contains(feat) == false)
+					toRemove.add(feat);
+			}
+
+			currentFeats.removeAll(toRemove);
+
+			for (String feat : feats)
+			{
+				if (currentFeats.contains(feat))
+				{
+					Integer count = Integer.valueOf(0);
+					
+					if (counts.containsKey(feat))
+						count = counts.get(feat);
+					
+					counts.put(feat, Integer.valueOf(count.intValue() + 1));
+				}
+			}
+		}
+
+		ArrayList<FeatCount> featCounts = new ArrayList<FeatCount>();
+		
+		for (String feat : counts.keySet())
+		{
+			FeatCount featCount = new FeatCount();
+			featCount.feat = feat;
+			featCount.count = counts.get(feat);
+			
+			featCounts.add(featCount);
+		}
+		
+		Collections.sort(featCounts, new Comparator<FeatCount>()
+		{
+			public int compare(FeatCount one, FeatCount two) 
+			{
+				int compare = two.count.compareTo(one.count);
+				
+				if (compare == 0)
+					compare = one.feat.compareTo(two.feat);
+				
+				return compare;
+			}
+		});
+		
+		return featCounts;
+	}
+	
+	static class FeatCount
+	{
+		public String feat = "";
+		public Integer count = Integer.valueOf(0); 
 	}
 }

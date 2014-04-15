@@ -35,7 +35,7 @@
     <string name="tool_replay_intro">Replay Intro</string>
     <string name="desc_replay_intro"></string> <!-- Mark -->
     <string name="profile_wizard">Profile</string>
-    <string name="desc_profile_wizard">Your worry settings.</string>
+    <string name="desc_profile_wizard">Your worry settings</string>
     <string name="main_activity_title">Cows Are Ruminants</string>
 
     <string name="hint_comments">One thing you\'ve worried about lately.</string>
@@ -43,6 +43,7 @@
     <!-- Worry Practice Tool Details -->
     <string name="wpt_instructions_title">Using the Worry Practice Tool</string>
     <string name="wpt_instructions">Press \"Start\" to begin the timer; then concentrate exclusively on your worries. When the timer stops, M00-ve on to something else.</string>
+    <string name="wpt_in_timer_instructions">Spend some time focusing exclusively on your worries. When the timer ends,  take a break for a while.</string>
 
     <string name="time_picker_title">Set practice length:</string>
 
@@ -121,20 +122,6 @@
         <item>Nervousness</item>
     </string-array>
 
-    <!-- Probably need to just delete; have to refactor activity. -->
-    <string-array name="intro_titles">
-        <item>Meet Bessie</item>
-        <item>Bessie is our friend</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>9</item>
-        <item>10</item>
-        <item>11</item>
-    </string-array>
 
     <string-array name="pun_bank">
         <item>rumination - udderly unfun</item>
@@ -158,21 +145,20 @@
     </string-array>
 
     <string-array name="intro_content">
-        <item>People (like cows) are creatures of habit.</item>
-        <item>They live their lives, doing, thinking, feeling…</item>
-        <item>But, sometimes, when you start thinking about something…</item>
-        <item>Then you think about it again…</item>
-        <item>And again…</item>
-        <item>And after all that thinking you start to feel worried…</item>
-        <item>Or stressed…</item>
-        <item>That’s when you know you’re ruminating.</item>
-        <item>Rumination can be very difficult to manage.</item>
-        <item>We’ll show you a few basic strategies on how to help with this.</item>
-        <item>Now… let’s begin.</item>
+        <item>Welcome to \"Cows Are Ruminants\". If you look down--you will see Bessie, your guide to rumination.</item>
+        <item>Rumination is a way of thinking that may cause you to worry--but it\'s important to remember that not all thinking is bad.</item>
+        <item>Rumination is what happens when you start thinking about something…</item>
+        <item>Then you think about it again… And again… And after all that thinking you start to feel worried… Or stressed…</item>
+        <item>\"Cows Are Ruminants\" is designed to do a few things.</item>
+        <item>First, you\'ll be asked to set some preferences about when and how we can interrupt you to ask how you\'re doing.</item>
+        <item>Second, Bessie is going to ask you to check in every now and then and tell us if you have been ruminating--and what you\'ve been ruminating about.</item>
+        <item>Third, when you check in, we\'re going to give you a few basic strategies on how to help with rumination.</item>
+        <item>You can ALWAYS go to the app if you don\'t want to wait for Bessie to bother you.</item>
+        <item>Now… let’s MOOve!.</item>
     </string-array>
 
     <!-- Prompt to finish intro -->
-    <string name="nope">Talk to bessie more.</string>
+    <string name="nope">First, finish the intro...</string>
 
     <string-array name="didactic_content1">
         <item>Distract with books, movies, magazines, museums, a busy street or bustling park.</item>
@@ -298,5 +284,7 @@
     <string name="db_create_didactic_use_table">CREATE TABLE IF NOT EXISTS didactic_use (
 	_id INTEGER PRIMARY KEY,
     didactic_timestamp INTEGER)</string>
+    <string name="profile_explaination">Change your notification preferences here...</string>
+
 
 </resources>

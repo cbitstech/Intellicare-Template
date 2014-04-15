@@ -1,5 +1,11 @@
 package edu.northwestern.cbits.intellicare;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -50,6 +56,21 @@ public class StatusNotificationManager
 	@SuppressLint("NewApi")
 	public void notifyBigText(int appId, int icon, String title, String message, PendingIntent intent, Uri uri, boolean persistent)
 	{
+	    final Intent i = new Intent("com.getpebble.action.SEND_NOTIFICATION");
+
+	    final Map<String, String> data = new HashMap<String, String>();
+	    data.put("title", title);
+	    data.put("body", message);
+	    
+	    final JSONObject jsonData = new JSONObject(data);
+	    final String notificationData = new JSONArray().put(jsonData).toString();
+
+	    i.putExtra("messageType", "PEBBLE_ALERT");
+	    i.putExtra("sender", "Intellicare");
+	    i.putExtra("notificationData", notificationData);
+
+	    this._context.sendBroadcast(i);
+	    
 		PackageManager packages = this._context.getPackageManager();
 		
 		try 

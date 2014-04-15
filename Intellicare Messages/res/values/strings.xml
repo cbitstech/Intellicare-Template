@@ -271,8 +271,15 @@
 
   	<string name="launch_description">Day-to-Day will prompt you throughout the day with messages and exercises that help improve your mood.</string>
   	<string name="launch_next_message">Your next message is scheduled for:</string>
-  	<string name="launch_date_format">\'Shortly after \'h:mm a\' on \'EEEE\'.\'</string>
-  	<string name="launch_date_none">No upcoming messages scheduled.</string>
+  	<string name="launch_date_format">EEEE\', \'h:mm a</string>
+  	<string name="launch_date_none">No upcoming messages.</string>
   					
   	<string name="toast_rating_thanks">Thanks for the rating!</string>
+
+  	<string name="subtitle_launch" formatted="false">Next message: %s</string>
+  	<string name="subtitle_launch_waiting">Waiting for next lesson&#8230;</string>
+	<string name="title_launch">Earlier Tips &amp; Tasks</string>
+  		
+  	<string name="unknown_response_date">Unknown Response Date</string>
+  	<string name="message_no_responses">This list will populate with your responses once you have rated a few messages.</string>
 </resources>

@@ -3,8 +3,12 @@ package edu.northwestern.cbits.intellicare.messages;
 import java.util.HashMap;
 
 import android.app.AlertDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,6 +56,29 @@ public class TipActivity extends TaskActivity
 		LogManager.getInstance(this).log("tip_rated", payload);
 
 		this.finish();
+
+		Intent intent = this.getIntent();
+
+		Uri u = intent.getData();
+		
+		if (u != null)
+		{
+			int currentLesson = Integer.parseInt(u.getPathSegments().get(1));
+			int index = Integer.parseInt(u.getPathSegments().get(2));
+			
+			Message msg = ScheduleManager.getInstance(this).getMessage(currentLesson, index);
+
+			String key = "response_" + msg.lessonId + "_" + msg.index;
+			
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+			if (prefs.contains(key) == false)
+			{
+				Editor e = prefs.edit();
+				e.putLong(key, System.currentTimeMillis());
+				e.commit();
+			}
+		}
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) 

@@ -7,6 +7,51 @@
     android:weightSum="1">
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/wpt_in_timer_instructions"
+        android:id="@+id/textView"
+        android:gravity="center_vertical|center_horizontal"
+        android:textStyle="bold|italic"
+        android:textSize="22sp"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="6dp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/start_wpt"
+            android:id="@+id/start_button"
+            android:minWidth="48dp"
+            android:minHeight="36dp"
+            android:textStyle="bold"
+            android:background="#7cbc6e"
+            android:padding="12dp"
+            android:layout_marginRight="6dp"
+            android:singleLine="false" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reset_wpt"
+            android:id="@+id/reset_button"
+            android:minWidth="48dp"
+            android:minHeight="36dp"
+            android:textStyle="bold"
+            android:background="#7cbc6e"
+            android:padding="12dp"
+            android:layout_marginLeft="6dp"
+            android:singleLine="false"
+            android:shadowColor="#636363" />
+    </LinearLayout>
+
+    <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -54,41 +99,7 @@
             android:layout_gravity="center|left"
             android:gravity="center_horizontal|left"
             android:minWidth="144dp" />
-    </LinearLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/start_wpt"
-            android:id="@+id/start_button"
-            android:minWidth="48dp"
-            android:minHeight="36dp"
-            android:textStyle="bold"
-            android:background="#7cbc6e"
-            android:padding="12dp"
-            android:layout_marginRight="6dp"
-            android:singleLine="false" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/reset_wpt"
-            android:id="@+id/reset_button"
-            android:minWidth="48dp"
-            android:minHeight="36dp"
-            android:textStyle="bold"
-            android:background="#7cbc6e"
-            android:padding="12dp"
-            android:layout_marginLeft="6dp"
-            android:singleLine="false"
-            android:shadowColor="#636363" />
     </LinearLayout>
 
     <Button

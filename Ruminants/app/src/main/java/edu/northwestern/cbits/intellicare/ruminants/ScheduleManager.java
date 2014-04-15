@@ -24,8 +24,8 @@ public class ScheduleManager {
 //    public static final String REMINDER_HOUR = "preferred_hour";
 //    public static final String REMINDER_MINUTE = "preferred_minutes";
 
-    public static final int DEFAULT_PROFILE_HOUR = 16;
-    public static final int DEFAULT_PROFILE_MINUTE = 35;
+    public static final int DEFAULT_PROFILE_HOUR = 9;
+    public static final int DEFAULT_PROFILE_MINUTE = 00;
 
 //    private static final String LAST_PROFILE_NOTIFICATION = "last_notification";
 //    private static final String LAST_PROFILE_NOTIFICATION = "last_notification";

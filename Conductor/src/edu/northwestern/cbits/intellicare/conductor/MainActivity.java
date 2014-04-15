@@ -604,6 +604,8 @@ public class MainActivity extends ConsentedActivity
 						String[] args = { urlString };
 						
 						me.getContentResolver().update(ConductorContentProvider.MESSAGES_URI, values, selection, args);
+					
+				    	me.startService(new Intent(MessagesService.REFRESH_MESSAGES));
 					}
 					catch (ActivityNotFoundException e)
 					{

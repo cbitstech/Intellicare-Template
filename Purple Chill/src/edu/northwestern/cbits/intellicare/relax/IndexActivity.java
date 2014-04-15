@@ -50,88 +50,131 @@ public class IndexActivity extends ConsentedActivity
 	public void onResume()
 	{
 		super.onResume();
-		
-		LogManager.getInstance(this).log("viewed_index", null);
 
-		final String[] titles = this.getResources().getStringArray(R.array.group_titles);
-		final String[] descriptions = this.getResources().getStringArray(R.array.group_descriptions);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-		final IndexActivity me = this;
-
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row_group, titles)
+		if (ConsentActivity.isConsented() == true && prefs.getBoolean(HelpActivity.HELP_COMPLETED, false) == false)
+			this.startActivity(new Intent(this, HelpActivity.class));
+		else if (DownloadManager.getInstance(this).downloadsComplete() == false)
 		{
-			public View getView(int position, View convertView, ViewGroup parent)
-			{
-				if (convertView == null)
-				{
-					LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-					convertView = inflater.inflate(R.layout.row_group, parent, false);
-				}
-				
-				TextView title = (TextView) convertView.findViewById(R.id.group_title);
-				TextView description = (TextView) convertView.findViewById(R.id.group_description);
-				
-				title.setText(titles[position]);
-				description.setText(descriptions[position]);
-				
-				return convertView;
-			}
-		};
-
-		ListView list = (ListView) this.findViewById(R.id.list_view);
-		list.setAdapter(adapter);
-		
-		list.setOnItemClickListener(new OnItemClickListener()
+			Intent intent = new Intent(this, DownloadActivity.class);
+			this.startActivity(intent);
+			
+			this.finish();
+		}
+		else
 		{
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
+			LogManager.getInstance(this).log("viewed_index", null);
+	
+			final String[] titles = this.getResources().getStringArray(R.array.group_titles);
+			final String[] descriptions = this.getResources().getStringArray(R.array.group_descriptions);
+	
+			final IndexActivity me = this;
+	
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row_group, titles)
 			{
-				Intent playerIntent = new Intent(me, GroupActivity.class);
-				
-				playerIntent.putExtra(GroupActivity.GROUP_NAME, titles[position]);
-				
-				switch (position)
+				public View getView(int position, View convertView, ViewGroup parent)
 				{
-					case 0:
-						playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.deep_breathing_media_urls);
-						playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.deep_breathing_media_url_titles);
-						playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.deep_breathing_media_url_times);
-						playerIntent.putExtra(GroupActivity.GROUP_DESCRIPTIONS, R.array.deep_breathing_descs);
-						break;
-					case 1:
-						playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.muscle_media_urls);
-						playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.muscle_media_url_titles);
-						playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.muscle_media_url_times);
-						playerIntent.putExtra(GroupActivity.GROUP_DESCRIPTIONS, R.array.muscle_descs);
-						break;
-					case 2:
-						playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.autogenic_media_urls);
-						playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.autogenic_media_url_titles);
-						playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.autogenic_media_url_times);
-						playerIntent.putExtra(GroupActivity.GROUP_DESCRIPTIONS, R.array.autogenic_descs);
-						break;
-					case 3:
-						playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.visualization_media_urls);
-						playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.visualization_media_url_titles);
-						playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.visualization_media_url_times);
-						playerIntent.putExtra(GroupActivity.GROUP_DESCRIPTIONS, R.array.visualization_descs);
-						break;
-					case 4:
-						playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.mindfulness_media_urls);
-						playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.mindfulness_media_url_titles);
-						playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.mindfulness_media_url_times);
-						playerIntent.putExtra(GroupActivity.GROUP_DESCRIPTIONS, R.array.mindfulness_descs);
-						break;
-					case 5:
-						playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.sleep_media_urls);
-						playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.sleep_media_url_titles);
-						playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.sleep_media_url_times);
-						playerIntent.putExtra(GroupActivity.GROUP_DESCRIPTIONS, R.array.sleep_descs);
-						break;
+					if (convertView == null)
+					{
+						LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+						convertView = inflater.inflate(R.layout.row_group, parent, false);
+					}
+					
+					TextView title = (TextView) convertView.findViewById(R.id.group_title);
+					TextView description = (TextView) convertView.findViewById(R.id.group_description);
+					
+					title.setText(titles[position]);
+					description.setText(descriptions[position]);
+					
+					return convertView;
 				}
+			};
+	
+			ListView list = (ListView) this.findViewById(R.id.list_view);
+			list.setAdapter(adapter);
+			
+			list.setOnItemClickListener(new OnItemClickListener()
+			{
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
+				{
+					Intent playerIntent = new Intent(me, GroupActivity.class);
+					
+					playerIntent.putExtra(GroupActivity.GROUP_NAME, titles[position]);
+					
+					switch (position)
+					{
+						case 0:
+							playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.deep_breathing_media_files);
+							playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.deep_breathing_media_url_titles);
+							playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.deep_breathing_media_url_times);
+							playerIntent.putExtra(GroupActivity.GROUP_DESCRIPTIONS, R.array.deep_breathing_descs);
+							break;
+						case 1:
+							playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.muscle_media_files);
+							playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.muscle_media_url_titles);
+							playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.muscle_media_url_times);
+							playerIntent.putExtra(GroupActivity.GROUP_DESCRIPTIONS, R.array.muscle_descs);
+							break;
+						case 2:
+							playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.autogenic_media_files);
+							playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.autogenic_media_url_titles);
+							playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.autogenic_media_url_times);
+							playerIntent.putExtra(GroupActivity.GROUP_DESCRIPTIONS, R.array.autogenic_descs);
+							break;
+						case 3:
+							playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.visualization_media_files);
+							playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.visualization_media_url_titles);
+							playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.visualization_media_url_times);
+							playerIntent.putExtra(GroupActivity.GROUP_DESCRIPTIONS, R.array.visualization_descs);
+							break;
+						case 4:
+							playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.mindfulness_media_files);
+							playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.mindfulness_media_url_titles);
+							playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.mindfulness_media_url_times);
+							playerIntent.putExtra(GroupActivity.GROUP_DESCRIPTIONS, R.array.mindfulness_descs);
+							break;
+						case 5:
+							playerIntent.putExtra(GroupActivity.GROUP_MEDIA, R.array.sleep_media_files);
+							playerIntent.putExtra(GroupActivity.GROUP_TITLES, R.array.sleep_media_url_titles);
+							playerIntent.putExtra(GroupActivity.GROUP_TIMES, R.array.sleep_media_url_times);
+							playerIntent.putExtra(GroupActivity.GROUP_DESCRIPTIONS, R.array.sleep_descs);
+							break;
+					}
+					
+					me.startActivity(playerIntent);
+				}
+			});
+			
+			LinearLayout currentTrack = (LinearLayout) this.findViewById(R.id.current_track);
+			
+			final AudioFileManager audio = AudioFileManager.getInstance(this);
+	
+			if (audio.isPlaying())
+			{
+				currentTrack.setVisibility(View.VISIBLE);
+	
+				ImageButton trackButton = (ImageButton) this.findViewById(R.id.goto_current_track);
 				
-				me.startActivity(playerIntent);
+				trackButton.setOnClickListener(new OnClickListener()
+				{
+					public void onClick(View v) 
+					{
+						Intent playerIntent = audio.launchIntentForCurrentTrack();
+						
+						if (playerIntent != null)
+							me.startActivity(playerIntent);
+						else
+							Log.e("PC", "NULL INTENT FOR CURRENTLY PLAYING!!!");
+					}
+				});
+				
+				TextView trackName = (TextView) this.findViewById(R.id.current_track_name);
+				trackName.setText(audio.currentTrackTitle());
 			}
-		});
+			else
+				currentTrack.setVisibility(View.GONE);
+		}
 		
 		CrashManager.register(this, APP_ID, new CrashManagerListener() 
 		{
@@ -140,40 +183,6 @@ public class IndexActivity extends ConsentedActivity
 				    return true;
 			}
 		});
-		
-		LinearLayout currentTrack = (LinearLayout) this.findViewById(R.id.current_track);
-		
-		final AudioFileManager audio = AudioFileManager.getInstance(this);
-
-		if (audio.isPlaying())
-		{
-			currentTrack.setVisibility(View.VISIBLE);
-
-			ImageButton trackButton = (ImageButton) this.findViewById(R.id.goto_current_track);
-			
-			trackButton.setOnClickListener(new OnClickListener()
-			{
-				public void onClick(View v) 
-				{
-					Intent playerIntent = audio.launchIntentForCurrentTrack();
-					
-					if (playerIntent != null)
-						me.startActivity(playerIntent);
-					else
-						Log.e("PC", "NULL INTENT FOR CURRENTLY PLAYING!!!");
-				}
-			});
-			
-			TextView trackName = (TextView) this.findViewById(R.id.current_track_name);
-			trackName.setText(audio.currentTrackTitle());
-		}
-		else
-			currentTrack.setVisibility(View.GONE);
-		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-		if (ConsentActivity.isConsented() == true && prefs.getBoolean(HelpActivity.HELP_COMPLETED, false) == false)
-			this.startActivity(new Intent(this, HelpActivity.class));
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) 
@@ -196,9 +205,9 @@ public class IndexActivity extends ConsentedActivity
 			this.startActivity(settingsIntent);
 		}
 		else if (item.getItemId() == R.id.action_feedback)
-		{
 			this.sendFeedback(this.getString(R.string.app_name));
-		}
+		else if (item.getItemId() == R.id.action_faq)
+			this.showFaq(this.getString(R.string.app_name));
 		
 		return true;
 	}

@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>CSS DOT</title>
+		<style type="text/css">
+			#dot {
+				margin-left: auto;
+				margin-right: auto;
+				margin-top: 100px;
+				width: 100px;
+				height: 100px;
+				background: gainsboro;
+				-moz-border-radius: 50px;
+				-webkit-border-radius: 50px;
+				border-radius: 50px;
+
+				-webkit-animation: breathe 100s; 
+				-webkit animation-timing-function: linear;
+			}
+
+			@-webkit-keyframes breathe {
+				0%  { border-radius: 50px; width: 100px; height: 100px; }
+				7%  { border-radius: 100px; width: 200px; height: 200px; }
+				10% { border-radius: 100px; width: 200px; height: 200px; }
+				17% { border-radius: 50px; width: 100px; height: 100px; }
+				20% { border-radius: 50px; width: 100px; height: 100px; }
+				27% { border-radius: 100px; width: 200px; height: 200px; }
+				30% { border-radius: 100px; width: 200px; height: 200px; }
+				37% { border-radius: 50px; width: 100px; height: 100px; }
+				40% { border-radius: 50px; width: 100px; height: 100px; }
+				47% { border-radius: 100px; width: 200px; height: 200px; }
+				50% { border-radius: 100px; width: 200px; height: 200px; }
+				57% { border-radius: 50px; width: 100px; height: 100px; }
+				60% { border-radius: 50px; width: 100px; height: 100px; }
+				67% { border-radius: 100px; width: 200px; height: 200px; }
+				70% { border-radius: 100px; width: 200px; height: 200px; }
+				77% { border-radius: 50px; width: 100px; height: 100px; }
+				80% { border-radius: 50px; width: 100px; height: 100px; }
+				87% { border-radius: 100px; width: 200px; height: 200px; }
+				90% { border-radius: 100px; width: 200px; height: 200px; }
+				97% { border-radius: 50px; width: 100px; height: 100px; }
+				100% { border-radius: 50px; width: 100px; height: 100px; }
+			}
+		</style>
+	</head>
+	<body>
+		<div id="dot"></div>
+	</body>
+</html>
