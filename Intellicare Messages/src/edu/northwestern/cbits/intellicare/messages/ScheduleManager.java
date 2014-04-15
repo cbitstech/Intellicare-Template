@@ -120,12 +120,12 @@ public class ScheduleManager
 			lessonCursor.close();
 		}
 
+		int index = prefs.getInt(ScheduleManager.MESSAGE_INDEX, 0);
+
 		boolean lessonComplete = prefs.getBoolean(LessonsActivity.LESSON_READ_PREFIX + currentLesson, false);
 
 		if (lessonComplete)
 		{
-			int index = prefs.getInt(ScheduleManager.MESSAGE_INDEX, 0);
-			
 			long notificationTime = this.getNotificationTime(index % 5, now);
 			
 			if (notificationTime > 0 && Math.abs(now - notificationTime) < (30 * 60 * 1000))
