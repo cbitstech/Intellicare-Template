@@ -146,14 +146,14 @@
 
     <string-array name="intro_content">
         <item>Welcome to \"Cows Are Ruminants\". If you look down--you will see Bessie, your guide to rumination.</item>
-        <item>Rumination is a way of thinking that may cause you to worry--but it's important to remember that not all thinking is bad.</item>
+        <item>Rumination is a way of thinking that may cause you to worry--but it\'s important to remember that not all thinking is bad.</item>
         <item>Rumination is what happens when you start thinking about something…</item>
         <item>Then you think about it again… And again… And after all that thinking you start to feel worried… Or stressed…</item>
         <item>\"Cows Are Ruminants\" is designed to do a few things.</item>
-        <item>First, you'll be asked to set some preferences about when and how we can interrupt you to ask how you're doing.</item>
-        <item>Second, Bessie is going to ask you to check in every now and then and tell us if you have been ruminating--and what you've been ruminating about.</item>
-        <item>Third, when you check in, we're going to give you a few basic strategies on how to help with rumination.</item>
-        <item>You can ALWAYS go to the app if you don't want to wait for Bessie to bother you.</item>
+        <item>First, you\'ll be asked to set some preferences about when and how we can interrupt you to ask how you\'re doing.</item>
+        <item>Second, Bessie is going to ask you to check in every now and then and tell us if you have been ruminating--and what you\'ve been ruminating about.</item>
+        <item>Third, when you check in, we\'re going to give you a few basic strategies on how to help with rumination.</item>
+        <item>You can ALWAYS go to the app if you don\'t want to wait for Bessie to bother you.</item>
         <item>Now… let’s MOOve!.</item>
     </string-array>
 
