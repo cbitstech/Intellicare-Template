@@ -175,15 +175,27 @@ public class GroupActivity extends ConsentedActivity
 	                		HashMap<String,Object> payload = new HashMap<String, Object>();
 	                		payload.put(GroupActivity.STRESS_RATING, stressLevel);
 	                		LogManager.getInstance(me).log("rated_stress", payload);
-
-	                		File f = new File(me.getFilesDir(), recordings.get(i));
 	                		
-							Uri u = Uri.fromFile(f);
-							
-							String title = titles.get(i);
-							String description = descriptions.get(i);
-
-							me.startActivity(AudioFileManager.getInstance(me).launchIntentForUri(u, title, description));
+	                		String filename = recordings.get(i);
+	                		
+	                		if (filename.endsWith(".html"))
+	                		{
+	                			Intent htmlIntent = new Intent(me, HtmlActivity.class);
+	                			htmlIntent.putExtra(HtmlActivity.FILENAME, filename);
+	                			
+	                			me.startActivity(htmlIntent);
+	                		}
+	                		else
+	                		{
+		                		File f = new File(me.getFilesDir(), filename);
+		                		
+								Uri u = Uri.fromFile(f);
+								
+								String title = titles.get(i);
+								String description = descriptions.get(i);
+	
+								me.startActivity(AudioFileManager.getInstance(me).launchIntentForUri(u, title, description));
+	                		}
 						}
 						catch (NumberFormatException e)
 						{

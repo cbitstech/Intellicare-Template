@@ -98,6 +98,7 @@
         <item>01_deepBreathing.mp3</item>
         <item>02_deepBreathing.mp3</item>
         <item>01_pmr.mp3</item>
+        <item>dot_tool.html</item>
    	</string-array>
 
 	<string-array name="mindfulness_media_files">
@@ -112,6 +113,7 @@
         <item>04_deepBreathing.mp3</item>
         <item>03_deepBreathing.mp3</item>
    	    <item>02_pmr.mp3</item>
+   	    <item>pmr_tool.html</item>
    	</string-array>
 
 	<string-array name="visualization_media_files">
@@ -133,6 +135,7 @@
         <item>Practice a deep relaxing breath starting from your abdomen rather than your chest.</item>
         <item>Practice breathing through your nose rather than your mouth.</item>
         <item>Practice breathing through your nose rather than your mouth.</item>
+        <item>Use this visualization to time your breathing.</item>
    	</string-array>
 
 	<string-array name="mindfulness_descs">
@@ -147,8 +150,7 @@
 	    <item>A shorter practice of PMR targetting only 4 muscle groups.</item>
         <item>Start with some deep breathing before moving on to PMR.</item>
         <item>Practice creating and releasing tension in your muscles.</item>
-        <item>Letting go of tension (long)</item>
-        <item>Letting go of tension (short)</item>
+        <item>Use this visualization to time your progressive muscle relaxation.</item>
    	</string-array>
 
 	<string-array name="visualization_descs">
@@ -170,6 +172,7 @@
         <item>Abdominal Breathing</item>
         <item>Nostril Breathing (Male Narrator)</item>
         <item>Nostril Breathing (Female Narrator)</item>
+        <item>The Breathing Dot</item>
    	</string-array>
 
 	<string-array name="mindfulness_media_url_titles">
@@ -184,8 +187,7 @@
 	    <item>PMR for 4 Muscle Groups</item>
         <item>PMR for Relaxation</item>
         <item>Practicing PMR with Tension</item>
-        <item>Letting go of tension (long)</item>
-        <item>Letting go of tension (short)</item>
+        <item>Muscle group visualization</item>
    	</string-array>
 
 	<string-array name="visualization_media_url_titles">
@@ -207,8 +209,8 @@
         <item>390</item>
         <item>102</item>
         <item>155</item>
-        <item>0</item>
-  	</string-array>
+        <item>100</item>
+   	</string-array>
 
 	<string-array name="mindfulness_media_url_times">
         <item>896</item>
@@ -222,9 +224,8 @@
 	    <item>1247</item>
         <item>1265</item>
         <item>1197</item>
-        <item>516</item>
-        <item>192</item>
-	</string-array>
+        <item>300</item>
+   	</string-array>
 
 	<string-array name="visualization_media_url_times">
         <item>516</item>
@@ -384,4 +385,15 @@
     <string name="label_thu">Thu.</string>
     <string name="label_fri">Fri.</string>
     <string name="label_sat">Sat.</string>
+    
+  	<string name="title_instructions">Instructions</string>
+  	<string name="action_continue">Continue</string>
+  	
+  	<string name="title_pmr_exercise">Muscle Group Visualization</string>
+  	<string name="subtitle_pmr_exercise">Duration: 5 minutes</string>
+  	<string name="message_pmr_exercise">Use this tool as a prompt for your own progressive muscle relaxation (PMR). If you do not remember how to do PMR, listen to the audio guide again. When the background is grey, contract the muscle group highlighted on the figure. When the background changes to blue, relax. This tool will guide you through a five minute exercise.</string>
+
+  	<string name="title_dot_exercise">Breathing Dot Visualization</string>
+  	<string name="subtitle_dot_exercise">Duration: 1 minute, 40 seconds</string>
+  	<string name="message_dot_exercise">To use this tool, inhale as the dot expands. Try to match the timing of the dot. When the dot contracts, exhale along with it. If you begin to feel lightheaded, try to slow down your breath. You may wish to watch the dot first without breathing along. The dot will guide you through five deep breathing cycles. Remember to sit comfortably and breathe into your stomach.</string>
 </resources>
