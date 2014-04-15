@@ -18,7 +18,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -85,8 +84,6 @@ public class LaunchActivity extends ConsentedActivity
 			
 			int index = prefs.getInt(ScheduleManager.MESSAGE_INDEX, 0);
 	
-			Log.e("D2D", "INDEX: " + index);
-	
 			Date scheduled = null;
 			
 			Date nextScheduled = null;
@@ -145,8 +142,6 @@ public class LaunchActivity extends ConsentedActivity
 
 		int index = prefs.getInt(ScheduleManager.MESSAGE_INDEX, 0);
 		int currentLesson = prefs.getInt(LessonsActivity.LESSON_LEVEL, 0);
-		
-		Log.e("D2D", "INDEX " + index + " -- " + currentLesson);
 		
 		ArrayList<Integer> lessons = new ArrayList<Integer>();
 		
