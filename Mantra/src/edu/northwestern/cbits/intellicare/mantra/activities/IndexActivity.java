@@ -56,11 +56,11 @@ import android.widget.GridView;
  * @author mohrlab
  *
  */
-public class NoFragmentsHomeActivity extends ConsentedActivity {
+public class IndexActivity extends ConsentedActivity {
 	
-	private static final String CN = "NoFragmentsHomeActivity";
+	private static final String CN = "IndexActivity";
 	
-	private final NoFragmentsHomeActivity self = this;
+	private final IndexActivity self = this;
 	
 	private boolean displayedMantraAttachToast = false;
 
@@ -184,7 +184,7 @@ public class NoFragmentsHomeActivity extends ConsentedActivity {
 							case 0:
 								Log.d(CN+".onItemLongClick....onClick", "You chose " + optionItems[which]);
 								
-								((NoFragmentsHomeActivity) self).editSelectedMantraCaption(self, id);
+								((IndexActivity) self).editSelectedMantraCaption(self, id);
 								break;
 
 							case 1:
@@ -198,7 +198,7 @@ public class NoFragmentsHomeActivity extends ConsentedActivity {
 									@Override
 									public void onClick(DialogInterface dialog, int which) {
 										int rowsDeleted = FocusBoardManager.get(self).deleteFocusBoard(id);
-										((NoFragmentsHomeActivity) self).attachGridView(self);
+										((IndexActivity) self).attachGridView(self);
 										Log.d(CN+".onItemLongClick....onClick", "deleted row = " + id + "; deleted row count = " + rowsDeleted);
 									}
 								});

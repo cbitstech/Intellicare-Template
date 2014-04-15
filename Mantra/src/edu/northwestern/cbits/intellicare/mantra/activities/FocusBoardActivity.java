@@ -146,8 +146,8 @@ public class FocusBoardActivity extends ActionBarActivity {
 					
 					@Override
 					public void run() {
-						Log.e(CN+".handleSelectedImageIntent", "about to run NoFragmentsHomeActivity.editSelectedMantraCaption");
-						NoFragmentsHomeActivity.editSelectedMantraCaption(self, mFocusBoardId);
+						Log.e(CN+".handleSelectedImageIntent", "about to run IndexActivity.editSelectedMantraCaption");
+						IndexActivity.editSelectedMantraCaption(self, mFocusBoardId);
 					}
 				});
 			}
