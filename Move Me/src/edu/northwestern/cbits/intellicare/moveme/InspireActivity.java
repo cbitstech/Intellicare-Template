@@ -54,7 +54,7 @@ public class InspireActivity extends ConsentedActivity
         return true;
     }
 
-	@SuppressLint("InlinedApi") private void launchSchedule() 
+	@SuppressLint({ "InlinedApi", "NewApi" }) private void launchSchedule() 
 	{
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 		{
@@ -170,7 +170,10 @@ public class InspireActivity extends ConsentedActivity
 				switch(which)
 				{
 					case 0:
-						Toast.makeText(me, "ToDO: List LeSSONs", Toast.LENGTH_LONG).show();
+						Intent lessonsIntent = new Intent(me, LessonsActivity.class);
+						
+						me.startActivity(lessonsIntent);
+
 						break;
 					case 1:
 						Toast.makeText(me, "ToDO: List ViDeOS", Toast.LENGTH_LONG).show();
@@ -182,7 +185,7 @@ public class InspireActivity extends ConsentedActivity
 		builder.create().show();
 	}
 
-	@SuppressLint("InlinedApi") 
+	@SuppressLint({ "InlinedApi", "NewApi" }) 
 	@SuppressWarnings("deprecation")
 	private void launchMusicPlayer() 
 	{

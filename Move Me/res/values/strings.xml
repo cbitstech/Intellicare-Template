@@ -119,4 +119,45 @@
         <item>150 minutes</item>
         <item>200 minutes</item>
  	</string-array>
+
+    <string name="title_lessons">Lessons</string>
+
+    <string-array name="array_lessons">
+        <item>Goals*</item>
+        <item>How much should I exercise?</item>
+        <item>How hard should I exercise?</item>
+        <item>What kind of physical activity should I do?</item>
+        <item>How do I develop activity as a habit?</item>
+        <item>How do I get – and stay – motivated to move?</item>
+        <item>How can I re-motivate when I’m feeling low?</item>
+        <item>How do I plan my activity for the week?</item>
+        <item>Obstacles: Motivation*</item>
+        <item>Motivation pitfalls</item>
+        <item>Resorting your motivation heirarchy</item>
+        <item>Looking outward for motivation</item>
+        <item>Obstacles: Motivation-Sapping Thoughts*</item>
+        <item>Morning</item>
+        <item>Afternoon</item>
+        <item>Evening</item>
+   	</string-array>
+
+    <string-array name="array_lesson_urls">
+        <item></item>
+        <item>how_much.html</item>
+        <item>how_hard.html</item>
+        <item>kind.html</item>
+        <item>habit.html</item>
+        <item>motivated.html</item>
+        <item>remotivate.html</item>
+        <item>plan.html</item>
+        <item></item>
+        <item>pitfalls.html</item>
+        <item>heirarchy.html</item>
+        <item>outward.html</item>
+        <item></item>
+        <item>morning.html</item>
+        <item>afternoon.html</item>
+        <item>evening.html</item>
+   	</string-array>
+    
 </resources>

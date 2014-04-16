@@ -23,6 +23,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".DashboardActivity" android:label="@string/app_name" />
+        <activity android:name=".LessonsActivity" android:label="@string/app_name" />
+        <activity android:name=".LessonActivity" android:label="@string/app_name" />
         <activity android:name=".IntroActivity" android:label="@string/app_name" />
         <activity android:name=".TimerActivity" android:label="@string/app_name" />
         <activity android:name=".InspireActivity" android:label="@string/app_name" />
