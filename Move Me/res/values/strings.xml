@@ -105,6 +105,7 @@
  	</string-array>
 
     <string name="action_continue">Continue</string>
+    
     <string name="action_finish">Finish</string>
     
     <string name="instructions_timer">Press the PLAY button above to begin your workout. Tap the button again to PAUSE your workout. When you complete your workout, tap the button below to save your exercise.</string>
@@ -159,5 +160,13 @@
         <item>afternoon.html</item>
         <item>evening.html</item>
    	</string-array>
+
+    <string name="action_log">Exercise Log</string>
+    <string name="title_log">Exercise Log</string>
     
+	<string name="db_create_exercises_table">CREATE TABLE IF NOT EXISTS exercises (_id INTEGER PRIMARY KEY NOT NULL, duration INTEGER NOT NULL, recorded INTEGER NOT NULL, premood INTEGER NOT NULL, postmood INTEGER NOT NULL);</string>
+	
+	<string name="mood_range" formatted="false">From %d to %d</string>
+	<string name="duration_label" formatted="false">Time Spent: %ss</string>
+		
 </resources>

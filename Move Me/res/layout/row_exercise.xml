@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+    <TextView android:id="@+id/mood_change"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:textSize="32sp"
+        android:textStyle="bold" 
+        android:gravity="right"
+        android:layout_marginRight="8dp" />
+    <LinearLayout android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+	   	<TextView android:id="@+id/recorded"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:gravity="center_vertical"
+		    android:textSize="18sp"
+		    android:paddingBottom="4dp" 
+		    android:paddingRight="4dp" />
+	   	<TextView android:id="@+id/duration"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:gravity="center_vertical"
+		    android:textSize="18sp"
+		    android:paddingRight="4dp" />
+	   	<TextView android:id="@+id/mood_range"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:gravity="center_vertical"
+		    android:textSize="14sp"
+		    android:paddingTop="4dp"
+		    android:paddingRight="4dp" />
+    </LinearLayout>
+</LinearLayout>    

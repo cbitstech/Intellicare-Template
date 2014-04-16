@@ -2,6 +2,7 @@ package edu.northwestern.cbits.intellicare.moveme;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -68,6 +69,14 @@ public class TimerActivity extends ConsentedActivity
 				{
 					public void onClick(DialogInterface dialog, int which) 
 					{
+						ContentValues values = new ContentValues();
+						values.put(MoveProvider.RECORDED, System.currentTimeMillis());
+						values.put(MoveProvider.DURATION, TimerActivity._elapsed);
+						values.put(MoveProvider.PRE_MOOD, TimerActivity._preMood);
+						values.put(MoveProvider.POST_MOOD, TimerActivity._postMood);
+
+						me.getContentResolver().insert(MoveProvider.EXERCISES_URI, values);
+						
 						me.finish();
 					}
 				});
@@ -246,7 +255,7 @@ public class TimerActivity extends ConsentedActivity
         return true;
     }
 
-	@SuppressLint("InlinedApi") 
+	@SuppressLint({ "InlinedApi", "NewApi" }) 
 	@SuppressWarnings("deprecation")
 	private void launchMusicPlayer() 
 	{

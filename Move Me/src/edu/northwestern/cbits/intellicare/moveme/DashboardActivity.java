@@ -30,9 +30,9 @@ public class DashboardActivity extends ConsentedActivity
 
     public boolean onOptionsItemSelected(MenuItem item) 
     {
-    	if (item.getItemId() == R.id.action_map)
+    	if (item.getItemId() == R.id.action_log)
     	{
-    		Intent intent = new Intent(this, MapActivity.class);
+    		Intent intent = new Intent(this, LogActivity.class);
     		
     		this.startActivity(intent);
     		

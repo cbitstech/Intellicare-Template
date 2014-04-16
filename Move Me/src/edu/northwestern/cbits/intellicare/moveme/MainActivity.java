@@ -1,7 +1,9 @@
 package edu.northwestern.cbits.intellicare.moveme;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,8 +52,13 @@ public class MainActivity extends ConsentedActivity
 			}
         });
         
-        Intent introIntent = new Intent(this, IntroActivity.class);
-        this.startActivity(introIntent);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        
+        if (prefs.getBoolean(IntroActivity.INTRO_SHOWN, false) == false)
+        {
+	        Intent introIntent = new Intent(this, IntroActivity.class);
+	        this.startActivity(introIntent);
+        }
     }
 
     public boolean onCreateOptionsMenu(Menu menu) 

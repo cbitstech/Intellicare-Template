@@ -21,6 +21,7 @@ import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 public class IntroActivity extends ConsentedActivity 
 {
+	public static final String INTRO_SHOWN = "intro_shown";
 	private Menu _menu = null;
 	private int _goal = 50;
 	
@@ -214,6 +215,10 @@ public class IntroActivity extends ConsentedActivity
 	    		
 	    		builder.create().show();
 			}
+			
+			Editor e = prefs.edit();
+			e.putBoolean(IntroActivity.INTRO_SHOWN, true);
+			e.commit();
 			
     		return true;
     	}
