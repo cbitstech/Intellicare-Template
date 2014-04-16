@@ -9,7 +9,9 @@ import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 public class DashboardActivity extends ConsentedActivity 
 {
-    protected void onCreate(Bundle savedInstanceState) 
+    protected static final String WEEKLY_GOAL = "setting_weekly_goal";
+
+	protected void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_dashboard);
@@ -39,5 +41,4 @@ public class DashboardActivity extends ConsentedActivity
 
         return super.onOptionsItemSelected(item);
     }
-
 }

@@ -49,6 +49,9 @@ public class MainActivity extends ConsentedActivity
 				me.startActivity(intent);
 			}
         });
+        
+        Intent introIntent = new Intent(this, IntroActivity.class);
+        this.startActivity(introIntent);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) 
