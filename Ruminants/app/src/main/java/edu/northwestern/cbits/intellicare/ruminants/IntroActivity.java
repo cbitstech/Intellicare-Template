@@ -83,7 +83,7 @@ public class IntroActivity extends ConsentedActivity {
         Log.e("Cows", "sizeStack = "+sizeStack );
 
         // fix reference to index
-        if (page >= 12)
+        if (page >= 10)
         {
             Intent launchIntent = new Intent(this, MainActivity.class);
             this.startActivity(launchIntent);

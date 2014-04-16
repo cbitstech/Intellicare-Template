@@ -47,6 +47,9 @@ public class FeatsProvider extends android.content.ContentProvider
 	private static final long DAY_LENGTH = 1000 * 3600 * 24;
 	protected static final String START_FEATS_DATE = "start_feats_date";
 	private static final long STREAK_LENGTH = 3;
+
+	private static final String MIN_FEAT_COUNT = "min_feat_count";
+	private static final int DEFAULT_MIN_FEAT_COUNT = 2;
     
     public FeatsProvider()
     {
@@ -686,14 +689,18 @@ public class FeatsProvider extends android.content.ContentProvider
 		
 		cursor.close();
 		
+		/*
 		String featsWhere = "feat_level = ?";
 		String[] featsArgs = { "" + level };
 		
 		cursor = context.getContentResolver().query(FeatsProvider.FEATS_URI, null, featsWhere, featsArgs, null);
-		
-		final int minFeatCount = (cursor.getCount() / 2) + 1;
-		
+
 		cursor.close();
+		*/
+
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		
+		int minFeatCount = prefs.getInt(FeatsProvider.MIN_FEAT_COUNT, FeatsProvider.DEFAULT_MIN_FEAT_COUNT); // (cursor.getCount() / 2) + 1;
 		
 		return (count >= minFeatCount);
 	}
