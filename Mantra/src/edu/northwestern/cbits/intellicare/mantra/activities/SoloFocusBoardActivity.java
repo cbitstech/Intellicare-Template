@@ -91,6 +91,16 @@ public class SoloFocusBoardActivity extends ActionBarActivity {
 		attachGridView();
 	}
 	
+	FocusImageCursor cursor = null;
+	
+	@Override
+	protected void onDestroy() {
+		if(cursor != null) {
+			cursor.close();
+		}
+		super.onDestroy();
+	}
+	
 	/**
 	 * Creates, binds to data, and fills the main view for this activity.
 	 */
@@ -98,7 +108,7 @@ public class SoloFocusBoardActivity extends ActionBarActivity {
 		setContentView(R.layout.no_fragments_home_activity);
 		final GridView gv = (GridView) this.findViewById(R.id.gridview);
 
-		final FocusImageCursor cursor = FocusBoardManager.get(this).queryFocusImages(this.mFocusBoardId);
+		cursor = FocusBoardManager.get(this).queryFocusImages(this.mFocusBoardId);
 		Util.logCursor(cursor);
 		
 		@SuppressWarnings("deprecation")
@@ -120,6 +130,7 @@ public class SoloFocusBoardActivity extends ActionBarActivity {
 					TextView tv = (TextView) view.findViewById(R.id.imageCaption);
 					String captionText = focusImage.getCaption();
 					tv.setText(captionText);
+					mFocusImageCursor.close();
 				}
 			}
 
@@ -330,6 +341,7 @@ public class SoloFocusBoardActivity extends ActionBarActivity {
 			Toast.makeText(this, "Image applied!", Toast.LENGTH_SHORT).show();
 			mManager.createFocusImage(mFocusBoardId, imageFile.getAbsolutePath(), "SOME IMAGE CAPTION");
 		}
+		fic.close();
 	}
 	
 	

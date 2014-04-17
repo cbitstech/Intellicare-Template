@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -21,17 +22,23 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import edu.northwestern.cbits.intellicare.mantra.ImageExtractor;
+import edu.northwestern.cbits.intellicare.mantra.MediaScannerService;
+import edu.northwestern.cbits.intellicare.mantra.Paths;
 import edu.northwestern.cbits.intellicare.mantra.R;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 public class DownloadManager
 {
 	public static final String DOWNLOAD_UPDATE = "chill_download_update";
 	public static final String DOWNLOAD_ERROR = "chill_download_error";
+	protected static final String CN = "DownloadManager";
 
 	private static DownloadManager _instance = null;
 	private Context _context = null;
@@ -43,6 +50,10 @@ public class DownloadManager
 	HashMap<String, Long> _downloadProgress = new HashMap<String, Long>();
 
 	private boolean _checking = false;
+
+	public static String[] urls = new String[] { "foo", "bar" };
+	public static Activity activity;
+
 	
 	public static class DownloadItem
 	{
@@ -85,8 +96,6 @@ public class DownloadManager
 		return complete;
 	}
 
-	final String[] urls = new String[] { "foo", "bar" };
-
 	
 	private void checkDownloads() 
 	{
@@ -105,17 +114,36 @@ public class DownloadManager
 		{
 			public void run() 
 			{
-				File folder = me._context.getFilesDir();
+//				File folder = me._context.getFilesDir();
 
+				// create the temp folder if it doesn't exist
+				// http://developer.android.com/reference/android/os/Environment.html#getExternalStoragePublicDirectory(java.lang.String)
+				// and: http://stackoverflow.com/questions/7592800/android-how-to-use-and-create-temporary-folder
+				final File mantraTempFolder = new File(Paths.MANTRA_IMAGES_TMP);
+				Log.d(CN+".checkDownloads().run()", "folder must exist: " + mantraTempFolder);
+				if(!mantraTempFolder.exists()) {
+					Log.d(CN+".checkDownloads().run()", "folder doesn't exist; creating: " + mantraTempFolder);
+					mantraTempFolder.mkdirs();
+				}
+				
 				for (String url : urls)
 				{
 					try 
 					{
 						Uri uri = Uri.parse(url);
 						
-						String filename = uri.getLastPathSegment();
+//						String filename = uri.getLastPathSegment();
+						String filename = null;
+						try {
+							filename = ImageExtractor.getLocalOutputFileName(uri.toString());
+						} catch (URISyntaxException e) {
+							e.printStackTrace();
+						}
 						
-						File existingFile = new File(folder, filename);
+//						Log.d(CN+".checkDownloads", "folder = " + folder + "; filename = " + filename);
+//						File existingFile = new File(folder, filename);
+						Log.d(CN+".checkDownloads", "folder = " + mantraTempFolder + "; filename = " + filename);
+						File existingFile = new File(mantraTempFolder, filename);
 
 						long fileSize = 0;
 						
@@ -155,6 +183,10 @@ public class DownloadManager
 
 				broadcast.sendBroadcast(intent);
 
+//				String[] fullFilePathsToScan = new String[me._remaining.size()];
+				ArrayList<String> scannableFilePaths = new ArrayList<String>();
+				int i = 0;
+				
 				while (me._remaining.size() > 0)
 				{
 					try 
@@ -170,6 +202,7 @@ public class DownloadManager
 						InputStream in = conn.getInputStream();
 
 						File tempFile = File.createTempFile(filename, "tmp", me._context.getCacheDir());
+						Log.d(CN+".checkDownloads.run", "1 tempFile = " + tempFile.getAbsolutePath());
 
 						BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(tempFile));
 
@@ -192,7 +225,15 @@ public class DownloadManager
 						out.flush();
 						out.close();
 
-						tempFile.renameTo(new File(folder, filename));
+//						tempFile.renameTo(new File(folder, filename));
+						tempFile.renameTo(new File(mantraTempFolder, filename));
+						Log.d(CN+".checkDownloads.run", "2 tempFile = " + tempFile.getAbsolutePath());
+
+						// need the path so we can scan it for Gallery access
+//						fullFilePathsToScan[i] = tempFile.getAbsolutePath();
+						if(tempFile.getAbsolutePath() != null) {
+							scannableFilePaths.add(tempFile.getAbsolutePath());
+						}
 						
 						me._remaining.remove(0);
 					} 
@@ -207,7 +248,15 @@ public class DownloadManager
 				}
 				
 				me._checking  = false;
+				
+				// ATTEMPT 3: run the image-scanning in a service called via an intent.
+				String[] fullFilePathsToScan = scannableFilePaths.toArray(new String[scannableFilePaths.size()]);
+				Intent mediaScannerIntent = new Intent(activity, MediaScannerService.class);
+				mediaScannerIntent.putExtra(MediaScannerService.INTENT_KEY_FILE_PATHS_TO_SCAN, fullFilePathsToScan);
+				Log.d(CN+".checkDownloads.run", "Starting MediaScannerService...");
+				activity.startService(mediaScannerIntent);
 			}
+						
 		};
 		
 		Thread t = new Thread(r);

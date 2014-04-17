@@ -47,7 +47,7 @@ public class ProgressActivity extends Activity {
 		self = this;
 
 		// set-up the image-scanner service + response.
-		mediaScannerServiceResponseReceiver = new MediaScannerServiceResponseReceiver();
+		mediaScannerServiceResponseReceiver = new MediaScannerServiceResponseReceiver(self);
 		LocalBroadcastManager
 			.getInstance(this)
 			.registerReceiver(
@@ -99,37 +99,37 @@ public class ProgressActivity extends Activity {
 		Log.d(CN+".onDestroy", "exiting");
 	}
 
-	/**
-	 * Handles a response from the MediaScannerService.
-	 * Src: https://developer.android.com/training/run-background-service/report-status.html
-	 * @author mohrlab
-	 *
-	 */
-	private class MediaScannerServiceResponseReceiver extends BroadcastReceiver {
-		public static final String CN = "MediaScannerServiceResponseReceiver";
-		
-		@Override
-		public void onReceive(Context arg0, Intent arg1) {
-			// TODO Auto-generated method stub
-			Log.d(CN+".onReceive", "arg1 = " + arg1);
-			
-			Bundle extras = arg1.getExtras();
-			if(extras != null) {
-				Log.d(CN+".onReceive", "intent not null");
-				Log.d(CN+".onReceive", "message = " + arg1.getStringExtra("message"));
-				
-				if(!extras.containsKey(MediaScannerService.INTENT_KEY_TO_RECEIVER_STRINGARRAY)) {
-					// display the Android image gallery for the folder
-					// ATTEMPT 1; displays Gallery or Photos, but only allows picking 1 image
-					Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-					self.startActivityForResult(intent, GetImagesTask.RESULT_LOAD_IMAGE);
-				}
-			}
-			else {
-				Log.d(CN+".onReceive", "intent is null");
-			}
-		}
-	}
+//	/**
+//	 * Handles a response from the MediaScannerService.
+//	 * Src: https://developer.android.com/training/run-background-service/report-status.html
+//	 * @author mohrlab
+//	 *
+//	 */
+//	public class MediaScannerServiceResponseReceiver extends BroadcastReceiver {
+//		public static final String CN = "MediaScannerServiceResponseReceiver";
+//		
+//		@Override
+//		public void onReceive(Context arg0, Intent arg1) {
+//			// TODO Auto-generated method stub
+//			Log.d(CN+".onReceive", "arg1 = " + arg1);
+//			
+//			Bundle extras = arg1.getExtras();
+//			if(extras != null) {
+//				Log.d(CN+".onReceive", "intent not null");
+//				Log.d(CN+".onReceive", "message = " + arg1.getStringExtra("message"));
+//				
+//				if(!extras.containsKey(MediaScannerService.INTENT_KEY_TO_RECEIVER_STRINGARRAY)) {
+//					// display the Android image gallery for the folder
+//					// ATTEMPT 1; displays Gallery or Photos, but only allows picking 1 image
+//					Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+//					self.startActivityForResult(intent, GetImagesTask.RESULT_LOAD_IMAGE);
+//				}
+//			}
+//			else {
+//				Log.d(CN+".onReceive", "intent is null");
+//			}
+//		}
+//	}
 	private MediaScannerServiceResponseReceiver mediaScannerServiceResponseReceiver;
 
 	/**

@@ -71,10 +71,10 @@
         <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.SoloFocusBoardActivity"
             android:label="@string/focus_board_label"
-            android:parentActivityName=".activities.NoFragmentsHomeActivity" >
+            android:parentActivityName=".activities.IndexActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.NoFragmentsHomeActivity" />
+                android:value=".activities.IndexActivity" />
 
         </activity>
         <activity
@@ -97,6 +97,13 @@
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.ProgressActivity"
             android:label="@string/title_activity_progress" >
             
+        </activity>
+        
+        <activity 
+              android:theme="@style/Theme.AppCompat.Light"
+              android:name="edu.northwestern.cbits.intellicare.mantra.activities.DownloadActivity" 
+              android:label="@string/app_name">
+            
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 
@@ -107,8 +114,6 @@
             </intent-filter>
             
         </activity>
-        
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".DownloadActivity" android:label="@string/app_name" />
         
         
         

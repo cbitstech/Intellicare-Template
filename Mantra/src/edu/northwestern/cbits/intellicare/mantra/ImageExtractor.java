@@ -217,8 +217,7 @@ public class ImageExtractor
 		// download and write the files
 		for(String u : imageUrlList) {
 			try {
-				String fileName = extractUrlFileName(u);
-				String outputFileName = java.util.UUID.randomUUID().toString() + getImageFileExtension(fileName);
+				String outputFileName = getLocalOutputFileName(u);
 				try{
 					saveImage(ImageExtractor.getImage(u), outputFolder + outputFileName);
 				} catch(Exception e) {
@@ -245,8 +244,7 @@ public class ImageExtractor
 
 		// download and write the files
 		try {
-			String fileName = extractUrlFileName(imageUrl);
-			String outputFileName = java.util.UUID.randomUUID().toString() + getImageFileExtension(fileName);
+			String outputFileName = getLocalOutputFileName(imageUrl);
 			try{
 				saveImage(ImageExtractor.getImage(imageUrl), outputFolder + outputFileName);
 				return outputFileName;
@@ -257,6 +255,18 @@ public class ImageExtractor
 			e1.printStackTrace();
 		}
 		return null;
+	}
+
+	/**
+	 * @param imageUrl
+	 * @return
+	 * @throws URISyntaxException
+	 */
+	public static String getLocalOutputFileName(String imageUrl)
+			throws URISyntaxException {
+		String fileName = extractUrlFileName(imageUrl);
+		String outputFileName = java.util.UUID.randomUUID().toString() + getImageFileExtension(fileName);
+		return outputFileName;
 	}
 	
 	

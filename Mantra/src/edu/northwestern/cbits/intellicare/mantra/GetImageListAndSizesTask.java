@@ -14,19 +14,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import edu.northwestern.cbits.intellicare.mantra.activities.DownloadManager;
 import edu.northwestern.cbits.intellicare.mantra.activities.ProgressActivity;
-
-/**** Async tasks *****/
-
-
-class GetImageListAndSizesTaskBackgroundReturn {
-	protected String url;
-	public Map<String, Integer> imagesToDownload;
-	public GetImageListAndSizesTaskBackgroundReturn(String u, Map<String, Integer> m) {
-		url = u;
-		imagesToDownload = m;
-	}
-}
 
 /**
  * Fetches the set of image URLs from webpage at a specified URL.
@@ -55,32 +44,7 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 			String url = arg0[0];
 			Log.d(CN + ".doInBackground", "entered for url = " + url);
 			try {
-				// get the set of image URLs, then get their file sizes
-				long startTime = System.currentTimeMillis();
-				Set<String> imageList = ImageExtractor.getImageList(url, false);
-				long imageListTime = System.currentTimeMillis();
-				Map<String,Integer> imageUrlsAndSizes = ImageExtractor.getRemoteContentLength(imageList);
-				long endTime = System.currentTimeMillis();
-				Log.d(CN + ".doInBackground", 
-						"exiting; ELAPSED TIME (ms) = " + ((double)endTime - startTime) + 
-						", getImageList (ms) = " + ((double)(imageListTime - startTime)) + 
-						", getRemoteContentLength (ms) = " + ((double)(endTime - imageListTime))
-						);
-		        publishProgress();
-				
-				// heuristically determine the set of images to download 
-				Map<String,Integer> imagesToDownload = new HashMap<String, Integer>();
-				for(String key : imageUrlsAndSizes.keySet()) {
-					int sz = imageUrlsAndSizes.get(key);
-					Log.d(CN + ".onPostExecute", "size = " + sz + " for image " + key);
-					if(ProgressActivity.shouldDownloadImage(sz)) {
-						imagesToDownload.put(key, sz);
-					}
-				}
-				
-				// process the set of images to download
-				GetImageListAndSizesTaskBackgroundReturn ret = new GetImageListAndSizesTaskBackgroundReturn(url, imagesToDownload);
-				return ret;
+				return getFilteredSetOfImageUrlsFromHtmlUrl(url);
 			}
 			catch(RuntimeException e) { System.out.println("1"); e.printStackTrace(); }
 			catch(SocketTimeoutException e) { System.out.println("2W");displayNetworkExceptionMessage(url, e); }
@@ -91,6 +55,45 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 
 		return null;
 	}
+
+
+	/**
+	 * @param url
+	 * @return
+	 * @throws SocketTimeoutException
+	 * @throws UnknownHostException
+	 * @throws IOException
+	 */
+	public GetImageListAndSizesTaskBackgroundReturn getFilteredSetOfImageUrlsFromHtmlUrl(
+			String url) throws SocketTimeoutException, UnknownHostException,
+			IOException {
+		// get the set of image URLs, then get their file sizes
+		long startTime = System.currentTimeMillis();
+		Set<String> imageList = ImageExtractor.getImageList(url, false);
+		long imageListTime = System.currentTimeMillis();
+		Map<String,Integer> imageUrlsAndSizes = ImageExtractor.getRemoteContentLength(imageList);
+		long endTime = System.currentTimeMillis();
+		Log.d(CN + ".getFilteredSetOfImageUrlsFromHtmlUrl", 
+				"exiting; ELAPSED TIME (ms) = " + ((double)endTime - startTime) + 
+				", getImageList (ms) = " + ((double)(imageListTime - startTime)) + 
+				", getRemoteContentLength (ms) = " + ((double)(endTime - imageListTime))
+				);
+		publishProgress();
+		
+		// heuristically determine the set of images to download 
+		Map<String,Integer> imagesToDownload = new HashMap<String, Integer>();
+		for(String key : imageUrlsAndSizes.keySet()) {
+			int sz = imageUrlsAndSizes.get(key);
+			Log.d(CN + ".getFilteredSetOfImageUrlsFromHtmlUrl", "size = " + sz + " for image " + key);
+			if(ProgressActivity.shouldDownloadImage(sz)) {
+				imagesToDownload.put(key, sz);
+			}
+		}
+		
+		// process the set of images to download
+		GetImageListAndSizesTaskBackgroundReturn ret = new GetImageListAndSizesTaskBackgroundReturn(url, imagesToDownload);
+		return ret;
+	}
 	
 	@Override
 	protected void onProgressUpdate(Void... values) {
@@ -98,7 +101,7 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 		for(int i=0;i<values.length;i++) {
 			Log.d(CN+".onProgressUpdate", values[i].toString());
 		}
-		progressBar.incrementProgressBy(1);
+//		progressBar.incrementProgressBy(1);
 	}
 
 	@Override
@@ -108,9 +111,22 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 		if(backgroundRet == null) { 
 			return;
 		}
-		new GetImagesTask(progressBar).execute(
-				new GetImagesTaskParams(backgroundRet.imagesToDownload, activity, progressBar, progressBarView)
-			);
+//		new GetImagesTask(progressBar).execute(
+//				new GetImagesTaskParams(backgroundRet.imagesToDownload, activity, progressBar, progressBarView)
+//			);
+
+		// start the download manager
+		DownloadManager.activity = activity;
+	
+		DownloadManager.urls = new String[backgroundRet.imagesToDownload.size()];
+		int i = 0;
+		for(String s : backgroundRet.imagesToDownload.keySet()) {
+			if(s != null) {
+				DownloadManager.urls[i] = s;
+				i++;
+			}
+		}
+		DownloadManager.getInstance(activity);
 	}
 
 	/**

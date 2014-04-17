@@ -3,13 +3,16 @@ package edu.northwestern.cbits.intellicare.mantra.activities;
 import java.util.Date;
 
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.mantra.MediaScannerService;
 import edu.northwestern.cbits.intellicare.mantra.NotificationAlarm;
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusBoardCursor;
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusImageCursor;
+import edu.northwestern.cbits.intellicare.mantra.Constants;
 import edu.northwestern.cbits.intellicare.mantra.FocusBoard;
 import edu.northwestern.cbits.intellicare.mantra.FocusBoardGridFragment;
 import edu.northwestern.cbits.intellicare.mantra.FocusBoardManager;
 import edu.northwestern.cbits.intellicare.mantra.FocusImage;
+import edu.northwestern.cbits.intellicare.mantra.GetImagesTask;
 import edu.northwestern.cbits.intellicare.mantra.PictureUtils;
 import edu.northwestern.cbits.intellicare.mantra.R;
 import edu.northwestern.cbits.intellicare.mantra.Util;
@@ -18,6 +21,7 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.IntentFilter;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
@@ -29,6 +33,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -63,18 +68,33 @@ public class IndexActivity extends ConsentedActivity {
 	private final IndexActivity self = this;
 	
 	private boolean displayedMantraAttachToast = false;
+	private MediaScannerServiceResponseReceiver mediaScannerServiceResponseReceiver;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.no_fragments_home_activity);
 		Log.d(CN+".onCreate", "entered");
+		
+		// set-up the image-scanner service + response.
+	 	mediaScannerServiceResponseReceiver = new MediaScannerServiceResponseReceiver(self);
+		LocalBroadcastManager
+			.getInstance(this)
+			.registerReceiver(
+					mediaScannerServiceResponseReceiver, 
+					new IntentFilter(Constants.BROADCAST_ACTION)
+			);
+
+		handleExternalIntents();
 	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.d(CN+".onResume", "entered");
+		Intent incomingIntent = getIntent();
+		Log.d(CN+".onResume", "entered; incomingIntent= " + incomingIntent);
+		Log.d(CN+".onResume", "entered; incomingIntent:extras(MediaScannerService.INTENT_KEY_TO_RECEIVER_STRINGARRAY) = " + incomingIntent.getStringArrayListExtra(MediaScannerService.INTENT_KEY_TO_RECEIVER_STRINGARRAY));
 		
 		// create, bind, and fill the main view for this activity
 		attachGridView(self);
@@ -90,11 +110,57 @@ public class IndexActivity extends ConsentedActivity {
 
 		// if this activity was opened by a response to the image gallery,
 		// then inform the user they need to tap on a mantra with which they wish to associate an image.
+		Log.d(CN+".onResume", "!displayedMantraAttachToast == " + (!displayedMantraAttachToast) + " && getIntent().getData() != null == " + (getIntent().getData() != null));
 		if(!displayedMantraAttachToast && getIntent().getData() != null) {
 			Toast.makeText(this, "Now tap on a mantra to attach your selected image to it!", Toast.LENGTH_LONG).show();
 			displayedMantraAttachToast = true;
 		}
 	}
+	
+	
+	/**
+	 * Handles the response from the image gallery activity.
+	 */
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data); 
+		Log.d(CN + ".onActivityResult", "requestCode = " + requestCode + "; resultCode = " + resultCode + "; data = " + data);
+		
+		if(requestCode == GetImagesTask.RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
+			Intent intent = new Intent(this, IndexActivity.class);
+			Uri uriFromImageBrowser = data.getData();
+			Log.d(CN+".onActivityResult", "uriFromImageBrowser = " + uriFromImageBrowser.toString());
+			intent.setData(uriFromImageBrowser);
+			this.startActivity(intent);
+        	self.finish();
+		}
+	}
+
+	
+	/**
+	 * Handle external intents; src: http://developer.android.com/training/sharing/receive.html
+	 */
+	private void handleExternalIntents() {
+		Intent intent = getIntent();
+		Bundle extras = intent.getExtras();
+		String action = intent.getAction();
+		String type = intent.getType();
+		
+		Log.d(CN+".handleExternalIntents", "action = " + action + "; type = " + type + ", extras = " + extras);
+		if(Intent.ACTION_SEND.equals(action) && type != null) {
+			if("text/plain".equals(type)) {
+				String urlFromBrowser = intent.getStringExtra(Intent.EXTRA_TEXT);
+//				promptConfirmDownloadPageImages(urlFromBrowser);
+			}
+		}
+		else if(extras != null && extras.getBoolean(MediaScannerService.INTENT_KEY_TO_RECEIVER_STRINGARRAY)) {
+			Log.d(CN+".handleExternalIntents", "intent from new-images notification alarm");
+			SoloFocusBoardActivity.startBrowsePhotosActivity(this);
+		}
+	}
+	
+	
+	
 
 	/**
 	 * Creates, binds to data, and fills the main view for this activity.
