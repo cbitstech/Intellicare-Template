@@ -27,6 +27,12 @@ public class MainActivity extends ConsentedActivity
 	        Intent introIntent = new Intent(this, IntroActivity.class);
 	        this.startActivity(introIntent);
         }
+        else if (prefs.getBoolean(RatingActivity.CONTACTS_RATED, false) == false)
+        {
+	        Intent introIntent = new Intent(this, RatingActivity.class);
+	        this.startActivity(introIntent);
+        }
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu) 

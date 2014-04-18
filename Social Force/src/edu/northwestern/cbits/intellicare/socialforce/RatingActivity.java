@@ -1,5 +1,8 @@
 package edu.northwestern.cbits.intellicare.socialforce;
 
+import java.util.List;
+
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -8,30 +11,38 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
-public class IntroActivity extends ConsentedActivity 
+public class RatingActivity extends ConsentedActivity 
 {
-	public static final String INTRO_SHOWN = "intro_shown";
+	public static final String CONTACTS_RATED = "contacts_rated";
+
 	private Menu _menu = null;
+	private List<ContactRecord> _contacts = null;
 	
     protected void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_intro);
         
-        final IntroActivity me = this;
+        final RatingActivity me = this;
         
         final ActionBar actionBar = this.getSupportActionBar();
         
 		actionBar.setTitle(me.getString(R.string.title_welcome, 1));
 		actionBar.setSubtitle(R.string.subtitle_welcome);
+		
+		this._contacts = ContactCalibrationHelper.fetchContactRecords(this);
         
         ViewPager pager = (ViewPager) this.findViewById(R.id.pager_content);
         
@@ -39,14 +50,12 @@ public class IntroActivity extends ConsentedActivity
 		{
 			public int getCount() 
 			{
-				return 4;
+				return 6;
 			}
 
 			public boolean isViewFromObject(View view, Object content) 
 			{
-				WebView webView = (WebView) view;
-
-				return webView.getTag().equals(content);
+				return view.getTag().equals(content);
 			}
 			
 			public void destroyItem (ViewGroup container, int position, Object content)
@@ -67,41 +76,101 @@ public class IntroActivity extends ConsentedActivity
 			
 			public Object instantiateItem (ViewGroup container, int position)
 			{
-				WebView webView = new WebView(container.getContext());
+				LayoutInflater inflater = (LayoutInflater) me.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+				View view = null;
 				
 				switch (position)
 				{
 					case 0:
-						webView.loadUrl("file:///android_asset/www/intro_0.html");
-						webView.setTag("0");
+						WebView webViewZero = new WebView(container.getContext());
+						
+						webViewZero.loadUrl("file:///android_asset/www/rating_0.html");
 
+						view = webViewZero;
 						break;
 					case 1:
-						webView.loadUrl("file:///android_asset/www/intro_1.html");
-						webView.setTag("1");
+						WebView webViewOne = new WebView(container.getContext());
+						
+						webViewOne.loadUrl("file:///android_asset/www/rating_1.html");
+						webViewOne.setTag("1");
+
+						view = webViewOne;
 
 						break;
 					case 2:
-						webView.loadUrl("file:///android_asset/www/intro_2.html");
-						webView.setTag("2");
+						view = inflater.inflate(R.layout.view_contact_rater, null);
+						
+						if (view instanceof ListView)
+						{
+							ListView list = (ListView) view;
+							
+					    	list.setAdapter(new ArrayAdapter<ContactRecord>(me, R.layout.row_contact, me._contacts)
+			    			{
+			    	    		public View getView (int position, View convertView, ViewGroup parent)
+			    	    		{
+			    	    			if (convertView == null)
+			    	    			{
+			    	    				LayoutInflater inflater = LayoutInflater.from(me);
+			    	    				convertView = inflater.inflate(R.layout.row_contact, parent, false);
+			    	    			}
+			    	    			
+			    	    			TextView contactName = (TextView) convertView.findViewById(R.id.label_contact_name);
+			    	    			TextView contactNumber = (TextView) convertView.findViewById(R.id.label_contact_number);
+			    	    			TextView contactType = (TextView) convertView.findViewById(R.id.label_contact_type);
+			    	    			
+			    	    			ContactRecord contact = me._contacts.get(position);
+			    	    			
+			    	    			if ("".equals(contact.name) == false)
+			    	    				contactName.setText(contact.name);
+			    	    			else
+			    	    				contactName.setText(contact.number);
+			    	    			
+			    	    			contactName.setText(contactName.getText() + " (" + contact.count + ")");
+
+			    					contactNumber.setText(contact.number);
+
+			    	    			return convertView;
+			    	    		}
+			    	    	});
+							
+						}
 
 						break;
 					case 3:
-						webView.loadUrl("file:///android_asset/www/intro_3.html");
-						webView.setTag("3");
+						WebView webViewThree = new WebView(container.getContext());
+						
+						webViewThree.loadUrl("file:///android_asset/www/rating_3.html");
+
+						view = webViewThree;
+
+						break;
+					case 4:
+						view = inflater.inflate(R.layout.view_contact_category, null);
+						
+						// TODO: Init rater view...
+
+						break;
+					case 5:
+						view = inflater.inflate(R.layout.view_my_network, null);
+						
+						// TODO: Init rater view...
 
 						break;
 				}
-				
-				container.addView(webView);
 
-				LayoutParams layout = (LayoutParams) webView.getLayoutParams();
+
+				view.setTag("" + position);
+
+				container.addView(view);
+
+				LayoutParams layout = (LayoutParams) view.getLayoutParams();
 				layout.height = LayoutParams.MATCH_PARENT;
 				layout.width = LayoutParams.MATCH_PARENT;
 				
-				webView.setLayoutParams(layout);
+				view.setLayoutParams(layout);
 
-				return webView.getTag();
+				return view.getTag();
 			}
 		};
 		
@@ -120,7 +189,7 @@ public class IntroActivity extends ConsentedActivity
 
 			public void onPageSelected(int page) 
 			{
-				actionBar.setTitle(me.getString(R.string.title_welcome, page + 1));
+				actionBar.setSubtitle(me.getString(R.string.subtitle_rating, page + 1));
 				
 				if (me._menu != null)
 				{
@@ -131,21 +200,37 @@ public class IntroActivity extends ConsentedActivity
 					switch(page)
 					{
 						case 0:
+							actionBar.setTitle(R.string.title_people_rater);
 							nextItem.setVisible(true);
 							backItem.setVisible(false);
 							doneItem.setVisible(false);
 							break;
 						case 1:
+							actionBar.setTitle(R.string.title_people_rater);
 							nextItem.setVisible(true);
 							backItem.setVisible(true);
 							doneItem.setVisible(false);
 							break;
 						case 2:
-							nextItem.setVisible(true);
+							actionBar.setTitle(R.string.title_people_rater_tool);
+							nextItem.setVisible(false);
 							backItem.setVisible(true);
 							doneItem.setVisible(false);
 							break;
 						case 3:
+							actionBar.setTitle(R.string.title_people_rater);
+							nextItem.setVisible(true);
+							backItem.setVisible(true);
+							doneItem.setVisible(false);
+							break;
+						case 4:
+							actionBar.setTitle(R.string.title_people_category_tool);
+							nextItem.setVisible(false);
+							backItem.setVisible(true);
+							doneItem.setVisible(false);
+							break;
+						case 5:
+							actionBar.setTitle(R.string.title_my_network);
 							nextItem.setVisible(false);
 							backItem.setVisible(true);
 							doneItem.setVisible(true);
@@ -156,6 +241,9 @@ public class IntroActivity extends ConsentedActivity
 		});
 		
 		pager.setCurrentItem(0, false);
+		
+		actionBar.setTitle(R.string.title_people_rater);
+		actionBar.setSubtitle(me.getString(R.string.subtitle_rating, 1));
     }
     
     public boolean onCreateOptionsMenu(Menu menu) 
@@ -194,7 +282,7 @@ public class IntroActivity extends ConsentedActivity
 			final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 			
 			Editor e = prefs.edit();
-			e.putBoolean(IntroActivity.INTRO_SHOWN, true);
+			e.putBoolean(RatingActivity.CONTACTS_RATED, true);
 			e.commit();
 			
 			this.finish();

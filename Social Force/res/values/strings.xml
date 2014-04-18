@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">Social Force</string>
     
-    <string name="title_welcome">Welcome to Social Force</string>
-
+    <string name="title_welcome" formatted="false">Page %d of 4</string>
+    <string name="subtitle_welcome">Social Force Introduction</string>
+    
+    <string name="  " formatted="false">Step %d of 6</string>
+    <string name="title_people_rater">People Rater</string>
+    <string name="title_people_rater_tool">Rate Contacts</string>
+    <string name="title_people_category_tool">Categorize Contacts</string>
+    <string name="title_my_network">My Network</string>
 </resources>
