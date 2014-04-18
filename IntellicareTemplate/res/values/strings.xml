@@ -216,4 +216,8 @@
     
     <string name="title_missing_faq">Missing FAQ</string>
     <string name="message_missing_faq">The HTML file for the frequently asked questions is not available within this app.</string>
+    
+    <string name="action_next">Next</string>
+    <string name="action_back">Back</string>
+    <string name="action_done">Done</string>
 </resources>
