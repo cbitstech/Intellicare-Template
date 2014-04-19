@@ -16,4 +16,20 @@
         <item>Negative</item>
         <item>Very Negative</item>
     </string-array>
+    
+    <string name="toast_practical" formatted="false">%s provides practical support.</string>
+    <string name="toast_no_practical" formatted="false">%s does not provide practical support.</string>
+    <string name="toast_emotional" formatted="false">%s provides emotional support.</string>
+    <string name="toast_no_emotional" formatted="false">%s does not provide emotional support.</string>
+    <string name="toast_advice" formatted="false">%s provides advice and information.</string>
+    <string name="toast_no_advice" formatted="false">%s does not provide advice and information.</string>
+    <string name="toast_companionship" formatted="false">%s provides companionship.</string>
+    <string name="toast_no_companionship" formatted="false">%s does not provide companionship.</string>
+
+    <string-array name="positive_activities">
+        <item>Meet up with a friend.</item>
+        <item>Call a friend.</item>
+        <item>Text (SMS) a friend.</item>
+    </string-array>
+    
 </resources>

@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.provider.CallLog;
 import android.provider.CallLog.Calls;
 import android.telephony.PhoneNumberUtils;
+import android.util.Log;
 
 public class ContactCalibrationHelper 
 {
@@ -30,6 +31,8 @@ public class ContactCalibrationHelper
 
 	public static void setLevel(Context context, String key, int level)
 	{
+		Log.e("SF", "SETTING " + key + " LEVEL " + level);
+		
 		if (ContactCalibrationHelper._cachedPrefs == null)
 			ContactCalibrationHelper._cachedPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
 		
@@ -85,7 +88,9 @@ public class ContactCalibrationHelper
 					contact.key = contact.number;
 				
 				contact.level = ContactCalibrationHelper.getLevel(context, contact.key);
-				
+
+				Log.e("SF", "CONTACT " + contact.key + " LEVEL = " + contact.level);
+
 				contacts.add(contact);
 			}
 		}

@@ -1,11 +1,15 @@
 package edu.northwestern.cbits.intellicare.socialforce;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.ShapeDrawable;
@@ -26,9 +30,11 @@ import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 public class RatingActivity extends ConsentedActivity 
@@ -129,7 +135,7 @@ public class RatingActivity extends ConsentedActivity
 			    	    			TextView contactNumber = (TextView) convertView.findViewById(R.id.label_contact_number);
 			    	    			TextView contactType = (TextView) convertView.findViewById(R.id.label_contact_type);
 			    	    			
-			    	    			ContactRecord contact = me._contacts.get(position);
+			    	    			ContactRecord contact = this.getItem(position);
 			    	    			
 			    	    			if ("".equals(contact.name) == false)
 			    	    				contactName.setText(contact.name);
@@ -157,7 +163,7 @@ public class RatingActivity extends ConsentedActivity
 					    	
 					    	list.setOnItemClickListener(new OnItemClickListener()
 					    	{
-								public void onItemClick(AdapterView<?> parent, final View view, int position, long id) 
+								public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) 
 								{
 									final ContactRecord contact = me._contacts.get(position);
 									
@@ -168,7 +174,8 @@ public class RatingActivity extends ConsentedActivity
 									{
 										public void onClick(DialogInterface dialog, int which) 
 										{
-					    	    			ContactRecord contact = me._contacts.get(which);
+					    	    			ContactRecord contact = me._contacts.get(position);
+					    	    			contact.level = which;
 
 					    	    			TextView contactType = (TextView) view.findViewById(R.id.label_contact_type);
 					    	    			
@@ -206,7 +213,28 @@ public class RatingActivity extends ConsentedActivity
 						{
 							ListView list = (ListView) view;
 							
-					    	list.setAdapter(new ArrayAdapter<ContactRecord>(me, R.layout.row_category, me._contacts)
+							ArrayList<ContactRecord> contacts = new ArrayList<ContactRecord>();
+							
+							for (ContactRecord contact : me._contacts)
+							{
+								if (contact.level >= 0 && contact.level < 3)
+									contacts.add(contact);
+							}
+							
+							Collections.sort(contacts, new Comparator<ContactRecord>()
+							{
+								public int compare(ContactRecord one, ContactRecord two) 
+								{
+									if (one.level < two.level)
+										return -1;
+									else if (one.level > two.level)
+										return 1;
+									
+									return one.name.compareTo(two.name);
+								}
+							});
+							
+					    	list.setAdapter(new ArrayAdapter<ContactRecord>(me, R.layout.row_category, contacts)
 			    			{
 			    	    		@SuppressWarnings("deprecation")
 								public View getView (int position, View convertView, ViewGroup parent)
@@ -220,7 +248,7 @@ public class RatingActivity extends ConsentedActivity
 			    	    			TextView contactName = (TextView) convertView.findViewById(R.id.label_contact_name);
 			    	    			TextView contactNumber = (TextView) convertView.findViewById(R.id.label_contact_number);
 			    	    			
-			    	    			final ContactRecord contact = me._contacts.get(position);
+			    	    			final ContactRecord contact = this.getItem(position);
 			    	    			
 			    	    			if ("".equals(contact.name) == false)
 			    	    				contactName.setText(contact.name);
@@ -254,11 +282,15 @@ public class RatingActivity extends ConsentedActivity
 										{
 					    					if (ContactCalibrationHelper.isPractical(me, contact))
 					    					{
+					    						Toast.makeText(me, me.getString(R.string.toast_no_practical, contact.name), Toast.LENGTH_SHORT).show();
+					    						
 					    						ContactCalibrationHelper.setPractical(me, contact, false);
 					    						practical.setAlpha(64);
 					    					}
 					    					else
 					    					{
+					    						Toast.makeText(me, me.getString(R.string.toast_practical, contact.name), Toast.LENGTH_SHORT).show();
+
 					    						ContactCalibrationHelper.setPractical(me, contact, true);
 					    						practical.setAlpha(255);
 					    					}
@@ -288,11 +320,15 @@ public class RatingActivity extends ConsentedActivity
 										{
 					    					if (ContactCalibrationHelper.isAdvice(me, contact))
 					    					{
+					    						Toast.makeText(me, me.getString(R.string.toast_no_advice, contact.name), Toast.LENGTH_SHORT).show();
+
 					    						ContactCalibrationHelper.setAdvice(me, contact, false);
 					    						advice.setAlpha(64);
 					    					}
 					    					else
 					    					{
+					    						Toast.makeText(me, me.getString(R.string.toast_advice, contact.name), Toast.LENGTH_SHORT).show();
+					    						
 					    						ContactCalibrationHelper.setAdvice(me, contact, true);
 					    						advice.setAlpha(255);
 					    					}
@@ -322,11 +358,15 @@ public class RatingActivity extends ConsentedActivity
 										{
 					    					if (ContactCalibrationHelper.isCompanion(me, contact))
 					    					{
+					    						Toast.makeText(me, me.getString(R.string.toast_no_companionship, contact.name), Toast.LENGTH_SHORT).show();
+
 					    						ContactCalibrationHelper.setCompanion(me, contact, false);
 					    						companion.setAlpha(64);
 					    					}
 					    					else
 					    					{
+					    						Toast.makeText(me, me.getString(R.string.toast_companionship, contact.name), Toast.LENGTH_SHORT).show();
+
 					    						ContactCalibrationHelper.setCompanion(me, contact, true);
 					    						companion.setAlpha(255);
 					    					}
@@ -356,11 +396,15 @@ public class RatingActivity extends ConsentedActivity
 										{
 					    					if (ContactCalibrationHelper.isEmotional(me, contact))
 					    					{
+					    						Toast.makeText(me, me.getString(R.string.toast_no_emotional, contact.name), Toast.LENGTH_SHORT).show();
+
 					    						ContactCalibrationHelper.setEmotional(me, contact, false);
 					    						emotional.setAlpha(64);
 					    					}
 					    					else
 					    					{
+					    						Toast.makeText(me, me.getString(R.string.toast_emotional, contact.name), Toast.LENGTH_SHORT).show();
+
 					    						ContactCalibrationHelper.setEmotional(me, contact, true);
 					    						emotional.setAlpha(255);
 					    					}
@@ -376,7 +420,28 @@ public class RatingActivity extends ConsentedActivity
 					case 5:
 						view = inflater.inflate(R.layout.view_my_network, null);
 						
-						// TODO: Init rater view...
+						Button scheduleButton = (Button) view.findViewById(R.id.button_yes);
+						
+						scheduleButton.setOnClickListener(new View.OnClickListener() 
+						{
+							public void onClick(View v) 
+							{
+								Intent intent = new Intent(me, ScheduleActivity.class);
+								me.startActivity(intent);
+								
+								me.finish();
+							}
+						});
+						
+						Button meetButton = (Button) view.findViewById(R.id.button_no);
+						
+						meetButton.setOnClickListener(new View.OnClickListener() 
+						{
+							public void onClick(View v) 
+							{
+								Toast.makeText(me, "ToDo: LaUNch MeeT actIviTy", Toast.LENGTH_LONG).show();
+							}
+						});
 
 						break;
 				}
@@ -435,7 +500,7 @@ public class RatingActivity extends ConsentedActivity
 							break;
 						case 2:
 							actionBar.setTitle(R.string.title_people_rater_tool);
-							nextItem.setVisible(false);
+							nextItem.setVisible(true);
 							backItem.setVisible(true);
 							doneItem.setVisible(false);
 							break;
@@ -447,7 +512,7 @@ public class RatingActivity extends ConsentedActivity
 							break;
 						case 4:
 							actionBar.setTitle(R.string.title_people_category_tool);
-							nextItem.setVisible(false);
+							nextItem.setVisible(true);
 							backItem.setVisible(true);
 							doneItem.setVisible(false);
 							break;
@@ -455,7 +520,7 @@ public class RatingActivity extends ConsentedActivity
 							actionBar.setTitle(R.string.title_my_network);
 							nextItem.setVisible(false);
 							backItem.setVisible(true);
-							doneItem.setVisible(true);
+							doneItem.setVisible(false);
 							break;
 					}
 				}
