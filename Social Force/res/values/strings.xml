@@ -8,6 +8,8 @@
     <string name="title_people_category_tool">Categorize Contacts</string>
     <string name="title_my_network">My Network</string>
     <string name="placeholder_rate">Rate&#8230;</string>
+
+	<string name="action_schedule">Schedule</string>
     
     <string-array name="contact_roles">
         <item>Very Positive</item>
@@ -31,5 +33,21 @@
         <item>Call a friend.</item>
         <item>Text (SMS) a friend.</item>
     </string-array>
+
+    <string-array name="meetup_activities">
+        <item>Take a walk.</item>
+        <item>Grab coffee.</item>
+        <item>Share a meal.</item>
+        <item>See a movie.</item>
+    </string-array>
+    
+    <string name="button_lonely">I am lonely.</string>
+    <string name="button_bored">I am bored.</string>
+    <string name="button_advice">I need advice.</string>
+    <string name="button_help">I need help.</string>
+    <string name="button_happy">I am happy.</string>
+    
+    <string name="title_calendar_error">Scheduling Not Available</string>
+    <string name="message_calendar_error">Calendar scheduling is only available on Android 4.0 and newer devices.</string>
     
 </resources>

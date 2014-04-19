@@ -420,6 +420,11 @@ public class RatingActivity extends ConsentedActivity
 					case 5:
 						view = inflater.inflate(R.layout.view_my_network, null);
 						
+						SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
+						Editor e = prefs.edit();
+						e.putBoolean(RatingActivity.CONTACTS_RATED, true);
+						e.commit();
+						
 						Button scheduleButton = (Button) view.findViewById(R.id.button_yes);
 						
 						scheduleButton.setOnClickListener(new View.OnClickListener() 
@@ -445,7 +450,6 @@ public class RatingActivity extends ConsentedActivity
 
 						break;
 				}
-
 
 				view.setTag("" + position);
 
