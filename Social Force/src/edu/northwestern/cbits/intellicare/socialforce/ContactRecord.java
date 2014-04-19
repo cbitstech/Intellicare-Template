@@ -5,7 +5,8 @@ public class ContactRecord implements Comparable<ContactRecord>
 	public int count = 1;
 	public String number = null;
 	public String name = null;
-	public String group = null;
+	public int level = -1;
+	public String key = null;
 
 	public int compareTo(ContactRecord other) 
 	{

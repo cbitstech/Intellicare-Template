@@ -2,9 +2,7 @@ package edu.northwestern.cbits.intellicare.socialforce;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,53 +15,26 @@ import android.telephony.PhoneNumberUtils;
 
 public class ContactCalibrationHelper 
 {
-	private static Map<String, String> _cache = new HashMap<String, String>();
 	private static SharedPreferences _cachedPrefs = null;
 	
-	public static String getGroup(Context context, String key, boolean isPhone) 
+	public static int getLevel(Context context, String key) 
 	{
 		if (key == null)
-			return null;
+			return -1;
 		
 		if (ContactCalibrationHelper._cachedPrefs == null)
 			ContactCalibrationHelper._cachedPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
 
-		String group = ContactCalibrationHelper._cachedPrefs.getString("contact_calibration_" + key + "_group", null);
-		
-		if (group != null)
-			return group;
-
-		if (isPhone)
-		{
-			String newKey = ContactCalibrationHelper._cache.get(key);
-			
-			if (newKey == null)
-			{
-				String numbersOnly = key.replaceAll("[^\\d]", "");
-				
-				if (numbersOnly.length() == 10)
-					numbersOnly = "1" + numbersOnly;
-				else if (numbersOnly.length() == 11)
-					numbersOnly = numbersOnly.substring(1);
-				
-				newKey = PhoneNumberUtils.formatNumber(numbersOnly);
-				
-				ContactCalibrationHelper._cache.put(key, newKey);
-			}
-			
-			key = newKey;
-		}
-		
-		return ContactCalibrationHelper._cachedPrefs.getString("contact_calibration_" + key + "_group", null);
+		return ContactCalibrationHelper._cachedPrefs.getInt("contact_calibration_" + key + "_level", -1);
 	}
 
-	public static void setGroup(Context context, String key, String group)
+	public static void setLevel(Context context, String key, int level)
 	{
 		if (ContactCalibrationHelper._cachedPrefs == null)
 			ContactCalibrationHelper._cachedPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
 		
 		Editor e = ContactCalibrationHelper._cachedPrefs.edit();
-		e.putString("contact_calibration_" + key + "_group", group);
+		e.putInt("contact_calibration_" + key + "_level", level);
 		e.commit();
 	}
 
@@ -108,20 +79,12 @@ public class ContactCalibrationHelper
 				contact.name = numberName;
 				contact.number = phoneNumber;
 				
-				String key = contact.name;
+				contact.key = contact.name;
 				
-				boolean isPhone = false;
+				if ("".equals(contact.key))
+					contact.key = contact.number;
 				
-				if ("".equals(key))
-				{
-					key = contact.number;
-					isPhone = true;
-				}
-				
-				String group = ContactCalibrationHelper.getGroup(context, key, isPhone);
-				
-				if (group != null)
-					contact.group = group;
+				contact.level = ContactCalibrationHelper.getLevel(context, contact.key);
 				
 				contacts.add(contact);
 			}
@@ -158,4 +121,76 @@ public class ContactCalibrationHelper
 		
     	return normalizedContacts;
     }
+
+	public static boolean isCompanion(Context context, ContactRecord contact) 
+	{
+		if (ContactCalibrationHelper._cachedPrefs == null)
+			ContactCalibrationHelper._cachedPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+		
+		return ContactCalibrationHelper._cachedPrefs.getBoolean("contact_calibration_" + contact.key + "_companion", false);
+	}
+
+	public static void setCompanion(Context context, ContactRecord contact, boolean isCompanion) 
+	{
+		if (ContactCalibrationHelper._cachedPrefs == null)
+			ContactCalibrationHelper._cachedPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+		
+		Editor e = ContactCalibrationHelper._cachedPrefs.edit();
+		e.putBoolean("contact_calibration_" + contact.key + "_companion", isCompanion);
+		e.commit();
+	}
+
+	public static boolean isAdvice(Context context, ContactRecord contact) 
+	{
+		if (ContactCalibrationHelper._cachedPrefs == null)
+			ContactCalibrationHelper._cachedPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+		
+		return ContactCalibrationHelper._cachedPrefs.getBoolean("contact_calibration_" + contact.key + "_advice", false);
+	}
+
+	public static void setAdvice(Context context, ContactRecord contact, boolean isAdvice) 
+	{
+		if (ContactCalibrationHelper._cachedPrefs == null)
+			ContactCalibrationHelper._cachedPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+		
+		Editor e = ContactCalibrationHelper._cachedPrefs.edit();
+		e.putBoolean("contact_calibration_" + contact.key + "_advice", isAdvice);
+		e.commit();
+	}
+
+	public static boolean isEmotional(Context context, ContactRecord contact) 
+	{
+		if (ContactCalibrationHelper._cachedPrefs == null)
+			ContactCalibrationHelper._cachedPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+		
+		return ContactCalibrationHelper._cachedPrefs.getBoolean("contact_calibration_" + contact.key + "_emotional", false);
+	}
+
+	public static void setEmotional(Context context, ContactRecord contact, boolean isEmotional) 
+	{
+		if (ContactCalibrationHelper._cachedPrefs == null)
+			ContactCalibrationHelper._cachedPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+		
+		Editor e = ContactCalibrationHelper._cachedPrefs.edit();
+		e.putBoolean("contact_calibration_" + contact.key + "_emotional", isEmotional);
+		e.commit();
+	}
+
+	public static boolean isPractical(Context context, ContactRecord contact) 
+	{
+		if (ContactCalibrationHelper._cachedPrefs == null)
+			ContactCalibrationHelper._cachedPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+		
+		return ContactCalibrationHelper._cachedPrefs.getBoolean("contact_calibration_" + contact.key + "_practical", false);
+	}
+
+	public static void setPractical(Context context, ContactRecord contact, boolean isPractical) 
+	{
+		if (ContactCalibrationHelper._cachedPrefs == null)
+			ContactCalibrationHelper._cachedPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+		
+		Editor e = ContactCalibrationHelper._cachedPrefs.edit();
+		e.putBoolean("contact_calibration_" + contact.key + "_practical", isPractical);
+		e.commit();
+	}
 }

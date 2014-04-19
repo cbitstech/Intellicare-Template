@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal" >
+    android:orientation="horizontal" 
+    android:padding="8dp">
     <LinearLayout android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp">
+        android:layout_height="wrap_content">
     	<TextView
         	android:id="@+id/label_contact_name"
         	android:layout_width="match_parent"
@@ -21,18 +21,13 @@
    	<View android:layout_width="0dp"
    	    android:layout_height="1dp"
    	    android:layout_weight="1" />
-    <LinearLayout android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp">
-   		<TextView
-	      	android:id="@+id/label_contact_type"
-	      	android:layout_width="wrap_content"
-	     	android:layout_height="wrap_content"
-	     	android:text="SlIDEr gOEs hERe"
-	      	android:textAppearance="?android:attr/textAppearanceMedium" />
-	   	<View android:layout_width="1dp"
-	   	    android:layout_height="0dp"
-	   	    android:layout_weight="1" />
-	</LinearLayout>
+	<TextView
+     	android:id="@+id/label_contact_type"
+     	android:layout_width="wrap_content"
+    	android:layout_height="match_parent"
+    	android:text="@string/placeholder_rate"
+    	android:gravity="center"
+    	android:textColor="#0099CC"
+    	android:textStyle="bold"
+     	android:textAppearance="?android:attr/textAppearanceSmall" />
 </LinearLayout>

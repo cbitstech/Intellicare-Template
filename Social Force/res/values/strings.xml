@@ -1,12 +1,19 @@
 <resources>
     <string name="app_name">Social Force</string>
-    
     <string name="title_welcome" formatted="false">Page %d of 4</string>
     <string name="subtitle_welcome">Social Force Introduction</string>
-    
-    <string name="  " formatted="false">Step %d of 6</string>
+    <string name="subtitle_rating" formatted="false">Step %d of 6</string>
     <string name="title_people_rater">People Rater</string>
     <string name="title_people_rater_tool">Rate Contacts</string>
     <string name="title_people_category_tool">Categorize Contacts</string>
     <string name="title_my_network">My Network</string>
+    <string name="placeholder_rate">Rate&#8230;</string>
+    
+    <string-array name="contact_roles">
+        <item>Very Positive</item>
+        <item>Positive</item>
+        <item>Neutral / Don\'t Know</item>
+        <item>Negative</item>
+        <item>Very Negative</item>
+    </string-array>
 </resources>
