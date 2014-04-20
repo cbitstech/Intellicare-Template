@@ -50,4 +50,16 @@
     <string name="title_calendar_error">Scheduling Not Available</string>
     <string name="message_calendar_error">Calendar scheduling is only available on Android 4.0 and newer devices.</string>
     
+    <string name="activity_other">Other activity&#8230;</string>
+    <string name="action_rating">Rate Your Contacts</string>
+    <string name="action_network">Build Your Network</string>
+    
+    <string name="title_network">Build your network</string>
+    <string name="title_network_tricks">Tips &amp; Tricks</string>
+    <string name="subtitle_network_tricks">For Building Your Network</string>
+    <string name="title_network_meet">Meet New People</string>
+    <string name="title_network_recommendation">Recommendation</string>
+    <string name="tips_intro">Good news: you can create a better, more supportive circle of friends for your self.\n\nSelect a step below to proceed.</string>
+    
+    <string name="title_be_friendly">Be Friendly</string>
 </resources>

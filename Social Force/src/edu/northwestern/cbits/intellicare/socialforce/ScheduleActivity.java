@@ -4,32 +4,48 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.CalendarContract.Events;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class ScheduleActivity extends ConsentedActivity 
 {
 	protected static final String CONTACT_KEY = "contact_key";
+	protected static final String SAVED_ACTIVITIES = "saved_activities";
 
 	private Menu _menu = null;
 	
@@ -140,6 +156,7 @@ public class ScheduleActivity extends ConsentedActivity
 					switch(page)
 					{
 						case 0:
+					        schedule.setVisible(false);
 							break;
 						case 1:
 							WebView webView = (WebView) me.findViewById(Integer.MAX_VALUE);
@@ -174,6 +191,64 @@ public class ScheduleActivity extends ConsentedActivity
         	this.scheduleActivity();
     }
     
+    protected void onResume()
+    {
+    	super.onResume();
+    	
+    	if (this._contact == null)
+    	{
+	    	final ScheduleActivity me = this;
+	    	
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			
+			builder.setTitle("SeLeCt sUppORTeR");
+			
+			List<ContactRecord> contacts = ContactCalibrationHelper.fetchContactRecords(this);
+			
+			final List<ContactRecord> positives = new ArrayList<ContactRecord>();
+			
+			for (ContactRecord record : contacts)
+			{
+				if (record.level >= 0 && record.level < 3)
+					positives.add(record);
+			}
+			
+			Collections.sort(positives, new Comparator<ContactRecord>()
+			{
+				public int compare(ContactRecord one, ContactRecord two) 
+				{
+					if (one.level < two.level)
+						return -1;
+					else if (one.level > two.level)
+						return 1;
+					
+					return one.name.compareTo(two.name);
+				}
+			});
+	
+			String[] names = new String[positives.size()];
+			
+			for (int i = 0; i < positives.size(); i++)
+			{
+				ContactRecord record = positives.get(i);
+				
+				names[i] = record.name;
+			}
+			
+			builder.setItems(names, new DialogInterface.OnClickListener() 
+			{
+				public void onClick(DialogInterface dialog, int which) 
+				{
+					me._contact = positives.get(which);
+					
+					me.scheduleActivity();
+				}
+			});
+			
+			builder.create().show();
+    	}
+    }
+    
     private void scheduleActivity() 
     {
         final ScheduleActivity me = this;
@@ -205,11 +280,128 @@ public class ScheduleActivity extends ConsentedActivity
 						{
 							if (which == meetUpActivities.length - 1) // Other
 							{
-								// TODO: Show Other Dialog
+								AlertDialog.Builder builder = new AlertDialog.Builder(me);
+								builder.setTitle("AdD neW AcTivItY");
+
+								LayoutInflater inflater = (LayoutInflater) me.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+								View view = inflater.inflate(R.layout.view_new_activity, null);
+								
+								final AutoCompleteTextView activity = (AutoCompleteTextView) view.findViewById(R.id.new_activity);
+								
+								String[] activities = me.getActivities();
+								
+								String[] newActivities = new String[activities.length - 1];
+								
+								for (int i = 0; i < newActivities.length; i++)
+								{
+									newActivities[i] = activities[i];
+								}
+								
+								ArrayAdapter<String> adapter = new ArrayAdapter<String>(me, android.R.layout.simple_dropdown_item_1line, newActivities);
+								activity.setAdapter(adapter);
+								
+								builder.setView(view);
+								
+								builder.setPositiveButton("cONTinUE", new DialogInterface.OnClickListener() 
+								{
+									public void onClick(DialogInterface dialog, int which) 
+									{		
+										String newActivity = activity.getText().toString();
+										
+										if (newActivity.trim().length() > 0)
+										{
+											SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
+											
+											String json = prefs.getString(ScheduleActivity.SAVED_ACTIVITIES, "[]");
+
+											JSONArray activityArray = new JSONArray();
+
+											JSONObject foundObj = null;
+											
+											try 
+											{
+												activityArray = new JSONArray(json);
+
+												for (int i = 0; i < activityArray.length() && foundObj == null; i++)
+												{
+													JSONObject obj = activityArray.getJSONObject(i);
+													
+													if (obj.get("name").equals(newActivity))
+														foundObj = obj;
+												}
+
+												if (foundObj == null)
+												{
+													foundObj = new JSONObject();
+													foundObj.put("name", newActivity);
+													
+													activityArray.put(foundObj);
+												}
+												
+												foundObj.put("last_used", System.currentTimeMillis());
+											}
+											catch (JSONException e) 
+											{
+												LogManager.getInstance(me).logException(e);
+											}
+											
+											Editor e = prefs.edit();
+											e.putString(ScheduleActivity.SAVED_ACTIVITIES, activityArray.toString());
+											e.commit();
+											
+											me._meetingActivity = newActivity;
+										
+											pager.setCurrentItem(1);
+										}
+									}
+								});
+								
+								builder.create().show();
 							}
 							else
 							{
 								me._meetingActivity = meetUpActivities[which];
+								
+								pager.setCurrentItem(1);
+
+								SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
+								
+								String json = prefs.getString(ScheduleActivity.SAVED_ACTIVITIES, "[]");
+
+								JSONArray activityArray = new JSONArray();
+
+								JSONObject foundObj = null;
+								
+								try 
+								{
+									activityArray = new JSONArray(json);
+
+									for (int i = 0; i < activityArray.length() && foundObj == null; i++)
+									{
+										JSONObject obj = activityArray.getJSONObject(i);
+										
+										if (obj.get("name").equals(me._meetingActivity))
+											foundObj = obj;
+									}
+
+									if (foundObj == null)
+									{
+										foundObj = new JSONObject();
+										foundObj.put("name", me._meetingActivity);
+										
+										activityArray.put(foundObj);
+									}
+									
+									foundObj.put("last_used", System.currentTimeMillis());
+								}
+								catch (JSONException e) 
+								{
+									LogManager.getInstance(me).logException(e);
+								}
+								
+								Editor e = prefs.edit();
+								e.putString(ScheduleActivity.SAVED_ACTIVITIES, activityArray.toString());
+								e.commit();
 								
 								pager.setCurrentItem(1);
 							}							
@@ -285,7 +477,81 @@ public class ScheduleActivity extends ConsentedActivity
 
 	protected String[] getActivities() 
 	{
-		return this.getResources().getStringArray(R.array.meetup_activities);
+		final ScheduleActivity me = this;
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+		String json = prefs.getString(ScheduleActivity.SAVED_ACTIVITIES, "[]");
+
+		JSONArray activityArray = new JSONArray();
+		
+		ArrayList<String> activityNames = new ArrayList<String>();
+		
+		try 
+		{
+			activityArray = new JSONArray(json);
+			
+			if (activityArray.length() == 0)
+			{
+				String[] activities = this.getResources().getStringArray(R.array.meetup_activities);
+
+				for (String activity : activities)
+				{
+					JSONObject jsonObj = new JSONObject();
+
+					jsonObj.put("name", activity);
+					jsonObj.put("last_used", 0L);
+					
+					activityArray.put(jsonObj);
+				}
+				
+				Editor e = prefs.edit();
+				e.putString(ScheduleActivity.SAVED_ACTIVITIES, activityArray.toString());
+				e.commit();
+			}
+			
+			ArrayList<JSONObject> objs = new ArrayList<JSONObject>();
+			
+			for (int i = 0; i < activityArray.length(); i++)
+			{
+				objs.add(activityArray.getJSONObject(i));
+			}
+			
+			Collections.sort(objs, new Comparator<JSONObject>()
+			{
+				public int compare(JSONObject one, JSONObject two) 
+				{
+					try 
+					{
+						if (one.getLong("last_used") > two.getLong("last_used"))
+							return -1;
+						else if (one.getLong("last_used") < two.getLong("last_used"))
+							return 1;
+					
+						return one.getString("name").compareToIgnoreCase(two.getString("name"));
+					} 
+					catch (JSONException e) 
+					{
+						LogManager.getInstance(me).logException(e);
+					}
+					
+					return one.toString().compareToIgnoreCase(two.toString());
+				}
+			});
+			
+			for (JSONObject obj : objs)
+			{
+				activityNames.add(obj.getString("name"));
+			}
+		}
+		catch (JSONException e) 
+		{
+			LogManager.getInstance(this).logException(e);
+		}
+		
+		activityNames.add(this.getString(R.string.activity_other));
+		
+		return activityNames.toArray(new String[0]);
 	}
 	
 	private String generateSummary() 

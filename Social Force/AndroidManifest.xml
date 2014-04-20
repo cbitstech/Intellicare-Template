@@ -22,6 +22,7 @@
         <activity android:name=".IntroActivity" android:label="@string/app_name" android:theme="@style/Theme.AppCompat.Light" />
         <activity android:name=".RatingActivity" android:label="@string/app_name" android:theme="@style/Theme.AppCompat.Light" />
         <activity android:name=".ScheduleActivity" android:label="@string/app_name" android:theme="@style/Theme.AppCompat.Light" />
+        <activity android:name=".NetworkActivity" android:label="@string/app_name" android:theme="@style/Theme.AppCompat.Light" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.ConsentActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.FaqActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.MotivationActivity" android:label="@string/app_name" />

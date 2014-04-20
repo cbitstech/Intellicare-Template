@@ -26,19 +26,6 @@ public class MainActivity extends ConsentedActivity
         
         this.getSupportActionBar().setSubtitle("lIst NExT ConTACT EvEnT HeRE");
         
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        
-        if (prefs.getBoolean(IntroActivity.INTRO_SHOWN, false) == false)
-        {
-	        Intent introIntent = new Intent(this, IntroActivity.class);
-	        this.startActivity(introIntent);
-        }
-        else if (prefs.getBoolean(RatingActivity.CONTACTS_RATED, false) == false)
-        {
-	        Intent introIntent = new Intent(this, RatingActivity.class);
-	        this.startActivity(introIntent);
-        }
-        
         final MainActivity me = this;
         
         View network = this.findViewById(R.id.network_visualization);
@@ -98,6 +85,24 @@ public class MainActivity extends ConsentedActivity
 			}
         });
     }
+    
+    protected void onResume()
+    {
+    	super.onResume();
+    	
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        
+        if (prefs.getBoolean(IntroActivity.INTRO_SHOWN, false) == false)
+        {
+	        Intent introIntent = new Intent(this, IntroActivity.class);
+	        this.startActivity(introIntent);
+        }
+        else if (prefs.getBoolean(RatingActivity.CONTACTS_RATED, false) == false)
+        {
+	        Intent introIntent = new Intent(this, RatingActivity.class);
+	        this.startActivity(introIntent);
+        }
+    }
 
     public boolean onCreateOptionsMenu(Menu menu) 
     {
@@ -114,6 +119,18 @@ public class MainActivity extends ConsentedActivity
 		{
 //			Intent settingsIntent = new Intent(this, SettingsActivity.class);
 //			this.startActivity(settingsIntent);
+		}
+		else if (itemId == R.id.action_rating)
+		{
+			Intent intent = new Intent(this, RatingActivity.class);
+			
+			this.startActivity(intent);
+		}
+		else if (itemId == R.id.action_network)
+		{
+			Intent intent = new Intent(this, NetworkActivity.class);
+			
+			this.startActivity(intent);
 		}
 		else if (item.getItemId() == R.id.action_feedback)
 			this.sendFeedback(this.getString(R.string.app_name));
