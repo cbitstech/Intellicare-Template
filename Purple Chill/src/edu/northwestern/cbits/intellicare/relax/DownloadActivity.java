@@ -2,10 +2,14 @@ package edu.northwestern.cbits.intellicare.relax;
 
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
@@ -27,7 +31,40 @@ public class DownloadActivity extends ConsentedActivity
 		this.getSupportActionBar().setTitle(R.string.title_download_queue);
 
 		DownloadManager.getInstance(this);
+
+        if (checkConnection(this) == true) {
+            DownloadManager.getInstance(this);
+        }
+        else {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setMessage(R.string.connect_to_internet);
+            builder.setTitle(R.string.no_internet);
+
+            final DownloadActivity me = this;
+
+            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
+            {
+                // where should the ok button take the user?
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
 	}
+
+    private boolean checkConnection(Context context) {
+
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        return isConnected;
+    }
 	
 	public void onResume()
 	{
@@ -42,7 +79,7 @@ public class DownloadActivity extends ConsentedActivity
 		
 		broadcasts.registerReceiver(new BroadcastReceiver()
 		{
-			public void onReceive(Context context, Intent intent) 
+			public void onReceive(final Context context, Intent intent)
 			{
 				List<DownloadManager.DownloadItem> items = DownloadManager.getInstance(me).getCurrentDownloads();
 				
@@ -57,9 +94,11 @@ public class DownloadActivity extends ConsentedActivity
 						}
 						
 						DownloadManager.DownloadItem item = this.getItem(position);
+
+                        String[] titles = context.getResources().getStringArray(R.array.remote_media_titles);
 						
 						TextView url = (TextView) convertView.findViewById(R.id.label_url);
-						url.setText(item.url);
+						url.setText(titles[position]);
 						
 						ProgressBar progress = (ProgressBar) convertView.findViewById(R.id.progress);
 						
@@ -71,7 +110,9 @@ public class DownloadActivity extends ConsentedActivity
 						
 						return convertView;
 					}
-				};
+
+
+                };
 
 				list.setAdapter(adapter);
 				

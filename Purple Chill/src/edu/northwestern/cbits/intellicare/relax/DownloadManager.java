@@ -21,8 +21,12 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v4.content.LocalBroadcastManager;
 
@@ -49,12 +53,11 @@ public class DownloadManager
 		public long downloaded = -1;
 	}
 
-	public DownloadManager(Context context) 
-	{
-		this._context  = context;
-		
-		this.checkDownloads();
-	}
+	public DownloadManager(Context context) {
+        this._context = context;
+
+        this.checkDownloads();
+    }
 	
 	public boolean downloadsComplete()
 	{
