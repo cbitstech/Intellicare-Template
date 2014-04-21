@@ -254,6 +254,17 @@ public class MainActivity extends ConsentedActivity
 
 						ImageView background = (ImageView) view.findViewById(R.id.image_background);
 						
+						background.setOnClickListener(new View.OnClickListener() 
+						{
+							public void onClick(View v) 
+							{
+								LinearLayout userInfo = (LinearLayout) me.findViewById(R.id.layout_card_info);
+								
+								if (userInfo != null)
+									userInfo.performClick();
+							}
+						});
+						
 						String imageUri = c.getString(c.getColumnIndex(AspireContentProvider.CARD_IMAGE));
 			
 						if (imageUri != null && imageUri.trim().length() > 0)
