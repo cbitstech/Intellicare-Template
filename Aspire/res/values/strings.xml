@@ -29,6 +29,10 @@
     
     <string name="hint_swipe_card">Swipe left &amp; right to view more cards.</string>
     
+    <string name="title_graph">This Week in Virtue</string>
+    <string name="subtitle_graph" formatted="false">%d virtues exercised</string>
+    <string name="subtitle_graph_single">1 virtue exercised</string>
+    
     <string name="action_graph">Graph Progress</string>
     <string name="action_add_value">Add Value</string>
     <string name="action_use_card">Use Card</string>

@@ -15,7 +15,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.ActionBar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.webkit.WebView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
@@ -38,6 +40,23 @@ public class GraphActivity extends ConsentedActivity
 		graphView.getSettings().setJavaScriptEnabled(true);
 		
 		graphView.loadDataWithBaseURL("file:///android_asset/", GraphActivity.generateGraph(this), "text/html", null, null);
+		
+		ActionBar actionBar = this.getSupportActionBar();
+		actionBar.setTitle(R.string.title_graph);
+		
+		try 
+		{
+			JSONArray data = GraphActivity.graphValues(this);
+		
+			if (data.length() == 1)
+				actionBar.setSubtitle(R.string.subtitle_graph_single);
+			else
+				actionBar.setSubtitle(this.getString(R.string.subtitle_graph, data.length()));
+		}
+		catch (JSONException e) 
+		{
+			LogManager.getInstance(this).logException(e);
+		}
 	}
 	
 	private static String generateGraph(Context context) 
@@ -69,7 +88,7 @@ public class GraphActivity extends ConsentedActivity
 		
 		try 
 		{
-			JSONArray graphValues = GraphActivity.graphValues(context, false);
+			JSONArray graphValues = GraphActivity.graphValues(context);
 
 			graphString = graphString.replaceAll("VALUES_JSON", graphValues.toString());
 		}
@@ -97,7 +116,7 @@ public class GraphActivity extends ConsentedActivity
 		return graphString;
 	}
 	
-	private static JSONArray graphValues(Context context, boolean includeAll) throws JSONException 
+	private static JSONArray graphValues(Context context) throws JSONException 
 	{
 		ArrayList<String> cards = new ArrayList<String>();
 		ArrayList<Long> cardIds = new ArrayList<Long>();
@@ -154,15 +173,46 @@ public class GraphActivity extends ConsentedActivity
 			
 			for (int i = 0; i < 7; i++)
 			{
-				long cellStart = start + (day * j);
-				long cellEnd = start + (day * (j + 1));
+				long cellStart = start + (day * i);
+				long cellEnd = start + (day * (i + 1));
 				
 				long cellMid = (cellStart + cellEnd) / 2;
+				
+				Calendar thisCal = Calendar.getInstance();
+				thisCal.setTimeInMillis(cellMid);
 				
 				JSONObject point = new JSONObject();
 				
 				point.put("x", cellMid / 1000);
-				point.put("y", i % 2);  // TODO: Query
+
+				int count = 0;
+				
+				String pathSelect = AspireContentProvider.PATH_CARD_ID + " = ?";
+				String[] pathArgs = { "" + cardId };
+				
+				Cursor pathCursor = context.getContentResolver().query(AspireContentProvider.ASPIRE_PATH_URI, null, pathSelect, pathArgs, null);
+				
+				while (pathCursor.moveToNext())
+				{
+					String taskSelect = AspireContentProvider.TASK_PATH_ID + " = ? AND " + AspireContentProvider.TASK_YEAR + " = ? AND " + 
+										AspireContentProvider.TASK_MONTH + " = ? AND " + AspireContentProvider.TASK_DAY + " = ?";
+					
+					String[] taskArgs = { "" + pathCursor.getLong(pathCursor.getColumnIndex(AspireContentProvider.ID)), "" + thisCal.get(Calendar.YEAR), 
+										  "" + thisCal.get(Calendar.MONTH), "" + thisCal.get(Calendar.DAY_OF_MONTH) };
+					
+					Cursor taskCursor = context.getContentResolver().query(AspireContentProvider.ASPIRE_TASK_URI, null, taskSelect, taskArgs, null);
+					
+					count += taskCursor.getCount();
+					
+					taskCursor.close();
+				}
+				
+				pathCursor.close();
+
+				if (count != 0)
+					point.put("y", count);
+				else
+					point.put("y", 0.1);
 				
 				points.put(point);
 			}
@@ -171,19 +221,27 @@ public class GraphActivity extends ConsentedActivity
 			
 			values.put(dataObj);
 		}
-		
-		/*
-		 * 		{
-			data: [ { x: 0, y: 40 }, { x: 1, y: 49 }, { x: 2, y: 38 }, { x: 3, y: 30 }, { x: 4, y: 32 } ],
-			color: '#4682b4'
-		}, {
-			data: [ { x: 0, y: 20 }, { x: 1, y: 24 }, { x: 2, y: 19 }, { x: 3, y: 15 }, { x: 4, y: 16 } ],
-			color: '#9cc1e0'
-
-		 */
-
-		Log.e("AS", "RETURNING " + values.toString(2));
 
 		return values;
+	}
+
+	public boolean onCreateOptionsMenu(Menu menu) 
+	{
+		this.getMenuInflater().inflate(R.menu.menu_graph, menu);
+		return true;
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		int itemId = item.getItemId();
+		
+		switch (itemId)
+		{
+			case R.id.action_close:
+				this.finish();
+				break;
+		}
+		
+		return true;
 	}
 }

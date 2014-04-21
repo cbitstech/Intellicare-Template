@@ -10,7 +10,7 @@
 		<style>
 			body
 			{
-				padding: 0;
+				padding: 16px;
 				margin: 0;
 				overflow: hidden;
 			}
@@ -34,15 +34,15 @@
 				var graph = new Rickshaw.Graph({
 					renderer: "bar",
 					element: document.getElementById("chart"),
-					height: $(window).height(),
-					width: $(window).width(),
+					height: $(window).height() - 32,
+					width: $(window).width() - 32,
 					series: values
 				});
 				
 				graph.render();
 
 				var time = new Rickshaw.Fixtures.Time();
-				var timeUnit = time.unit("week");
+				var timeUnit = time.unit("day");
 				
 				var xAxis = new Rickshaw.Graph.Axis.Time({ 
 					graph: graph,
