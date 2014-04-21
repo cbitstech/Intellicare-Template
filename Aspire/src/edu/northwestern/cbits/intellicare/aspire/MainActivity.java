@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.CrashManagerListener;
@@ -27,7 +28,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,7 +47,6 @@ public class MainActivity extends ConsentedActivity
 	protected static final int RESULT_FETCH_IMAGE = 123;
 
 	private int _index = -1;
-
 	private int _count = 0;
 
 	protected void onCreate(Bundle savedInstanceState) 
@@ -55,8 +54,6 @@ public class MainActivity extends ConsentedActivity
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_main);
 		
-        final ViewPager pager = (ViewPager) this.findViewById(R.id.pager_content);
-        
         final MainActivity me = this;
         
 		ImageView path = (ImageView) this.findViewById(R.id.button_map);
@@ -86,7 +83,6 @@ public class MainActivity extends ConsentedActivity
 				me.startActivityForResult(in, MainActivity.RESULT_FETCH_IMAGE);
 			}
 		});
-
 	}
 	
     protected void onActivityResult(int requestCode, int resultCode, Intent data) 
@@ -107,8 +103,6 @@ public class MainActivity extends ConsentedActivity
             	this.getContentResolver().update(AspireContentProvider.ASPIRE_CARD_URI, values, where, args);
 
                 final ViewPager pager = (ViewPager) this.findViewById(R.id.pager_content);
-                
-                Log.e("AS", "SETTING INDEX: " + this._index);
                 
                 pager.setCurrentItem(this._index);
             }
@@ -149,7 +143,16 @@ public class MainActivity extends ConsentedActivity
 		final MainActivity me = this;
 		
 		Cursor c = this.getContentResolver().query(AspireContentProvider.ASPIRE_PATH_URI, null, null, null, AspireContentProvider.ID);
-		this._count = c.getCount();
+		
+		HashSet<Long> uniqueIds = new HashSet<Long>();
+		
+		while(c.moveToNext())
+		{
+			uniqueIds.add(c.getLong(c.getColumnIndex(AspireContentProvider.PATH_CARD_ID)));
+		}
+		
+		this._count = uniqueIds.size();
+
 		c.close();
 		
 		if (this._count == 0)
@@ -174,6 +177,9 @@ public class MainActivity extends ConsentedActivity
 		}
 		else
 		{
+			if (this._index == -1)
+				this._index = 0;
+			
 			final HashMap<Long, Integer> cardCount = new HashMap<Long, Integer>();
 			final ArrayList<Long> cardIds = new ArrayList<Long>();
 			
@@ -198,8 +204,6 @@ public class MainActivity extends ConsentedActivity
 			
 			c.close();
 
-			Log.e("AS", "COUNT: " + this._count);
-			
 	        final ViewPager pager = (ViewPager) this.findViewById(R.id.pager_content);
 	        	        
 			PagerAdapter adapter = new PagerAdapter()
@@ -253,7 +257,11 @@ public class MainActivity extends ConsentedActivity
 						String imageUri = c.getString(c.getColumnIndex(AspireContentProvider.CARD_IMAGE));
 			
 						if (imageUri != null && imageUri.trim().length() > 0)
-							background.setImageURI(Uri.parse(imageUri));
+						{
+							Uri resizedUri = AspireContentProvider.fetchResizedImage(me, Uri.parse(imageUri), 1024, 1024);
+
+							background.setImageURI(resizedUri);
+						}
 						else
 						{
 							try 
@@ -292,8 +300,8 @@ public class MainActivity extends ConsentedActivity
 			};
 			
 			pager.setAdapter(adapter);
-			
-			pager.setOnPageChangeListener(new OnPageChangeListener()
+					
+			final OnPageChangeListener pageChange = new OnPageChangeListener()
 			{
 				public void onPageScrollStateChanged(int position) 
 				{
@@ -308,9 +316,6 @@ public class MainActivity extends ConsentedActivity
 				public void onPageSelected(int position) 
 				{
 					me._index = position;
-					
-	                Log.e("AS", "2 SETTING INDEX: " + me._index);
-
 					
 					View view = pager.findViewWithTag("" + position);
 					
@@ -427,10 +432,34 @@ public class MainActivity extends ConsentedActivity
 						}
 					});
 				}
+			};
+
+			pager.setOnPageChangeListener(pageChange);
+			
+			Thread t = new Thread(new Runnable()
+			{
+				public void run() 
+				{
+					try 
+					{
+						Thread.sleep(500);
+					} 
+					catch (InterruptedException e) 
+					{
+
+					}
+
+					me.runOnUiThread(new Runnable()
+					{
+						public void run() 
+						{
+							pageChange.onPageSelected(me._index);
+						}
+					});
+				}
 			});
 			
-			if (me._index != -1)
-				pager.setCurrentItem(me._index);
+			t.start();
 		}		
 
 		HashMap<String, Object> payload = new HashMap<String, Object>();
@@ -559,7 +588,7 @@ public class MainActivity extends ConsentedActivity
 	    							
 	    							args[0] = pathCursor.getString(pathCursor.getColumnIndex(AspireContentProvider.PATH_CARD_ID));
 	    							
-	    							Cursor cardCursor = me.getContentResolver().query(AspireContentProvider.ASPIRE_CARD_URI, null, null, null, null);
+	    							Cursor cardCursor = me.getContentResolver().query(AspireContentProvider.ASPIRE_CARD_URI, null, where, args, null);
 	    							
 	    							if (cardCursor.moveToNext())
 	    								card.setText(cardCursor.getString(cardCursor.getColumnIndex(AspireContentProvider.CARD_NAME)));
@@ -604,6 +633,11 @@ public class MainActivity extends ConsentedActivity
 		
 		switch (itemId)
 		{
+			case R.id.action_graph:
+				Intent graphIntent = new Intent(this, GraphActivity.class);
+				this.startActivity(graphIntent);
+				
+				break;
 			case R.id.action_settings:
 				Intent settingsIntent = new Intent(this, SettingsActivity.class);
 				this.startActivity(settingsIntent);
