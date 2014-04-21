@@ -55,8 +55,6 @@ public class DownloadManager
 
 	public DownloadManager(Context context) {
         this._context = context;
-
-        this.checkDownloads();
     }
 	
 	public boolean downloadsComplete()
@@ -85,7 +83,7 @@ public class DownloadManager
 		return complete;
 	}
 
-	private void checkDownloads() 
+	void checkDownloads()
 	{
 		if (this._checking)
 			return;
