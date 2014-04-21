@@ -6,11 +6,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.CrashManagerListener;
-
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -24,18 +22,23 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 
@@ -45,44 +48,18 @@ public class MainActivity extends ConsentedActivity
 
 	private int _index = -1;
 
+	private int _count = 0;
+
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_main);
 		
-		final MainActivity me = this;
-		
-		ImageView previous = (ImageView) this.findViewById(R.id.button_previous);
-		
-		previous.setOnClickListener(new OnClickListener()
-		{
-			public void onClick(View arg0) 
-			{
-				HashMap<String, Object> payload = new HashMap<String, Object>();
-				LogManager.getInstance(me).log("previous_card", payload);
-
-				me._index  -= 1;
-				
-				me.showCard(me._index);
-			}
-		});
-
-		ImageView next = (ImageView) this.findViewById(R.id.button_next);
-		
-		next.setOnClickListener(new OnClickListener()
-		{
-			public void onClick(View arg0) 
-			{
-				HashMap<String, Object> payload = new HashMap<String, Object>();
-				LogManager.getInstance(me).log("next_card", payload);
-
-				me._index  += 1;
-				
-				me.showCard(me._index);
-			}
-		});
-
-		ImageView path = (ImageView) this.findViewById(R.id.button_path);
+        final ViewPager pager = (ViewPager) this.findViewById(R.id.pager_content);
+        
+        final MainActivity me = this;
+        
+		ImageView path = (ImageView) this.findViewById(R.id.button_map);
 		
 		path.setOnClickListener(new OnClickListener()
 		{
@@ -109,8 +86,7 @@ public class MainActivity extends ConsentedActivity
 				me.startActivityForResult(in, MainActivity.RESULT_FETCH_IMAGE);
 			}
 		});
-		
-		this.showCard(0);
+
 	}
 	
     protected void onActivityResult(int requestCode, int resultCode, Intent data) 
@@ -130,7 +106,11 @@ public class MainActivity extends ConsentedActivity
             	
             	this.getContentResolver().update(AspireContentProvider.ASPIRE_CARD_URI, values, where, args);
 
-            	this.showCard(this._index);
+                final ViewPager pager = (ViewPager) this.findViewById(R.id.pager_content);
+                
+                Log.e("AS", "SETTING INDEX: " + this._index);
+                
+                pager.setCurrentItem(this._index);
             }
         }
     }
@@ -154,196 +134,6 @@ public class MainActivity extends ConsentedActivity
 		return cardIds.get(this._index);
 	}
 
-	private void showCard(int index) 
-	{
-		final MainActivity me = this;
-		
-		HashMap<Long, Integer> cardCount = new HashMap<Long, Integer>();
-		ArrayList<Long> cardIds = new ArrayList<Long>();
-		
-		Cursor c = this.getContentResolver().query(AspireContentProvider.ASPIRE_PATH_URI, null, null, null, AspireContentProvider.PATH_CARD_ID);
-		
-		while (c.moveToNext())
-		{
-			Long cardId = Long.valueOf(c.getLong(c.getColumnIndex(AspireContentProvider.PATH_CARD_ID)));
-			
-			if (cardIds.contains(cardId) == false)
-				cardIds.add(cardId);
-			
-			int count = 0;
-			
-			if (cardCount.containsKey(cardId))
-				count = cardCount.get(cardId).intValue();
-			
-			count += 1;
-			
-			cardCount.put(cardId, Integer.valueOf(count));
-		}
-		
-		c.close();
-
-		if (cardIds.size() > 0)
-		{
-			if (index < 0)
-				this._index = cardIds.size() - 1;
-			else if (index >= cardIds.size())
-				this._index = 0;
-			else
-				this._index = index;
-
-			final long cardId = cardIds.get(this._index).longValue();
-	
-			int count = cardCount.get(Long.valueOf(cardId)).intValue();
-	
-			final TextView name = (TextView) this.findViewById(R.id.card_name);
-			TextView description = (TextView) this.findViewById(R.id.card_description);
-			
-			HashMap<String, Object> payload = new HashMap<String, Object>();
-			payload.put("virtue", name.getText().toString());
-			LogManager.getInstance(this).log("showed_virtue", payload);
-
-			String where = AspireContentProvider.ID + " = ?";
-			String[] args = { "" + cardId };
-			
-			c = this.getContentResolver().query(AspireContentProvider.ASPIRE_CARD_URI, null, where, args, null);
-			
-			if (c.moveToNext())
-			{
-				name.setText(c.getString(c.getColumnIndex(AspireContentProvider.CARD_NAME)));
-			
-				ImageView background = (ImageView) this.findViewById(R.id.image_background);
-				
-				String imageUri = c.getString(c.getColumnIndex(AspireContentProvider.CARD_IMAGE));
-	
-				if (imageUri != null && imageUri.trim().length() > 0)
-					background.setImageURI(Uri.parse(imageUri));
-				else
-				{
-					try 
-					{
-					    InputStream ims = this.getAssets().open("placeholder.jpg");
-		
-			            Bitmap bitmap = BitmapFactory.decodeStream(ims);
-		
-			            background.setImageBitmap(bitmap);
-			            
-			            ims.close();
-					}
-					catch(IOException e) 
-					{
-						e.printStackTrace();
-						
-						LogManager.getInstance(this).logException(e);
-					}
-				}
-			}
-
-			c.close();
-			
-			if (count == 1)
-				description.setText(R.string.desc_single_path);
-			else
-				description.setText(this.getString(R.string.desc_paths, count));
-			
-			LinearLayout userInfo = (LinearLayout) this.findViewById(R.id.layout_card_info);
-			
-			userInfo.setOnClickListener(new OnClickListener()
-			{
-				public void onClick(View arg0) 
-				{
-					AlertDialog.Builder builder = new AlertDialog.Builder(me);
-					
-					builder.setTitle(name.getText().toString());
-					
-					String where = AspireContentProvider.PATH_CARD_ID + " = ?";
-					String[] args = { "" + cardId };
-					
-					Cursor c = me.getContentResolver().query(AspireContentProvider.ASPIRE_PATH_URI, null, where, args, AspireContentProvider.PATH_PATH);
-					
-					ArrayList<String> paths = new ArrayList<String>();
-					final ArrayList<Long> pathIds = new ArrayList<Long>();
-					
-					while (c.moveToNext())
-					{
-						paths.add(c.getString(c.getColumnIndex(AspireContentProvider.PATH_PATH)));
-						pathIds.add(c.getLong(c.getColumnIndex(AspireContentProvider.ID)));
-					}
-					
-					final String[] pathArray = new String[paths.size()];
-					boolean[] selected = new boolean[paths.size()];
-
-					Calendar cal = Calendar.getInstance();
-
-					for (int i = 0; i < pathArray.length; i++)
-					{
-						pathArray[i] = paths.get(i);
-						
-						String select = AspireContentProvider.TASK_PATH_ID + " = ?";
-						select += " AND " + AspireContentProvider.TASK_YEAR + " =?";
-						select += " AND " + AspireContentProvider.TASK_MONTH + " =?";
-						select += " AND " + AspireContentProvider.TASK_DAY + " =?";
-						
-						String[] selectArgs = { "" + pathIds.get(i), "" + cal.get(Calendar.YEAR), "" + cal.get(Calendar.MONTH), "" + cal.get(Calendar.DAY_OF_MONTH) };
-						
-						Cursor cursor = me.getContentResolver().query(AspireContentProvider.ASPIRE_TASK_URI, null, select, selectArgs, null);
-						
-						selected[i] = (cursor.getCount() > 0);
-						
-						cursor.close();
-					}
-					
-					builder.setMultiChoiceItems(pathArray, selected, new OnMultiChoiceClickListener()
-					{
-						public void onClick(DialogInterface arg0, int which, boolean checked) 
-						{
-							final Calendar cal = Calendar.getInstance();
-
-							String where = AspireContentProvider.TASK_PATH_ID + " = ?";
-							where += " AND " + AspireContentProvider.TASK_YEAR + " =?";
-							where += " AND " + AspireContentProvider.TASK_MONTH + " =?";
-							where += " AND " + AspireContentProvider.TASK_DAY + " =?";
-							
-							String[] args = { "" + pathIds.get(which), "" + cal.get(Calendar.YEAR), "" + cal.get(Calendar.MONTH), "" + cal.get(Calendar.DAY_OF_MONTH) };
-							
-							me.getContentResolver().delete(AspireContentProvider.ASPIRE_TASK_URI, where, args);
-
-							HashMap<String, Object> payload = new HashMap<String, Object>();
-							payload.put("virtue", name.getText().toString());
-							payload.put("path", pathArray[which]);
-
-							if (checked)
-							{
-								ContentValues values = new ContentValues();
-								values.put(AspireContentProvider.TASK_PATH_ID, pathIds.get(which));
-								values.put(AspireContentProvider.TASK_YEAR, cal.get(Calendar.YEAR));
-								values.put(AspireContentProvider.TASK_MONTH, cal.get(Calendar.MONTH));
-								values.put(AspireContentProvider.TASK_DAY, cal.get(Calendar.DAY_OF_MONTH));
-								
-								me.getContentResolver().insert(AspireContentProvider.ASPIRE_TASK_URI, values);
-
-								LogManager.getInstance(me).log("selected_path", payload);
-							}
-							else
-								LogManager.getInstance(me).log("deselected_path", payload);
-						}
-					});
-					
-					c.close();
-					
-					builder.setPositiveButton(R.string.action_close, new DialogInterface.OnClickListener() 
-					{
-						public void onClick(DialogInterface dialog, int which) 
-						{
-
-						}
-					});
-					
-					builder.create().show();
-				}
-			});
-		}
-	}
-
 	protected void onResume()
 	{
 		super.onResume();
@@ -352,15 +142,17 @@ public class MainActivity extends ConsentedActivity
 		{
 			public boolean shouldAutoUploadCrashes() 
 			{
-				    return true;
+			    return true;
 			}
 		});
 		
 		final MainActivity me = this;
 		
 		Cursor c = this.getContentResolver().query(AspireContentProvider.ASPIRE_PATH_URI, null, null, null, AspireContentProvider.ID);
-
-		if (c.getCount() == 0)
+		this._count = c.getCount();
+		c.close();
+		
+		if (this._count == 0)
 		{
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			
@@ -382,20 +174,264 @@ public class MainActivity extends ConsentedActivity
 		}
 		else
 		{
-			HashSet<Long> cardIds = new HashSet<Long>();
+			final HashMap<Long, Integer> cardCount = new HashMap<Long, Integer>();
+			final ArrayList<Long> cardIds = new ArrayList<Long>();
+			
+			c = this.getContentResolver().query(AspireContentProvider.ASPIRE_PATH_URI, null, null, null, AspireContentProvider.PATH_CARD_ID);
 			
 			while (c.moveToNext())
 			{
-				cardIds.add(Long.valueOf(c.getLong(c.getColumnIndex(AspireContentProvider.PATH_CARD_ID))));
+				Long cardId = Long.valueOf(c.getLong(c.getColumnIndex(AspireContentProvider.PATH_CARD_ID)));
+				
+				if (cardIds.contains(cardId) == false)
+					cardIds.add(cardId);
+				
+				int count = 0;
+				
+				if (cardCount.containsKey(cardId))
+					count = cardCount.get(cardId).intValue();
+				
+				count += 1;
+				
+				cardCount.put(cardId, Integer.valueOf(count));
 			}
 			
-			if (cardIds.size() == 1)
-				this.getSupportActionBar().setSubtitle(R.string.subtitle_single_value);
-			else
-				this.getSupportActionBar().setSubtitle(this.getString(R.string.subtitle_values, cardIds.size()));
-		}
-		
-		c.close();
+			c.close();
+
+			Log.e("AS", "COUNT: " + this._count);
+			
+	        final ViewPager pager = (ViewPager) this.findViewById(R.id.pager_content);
+	        	        
+			PagerAdapter adapter = new PagerAdapter()
+			{
+				public int getCount() 
+				{
+					return me._count;
+				}
+
+				public boolean isViewFromObject(View view, Object content) 
+				{
+					return view.getTag().equals(content);
+				}
+
+				public void destroyItem (ViewGroup container, int position, Object content)
+				{
+					int toRemove = -1;
+
+					for (int i = 0; i < container.getChildCount(); i++)
+					{
+						View child = container.getChildAt(i);
+
+						if (this.isViewFromObject(child, content))
+							toRemove = i;
+					}
+
+					if (toRemove >= 0)
+						container.removeViewAt(toRemove);
+				}
+
+				public Object instantiateItem (ViewGroup container, int position)
+				{
+					LayoutInflater inflater = LayoutInflater.from(me);
+					View view = inflater.inflate(R.layout.view_virtue, null, false);
+
+					final long cardId = cardIds.get(position).longValue();
+					
+					String where = AspireContentProvider.ID + " = ?";
+					String[] args = { "" + cardId };
+					
+					Cursor c = me.getContentResolver().query(AspireContentProvider.ASPIRE_CARD_URI, null, where, args, null);
+					
+					final TextView name = (TextView) view.findViewById(R.id.card_name);
+
+					if (c.moveToNext())
+					{
+						name.setText(c.getString(c.getColumnIndex(AspireContentProvider.CARD_NAME)));
+
+						ImageView background = (ImageView) view.findViewById(R.id.image_background);
+						
+						String imageUri = c.getString(c.getColumnIndex(AspireContentProvider.CARD_IMAGE));
+			
+						if (imageUri != null && imageUri.trim().length() > 0)
+							background.setImageURI(Uri.parse(imageUri));
+						else
+						{
+							try 
+							{
+							    InputStream ims = me.getAssets().open("placeholder.jpg");
+				
+					            Bitmap bitmap = BitmapFactory.decodeStream(ims);
+				
+					            background.setImageBitmap(bitmap);
+					            
+					            ims.close();
+							}
+							catch(IOException e) 
+							{
+								e.printStackTrace();
+								
+								LogManager.getInstance(me).logException(e);
+							}
+						}
+					}
+
+					c.close();
+					
+					view.setTag("" + position);
+
+					container.addView(view);
+
+					LayoutParams layout = (LayoutParams) view.getLayoutParams();
+					layout.height = LayoutParams.MATCH_PARENT;
+					layout.width = LayoutParams.MATCH_PARENT;
+
+					view.setLayoutParams(layout);
+
+					return view.getTag();
+				}
+			};
+			
+			pager.setAdapter(adapter);
+			
+			pager.setOnPageChangeListener(new OnPageChangeListener()
+			{
+				public void onPageScrollStateChanged(int position) 
+				{
+
+				}
+
+				public void onPageScrolled(int arg0, float arg1, int arg2) 
+				{
+
+				}
+
+				public void onPageSelected(int position) 
+				{
+					me._index = position;
+					
+	                Log.e("AS", "2 SETTING INDEX: " + me._index);
+
+					
+					View view = pager.findViewWithTag("" + position);
+					
+					final long cardId = cardIds.get(position).longValue();
+					
+					int count = cardCount.get(Long.valueOf(cardId)).intValue();
+			
+					TextView description = (TextView) me.findViewById(R.id.card_description);
+					final TextView name = (TextView) view.findViewById(R.id.card_name);
+					
+					HashMap<String, Object> payload = new HashMap<String, Object>();
+					payload.put("virtue", name.getText().toString());
+					LogManager.getInstance(me).log("showed_virtue", payload);
+
+					if (count == 1)
+						description.setText(R.string.desc_single_path);
+					else
+						description.setText(me.getString(R.string.desc_paths, count));
+
+					LinearLayout userInfo = (LinearLayout) me.findViewById(R.id.layout_card_info);
+					
+					userInfo.setOnClickListener(new OnClickListener()
+					{
+						public void onClick(View arg0) 
+						{
+							AlertDialog.Builder builder = new AlertDialog.Builder(me);
+							
+							builder.setTitle(name.getText().toString());
+							
+							String where = AspireContentProvider.PATH_CARD_ID + " = ?";
+							String[] args = { "" + cardId };
+							
+							Cursor c = me.getContentResolver().query(AspireContentProvider.ASPIRE_PATH_URI, null, where, args, AspireContentProvider.PATH_PATH);
+							
+							ArrayList<String> paths = new ArrayList<String>();
+							final ArrayList<Long> pathIds = new ArrayList<Long>();
+							
+							while (c.moveToNext())
+							{
+								paths.add(c.getString(c.getColumnIndex(AspireContentProvider.PATH_PATH)));
+								pathIds.add(c.getLong(c.getColumnIndex(AspireContentProvider.ID)));
+							}
+							
+							final String[] pathArray = new String[paths.size()];
+							boolean[] selected = new boolean[paths.size()];
+
+							Calendar cal = Calendar.getInstance();
+
+							for (int i = 0; i < pathArray.length; i++)
+							{
+								pathArray[i] = paths.get(i);
+								
+								String select = AspireContentProvider.TASK_PATH_ID + " = ?";
+								select += " AND " + AspireContentProvider.TASK_YEAR + " =?";
+								select += " AND " + AspireContentProvider.TASK_MONTH + " =?";
+								select += " AND " + AspireContentProvider.TASK_DAY + " =?";
+								
+								String[] selectArgs = { "" + pathIds.get(i), "" + cal.get(Calendar.YEAR), "" + cal.get(Calendar.MONTH), "" + cal.get(Calendar.DAY_OF_MONTH) };
+								
+								Cursor cursor = me.getContentResolver().query(AspireContentProvider.ASPIRE_TASK_URI, null, select, selectArgs, null);
+								
+								selected[i] = (cursor.getCount() > 0);
+								
+								cursor.close();
+							}
+							
+							builder.setMultiChoiceItems(pathArray, selected, new OnMultiChoiceClickListener()
+							{
+								public void onClick(DialogInterface arg0, int which, boolean checked) 
+								{
+									final Calendar cal = Calendar.getInstance();
+
+									String where = AspireContentProvider.TASK_PATH_ID + " = ?";
+									where += " AND " + AspireContentProvider.TASK_YEAR + " =?";
+									where += " AND " + AspireContentProvider.TASK_MONTH + " =?";
+									where += " AND " + AspireContentProvider.TASK_DAY + " =?";
+									
+									String[] args = { "" + pathIds.get(which), "" + cal.get(Calendar.YEAR), "" + cal.get(Calendar.MONTH), "" + cal.get(Calendar.DAY_OF_MONTH) };
+									
+									me.getContentResolver().delete(AspireContentProvider.ASPIRE_TASK_URI, where, args);
+
+									HashMap<String, Object> payload = new HashMap<String, Object>();
+									payload.put("virtue", name.getText().toString());
+									payload.put("path", pathArray[which]);
+
+									if (checked)
+									{
+										ContentValues values = new ContentValues();
+										values.put(AspireContentProvider.TASK_PATH_ID, pathIds.get(which));
+										values.put(AspireContentProvider.TASK_YEAR, cal.get(Calendar.YEAR));
+										values.put(AspireContentProvider.TASK_MONTH, cal.get(Calendar.MONTH));
+										values.put(AspireContentProvider.TASK_DAY, cal.get(Calendar.DAY_OF_MONTH));
+										
+										me.getContentResolver().insert(AspireContentProvider.ASPIRE_TASK_URI, values);
+
+										LogManager.getInstance(me).log("selected_path", payload);
+									}
+									else
+										LogManager.getInstance(me).log("deselected_path", payload);
+								}
+							});
+							
+							c.close();
+							
+							builder.setPositiveButton(R.string.action_close, new DialogInterface.OnClickListener() 
+							{
+								public void onClick(DialogInterface dialog, int which) 
+								{
+									me.updateWeek();
+								}
+							});
+							
+							builder.create().show();
+						}
+					});
+				}
+			});
+			
+			if (me._index != -1)
+				pager.setCurrentItem(me._index);
+		}		
 
 		HashMap<String, Object> payload = new HashMap<String, Object>();
 		LogManager.getInstance(this).log("opened_main", payload);

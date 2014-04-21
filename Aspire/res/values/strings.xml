@@ -27,6 +27,8 @@
     <string name="desc_single_path">1 path</string>
     <string name="desc_paths" formatted="false">%d paths</string>
     
+    <string name="hint_swipe_card">Swipe left &amp; right to view more cards.</string>
+    
     <string name="action_add_value">Add Value</string>
     <string name="action_use_card">Use Card</string>
     <string name="action_add_path">Add Path</string>

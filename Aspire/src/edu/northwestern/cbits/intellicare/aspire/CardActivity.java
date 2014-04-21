@@ -8,20 +8,21 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class CardActivity extends ConsentedActivity 
 {
-	private int _index = 0;
 	private int _count = 0;
 	
 	protected void onCreate(Bundle savedInstanceState) 
@@ -29,50 +30,85 @@ public class CardActivity extends ConsentedActivity
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_card);
 		
-		this.getSupportActionBar().setTitle(R.string.title_card);
+		this.getSupportActionBar().setTitle(R.string.title_card);		
 		
+        final ViewPager pager = (ViewPager) this.findViewById(R.id.pager_content);
+        
 		Cursor c = this.getContentResolver().query(AspireContentProvider.ASPIRE_CARD_URI, null, null, null, AspireContentProvider.ID);
-		
-		SecureRandom random = new SecureRandom();
-		
 		this._count = c.getCount();
-		this._index = random.nextInt(this._count);
-		
 		c.close();
 		
-		this.showCard(this._index);
-		
 		final CardActivity me = this;
-		
-		ImageView previous = (ImageView) this.findViewById(R.id.button_previous);
-		
-		previous.setOnClickListener(new OnClickListener()
+        
+		PagerAdapter adapter = new PagerAdapter()
 		{
-			public void onClick(View arg0) 
+			public int getCount() 
 			{
-				HashMap<String, Object> payload = new HashMap<String, Object>();
-				LogManager.getInstance(me).log("previous_card", payload);
-
-				me._index -= 1;
-				
-				me.showCard(me._index);
+				return me._count;
 			}
-		});
 
-		ImageView next = (ImageView) this.findViewById(R.id.button_next);
-		
-		next.setOnClickListener(new OnClickListener()
-		{
-			public void onClick(View arg0) 
+			public boolean isViewFromObject(View view, Object content) 
 			{
-				HashMap<String, Object> payload = new HashMap<String, Object>();
-				LogManager.getInstance(me).log("next_card", payload);
-
-				me._index += 1;
-				
-				me.showCard(me._index);
+				return view.getTag().equals(content);
 			}
-		});
+
+			public void destroyItem (ViewGroup container, int position, Object content)
+			{
+				int toRemove = -1;
+
+				for (int i = 0; i < container.getChildCount(); i++)
+				{
+					View child = container.getChildAt(i);
+
+					if (this.isViewFromObject(child, content))
+						toRemove = i;
+				}
+
+				if (toRemove >= 0)
+					container.removeViewAt(toRemove);
+			}
+
+			public Object instantiateItem (ViewGroup container, int position)
+			{
+				LayoutInflater inflater = LayoutInflater.from(me);
+				View view = inflater.inflate(R.layout.view_card, null, false);
+
+				TextView name = (TextView) view.findViewById(R.id.card_name);
+				TextView description = (TextView) view.findViewById(R.id.card_description);
+			
+				Cursor c = me.getContentResolver().query(AspireContentProvider.ASPIRE_CARD_URI, null, null, null, AspireContentProvider.ID);
+				
+				if (c.moveToPosition(position))
+				{
+					name.setText(c.getString(c.getColumnIndex(AspireContentProvider.CARD_NAME)));
+					description.setText(c.getString(c.getColumnIndex(AspireContentProvider.CARD_DESCRIPTION)));
+
+					HashMap<String, Object> payload = new HashMap<String, Object>();
+					payload.put("name", name.getText().toString());
+					payload.put("description", description.getText().toString());
+					LogManager.getInstance(me).log("showed_card", payload);
+				}
+				
+				c.close();
+
+				view.setTag("" + position);
+
+				container.addView(view);
+
+				LayoutParams layout = (LayoutParams) view.getLayoutParams();
+				layout.height = LayoutParams.MATCH_PARENT;
+				layout.width = LayoutParams.MATCH_PARENT;
+
+				view.setLayoutParams(layout);
+
+				return view.getTag();
+			}
+		};
+
+		pager.setAdapter(adapter);
+
+		SecureRandom random = new SecureRandom();
+		pager.setCurrentItem(random.nextInt(this._count));
 	}
 	
 	protected void onResume()
@@ -91,34 +127,6 @@ public class CardActivity extends ConsentedActivity
 		LogManager.getInstance(this).log("closed_cards", payload);
 	}
 
-	private void showCard(int index) 
-	{
-		if (index < 0)
-			this._index = this._count - 1;
-		else if (index >= this._count)
-			this._index = 0;
-		else
-			this._index = index;
-		
-		TextView name = (TextView) this.findViewById(R.id.card_name);
-		TextView description = (TextView) this.findViewById(R.id.card_description);
-	
-		Cursor c = this.getContentResolver().query(AspireContentProvider.ASPIRE_CARD_URI, null, null, null, AspireContentProvider.ID);
-		
-		if (c.moveToPosition(this._index))
-		{
-			name.setText(c.getString(c.getColumnIndex(AspireContentProvider.CARD_NAME)));
-			description.setText(c.getString(c.getColumnIndex(AspireContentProvider.CARD_DESCRIPTION)));
-
-			HashMap<String, Object> payload = new HashMap<String, Object>();
-			payload.put("name", name.getText().toString());
-			payload.put("description", description.getText().toString());
-			LogManager.getInstance(this).log("showed_card", payload);
-		}
-		
-		c.close();
-	}
-
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
 		this.getMenuInflater().inflate(R.menu.menu_card, menu);
@@ -134,11 +142,13 @@ public class CardActivity extends ConsentedActivity
 		switch (itemId)
 		{
 			case R.id.action_use_card:
+		        final ViewPager pager = (ViewPager) this.findViewById(R.id.pager_content);
+
 				long id = -1;
 				
 				Cursor c = this.getContentResolver().query(AspireContentProvider.ASPIRE_CARD_URI, null, null, null, AspireContentProvider.ID);
 				
-				if (c.moveToPosition(this._index))
+				if (c.moveToPosition(pager.getCurrentItem()))
 				{
 					id = c.getLong(c.getColumnIndex(AspireContentProvider.ID));
 					
@@ -199,7 +209,7 @@ public class CardActivity extends ConsentedActivity
 				}
 				else
 					this.finish();
-				
+
 				break;
 		}
 		
