@@ -6,7 +6,6 @@ import java.util.Date;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import edu.northwestern.cbits.intellicare.dailyfeats.FeatsProvider;
@@ -28,10 +27,6 @@ public class CalendarView extends LinearLayout
 
 	private DateChangeListener _dateChangeListener = null;
 
-	private Date _date = null;
-
-	private float _startX = -1;
-	
 	public CalendarView(Context context, AttributeSet attrs) 
 	{
 		super(context, attrs);
@@ -48,8 +43,6 @@ public class CalendarView extends LinearLayout
 
 	public void setDate(final Date date, boolean doCallbacks) 
 	{
-		this._date = date;
-		
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
 		
@@ -163,56 +156,6 @@ public class CalendarView extends LinearLayout
 		this._dateChangeListener  = dateChangeListener;
 	}
 	
-	public boolean onInterceptTouchEvent(MotionEvent event)
-	{
-		int action = event.getAction();
-		
-		if (action == MotionEvent.ACTION_DOWN)
-		{
-			this._startX  = event.getX();
-		}
-		else if (action == MotionEvent.ACTION_MOVE)
-		{
-			float delta = event.getX() - this._startX;
-
-			if (Math.abs(delta) > 512)
-			{
-				this._startX = event.getX();
-				
-				Calendar next = Calendar.getInstance();
-				next.setTime(this._date);
-				
-				int month = next.get(Calendar.MONTH);
-				int year = next.get(Calendar.YEAR);
-				
-				if (delta > 0)
-					month -= 1;
-				else
-					month += 1;
-				
-				if (month < 0)
-				{
-					month = 11;
-					year -= 1;
-				}
-				else if (month == 12)
-				{
-					month = 0;
-					year += 1;
-				}
-				
-				next.set(Calendar.MONTH, month);
-				next.set(Calendar.YEAR, year);
-				
-				this.setDate(next.getTime());
-			}
-		}
-		else if (action == MotionEvent.ACTION_UP)
-			this._startX = -1;
-
-	    return false;
-	}
-
 	public void setDate(Date date) 
 	{
 		this.setDate(date, true);

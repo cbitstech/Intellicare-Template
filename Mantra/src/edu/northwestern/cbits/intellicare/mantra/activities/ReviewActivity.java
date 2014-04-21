@@ -55,7 +55,7 @@ public class ReviewActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				self.startActivity(new Intent(self, NoFragmentsHomeActivity.class));
+				self.startActivity(new Intent(self, IndexActivity.class));
 				self.finish();
 			}
 		});

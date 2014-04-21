@@ -1,33 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <edu.northwestern.cbits.intellicare.dailyfeats.views.CalendarView 
-        android:id="@+id/view_calendar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="#ffffcc" />
-    <ListView android:id="@+id/list_feats"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-	<LinearLayout android:id="@+id/empty_list"
-	    android:orientation="vertical"
-	    android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" 
-        android:visibility="gone">
-	    <View android:layout_width="match_parent"
-	        android:layout_height="0dp"
-	        android:layout_weight="1" />
-	    <TextView android:text="@string/message_no_feats"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:gravity="center" />
-	    <View android:layout_width="match_parent"
-	        android:layout_height="0dp"
-	        android:layout_weight="1" />
-	</LinearLayout>    
-</LinearLayout>
+<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pager_content"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent" /> 

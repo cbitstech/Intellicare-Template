@@ -170,10 +170,10 @@ public class EditActivity extends ConsentedActivity
 					public void onClick(DialogInterface dialog, int which) 
 					{
 						ContentValues values = new ContentValues();
-						values.put(AspireContentProvider.PATH_CARD_ID, me._cardId);
+						values.put(AspireContentProvider.T, me._cardId);
 						values.put(AspireContentProvider.PATH_PATH, taskField.getText().toString().trim());
 						
-						me.getContentResolver().insert(AspireContentProvider.ASPIRE_PATH_URI, values);
+						me.getContentResolver().insert(AspireContentProvider.ASPIRE_TASK_URI, values);
 						
 						me.refreshList();
 						
@@ -182,6 +182,10 @@ public class EditActivity extends ConsentedActivity
 						LogManager.getInstance(me).log("added_path", payload);
 					}
 				});
+
+			   	<string name="db_create_paths_table">CREATE TABLE IF NOT EXISTS paths(_id INTEGER PRIMARY KEY, card_id INTEGER, path TEXT);</string>
+			   	<string name="db_create_tasks_table">CREATE TABLE IF NOT EXISTS tasks(_id INTEGER PRIMARY KEY, path_id INTEGER, year INTEGER, month INTEGER, day INTEGER);</string>
+
 				
 				builder.create().show();
 

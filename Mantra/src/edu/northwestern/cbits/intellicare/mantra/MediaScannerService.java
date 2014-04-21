@@ -50,7 +50,7 @@ public class MediaScannerService extends IntentService {
 		ArrayList<SingleMediaScanner> scanners = new ArrayList<SingleMediaScanner>();
 		for(int i = 0; i < fullFilePathsToScan.length; i++) {
 			String filePath = fullFilePathsToScan[i];
-			Log.d(CN+".onHandleIntent", "scanning file (start): " + filePath);
+//			Log.d(CN+".onHandleIntent", "scanning file (start): " + filePath);
 			allCompleted.add(new Boolean(false));
 			scanners.add(new SingleMediaScanner(this, new File(filePath), allCompleted.get(i)));
 		}

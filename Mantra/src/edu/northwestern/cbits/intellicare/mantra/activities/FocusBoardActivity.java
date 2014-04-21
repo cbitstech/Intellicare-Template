@@ -136,10 +136,23 @@ public class FocusBoardActivity extends ActionBarActivity {
 				applyNewImageToMantra(imageFile);
 				
 				// clean-up the temp folder
+				Log.e(CN+".handleSelectedImageIntent", "Deleting temp images in: " + Paths.MANTRA_IMAGES_TMP);
 				deleteAllFilesInImageFolder(Paths.MANTRA_IMAGES_TMP);
+				
+				// prompt the user to immediately edit the caption to their newly-added web photo
+				final FocusBoardActivity self = this;
+				Log.e(CN+".handleSelectedImageIntent", "Starting UI thread...");
+				this.runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						Log.e(CN+".handleSelectedImageIntent", "about to run IndexActivity.editSelectedMantraCaption");
+						IndexActivity.editSelectedMantraCaption(self, mFocusBoardId);
+					}
+				});
 			}
 			else
-				Log.d(CN+".handleSelectedImageIntent", "one of the conds is untrue: " + (selectedImage != null) + " && " + (selectedImage == null ? "<not evaluable>" : selectedImage.toString().length() > 0) + ")");
+				Log.e(CN+".handleSelectedImageIntent", "one of the conds is untrue: " + (selectedImage != null) + " && " + (selectedImage == null ? "<not evaluable>" : selectedImage.toString().length() > 0) + ")");
 		}
 		else
 			Log.d(CN+".handleSelectedImageIntent", "intent is null");
@@ -158,7 +171,7 @@ public class FocusBoardActivity extends ActionBarActivity {
 		Util.logCursor(fic);
 		while(fic.moveToNext()) {
 			String path = fic.getString(FocusBoardManager.COL_INDEX_FILE_PATH).trim();
-			Log.d(CN+".applyNewImageToMantra", "path.equals(filePathToImage) = " + (path.equals(imageFile.getAbsolutePath())) + "; path = \"" + path + "\"" + "; imageFile.getAbsolutePath() = \"" + imageFile.getAbsolutePath() + "\"");
+//			Log.d(CN+".applyNewImageToMantra", "path.equals(filePathToImage) = " + (path.equals(imageFile.getAbsolutePath())) + "; path = \"" + path + "\"" + "; imageFile.getAbsolutePath() = \"" + imageFile.getAbsolutePath() + "\"");
 			if(path.equals(imageFile.getAbsolutePath())) {
 				Toast.makeText(this, "Image already applied. Consider choosing a different one!", Toast.LENGTH_LONG).show();
 				imageAlreadyAssociated = true;
@@ -168,8 +181,9 @@ public class FocusBoardActivity extends ActionBarActivity {
 		if(!imageAlreadyAssociated) {
 			Log.d(CN+".applyNewImageToMantra","for board " + mFocusBoardId + ", associating image = " + imageFile.getAbsolutePath());
 			Toast.makeText(this, "Image applied!", Toast.LENGTH_SHORT).show();
-			mManager.createFocusImage(mFocusBoardId, imageFile.getAbsolutePath(), "SOME IMAGE CAPTION");
+			mManager.createFocusImage(mFocusBoardId, imageFile.getAbsolutePath(), this.getString(R.string.default_image_caption));
 		}
+		fic.close();
 	}
 	
 	
@@ -183,11 +197,11 @@ public class FocusBoardActivity extends ActionBarActivity {
 		// ATTEMPT 4: query the content provider and log the contents of the thumbnail and media images sets.
 		Log.d(CN+".deleteAllFilesInImageFolder", "logging content provider contents for MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI = " + MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI);
 		Cursor imagesThumbsCursor = managedQuery(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, null, null, null, null);
-		Util.logCursor(imagesThumbsCursor);
+//		Util.logCursor(imagesThumbsCursor);
 //		imagesThumbsCursor.moveToPosition(-1);
 		Log.d(CN+".deleteAllFilesInImageFolder", "logging content provider contents for MediaStore.Images.Media.EXTERNAL_CONTENT_URI = " + MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		Cursor imagesMediaCursor = managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, null);
-		Util.logCursor(imagesMediaCursor);
+//		Util.logCursor(imagesMediaCursor);
 //		imagesMediaCursor.moveToPosition(-1);
 
 		// get the set of images to delete
@@ -232,9 +246,9 @@ public class FocusBoardActivity extends ActionBarActivity {
 		ArrayList<Integer> imageIdsToDelete = new ArrayList<Integer>();
 		while(imagesMediaCursor.moveToNext()) {
 			String filePath = imagesMediaCursor.getString(imagesMediaCursor.getColumnIndex("_data"));
-			Log.d(CN+".getImageFilePaths", "filePath = " + filePath + "; folderPath = " + folderPath);
+//			Log.d(CN+".getImageFilePaths", "filePath = " + filePath + "; folderPath = " + folderPath);
 			if(filePath.contains(folderPath)) {
-				Log.d(CN+".getImageFilePaths", "Adding to list of images to delete: " + filePath);
+//				Log.d(CN+".getImageFilePaths", "Adding to list of images to delete: " + filePath);
 				imageIdsToDelete.add(imagesMediaCursor.getInt(imagesMediaCursor.getColumnIndex("_id")));
 			}
 		}
@@ -245,16 +259,16 @@ public class FocusBoardActivity extends ActionBarActivity {
 	 * Indexes the Mantra folder.
 	 */
 	private void indexMantraFolder() {
-		Log.d(CN+".deleteAllFilesInFolder", "re-indexing files in the folder: " + Paths.MANTRA_IMAGES);
+		Log.d(CN+".indexMantraFolder", "re-indexing files in the folder: " + Paths.MANTRA_IMAGES);
 		File mantraFolder = new File(Paths.MANTRA_IMAGES);
 		Intent mediaScannerIntent = new Intent(this, MediaScannerService.class);
 		File[] pathsToFilesInMantraFolder = mantraFolder.listFiles();
 		String[] filesToScan = new String[pathsToFilesInMantraFolder.length]; for(int i = 0; i < pathsToFilesInMantraFolder.length; i++) { filesToScan[i] = pathsToFilesInMantraFolder[i].getAbsolutePath(); }
-		StringBuilder sb = new StringBuilder(); for(String f : filesToScan) { sb.append("\r\n\t" + f); } Log.d(CN+".deleteAllFilesInFolder", "scanning files:" + sb.toString());
+		StringBuilder sb = new StringBuilder(); for(String f : filesToScan) { sb.append("\r\n\t" + f); } Log.d(CN+".indexMantraFolder", "scanning files:" + sb.toString());
 		mediaScannerIntent.putExtra(MediaScannerService.INTENT_KEY_FILE_PATHS_TO_SCAN, filesToScan);
 		ArrayList<String> receiverArrayListExtras = new ArrayList<String>(); receiverArrayListExtras.add("true");
 		mediaScannerIntent.putExtra(MediaScannerService.INTENT_KEY_TO_RECEIVER_STRINGARRAY, receiverArrayListExtras);
-		Log.d(CN+".deleteAllFilesInFolder", "starting mediaScannerIntent");
+		Log.d(CN+".indexMantraFolder", "starting mediaScannerIntent");
 		startService(mediaScannerIntent);
 	}
 

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MoveME</string>
+    <string name="action_settings">Settings</string>
+    
+    <string name="action_dashboard">My Dashboard</string>
+    <string name="action_inspire_me">Inspire Me</string>
+	<string name="action_boost_my_mood">Boost My Mood</string>
+    <string name="action_map">My Map</string>
+    <string name="action_music">Launch Music Player</string>
+    <string name="action_schedule">Schedule Exercise</string>
+    <string name="action_lessons">Lessons</string>
+
+    <string name="action_next">Next</string>
+    <string name="action_back">Back</string>
+    <string name="action_done">Done</string>
+    
+    <string name="title_dashboard">My Dashboard</string>
+
+    <string name="title_my_map">My Map</string>
+    <string name="title_settings">Settings</string>
+    
+    <string name="pref_music_player">Preferred Music Player</string>
+    <string name="summary_music_player">Select your music player that hosts your workout playlists.</string>
+    
+    <string-array name="empty_array"></string-array>
+    
+    <string name="player_google_play">Google Play Music</string>
+    <string name="player_spotify">Spotify</string>
+    <string name="player_pandora">Pandora</string>
+    <string name="player_siriusxm">SiriusXM</string>
+    <string name="player_amazon_mp3">Amazon MP3</string>
+    <string name="player_default">Default Music Player</string>
+    <string name="pref_default">default</string>
+
+    <string name="title_inspire_me">Inspire Me</string>
+    
+    <string name="title_learn_more">Learn More</string>
+    <string name="item_lessons">Lessons</string>
+    <string name="item_videos">Videos</string>
+
+    <string name="title_schedule">Schedule Exercise</string>
+    <string name="item_aerobic_moderate">Moderate Aerobic Exercise</string>
+    <string name="item_aerobic_vigorous">Vigorous Aerobic Exercise</string>
+    <string name="item_strengthening">Strengthening Exercise</string>
+    
+    <string-array name="array_moderate_aerobic">
+        <item>Walking briskly</item>
+        <item>Biking slowly</item>
+        <item>Jogging</item>
+        <item>Swimming leisurely</item>
+        <item>Elliptical or other gym machine</item>
+        <item>Stair walking</item>
+        <item>Shooting baskets</item>
+        <item>Aerobic yoga</item>
+        <item>Tennnis</item>
+        <item>Catch/throw sport (e.g. baseball)</item>
+        <item>Other</item>
+ 	</string-array>
+    
+    <string-array name="array_vigorous_aerobic">
+        <item>Jogging or running</item>
+        <item>Sport with running (e.g. soccer)</item>
+        <item>Biking quickly</item>
+        <item>Aerobic workout class</item>
+        <item>Hiking uphill</item>
+        <item>Jumping rope</item>
+        <item>Swimming quickly</item>
+        <item>Rollerblading</item>
+        <item>Other</item>
+ 	</string-array>
+    
+    <string-array name="array_strengthening">
+        <item>Lifting weights</item>
+        <item>Gym machine</item>
+        <item>Push-ups</item>
+        <item>Sit-ups</item>
+        <item>Resistance band workout</item>
+        <item>Yoga</item>
+        <item>Heavy gardening</item>
+        <item>Other</item>
+ 	</string-array>
+
+    <string name="event_name" formatted="false">Move Me: %s</string>
+    <string name="event_description" formatted="false">Created by Move Me.\n\nBegin exercising by visiting intellicare://move-me/%s</string>
+    <string name="exercise_unknown">Unknown Exercise</string>
+
+    <string name="title_calendar_error">Scheduling Not Available</string>
+    <string name="message_calendar_error">Calendar scheduling is only available on Android 4.0 and newer devices.</string>
+    
+    <string name="action_toggle">Toggle Timer</string>
+    <string name="title_exercise_timer">Boost My Mood</string>
+
+    <string name="title_pre_mood">Select Pre-Exercise Mood</string>
+    <string name="title_post_mood">Select Post-Exercise Mood</string>
+
+    <string-array name="array_moods">
+        <item>3 (Very Positive)</item>
+        <item>2</item>
+        <item>1</item>
+        <item>0 (Neutral)</item>
+        <item>-1</item>
+        <item>-2</item>
+        <item>-3 (Very Negative)</item>
+ 	</string-array>
+
+    <string name="action_continue">Continue</string>
+    
+    <string name="action_finish">Finish</string>
+    
+    <string name="instructions_timer">Press the PLAY button above to begin your workout. Tap the button again to PAUSE your workout. When you complete your workout, tap the button below to save your exercise.</string>
+    <string name="action_finish_exercise">Finish Exercise</string>
+
+    <string name="title_welcome">Welcome to MoveME</string>
+    <string name="title_set_goal">Select Weekly Target</string>
+    
+    <string-array name="array_goals">
+        <item>50 minutes</item>
+        <item>100 minutes</item>
+        <item>150 minutes</item>
+        <item>200 minutes</item>
+ 	</string-array>
+
+    <string name="title_lessons">Lessons</string>
+
+    <string-array name="array_lessons">
+        <item>Goals*</item>
+        <item>How much should I exercise?</item>
+        <item>How hard should I exercise?</item>
+        <item>What kind of physical activity should I do?</item>
+        <item>How do I develop activity as a habit?</item>
+        <item>How do I get – and stay – motivated to move?</item>
+        <item>How can I re-motivate when I’m feeling low?</item>
+        <item>How do I plan my activity for the week?</item>
+        <item>Obstacles: Motivation*</item>
+        <item>Motivation pitfalls</item>
+        <item>Resorting your motivation heirarchy</item>
+        <item>Looking outward for motivation</item>
+        <item>Obstacles: Motivation-Sapping Thoughts*</item>
+        <item>Morning</item>
+        <item>Afternoon</item>
+        <item>Evening</item>
+   	</string-array>
+
+    <string-array name="array_lesson_urls">
+        <item></item>
+        <item>how_much.html</item>
+        <item>how_hard.html</item>
+        <item>kind.html</item>
+        <item>habit.html</item>
+        <item>motivated.html</item>
+        <item>remotivate.html</item>
+        <item>plan.html</item>
+        <item></item>
+        <item>pitfalls.html</item>
+        <item>heirarchy.html</item>
+        <item>outward.html</item>
+        <item></item>
+        <item>morning.html</item>
+        <item>afternoon.html</item>
+        <item>evening.html</item>
+   	</string-array>
+
+    <string name="action_log">Exercise Log</string>
+    <string name="title_log">Exercise Log</string>
+    
+	<string name="db_create_exercises_table">CREATE TABLE IF NOT EXISTS exercises (_id INTEGER PRIMARY KEY NOT NULL, duration INTEGER NOT NULL, recorded INTEGER NOT NULL, premood INTEGER NOT NULL, postmood INTEGER NOT NULL);</string>
+	
+	<string name="mood_range" formatted="false">From %d to %d</string>
+	<string name="duration_label" formatted="false">Time Spent: %ss</string>
+		
+</resources>

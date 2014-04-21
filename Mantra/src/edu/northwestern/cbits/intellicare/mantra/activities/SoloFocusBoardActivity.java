@@ -276,23 +276,27 @@ public class SoloFocusBoardActivity extends ActionBarActivity {
 				mManager = FocusBoardManager.get(this);
 				FocusBoard focusBoard = mManager.getFocusBoard(mFocusBoardId);
 
+				Log.d(CN+".handleSelectedImageIntent", "selectedImage = " + selectedImage.toString());
 				String filePathToImageInTmpFolder = Paths.getRealPathFromURI(this, selectedImage).trim();
-				File imageFileTmp = new File(filePathToImageInTmpFolder);
-				String fileName = imageFileTmp.getName();
-				String newFilePath = Paths.MANTRA_IMAGES + "/" + fileName;
-				File imageFile = new File(newFilePath);
-				if(imageFileTmp.exists()) { 
-					if(!imageFileTmp.renameTo(imageFile)) {
-						throw new Exception("Couldn't rename file from \"" + filePathToImageInTmpFolder + "\" to \"" + newFilePath + "\""); 
+				
+				if(filePathToImageInTmpFolder != Paths.IMAGE_NOT_FOUND) {
+					File imageFileTmp = new File(filePathToImageInTmpFolder);
+					String fileName = imageFileTmp.getName();
+					String newFilePath = Paths.MANTRA_IMAGES + "/" + fileName;
+					File imageFile = new File(newFilePath);
+					if(imageFileTmp.exists()) { 
+						if(!imageFileTmp.renameTo(imageFile)) {
+							throw new Exception("Couldn't rename file from \"" + filePathToImageInTmpFolder + "\" to \"" + newFilePath + "\""); 
+						}
+						else
+							Log.d(CN+".handleSelectedImageIntent", "Renamed file from \"" + filePathToImageInTmpFolder + "\" to \"" + newFilePath + "\"");
 					}
-					else
-						Log.d(CN+".handleSelectedImageIntent", "Renamed file from \"" + filePathToImageInTmpFolder + "\" to \"" + newFilePath + "\"");
+					
+					applyNewImageToMantra(imageFile);
+					
+					// clean-up the temp folder
+					deleteAllFilesInImageFolder(Paths.MANTRA_IMAGES_TMP);
 				}
-				
-				applyNewImageToMantra(imageFile);
-				
-				// clean-up the temp folder
-				deleteAllFilesInImageFolder(Paths.MANTRA_IMAGES_TMP);
 			}
 			else
 				Log.d(CN+".handleSelectedImageIntent", "one of the conds is untrue: " + (selectedImage != null) + " && " + (selectedImage == null ? "<not evaluable>" : selectedImage.toString().length() > 0) + ")");

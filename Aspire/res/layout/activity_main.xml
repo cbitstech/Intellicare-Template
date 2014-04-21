@@ -2,38 +2,11 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:orientation="vertical">
-    <FrameLayout android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" >
-	    <ImageView android:id="@+id/image_background" 
-	        android:layout_width="match_parent"
-	        android:layout_height="match_parent" 
-	        android:scaleType="centerCrop" />
-	    <TextView android:id="@+id/card_name"
-	        android:layout_gravity="center"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:textStyle="bold"
-	        android:textColor="#ffffff"
-	        android:textSize="48sp" 
-	        android:shadowColor="#000000"
-	        android:shadowRadius="8.0"
-	        android:shadowDx="0"
-	        android:shadowDy="0"
-	        android:gravity="center" />
-	    <ImageView android:id="@+id/button_photo"
-	        android:src="@drawable/button_photo"
-	        android:layout_width="96dp"
-	        android:layout_height="96dp"
-	        android:layout_gravity="bottom|left"
-	        android:layout_margin="8dp" />
-	    <ImageView android:id="@+id/button_path"
-	        android:src="@drawable/button_path"
-	        android:layout_width="96dp"
-	        android:layout_height="96dp"
-	        android:layout_gravity="bottom|right" 
-	        android:layout_margin="8dp" />
-    </FrameLayout>
+    <android.support.v4.view.ViewPager 
+        android:id="@+id/pager_content"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="1" /> 
 	<LinearLayout android:orientation="vertical"
 	    android:layout_height="wrap_content"
 	    android:layout_width="match_parent">
@@ -44,10 +17,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp">
-            <ImageView android:id="@+id/button_previous"
+            <ImageView android:id="@+id/button_photo"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_action_goleft"
+                android:src="@drawable/ic_action_picture"
                 android:scaleType="centerInside" />
             <LinearLayout android:orientation="vertical"
                 android:layout_width="0dp"
@@ -69,10 +42,10 @@
                     android:textStyle="bold"
                     android:textColor="#669900" />
             </LinearLayout>
-            <ImageView android:id="@+id/button_next"
+            <ImageView android:id="@+id/button_map"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_action_goright"
+                android:src="@drawable/ic_action_map"
                 android:scaleType="centerInside" />
         </LinearLayout>
 	    <View android:layout_height="1dp"
