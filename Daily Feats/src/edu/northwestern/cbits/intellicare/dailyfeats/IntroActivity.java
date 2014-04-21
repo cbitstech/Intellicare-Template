@@ -15,7 +15,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,25 +24,22 @@ import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class IntroActivity extends ConsentedActivity 
 {
 	public static final String INTRO_SHOWN = "intro_shown";
-
-	protected int _dialogId = 0;
-
 	private Menu _menu = null;
-	
-	final IntroActivity me = this;
 	
     protected void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
+        
+    	final IntroActivity me = this;
 
         this.setContentView(R.layout.activity_intro);
 
@@ -104,8 +100,6 @@ public class IntroActivity extends ConsentedActivity
 				        {
 				        	int level = prefs.getInt(FeatsProvider.DEPRESSION_LEVEL, 0);
 				        	
-				        	Log.e("DF", "GOT LEVEL: " + level);
-				        	
 				        	int id = -1;
 				        	
 							switch(level)
@@ -124,13 +118,9 @@ public class IntroActivity extends ConsentedActivity
 									break;
 							}
 							
-							Log.e("DF", "GOT ID: " + id);
-							
 							if (id != -1)
 							{
 								RadioButton button = (RadioButton) depression.findViewById(id);
-								
-								Log.e("DF", "GOT BUTTON: " + button);
 								
 								button.setChecked(true);
 							}
@@ -386,9 +376,9 @@ public class IntroActivity extends ConsentedActivity
     		e.commit();
     		
     		Intent intent = new Intent(this, CalendarActivity.class);
-    		me.startActivity(intent);
+    		this.startActivity(intent);
     		
-    		me.finish();
+    		this.finish();
     		
     		return true;
     	}

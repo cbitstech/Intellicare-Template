@@ -10,7 +10,6 @@ import java.util.HashMap;
 
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.CrashManagerListener;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -22,12 +21,16 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -53,36 +56,150 @@ public class CalendarActivity extends ConsentedActivity
         this.setContentView(R.layout.activity_calendar);
         
         final CalendarActivity me = this;
-        
-        CalendarView calendar = (CalendarView) this.findViewById(R.id.view_calendar);
-        
-        calendar.setOnDateChangeListener(new CalendarView.DateChangeListener() 
-        {
-			public void onDateChanged(Date date) 
+
+        final ViewPager pager = (ViewPager) this.findViewById(R.id.pager_content);
+//        pager.setOffscreenPageLimit(0);
+
+		PagerAdapter adapter = new PagerAdapter()
+		{
+			public int getCount() 
 			{
+				return FeatsProvider.fetchMonthCount(me);
+			}
+
+			public boolean isViewFromObject(View view, Object content) 
+			{
+				return view.getTag().equals(content);
+			}
+			
+			public void destroyItem (ViewGroup container, int position, Object content)
+			{
+				int toRemove = -1;
+				
+				for (int i = 0; i < container.getChildCount(); i++)
+				{
+					View child = container.getChildAt(i);
+					
+					if (this.isViewFromObject(child, content))
+						toRemove = i;
+				}
+				
+				if (toRemove >= 0)
+					container.removeViewAt(toRemove);
+			}
+			
+			public Object instantiateItem(ViewGroup container, int position)
+			{
+				Date date = FeatsProvider.dateForMonthIndex(me, position);
+				
+				LayoutInflater inflater = (LayoutInflater) me.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				final View view = inflater.inflate(R.layout.view_calendar_all, null, false);
+				
+		        CalendarView calendar = (CalendarView) view.findViewById(R.id.view_calendar);
+		        calendar.setDate(date);
+
+		        calendar.setOnDateChangeListener(new CalendarView.DateChangeListener() 
+		        {
+					public void onDateChanged(Date date) 
+					{
+						SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
+						
+						me._currentDate = date;
+						
+						me.reloadList(view);
+
+						HashMap<String, Object> payload = new HashMap<String, Object>();
+						payload.put("date", date.getTime());
+						payload.put("full_mode", prefs.getBoolean("settings_full_mode", true));
+						
+						LogManager.getInstance(me).log("changed_date", payload);
+					}
+				});
+				
+				view.setTag("" + position);
+
+				container.addView(view);
+
+				LayoutParams layout = (LayoutParams) view.getLayoutParams();
+				layout.height = LayoutParams.MATCH_PARENT;
+				layout.width = LayoutParams.MATCH_PARENT;
+				
+				view.setLayoutParams(layout);
+
+				return view.getTag();
+			}
+		};
+		
+		pager.setAdapter(adapter);
+
+		pager.setOnPageChangeListener(new OnPageChangeListener()
+		{
+			public void onPageScrollStateChanged(int arg0) 
+			{
+
+			}
+
+			public void onPageScrolled(int arg0, float arg1, int arg2) 
+			{
+
+			}
+
+			public void onPageSelected(final int page) 
+			{
+				final Date date = FeatsProvider.dateForMonthIndex(me, page);
+
+				final ViewPager pager = (ViewPager) me.findViewById(R.id.pager_content);
+				View content = pager.findViewWithTag("" + pager.getCurrentItem());
+				
 				SimpleDateFormat sdf = new SimpleDateFormat("LLLL yyyy");
 				me.getSupportActionBar().setTitle(sdf.format(date));
-
+				
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
 				int level = prefs.getInt(FeatsProvider.DEPRESSION_LEVEL, 2);
 				int streak = FeatsProvider.streakForLevel(me, level);
 				
 				me.getSupportActionBar().setSubtitle(me.getString(R.string.title_level_streak, level, streak));
-				
-				me._currentDate = date;
-				
-				me.reloadList();
-				
 
-				HashMap<String, Object> payload = new HashMap<String, Object>();
-				payload.put("date", date.getTime());
-				payload.put("full_mode", prefs.getBoolean("settings_full_mode", true));
-				
-				LogManager.getInstance(me).log("changed_date", payload);
+				if (content != null)
+				{
+					CalendarView calendar = (CalendarView) content.findViewById(R.id.view_calendar);
+			        calendar.setDate(date);
+				}
+				else
+				{
+					Thread t = new Thread(new Runnable()
+					{
+						public void run() 
+						{
+							try 
+							{
+								Thread.sleep(250);
+							} 
+							catch (InterruptedException e) 
+							{
+
+							}
+							
+							me.runOnUiThread(new Runnable()
+							{
+								public void run() 
+								{
+									View content = pager.findViewWithTag("" + pager.getCurrentItem());
+
+									if (content != null)
+									{
+										CalendarView calendar = (CalendarView) content.findViewById(R.id.view_calendar);
+								        calendar.setDate(date);
+									}
+								}
+							});
+						}
+					});
+					
+					t.start();
+				}
 			}
 		});
-
-        calendar.setDate(new Date());
     }
 	
 	public void onResume()
@@ -90,7 +207,13 @@ public class CalendarActivity extends ConsentedActivity
 		super.onResume();
 
 		if (this._currentDate == null)
+		{
 			this._currentDate = new Date();
+
+	        final ViewPager pager = (ViewPager) this.findViewById(R.id.pager_content);
+
+			pager.setCurrentItem(pager.getAdapter().getCount() - 2, true);
+		}
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -99,11 +222,6 @@ public class CalendarActivity extends ConsentedActivity
 		payload.put("full_mode", prefs.getBoolean("settings_full_mode", true));
 		LogManager.getInstance(this).log("opened_calendar", payload);
 
-        CalendarView calendar = (CalendarView) this.findViewById(R.id.view_calendar);
-        calendar.setDate(this._currentDate);
-        
-        this.reloadList();
-        
 		CrashManager.register(this, APP_ID, new CrashManagerListener() 
 		{
 			public boolean shouldAutoUploadCrashes() 
@@ -125,10 +243,9 @@ public class CalendarActivity extends ConsentedActivity
 	}
 
 	@SuppressWarnings("deprecation")
-	protected void reloadList() 
+	protected void reloadList(View content) 
 	{
-		ListView featsList = (ListView) this.findViewById(R.id.list_feats);
-		
+		ListView listView = (ListView) content.findViewById(R.id.list_feats);
 		DateFormat formatter = android.text.format.DateFormat.getDateFormat(this);
 		
 		String todayFormatted = formatter.format(new Date());
@@ -162,7 +279,7 @@ public class CalendarActivity extends ConsentedActivity
 			Cursor featsCursor = this.getContentResolver().query(FeatsProvider.FEATS_URI, null, where, args, "feat_level, feat_name");
 			this.startManagingCursor(featsCursor);
 			
-	        final CalendarView calendar = (CalendarView) this.findViewById(R.id.view_calendar);
+	        final CalendarView calendar = (CalendarView) content.findViewById(R.id.view_calendar);
 
 			SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.row_feat_checkbox, featsCursor, new String[0], new int[0], 0)
 			{
@@ -210,13 +327,13 @@ public class CalendarActivity extends ConsentedActivity
 
 								FeatsProvider.clearFeats(me, featName, me._currentDate);
 							}
-							
-							calendar.setDate(new Date(), false);
-							
+
 							int level = prefs.getInt(FeatsProvider.DEPRESSION_LEVEL, 2);
 							int streak = FeatsProvider.streakForLevel(me, level);
 							
 							me.getSupportActionBar().setSubtitle(me.getString(R.string.title_level_streak, level, streak));
+
+							calendar.setDate(me._currentDate, false);
 						}
 					});
 
@@ -262,7 +379,7 @@ public class CalendarActivity extends ConsentedActivity
 				}
 			};
 			
-			featsList.setAdapter(adapter);
+			listView.setAdapter(adapter);
 		}
 		else
 		{
@@ -386,8 +503,8 @@ public class CalendarActivity extends ConsentedActivity
 				}
 			};
 			
-			featsList.setAdapter(adapter);
-			featsList.setEmptyView(this.findViewById(R.id.empty_list));
+			listView.setAdapter(adapter);
+			listView.setEmptyView(content.findViewById(R.id.empty_list));
 		}
 	}
 
@@ -409,8 +526,8 @@ public class CalendarActivity extends ConsentedActivity
 		
 		if (itemId == R.id.action_today)
 		{
-	        CalendarView calendar = (CalendarView) this.findViewById(R.id.view_calendar);
-	        calendar.setDate(new Date());
+	        ViewPager pager = (ViewPager) this.findViewById(R.id.pager_content);
+	        pager.setCurrentItem(pager.getAdapter().getCount() - 2, true);
 		}
 		else if (itemId == R.id.action_edit_feats)
 		{

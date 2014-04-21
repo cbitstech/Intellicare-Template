@@ -3,6 +3,7 @@
  */
 package edu.northwestern.cbits.intellicare.dailyfeats;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -571,7 +572,7 @@ public class FeatsProvider extends android.content.ContentProvider
 		
 		Cursor cursor = context.getContentResolver().query(FeatsProvider.FEATS_URI, null, where, args, null);
 		
-		final int minFeatCount = (cursor.getCount() / 2) + 1;
+		final int minFeatCount = 2; // (cursor.getCount() / 2) + 1;
 		
 		while (cursor.moveToNext())
 			feats.add(cursor.getString(cursor.getColumnIndex("feat_name")));
@@ -797,5 +798,42 @@ public class FeatsProvider extends android.content.ContentProvider
 	{
 		public String feat = "";
 		public Integer count = Integer.valueOf(0); 
+	}
+
+	public static int fetchMonthCount(Context context) 
+	{
+		Cursor c = context.getContentResolver().query(FeatsProvider.RESPONSES_URI, null, null, null, null);
+
+		SimpleDateFormat sdf = new SimpleDateFormat("LLLL yyyy");
+		
+		HashSet<String> months = new HashSet<String>();
+
+		while (c.moveToNext())
+		{
+			long date = c.getLong(c.getColumnIndex("recorded"));
+			
+			Date d = new Date(date);
+			
+			months.add(sdf.format(d));
+		}
+
+		c.close();
+
+		return months.size() + 2;
+	}
+
+	public static Date dateForMonthIndex(Context context, int position) 
+	{
+		int count = FeatsProvider.fetchMonthCount(context);
+		
+		if (position == (count - 2))
+			return new Date();
+		
+		Calendar c = Calendar.getInstance();
+		c.set(Calendar.DAY_OF_MONTH, 15);
+		
+		c.add(Calendar.MONTH, position - (count - 2));
+		
+		return c.getTime();
 	}
 }
