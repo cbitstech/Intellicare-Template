@@ -45,16 +45,16 @@
    	</string-array>
 
    	<string-array name="one_titles">
-        <item>Lesson: Thoughts (1/10)</item>
-		<item>Lesson: Thoughts (2/10)</item>
-        <item>Lesson: Thoughts (3/10)</item>
-        <item>Lesson: Thoughts (4/10)</item>
-        <item>Lesson: Thoughts (5/10)</item>
-        <item>Lesson: Thoughts (6/10)</item>
-        <item>Lesson: Thoughts (7/10)</item>
-        <item>Lesson: Thoughts (8/10)</item>
-        <item>Lesson: Thoughts (9/10)</item>
-        <item>Lesson: Thoughts (10/10)</item>
+        <item>Thoughts</item>
+		<item>Thoughts</item>
+        <item>Thoughts</item>
+        <item>Thoughts</item>
+        <item>Thoughts</item>
+        <item>Thoughts</item>
+        <item>Thoughts</item>
+        <item>Thoughts</item>
+        <item>Thoughts</item>
+        <item>Thoughts</item>
     </string-array>
 
     <!-- Lesson Two Resources -->
@@ -67,11 +67,11 @@
    	</string-array>
 
    	<string-array name="two_titles">
-        <item>Lesson: Gratitude (1/5)</item>
-		<item>Lesson: Gratitude (2/5)</item>
-        <item>Lesson: Gratitude (3/5)</item>
-        <item>Lesson: Gratitude (4/5)</item>
-        <item>Lesson: Gratitude (5/5)</item>
+        <item>Gratitude</item>
+		<item>Gratitude</item>
+        <item>Gratitude</item>
+        <item>Gratitude</item>
+        <item>Gratitude</item>
   	</string-array>
    	
     <!-- Lesson Three Resources -->
@@ -85,12 +85,12 @@
   	</string-array>
 
    	<string-array name="three_titles">
-        <item>Lesson: Getting Activated! (1/6)</item>
-        <item>Lesson: Getting Activated! (2/6)</item>
-        <item>Lesson: Getting Activated! (3/6)</item>
-        <item>Lesson: Getting Activated! (4/6)</item>
-        <item>Lesson: Getting Activated! (5/6)</item>
-        <item>Lesson: Getting Activated! (6/6)</item>
+        <item>Getting Activated!</item>
+        <item>Getting Activated!</item>
+        <item>Getting Activated!</item>
+        <item>Getting Activated!</item>
+        <item>Getting Activated!</item>
+        <item>Getting Activated!</item>
     </string-array>
    			
     <!-- Lesson Four Resources -->
@@ -103,11 +103,11 @@
 	</string-array>
 
    	<string-array name="four_titles">
-        <item>Lesson: Improving Interpersonal Interactions (1/5)</item>
-        <item>Lesson: Improving Interpersonal Interactions (2/5)</item>
-        <item>Lesson: Improving Interpersonal Interactions (3/5)</item>
-        <item>Lesson: Improving Interpersonal Interactions (4/5)</item>
-        <item>Lesson: Improving Interpersonal Interactions (5/5)</item>
+        <item>Improving Interpersonal Interactions</item>
+        <item>Improving Interpersonal Interactions</item>
+        <item>Improving Interpersonal Interactions</item>
+        <item>Improving Interpersonal Interactions</item>
+        <item>Improving Interpersonal Interactions</item>
     </string-array>
 
     <!-- Lesson Five Resources -->
@@ -120,11 +120,11 @@
 	</string-array>
 
    	<string-array name="five_titles">
-        <item>Lesson: Problem Solving (1/5)</item>
-        <item>Lesson: Problem Solving (2/5)</item>
-        <item>Lesson: Problem Solving (3/5)</item>
-        <item>Lesson: Problem Solving (4/5)</item>
-        <item>Lesson: Problem Solving (5/5)</item>
+        <item>Problem Solving</item>
+        <item>Problem Solving</item>
+        <item>Problem Solving</item>
+        <item>Problem Solving</item>
+        <item>Problem Solving</item>
     </string-array>
    		
     <!-- Help Resources -->
@@ -134,13 +134,22 @@
         <item>file:///android_asset/help_2.html</item>
         <item>file:///android_asset/help_3.html</item>
 	</string-array>
-	<string-array name="help_titles">
-        <item>Day-to-Day Introduction (1/4)</item>
-        <item>Day-to-Day Introduction (2/4)</item>
-        <item>Day-to-Day Introduction (3/4)</item>
-        <item>Day-to-Day Introduction (4/4)</item>
+
+   	<string-array name="help_titles">
+        <item>Introduction</item>
+        <item>Introduction</item>
+        <item>Introduction</item>
+        <item>Introduction</item>
     </string-array>
 
+   	
+   	<string-array name="help_subtitles">
+        <item>Page 1 of 4</item>
+        <item>Page 2 of 4</item>
+        <item>Page 3 of 4</item>
+        <item>Page 4 of 4</item>
+    </string-array>
+   	
 	<!-- Settings Resources -->
     <string name="title_settings">Day-to-Day Settings</string>
 	
@@ -248,7 +257,7 @@
         <item>6</item>
         <item>7</item>
    	</string-array>
-   	
+   		
    	<string name="note_title">Day-to-Day Message</string>
    	<string name="note_instruction">Day-to-Day Instruction</string>
 
