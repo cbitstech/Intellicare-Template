@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -44,9 +45,6 @@ public class WizardOneActivity extends Activity
         if (rumChecked != -1)
             outState.putInt(WizardOneActivity.SELECTED_RADIO_ISRUM, rumChecked);
 
-        /*RadioGroup emoRadios = (RadioGroup) this.findViewById(R.id.radios_emotion);
-        int emoChecked = emoRadios.getCheckedRadioButtonId(); */
-
         if (this._rumDuration != -1)
             outState.putInt(WizardOneActivity.SELECTED_RUM_DURATION, this._rumDuration);
 
@@ -62,6 +60,8 @@ public class WizardOneActivity extends Activity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState == null)
             savedInstanceState = new Bundle();
@@ -83,59 +83,16 @@ public class WizardOneActivity extends Activity
 
         final TextView duration = (TextView) this.findViewById(R.id.label_rumination_duration);
 
-        final SeekBar rumDuration = (SeekBar) this.findViewById(R.id.field_rumination_duration);
-        rumDuration.setMax(4);
-
-        if (savedInstanceState.containsKey(WizardOneActivity.SELECTED_RUM_DURATION))
-            rumDuration.setProgress(savedInstanceState.getInt(WizardOneActivity.SELECTED_RUM_DURATION));
-
-        rumDuration.setOnSeekBarChangeListener(new OnSeekBarChangeListener()
-        {
-            public void onProgressChanged(SeekBar bar, int position, boolean fromUser)
-            {
-                switch (position)
-                {
-                    case 0:
-                        duration.setText(R.string.label_a_few_min);
-                        me._rumDuration  = 0;
-
-                        break;
-                    case 1:
-                        duration.setText(R.string.label_thirty_min);
-                        me._rumDuration  = 5;
-
-                        break;
-                    case 2:
-                        duration.setText(R.string.label_an_hour);
-                        me._rumDuration  = 15;
-
-                        break;
-                    case 3:
-                        duration.setText(R.string.label_a_few_hours);
-                        me._rumDuration  = 30;
-
-                        break;
-                    case 4:
-                        duration.setText(R.string.label_all_day);
-                        me._rumDuration  = 60;
-
-                        break;
-                }
-
-            }
-
-            public void onStartTrackingTouch(SeekBar arg0)
-            {
-
-            }
-
-            public void onStopTrackingTouch(SeekBar arg0)
-            {
-
-            }
-
-        });
-
+        Spinner durationSpinner = (Spinner) this.findViewById(R.id.duration_spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> durationAdapter = ArrayAdapter.createFromResource(this,
+                R.array.durations, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        durationSpinner.setAdapter(durationAdapter);
+        /*if (savedInstanceState.containsKey(WizardOneActivity.SELECTED_RUM_DURATION))
+            durationSpinner.setText(savedInstanceState.getString(WizardOneActivity.SELECTED_RUM_DURATION)); */
 
         RadioGroup rumination = (RadioGroup) this.findViewById(R.id.radios_ruminating);
         if (savedInstanceState.containsKey(WizardOneActivity.SELECTED_RADIO_ISRUM))
@@ -161,8 +118,15 @@ public class WizardOneActivity extends Activity
         return true;
     }
 
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()) {
+
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+
+        }
+
         if (item.getItemId() == R.id.action_save)
         {
             ContentValues values = new ContentValues();

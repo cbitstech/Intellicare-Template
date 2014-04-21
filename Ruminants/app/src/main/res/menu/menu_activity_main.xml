@@ -1,8 +1,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:robot="http://schemas.android.com/apk/res-auto"  xmlns:ic="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/action_replay_intro"
-        android:showAsAction="always"
-        android:title="@string/tool_replay_intro"
-        ic:title="@string/tool_replay_intro"
-        ic:showAsAction="always"/>
+    <item
+        android:id="@+id/action_replay_intro"
+        robot:showAsAction="never"
+        android:icon="@drawable/ic_action_info"
+        android:title="@string/tool_replay_intro"/>
+    <item android:id="@+id/action_faq"
+        android:title="@string/action_faq"
+        robot:showAsAction="never"
+        android:showAsAction="never" />
+    <item
+        android:id="@+id/action_settings"
+        robot:showAsAction="never"
+        android:title="@string/action_settings"/>
+    <item
+        android:id="@+id/action_feedback"
+        robot:showAsAction="never"
+        android:title="@string/action_feedback"/>
 </menu>

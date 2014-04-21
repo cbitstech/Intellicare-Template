@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -26,6 +28,8 @@ public class ProfileActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
         if (savedInstanceState == null)
             savedInstanceState = new Bundle();
 
@@ -43,10 +47,14 @@ public class ProfileActivity extends Activity {
         if (savedInstanceState.containsKey(ProfileActivity.SELECTED_ISSUES))
             issues.setText(savedInstanceState.getString(ProfileActivity.SELECTED_ISSUES));
 
-        // ?? for an integer ok?
-        EditText helpFrequency = (EditText) this.findViewById(R.id.editText_help_frequency);
+
+        NumberPicker helpFrequency = (NumberPicker) this.findViewById(R.id.numberPicker_help_frequency);
+        helpFrequency.setMaxValue(3);
+        helpFrequency.setMinValue(0);
+        helpFrequency.setValue(1);
+
         if (savedInstanceState.containsKey(ProfileActivity.SELECTED_HELP_FREQUENCY))
-            helpFrequency.setText(savedInstanceState.getString(ProfileActivity.SELECTED_HELP_FREQUENCY));
+            helpFrequency.setValue(savedInstanceState.getInt(ProfileActivity.SELECTED_HELP_FREQUENCY));
 
     }
 
@@ -59,6 +67,13 @@ public class ProfileActivity extends Activity {
 
     public boolean onOptionsItemSelected(MenuItem item)
     {
+        switch (item.getItemId()) {
+
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+
         if (item.getItemId() == R.id.action_profile_save)
         {
 /*            RadioGroup rumLately = (RadioGroup) this.findViewById(R.id.radios_ruminating_lately);
@@ -88,11 +103,9 @@ public class ProfileActivity extends Activity {
 
             payload.put("ruminating_lately", (rumChecked == R.id.rum_yes)); */
 
-            EditText help = (EditText) this.findViewById(R.id.editText_help_frequency);
+            // concerned this is not going to store notifications correctly
 
-            int n = Integer.parseInt(help.getEditableText().toString());
-
-            values.put(RuminantsContentProvider.PROFILE_HELP_FREQUENCY, n);
+            values.put(RuminantsContentProvider.PROFILE_HELP_FREQUENCY, SELECTED_HELP_FREQUENCY);
             payload.put("help_frequency", SELECTED_HELP_FREQUENCY);
 
             // toast required if not completed

@@ -13,17 +13,9 @@
         android:layout_weight="0.60"
         android:background="@drawable/sun_bg"
         android:gravity="center_vertical|center_horizontal"
-        android:textSize="20sp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/pageNumber"
-        android:layout_weight="0.05"
-        android:background="#76b857"
-        android:gravity="center_vertical|center_horizontal" />
+        android:textSize="28sp"
+        android:layout_margin="12dp"
+        android:shadowColor="@android:color/darker_gray" />
 
     <ImageView
         android:layout_width="match_parent"

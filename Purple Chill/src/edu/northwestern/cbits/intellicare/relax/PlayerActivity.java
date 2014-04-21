@@ -3,6 +3,7 @@ package edu.northwestern.cbits.intellicare.relax;
 import java.util.HashMap;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -42,7 +43,7 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
 
 	private Handler _handler = null;
 	
-	protected void onCreate(Bundle savedInstanceState) 
+	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 
@@ -122,116 +123,111 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
 		builder.create().show();
 	}
 	
-	public void onResume()
-	{
-		super.onResume();
+	public void onResume() {
 
-		this._trackUri = Uri.parse(this.getIntent().getStringExtra(AudioFileManager.TRACK_URI));
-		this._trackTitle = this.getIntent().getStringExtra(AudioFileManager.TRACK_TITLE);
-		this._trackDescription = this.getIntent().getStringExtra(AudioFileManager.TRACK_DESCRIPTION);
+        super.onResume();
 
-		this.getSupportActionBar().setTitle(this._trackTitle);
 
-		this._controller = new PersistentMediaController(this);
+        this._trackUri = Uri.parse(this.getIntent().getStringExtra(AudioFileManager.TRACK_URI));
+        this._trackTitle = this.getIntent().getStringExtra(AudioFileManager.TRACK_TITLE);
+        this._trackDescription = this.getIntent().getStringExtra(AudioFileManager.TRACK_DESCRIPTION);
 
-		AudioFileManager audio = AudioFileManager.getInstance(this);
-		this._controller.setMediaPlayer(audio);
+        this.getSupportActionBar().setTitle(this._trackTitle);
 
-		audio.setTrackUri(this._trackUri, this._trackTitle, this._trackDescription, this);
+        this._controller = new PersistentMediaController(this);
 
-		HashMap<String,Object> payload = new HashMap<String, Object>();
-		payload.put(GroupActivity.GROUP_NAME, this.getSupportActionBar().getTitle());
-		LogManager.getInstance(this).log("viewed_track", payload);
-		
-		ViewPager pager = (ViewPager) this.findViewById(R.id.track_backgrounds);
-		
-		PagerAdapter adapter = new PagerAdapter()
-		{
-			public int getCount() 
-			{
-				return 7;
-			}
+        AudioFileManager audio = AudioFileManager.getInstance(this);
+        this._controller.setMediaPlayer(audio);
 
-			public boolean isViewFromObject(View view, Object content) 
-			{
-				ImageView image = (ImageView) view;
-				Integer identifier = (Integer) content;
-				
-				return image.getTag().equals(identifier);
-			}
-			
-			public void destroyItem (ViewGroup container, int position, Object content)
-			{
-				int toRemove = -1;
-				
-				for (int i = 0; i < container.getChildCount(); i++)
-				{
-					View child = container.getChildAt(i);
-					
-					if (this.isViewFromObject(child, content))
-						toRemove = i;
-				}
-				
-				if (toRemove >= 0)
-					container.removeViewAt(toRemove);
-			}
-			
-			public Object instantiateItem (ViewGroup container, int position)
-			{
-				ImageView image = new ImageView(container.getContext());
-				
-				int imageId = 0;
-				
-				switch (position)
-				{
-					case 0:
-						imageId = R.drawable.boat;
-						break;
-					case 1:
-						imageId = R.drawable.butterfly;
-						break;
-					case 2:
-						imageId = R.drawable.flower;
-						break;
-					case 3:
-						imageId = R.drawable.steps;
-						break;
-					case 4:
-						imageId = R.drawable.stones;
-						break;
-					case 5:
-						imageId = R.drawable.sunset;
-						break;
-					case 6:
-						imageId = R.drawable.tree;
-						break;
-				}
-				
-				image.setImageResource(imageId);
-				image.setTag(Integer.valueOf(imageId));
-				
-				container.addView(image);
+        audio.setTrackUri(this._trackUri, this._trackTitle, this._trackDescription, this);
 
-				LayoutParams layout = (LayoutParams) image.getLayoutParams();
-				layout.height = LayoutParams.MATCH_PARENT;
-				layout.width = LayoutParams.MATCH_PARENT;
-				
-				image.setLayoutParams(layout);
-				
-				image.setScaleType(ScaleType.CENTER_CROP);
+        HashMap<String, Object> payload = new HashMap<String, Object>();
+        payload.put(GroupActivity.GROUP_NAME, this.getSupportActionBar().getTitle());
+        LogManager.getInstance(this).log("viewed_track", payload);
 
-				return Integer.valueOf(imageId);
-			}
-		};
-		
-		pager.setAdapter(adapter);
-		pager.setOffscreenPageLimit(1);
-		
-		this._controller.setAnchorView(pager);
-		
-		if (this.getIntent().getBooleanExtra(PlayerActivity.REQUEST_STRESS, false))
-			this.fetchStress();
-	}
+        ViewPager pager = (ViewPager) this.findViewById(R.id.track_backgrounds);
+
+        PagerAdapter adapter = new PagerAdapter() {
+            public int getCount() {
+                return 7;
+            }
+
+            public boolean isViewFromObject(View view, Object content) {
+                ImageView image = (ImageView) view;
+                Integer identifier = (Integer) content;
+
+                return image.getTag().equals(identifier);
+            }
+
+            public void destroyItem(ViewGroup container, int position, Object content) {
+                int toRemove = -1;
+
+                for (int i = 0; i < container.getChildCount(); i++) {
+                    View child = container.getChildAt(i);
+
+                    if (this.isViewFromObject(child, content))
+                        toRemove = i;
+                }
+
+                if (toRemove >= 0)
+                    container.removeViewAt(toRemove);
+            }
+
+            public Object instantiateItem(ViewGroup container, int position) {
+                ImageView image = new ImageView(container.getContext());
+
+                int imageId = 0;
+
+                switch (position) {
+                    case 0:
+                        imageId = R.drawable.boat;
+                        break;
+                    case 1:
+                        imageId = R.drawable.butterfly;
+                        break;
+                    case 2:
+                        imageId = R.drawable.flower;
+                        break;
+                    case 3:
+                        imageId = R.drawable.steps;
+                        break;
+                    case 4:
+                        imageId = R.drawable.stones;
+                        break;
+                    case 5:
+                        imageId = R.drawable.sunset;
+                        break;
+                    case 6:
+                        imageId = R.drawable.tree;
+                        break;
+                }
+
+                image.setImageResource(imageId);
+                image.setTag(Integer.valueOf(imageId));
+
+                container.addView(image);
+
+                LayoutParams layout = (LayoutParams) image.getLayoutParams();
+                layout.height = LayoutParams.MATCH_PARENT;
+                layout.width = LayoutParams.MATCH_PARENT;
+
+                image.setLayoutParams(layout);
+
+                image.setScaleType(ScaleType.CENTER_CROP);
+
+                return Integer.valueOf(imageId);
+            }
+        };
+
+        pager.setAdapter(adapter);
+        pager.setOffscreenPageLimit(1);
+
+        this._controller.setAnchorView(pager);
+
+        if (this.getIntent().getBooleanExtra(PlayerActivity.REQUEST_STRESS, false))
+            this.fetchStress();
+
+    }
 	
 	public void onPause()
 	{
@@ -239,6 +235,7 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
 
 		this._controller.superHide();
 	}
+
 	
 	public void onPrepared(final MediaPlayer player) 
 	{

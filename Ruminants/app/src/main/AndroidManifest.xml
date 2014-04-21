@@ -30,6 +30,9 @@
 
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".DidacticActivity" android:label="@string/app_name"
             android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.northwestern.cbits.intellicare.ruminants.ToolChooserActivity" />
 
         </activity>
 
@@ -37,22 +40,35 @@
             android:name=".WorryPracticeActivity"
             android:label="@string/tool_worry_practice"
             android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.northwestern.cbits.intellicare.ruminants.ToolChooserActivity" />
+
         </activity>
 
         <activity android:theme="@style/Theme.AppCompat.Light"
             android:name=".ProfileActivity"
             android:label="@string/profile_wizard" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.northwestern.cbits.intellicare.ruminants.MainActivity" />
         </activity>
 
         <activity android:theme="@style/Theme.AppCompat.Light"
             android:name=".ToolTrackerActivity"
             android:label="@string/tool_log_title"
             android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.northwestern.cbits.intellicare.ruminants.MainActivity" />
         </activity>
 
         <activity android:theme="@style/Theme.AppCompat.Light"
             android:name=".WizardOneActivity"
             android:label="@string/survey_wizard_title" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.northwestern.cbits.intellicare.ruminants.ToolChooserActivity" />
         </activity>
 
         <activity android:theme="@style/Theme.AppCompat.Light"
@@ -65,6 +81,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="intellicare" android:host="ruminants" android:pathPrefix="/tool-chooser" />
             </intent-filter>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.northwestern.cbits.intellicare.ruminants.MainActivity" />
         </activity>
 
         <activity android:theme="@style/Theme.AppCompat.Light"

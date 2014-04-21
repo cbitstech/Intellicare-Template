@@ -1,5 +1,6 @@
 package edu.northwestern.cbits.intellicare.ruminants;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -60,11 +61,11 @@ public class DidacticActivity extends ConsentedActivity {
     {
         String[] contentValues = this.mContentSet;
         TextView content = (TextView) this.findViewById(R.id.content);
-        TextView pageNumber = (TextView) this.findViewById(R.id.pageNumber);
+        //TextView pageNumber = (TextView) this.findViewById(R.id.pageNumber);
 
         content.setText(contentValues[index]);
-        pageNumber.setText((index + 1) + " of " + contentValues.length);
-
+        //pageNumber.setText((index + 1) + " of " + contentValues.length);
+        setTitle("Page " + (index + 1) + " of " + contentValues.length);
     }
 
     private void goTo(int page) {
@@ -76,8 +77,7 @@ public class DidacticActivity extends ConsentedActivity {
             values.put(RuminantsContentProvider.DIDACTIC_TIMESTAMP, System.currentTimeMillis());
             this.getContentResolver().insert(RuminantsContentProvider.DIDACTIC_USE_URI, values);
 
-            Intent launchIntent = new Intent(this, MainActivity.class);
-            this.startActivity(launchIntent);
+            this.finish();
 
             return;
         }
@@ -121,6 +121,9 @@ public class DidacticActivity extends ConsentedActivity {
             case R.id.action_next:
                 // Advance to the next step in the wizard. If there is no next step, setCurrentItem
                 // will do nothing.
+                if (this.mCurrentPage == this.mContentSet.length - 2){
+                    item.setTitle("Finish");
+                }
                 this.goTo(this.mCurrentPage + 1);
                 return true;
         }
