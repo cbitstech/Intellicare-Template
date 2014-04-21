@@ -818,6 +818,9 @@ public class FeatsProvider extends android.content.ContentProvider
 		}
 
 		c.close();
+		
+		if (months.size() == 0)
+			months.add("");
 
 		return months.size() + 2;
 	}
