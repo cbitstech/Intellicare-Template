@@ -212,7 +212,7 @@ public class ThoughtsListActivity extends ConsentedActivity
 				public void onItemClick(AdapterView<?> arg0, View view, int which, long id) 
 				{
 					Intent data = new Intent();
-					data.putExtra(ReviewActivity.THOUGHT_ID, id);
+					data.putExtra(ReviewActivity.THOUGHT_INDEX, which);
 					
 					me.setResult(Activity.RESULT_OK, data);
 					

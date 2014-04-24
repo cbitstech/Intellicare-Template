@@ -20,7 +20,7 @@
 	        android:layout_height="wrap_content"
 	        android:textSize="18sp"
 	        android:layout_marginBottom="16dp" />
-	    <TextView android:id="@+id/link_help"
+	    <TextView android:id="@+id/link_challenge_help"
 	        android:text="@string/link_examples"
 	        android:textSize="14sp"
 	        android:gravity="right"
