@@ -245,9 +245,10 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
                     {
                         Log.e("PC", "DRAG!");
 
-                        int dragLength = 8;
-
+                        int dragLength = 16;
+                        view.performHapticFeedback(1);
                         pager.beginFakeDrag();
+
 
                         if (position != pager.getAdapter().getCount() - 1) {
                             pager.fakeDragBy(0 - dragLength);
@@ -356,7 +357,7 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
 		{
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder = builder.setTitle(this._trackTitle);
-			builder = builder.setMessage(this._trackDescription);
+			builder = builder.setMessage(this._trackDescription + " (Swipe to change track image.)");
 			
 			builder.create().show();
 		}
