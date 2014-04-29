@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Gratitude</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="specificity_entry_title">Gratitude Entry</string>
+    <string name="entry_title">Entry Title</string>
+    <string name="grateful_to">I am grateful to...</string>
+    <string name="grateful_for">...who did...</string>
+    <string name="more_detail">... and also...</string>
+
+</resources>
