@@ -75,6 +75,7 @@ public class FocusBoardActivity extends ActionBarActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
 		Log.d(CN+".onResume", "entered");
 //		refreshDisplay();
 	}
@@ -96,6 +97,12 @@ public class FocusBoardActivity extends ActionBarActivity {
 			return true;
 		case R.id.existing_image_action:
 			startBrowsePhotosActivity();
+			return true;
+	    case android.R.id.home:
+	    	Log.e("MA", "HOME");
+	    	
+	    	this.onBackPressed();
+
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
