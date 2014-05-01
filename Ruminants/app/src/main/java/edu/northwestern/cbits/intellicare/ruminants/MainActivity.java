@@ -34,7 +34,7 @@ public class MainActivity extends ConsentedActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-        ScheduleManager.getInstance(this.getApplicationContext());
+      /*  ScheduleManager.getInstance(this.getApplicationContext());
 
         // check if this is first app use
         ActivityManager am = (ActivityManager)this.getSystemService(Context.ACTIVITY_SERVICE);
@@ -55,7 +55,7 @@ public class MainActivity extends ConsentedActivity
             SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean(MainActivity.RUNBEFORE, true);
             editor.commit();
-        }
+        } */
     }
 
     private class Tool
@@ -120,7 +120,7 @@ public class MainActivity extends ConsentedActivity
 
        tools.add(new Tool(this.getResources().getString(R.string.tool_chooser_name), this.getString(R.string.desc_tool_chooser), R.drawable.ic_action_star, new Intent(this, ToolChooserActivity.class)));
        tools.add(new Tool(this.getString(R.string.tool_use_log), this.getString(R.string.desc_tool_chooser_log), R.drawable.ic_action_view_as_list, new Intent(this, ToolTrackerActivity.class)));
-       tools.add(new Tool(this.getString(R.string.profile_wizard), this.getString(R.string.desc_profile_wizard), R.drawable.ic_action_profile, new Intent(this, ProfileActivity.class)));
+    //   tools.add(new Tool(this.getString(R.string.profile_wizard), this.getString(R.string.desc_profile_wizard), R.drawable.ic_action_profile, new Intent(this, ProfileActivity.class)));
 
         ListView toolsList = (ListView) this.findViewById(R.id.list_tools);
 

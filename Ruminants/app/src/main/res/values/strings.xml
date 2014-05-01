@@ -290,6 +290,7 @@
     <string name="wpt_complete_title">Worry practice is over.</string>
     <string name="work_title">con-GRASS-ulations!</string>
     <string name="reuse_tool">Touch here to use this tool again</string>
-
+    <string name="action_set_notification_preferences">Notification Preferences</string>
+    <string name="settings_reminder_time">Set Reminder Time</string>
 
 </resources>

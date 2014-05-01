@@ -12,7 +12,7 @@ import android.net.Uri;
 
     public class RuminantsContentProvider extends ContentProvider
     {
-    public static final int PROFILE = 1;
+    //public static final int PROFILE = 1;
     private static final int WIZARD_ONE = 2;
     private static final int WPT_USE = 3;
     private static final int LOG_USE = 4;
@@ -25,13 +25,13 @@ import android.net.Uri;
 
     private static final String AUTHORITY = "edu.northwestern.cbits.intellicare.ruminants";
 
-    private static final String PROFILE_TABLE = "profile";
+    //private static final String PROFILE_TABLE = "profile";
     private static final String WIZARD_ONE_TABLE = "wizard_one";
     private static final String WPT_USE_TABLE = "wpt_use";
     private static final String LOG_USE_TABLE = "log_use";
     private static final String DIDACTIC_USE_TABLE = "didactic_use";
 
-    public static final Uri PROFILE_URI = Uri.parse("content://" + AUTHORITY + "/" + PROFILE_TABLE);
+   // public static final Uri PROFILE_URI = Uri.parse("content://" + AUTHORITY + "/" + PROFILE_TABLE);
     public static final Uri WIZARD_ONE_URI = Uri.parse("content://" + AUTHORITY + "/" + WIZARD_ONE_TABLE);
     public static final Uri WPT_USE_URI = Uri.parse("content://" + AUTHORITY + "/" + WPT_USE_TABLE);
     public static final Uri LOG_USE_URI = Uri.parse("content://" + AUTHORITY + "/" + LOG_USE_TABLE);
@@ -50,12 +50,12 @@ import android.net.Uri;
 
     public static final String WIZARD_ONE_TIMESTAMP= "wizard_one_timestamp";
 
-    public static final String PROFILE_ID = "_id";
+   /* public static final String PROFILE_ID = "_id";
     public static final String PROFILE_RUMINATION_CONCERNS = "concerns";
     public static final String PROFILE_HELP_FREQUENCY = "help_frequency";
     public static final String PROFILE_RUMINATING_LATELY = "ruminating_lately";
 
-    public static final String PROFILE_TIMESTAMP= "profile_timestamp";
+    public static final String PROFILE_TIMESTAMP= "profile_timestamp"; */
 
 
     public static final String WPT_USE_ID = "_id";
@@ -77,7 +77,7 @@ import android.net.Uri;
     {
         super();
 
-        this._matcher.addURI(AUTHORITY, PROFILE_TABLE, PROFILE);
+       // this._matcher.addURI(AUTHORITY, PROFILE_TABLE, PROFILE);
         this._matcher.addURI(AUTHORITY, WIZARD_ONE_TABLE, WIZARD_ONE);
         this._matcher.addURI(AUTHORITY, WPT_USE_TABLE, WPT_USE);
         this._matcher.addURI(AUTHORITY, LOG_USE_TABLE, LOG_USE);
@@ -93,7 +93,7 @@ import android.net.Uri;
         {
             public void onCreate(SQLiteDatabase db)
             {
-                db.execSQL(context.getString(R.string.db_create_profile_table));
+              //  db.execSQL(context.getString(R.string.db_create_profile_table));
                 db.execSQL(context.getString(R.string.db_create_wizard_one_table));
                 db.execSQL(context.getString(R.string.db_create_wpt_use_table));
                 db.execSQL(context.getString(R.string.db_create_log_use_table));
@@ -130,8 +130,8 @@ import android.net.Uri;
     {
         switch(this._matcher.match(uri))
         {
-            case RuminantsContentProvider.PROFILE:
-                return this._db.delete(RuminantsContentProvider.PROFILE_TABLE, where, whereArgs);
+       /*     case RuminantsContentProvider.PROFILE:
+                return this._db.delete(RuminantsContentProvider.PROFILE_TABLE, where, whereArgs); */
             case RuminantsContentProvider.WIZARD_ONE:
                 return this._db.delete(RuminantsContentProvider.WIZARD_ONE_TABLE, where, whereArgs);
             case RuminantsContentProvider.WPT_USE:
@@ -158,8 +158,8 @@ import android.net.Uri;
     {
         switch(this._matcher.match(uri))
         {
-            case RuminantsContentProvider.PROFILE:
-                return "vnd.android.cursor.dir/" + AUTHORITY + ".profile";
+     /*       case RuminantsContentProvider.PROFILE:
+                return "vnd.android.cursor.dir/" + AUTHORITY + ".profile"; */
             case RuminantsContentProvider.WIZARD_ONE:
                 return "vnd.android.cursor.dir/" + AUTHORITY + ".wizard_one";
             case RuminantsContentProvider.WPT_USE:
@@ -179,10 +179,10 @@ import android.net.Uri;
         long newId = -1;
         switch(this._matcher.match(uri))
         {
-            case RuminantsContentProvider.PROFILE:
+     /*       case RuminantsContentProvider.PROFILE:
                 newId = this._db.insert(RuminantsContentProvider.PROFILE_TABLE, null, values);
 
-                break;
+                break; */
             case RuminantsContentProvider.WIZARD_ONE:
                 newId = this._db.insert(RuminantsContentProvider.WIZARD_ONE_TABLE, null, values);
 
@@ -219,8 +219,8 @@ import android.net.Uri;
     {
         switch(this._matcher.match(uri))
         {
-            case RuminantsContentProvider.PROFILE:
-                return this._db.query(RuminantsContentProvider.PROFILE_TABLE, projection, selection, selectionArgs, null, null, sortOrder);
+      /*      case RuminantsContentProvider.PROFILE:
+                return this._db.query(RuminantsContentProvider.PROFILE_TABLE, projection, selection, selectionArgs, null, null, sortOrder); */
             case RuminantsContentProvider.WIZARD_ONE:
                 return this._db.query(RuminantsContentProvider.WIZARD_ONE_TABLE, projection, selection, selectionArgs, null, null, sortOrder);
             case RuminantsContentProvider.WPT_USE:
@@ -239,8 +239,8 @@ import android.net.Uri;
     {
         switch(this._matcher.match(uri))
         {
-            case RuminantsContentProvider.PROFILE:
-                return this._db.update(RuminantsContentProvider.PROFILE_TABLE, values, where, whereArgs);
+     /*       case RuminantsContentProvider.PROFILE:
+                return this._db.update(RuminantsContentProvider.PROFILE_TABLE, values, where, whereArgs); */
             case RuminantsContentProvider.WIZARD_ONE:
                 return this._db.update(RuminantsContentProvider.WIZARD_ONE_TABLE, values, where, whereArgs);
             case RuminantsContentProvider.WPT_USE:
