@@ -3,19 +3,21 @@ package edu.northwestern.cbits.intellicare.relax;
 import java.util.HashMap;
 
 import android.app.AlertDialog;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,7 +45,7 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
 
 	private Handler _handler = null;
 	
-	protected void onCreate(Bundle savedInstanceState)
+	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
 
@@ -123,111 +125,195 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
 		builder.create().show();
 	}
 	
-	public void onResume() {
+	public void onResume()
+	{
+		super.onResume();
 
-        super.onResume();
+		this._trackUri = Uri.parse(this.getIntent().getStringExtra(AudioFileManager.TRACK_URI));
+		this._trackTitle = this.getIntent().getStringExtra(AudioFileManager.TRACK_TITLE);
+		this._trackDescription = this.getIntent().getStringExtra(AudioFileManager.TRACK_DESCRIPTION);
 
+		this.getSupportActionBar().setTitle(this._trackTitle);
 
-        this._trackUri = Uri.parse(this.getIntent().getStringExtra(AudioFileManager.TRACK_URI));
-        this._trackTitle = this.getIntent().getStringExtra(AudioFileManager.TRACK_TITLE);
-        this._trackDescription = this.getIntent().getStringExtra(AudioFileManager.TRACK_DESCRIPTION);
+		this._controller = new PersistentMediaController(this);
 
-        this.getSupportActionBar().setTitle(this._trackTitle);
+		AudioFileManager audio = AudioFileManager.getInstance(this);
+		this._controller.setMediaPlayer(audio);
 
-        this._controller = new PersistentMediaController(this);
+		audio.setTrackUri(this._trackUri, this._trackTitle, this._trackDescription, this);
 
-        AudioFileManager audio = AudioFileManager.getInstance(this);
-        this._controller.setMediaPlayer(audio);
+		HashMap<String,Object> payload = new HashMap<String, Object>();
+		payload.put(GroupActivity.GROUP_NAME, this.getSupportActionBar().getTitle());
+		LogManager.getInstance(this).log("viewed_track", payload);
+		
+		final ViewPager pager = (ViewPager) this.findViewById(R.id.track_backgrounds);
 
-        audio.setTrackUri(this._trackUri, this._trackTitle, this._trackDescription, this);
+        pager.setPageTransformer(false, new ViewPager.PageTransformer() {
+            @Override
+            public void transformPage(View view, float position) {
+                int pageWidth = view.getWidth();
 
-        HashMap<String, Object> payload = new HashMap<String, Object>();
-        payload.put(GroupActivity.GROUP_NAME, this.getSupportActionBar().getTitle());
-        LogManager.getInstance(this).log("viewed_track", payload);
+                if (position < -1) { // [-Infinity,-1)
+                    // This page is way off-screen to the left.
+                    view.setAlpha(0);
 
-        ViewPager pager = (ViewPager) this.findViewById(R.id.track_backgrounds);
+                } else if (position <= 0) { // [-1,0]
+                    // Use the default slide transition when moving to the left page
+                    view.setAlpha(1);
+                    view.setTranslationX(0);
 
-        PagerAdapter adapter = new PagerAdapter() {
-            public int getCount() {
-                return 7;
-            }
+                } else if (position <= 1) { // (0,1]
+                    // Fade the page out.
+                    view.setAlpha(1 - position);
 
-            public boolean isViewFromObject(View view, Object content) {
-                ImageView image = (ImageView) view;
-                Integer identifier = (Integer) content;
+                    // Counteract the default slide transition
+                    view.setTranslationX(pageWidth * -position);
 
-                return image.getTag().equals(identifier);
-            }
-
-            public void destroyItem(ViewGroup container, int position, Object content) {
-                int toRemove = -1;
-
-                for (int i = 0; i < container.getChildCount(); i++) {
-                    View child = container.getChildAt(i);
-
-                    if (this.isViewFromObject(child, content))
-                        toRemove = i;
+                } else { // (1,+Infinity]
+                    // This page is way off-screen to the right.
+                    view.setAlpha(0);
                 }
+            }
+        });
+		PagerAdapter adapter = new PagerAdapter()
+		{
+			public int getCount() 
+			{
+				return 7;
+			}
 
-                if (toRemove >= 0)
-                    container.removeViewAt(toRemove);
+			public boolean isViewFromObject(View view, Object content) 
+			{
+				ImageView image = (ImageView) view;
+				Integer identifier = (Integer) content;
+				
+				return image.getTag().equals(identifier);
+			}
+			
+			public void destroyItem (ViewGroup container, int position, Object content)
+			{
+				int toRemove = -1;
+				
+				for (int i = 0; i < container.getChildCount(); i++)
+				{
+					View child = container.getChildAt(i);
+					
+					if (this.isViewFromObject(child, content))
+						toRemove = i;
+				}
+				
+				if (toRemove >= 0)
+					container.removeViewAt(toRemove);
+			}
+
+            public final Integer IMAGE_ID = 0;
+			
+			public Object instantiateItem (ViewGroup container, final int position)
+			{
+				ImageView image = new ImageView(container.getContext());
+
+                int imageId = R.drawable.boat;
+
+				switch (position)
+				{
+					case 1:
+						imageId = R.drawable.butterfly;
+						break;
+					case 2:
+						imageId = R.drawable.flower;
+						break;
+					case 3:
+						imageId = R.drawable.steps;
+						break;
+					case 4:
+						imageId = R.drawable.stones;
+						break;
+					case 5:
+						imageId = R.drawable.sunset;
+						break;
+					case 6:
+						imageId = R.drawable.tree;
+						break;
+				}
+				
+				image.setImageResource(imageId);
+				image.setTag(Integer.valueOf(imageId));
+
+                image.setOnClickListener(new View.OnClickListener()
+                {
+                    public void onClick(View view)
+                    {
+                        Log.e("PC", "DRAG!");
+
+                        int dragLength = 16;
+                        view.performHapticFeedback(1);
+                        pager.beginFakeDrag();
+
+
+                        if (position != pager.getAdapter().getCount() - 1) {
+                            pager.fakeDragBy(0 - dragLength);
+                        }
+                        else
+                        {
+                            pager.fakeDragBy(dragLength);
+                        }
+
+                        pager.endFakeDrag();
+                    }
+                });
+				
+				container.addView(image);
+
+				LayoutParams layout = (LayoutParams) image.getLayoutParams();
+				layout.height = LayoutParams.MATCH_PARENT;
+				layout.width = LayoutParams.MATCH_PARENT;
+				
+				image.setLayoutParams(layout);
+				
+				image.setScaleType(ScaleType.CENTER_CROP);
+
+				return Integer.valueOf(imageId);
+			}
+		};
+		
+		pager.setAdapter(adapter);
+		pager.setOffscreenPageLimit(1);
+
+        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
             }
 
-            public Object instantiateItem(ViewGroup container, int position) {
-                ImageView image = new ImageView(container.getContext());
-
-                int imageId = 0;
-
-                switch (position) {
-                    case 0:
-                        imageId = R.drawable.boat;
-                        break;
-                    case 1:
-                        imageId = R.drawable.butterfly;
-                        break;
-                    case 2:
-                        imageId = R.drawable.flower;
-                        break;
-                    case 3:
-                        imageId = R.drawable.steps;
-                        break;
-                    case 4:
-                        imageId = R.drawable.stones;
-                        break;
-                    case 5:
-                        imageId = R.drawable.sunset;
-                        break;
-                    case 6:
-                        imageId = R.drawable.tree;
-                        break;
-                }
-
-                image.setImageResource(imageId);
-                image.setTag(Integer.valueOf(imageId));
-
-                container.addView(image);
-
-                LayoutParams layout = (LayoutParams) image.getLayoutParams();
-                layout.height = LayoutParams.MATCH_PARENT;
-                layout.width = LayoutParams.MATCH_PARENT;
-
-                image.setLayoutParams(layout);
-
-                image.setScaleType(ScaleType.CENTER_CROP);
-
-                return Integer.valueOf(imageId);
+            @Override
+            public void onPageSelected(int position)
+            {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putInt("cover_art_" + me._trackUri, Integer.valueOf(position));
+                editor.commit();
             }
-        };
 
-        pager.setAdapter(adapter);
-        pager.setOffscreenPageLimit(1);
+            @Override
+            public void onPageScrollStateChanged(int state) {
 
-        this._controller.setAnchorView(pager);
+            }
+        });
+		
+		this._controller.setAnchorView(pager);
+		
+		if (this.getIntent().getBooleanExtra(PlayerActivity.REQUEST_STRESS, false))
+			this.fetchStress();
 
-        if (this.getIntent().getBooleanExtra(PlayerActivity.REQUEST_STRESS, false))
-            this.fetchStress();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-    }
+        if (prefs.contains("cover_art_" + me._trackUri))
+        {
+            int imageId = prefs.getInt("cover_art_" + me._trackUri, 0);
+
+            pager.setCurrentItem(imageId);
+        }
+	}
 	
 	public void onPause()
 	{
@@ -235,7 +321,6 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
 
 		this._controller.superHide();
 	}
-
 	
 	public void onPrepared(final MediaPlayer player) 
 	{
@@ -272,7 +357,7 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
 		{
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder = builder.setTitle(this._trackTitle);
-			builder = builder.setMessage(this._trackDescription);
+			builder = builder.setMessage(this._trackDescription + " (Swipe to change track image.)");
 			
 			builder.create().show();
 		}

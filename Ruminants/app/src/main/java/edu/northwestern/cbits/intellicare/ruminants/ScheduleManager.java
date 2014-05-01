@@ -93,7 +93,7 @@ public class ScheduleManager {
             builder.setContentTitle(this._context.getString(R.string.profile_note_title));
             builder.setContentText(this._context.getString(R.string.profile_note_message));
             builder.setTicker(this._context.getString(R.string.profile_note_message));
-            builder.setSmallIcon(R.drawable.ic_action_chat);
+            builder.setSmallIcon(R.drawable.notification);
 
             Notification note = builder.build();
 
@@ -143,7 +143,7 @@ public class ScheduleManager {
             builder.setContentTitle(title);
             builder.setContentText(message);
             builder.setTicker(this._context.getString(R.string.help_note_message));
-            builder.setSmallIcon(R.drawable.ic_action_star);
+            builder.setSmallIcon(R.drawable.notification);
 
             Notification note = builder.build();
 

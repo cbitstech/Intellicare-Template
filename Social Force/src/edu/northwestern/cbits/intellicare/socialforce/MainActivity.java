@@ -120,16 +120,19 @@ public class MainActivity extends ConsentedActivity
 //			Intent settingsIntent = new Intent(this, SettingsActivity.class);
 //			this.startActivity(settingsIntent);
 		}
+		else if (itemId == R.id.action_pleasure)
+		{
+			Intent intent = new Intent(this, EventReviewActivity.class);
+			this.startActivity(intent);
+		}
 		else if (itemId == R.id.action_rating)
 		{
 			Intent intent = new Intent(this, RatingActivity.class);
-			
 			this.startActivity(intent);
 		}
 		else if (itemId == R.id.action_network)
 		{
 			Intent intent = new Intent(this, NetworkActivity.class);
-			
 			this.startActivity(intent);
 		}
 		else if (item.getItemId() == R.id.action_feedback)

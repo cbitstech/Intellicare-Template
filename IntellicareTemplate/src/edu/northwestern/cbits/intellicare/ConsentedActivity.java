@@ -14,7 +14,6 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.Toast;
 import edu.northwestern.cbits.ic_template.R;
-import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class ConsentedActivity extends ActionBarActivity 
 {
@@ -101,20 +100,12 @@ public class ConsentedActivity extends ActionBarActivity
 
 				}
 			});
-
-            // TODO: Chris to investigate..
-
-            try {
-                builder.create().show();
-
-                Editor e = prefs.edit();
-                e.putBoolean(ConsentedActivity.SHOWED_TESTING_MESSAGE, true);
-                e.commit();
-            }
-            catch(RuntimeException e)
-            {
-                LogManager.getInstance(this).logException(e);
-            }
+			
+			builder.create().show();
+			
+			Editor e = prefs.edit();
+			e.putBoolean(ConsentedActivity.SHOWED_TESTING_MESSAGE, true);
+			e.commit();
 		}
 	}
 	

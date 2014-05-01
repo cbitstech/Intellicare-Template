@@ -116,28 +116,23 @@ public abstract class SequentialPageActivity extends ConsentedActivity
 					MenuItem backItem = me._menu.findItem(R.id.action_back);
 					MenuItem doneItem = me._menu.findItem(R.id.action_done);
 
-					switch(page)
+					if (page == me._urls.length - 1)
 					{
-						case 0:
-							nextItem.setVisible(true);
-							backItem.setVisible(false);
-							doneItem.setVisible(false);
-							break;
-						default:
-							if (page == me._urls.length - 1)
-							{
-								nextItem.setVisible(false);
-								backItem.setVisible(true);
-								doneItem.setVisible(true);
-							}
-							else
-							{
-								nextItem.setVisible(true);
-								backItem.setVisible(true);
-								doneItem.setVisible(false);
-							}
-							
-							break;
+						nextItem.setVisible(false);
+						backItem.setVisible(true);
+						doneItem.setVisible(true);
+					}
+					else if (page == 0)
+					{
+						nextItem.setVisible(true);
+						backItem.setVisible(false);
+						doneItem.setVisible(false);
+					}
+					else
+					{
+						nextItem.setVisible(true);
+						backItem.setVisible(true);
+						doneItem.setVisible(false);
 					}
 				}
 			}
@@ -149,6 +144,8 @@ public abstract class SequentialPageActivity extends ConsentedActivity
 			this.getActionBar().setSubtitle(this._subtitles[0]);
 		else
 			this.getActionBar().setSubtitle(this.getString(R.string.subtitle_pages, 1, this._titles.length));
+		
+
 	}
 
 	public void onSequenceComplete()
@@ -167,11 +164,22 @@ public abstract class SequentialPageActivity extends ConsentedActivity
         
         this._menu = menu;
 
+		MenuItem nextItem = this._menu.findItem(R.id.action_next);
 		MenuItem backItem = this._menu.findItem(R.id.action_back);
 		MenuItem doneItem = this._menu.findItem(R.id.action_done);
 
-		backItem.setVisible(false);
-		doneItem.setVisible(false);
+		if (this._urls.length == 1)
+		{
+			nextItem.setVisible(false);
+			backItem.setVisible(false);
+			doneItem.setVisible(true);
+		}
+		else
+		{
+			nextItem.setVisible(true);
+			backItem.setVisible(false);
+			doneItem.setVisible(false);
+		}
 
         return true;
     }

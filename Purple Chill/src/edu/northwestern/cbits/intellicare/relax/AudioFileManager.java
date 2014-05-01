@@ -13,10 +13,7 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.widget.MediaController.MediaPlayerControl;
 import android.widget.RemoteViews;
 
@@ -25,7 +22,7 @@ public class AudioFileManager implements MediaPlayerControl, OnCompletionListene
 	public static final String TRACK_URI = "track_uri";
 	public static final String TRACK_TITLE = "track_title";
 	public static final String TRACK_DESCRIPTION = "track_description";
-	private static final int NOTIFICATION_ID = 901;
+	static final int NOTIFICATION_ID = 901;
 	
 	private static AudioFileManager _instance = null;
 	
@@ -34,11 +31,9 @@ public class AudioFileManager implements MediaPlayerControl, OnCompletionListene
 	private Context _context = null;
 	private MediaPlayer _player = null;
 
-	public Uri _currentTrack = null;
+	private Uri _currentTrack = null;
 	private String _currentTitle = null;
 	private String _currentDescription = null;
-
-    private Handler _handler = null;
 	
 	public Intent launchIntentForCurrentTrack()
 	{
@@ -94,8 +89,7 @@ public class AudioFileManager implements MediaPlayerControl, OnCompletionListene
 		return true;
 	}
 
-
-    public boolean canSeekBackward()
+	public boolean canSeekBackward() 
 	{
 		if (AudioFileManager.PLACEHOLDER.equals(this))
 			return false;
@@ -187,62 +181,41 @@ public class AudioFileManager implements MediaPlayerControl, OnCompletionListene
 	}
 
 
-	public void updateNotification()
+	public void updateNotification() 
 	{
-        Log.e("PC", "UPDATE NOTIFICATION");
+		Context context = this._context;
 
-        if (this._handler == null)
-            this._handler = new Handler(Looper.getMainLooper());
+        PendingIntent pi = PendingIntent.getActivity(context, 0, this.launchIntentForCurrentTrack(), PendingIntent.FLAG_UPDATE_CURRENT);
 
-        final AudioFileManager me = this;
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+		builder.setContentIntent(pi);
+		builder.setSmallIcon(R.drawable.ic_reminder);
 
-        this._handler.post(new Runnable()
-        {
-            public void run()
-            {
-                Log.e("PC", "IN HANDLER...");
-                Context context = me._context;
+		RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.note_player);
+		rv.setTextViewText(R.id.title, this._currentTitle);
+		rv.setTextViewText(R.id.subtitle, this._context.getString(R.string.app_name));
+		rv.setImageViewResource(R.id.icon, R.drawable.ic_reminder);
+		
+		if (this.isPlaying())
+			rv.setImageViewResource(R.id.note_toggle, R.drawable.ic_av_pause);
+		else
+			rv.setImageViewResource(R.id.note_toggle, R.drawable.ic_av_play);
+		
+		PendingIntent pendingIntent = PendingIntent.getService(context, 0, new Intent(AudioService.TOGGLE_PLAYBACK), 0);
+		
+		rv.setOnClickPendingIntent(R.id.note_toggle, pendingIntent);
 
-                PendingIntent pi = PendingIntent.getActivity(context, 0, me.launchIntentForCurrentTrack(), PendingIntent.FLAG_UPDATE_CURRENT);
+		builder.setContent(rv);
+		
+		Notification note = builder.build();
 
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-                builder.setContentIntent(pi);
-                builder.setSmallIcon(R.drawable.ic_reminder);
+		note.flags = Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE;
 
-                RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.note_player);
-                rv.setTextViewText(R.id.title, me._currentTitle);
-                rv.setTextViewText(R.id.subtitle, me._context.getString(R.string.app_name));
-                rv.setImageViewResource(R.id.icon, R.drawable.ic_reminder);
-
-                if (me.isPlaying())
-                    rv.setImageViewResource(R.id.note_toggle, R.drawable.ic_av_pause);
-                else
-                    rv.setImageViewResource(R.id.note_toggle, R.drawable.ic_av_play);
-
-                if (me._currentTrack != null) {
-
-                    PendingIntent pendingIntent = PendingIntent.getService(context, 0, new Intent(AudioService.TOGGLE_PLAYBACK), 0);
-
-                    rv.setOnClickPendingIntent(R.id.note_toggle, pendingIntent);
-
-                    builder.setContent(rv);
-
-                    Notification note = builder.build();
-
-                    note.flags = Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE;
-
-                    NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                    manager.notify(AudioFileManager.NOTIFICATION_ID, note);
-                }
-                else
-                {
-                    Log.e("PC", "KILLING NOTIFICATION...");
-                    NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                    manager.cancelAll();
-                    Log.e("PC", "KILLED?");
-                }
-            }
-        });
+		NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+		manager.notify(AudioFileManager.NOTIFICATION_ID, note);
+		
+		Intent serviceIntent = new Intent(this._context, MonitorService.class);
+		this._context.startService(serviceIntent);
 	}
 
 	public void setTrackUri(Uri uri, String title, String description, OnPreparedListener listener) 
@@ -279,25 +252,6 @@ public class AudioFileManager implements MediaPlayerControl, OnCompletionListene
 
 				this._player.setOnPreparedListener(listener);
 				this._player.setOnCompletionListener(this);
-
-                this._player.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-                    public boolean onError(MediaPlayer mediaPlayer, int i, int i2)
-                    {
-                        Log.e("PC", "ERROR " + i + " -- " + i2);
-
-                        return false;
-                    }
-                });
-
-                this._player.setOnInfoListener(new MediaPlayer.OnInfoListener() {
-                    @Override
-                    public boolean onInfo(MediaPlayer mediaPlayer, int i, int i2) {
-
-                        Log.e("PC", "INFO " + i + " -- " + i2);
-
-                        return false;
-                    }
-                });
 				
 				this._player.prepare();
 			} 
@@ -331,8 +285,6 @@ public class AudioFileManager implements MediaPlayerControl, OnCompletionListene
 
 	public void onCompletion(MediaPlayer player) 
 	{
-        Log.e("PC", "COMPLETE!");
-
 		NotificationManager manager = (NotificationManager) this._context.getSystemService(Context.NOTIFICATION_SERVICE);
 
 		manager.cancel(AudioFileManager.NOTIFICATION_ID);

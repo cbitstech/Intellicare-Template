@@ -1,0 +1,49 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+	android:background="#e0e0e0"    
+    android:padding="4dp">
+	<SeekBar android:id="@+id/rating"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content" 
+	    android:layout_marginTop="16dp"
+	    android:layout_marginLeft="16dp"
+	    android:layout_marginRight="16dp"
+	    android:layout_marginBottom="4dp"/>
+	<LinearLayout android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal"
+	    android:padding="4dp"
+	    android:layout_marginBottom="16dp">
+	    <TextView android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:text="tErrIBLe"
+	        android:gravity="left"
+	        android:textSize="12sp" />
+	    <TextView android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:text="okAy"
+	        android:gravity="center"
+	        android:textSize="12sp" 
+	        android:textStyle="bold"/>
+	    <TextView android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:text="aWeSOMe"
+	        android:gravity="right"
+	        android:textSize="12sp" />
+   	</LinearLayout>
+   	<ScrollView android:layout_width="match_parent"
+   	    android:layout_height="0dp"
+   	    android:layout_weight="1">
+   	    <TextView android:layout_width="match_parent"
+   	        android:layout_height="wrap_content"
+   	        android:textSize="18sp"
+   	        android:singleLine="false"
+   	        android:text="@string/instructions_review" android:padding="16dp" />
+   	</ScrollView>
+</LinearLayout>

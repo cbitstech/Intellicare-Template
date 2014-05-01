@@ -2,6 +2,9 @@ package edu.northwestern.cbits.intellicare.mantra.activities;
 
 import java.util.Date;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.CrashManagerListener;
+
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.mantra.NotificationAlarm;
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusBoardCursor;
@@ -69,11 +72,49 @@ public class IndexActivity extends ConsentedActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.no_fragments_home_activity);
 		Log.d(CN+".onCreate", "entered");
+		
+		final IndexActivity me = this;
+		
+		FocusBoardCursor mantraItemCursor = FocusBoardManager.get(self).queryFocusBoards();
+		
+		if (mantraItemCursor.getCount() == 0)
+		{
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(R.string.title_create_board);
+			builder.setMessage(R.string.message_create_board);
+			
+			builder.setPositiveButton(R.string.action_yes, new DialogInterface.OnClickListener() 
+			{
+				public void onClick(DialogInterface dialog, int which) 
+				{
+					me.openNewFocusBoardActivity();
+				}
+			});
+			
+			builder.setNegativeButton(R.string.action_no, new DialogInterface.OnClickListener()
+			{
+				public void onClick(DialogInterface dialog, int which) 
+				{
+
+				}
+			});
+			
+			builder.create().show();
+		}
 	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
+		CrashManager.register(this, "fcd8e6aab20e0e4ce94c0f86da7deb96", new CrashManagerListener() 
+		{
+			public boolean shouldAutoUploadCrashes() 
+			{
+				    return true;
+			}
+		});
+
 		Log.d(CN+".onResume", "entered");
 		
 		// create, bind, and fill the main view for this activity
@@ -240,10 +281,18 @@ public class IndexActivity extends ConsentedActivity {
 	        case R.id.action_settings:
 	        	Intent settingsIntent = new Intent(this, SettingsActivity.class);
 				this.startActivity(settingsIntent);
-				
-	        default:
-	            return super.onOptionsItemSelected(item);
+	            return true;
+			case R.id.action_feedback:
+				this.sendFeedback(this.getString(R.string.app_name));
+
+				return true;
+			case R.id.action_faq:
+				this.showFaq(this.getString(R.string.app_name));
+					
+	            return true;
 	    }
+
+	    return super.onOptionsItemSelected(item);
 	}
 	
 	private void openNewFocusBoardActivity() {
