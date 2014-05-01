@@ -5,6 +5,8 @@ package edu.northwestern.cbits.intellicare.ruminants;
  */
 import java.util.HashMap;
 
+import edu.northwestern.cbits.intellicare.ConsentedActivity;
+
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.SharedPreferences;
@@ -86,11 +88,10 @@ public class SettingsActivity extends PreferenceActivity
 */
             return true;
         }
-        /*else if (key.equals("copyright_statement"))
-            ConsentedActivity.showCopyrightDialog(this); */
+        else if (key.equals("copyright_statement"))
+            ConsentedActivity.showCopyrightDialog(this);
 
         return super.onPreferenceTreeClick(screen, preference);
     }
-
 }
 

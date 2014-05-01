@@ -3,33 +3,38 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#ffffff">
-
     <ListView android:id="@+id/list_tools"
         android:layout_width="match_parent"
-        android:layout_height="315dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp"
-        android:layout_weight="0.35"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:dividerHeight="0dp" />
-
-    <ImageView
-        android:layout_width="512dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView"
-        android:baselineAlignBottom="true"
-        android:src="@drawable/distracted"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.40" />
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/pun"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight=".25"
-        android:background="#76b857"
-        android:gravity="center_vertical|center_horizontal"
-        android:textSize="22sp"
-        android:textStyle="italic" />
+    <FrameLayout
+	    android:layout_width="fill_parent"
+	    android:background="#ff000000"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <ImageView
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:id="@+id/imageView"
+	        android:src="@drawable/main_content"
+	        android:scaleType="centerCrop" />
+	    <TextView
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:id="@+id/pun"
+	        android:gravity="bottom|center"
+	        android:textSize="24sp"
+	        android:padding="16dp"
+	        android:textStyle="italic|bold"
+		    android:textColor="#ffffff"
+		    android:shadowColor="#000000"
+		    android:shadowRadius="8.0"
+		    android:shadowDx="0"
+		    android:shadowDy="0" />
+	</FrameLayout>
 </LinearLayout>
+
+
+

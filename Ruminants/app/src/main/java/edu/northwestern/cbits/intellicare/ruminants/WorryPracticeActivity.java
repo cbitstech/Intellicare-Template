@@ -62,7 +62,7 @@ public class WorryPracticeActivity extends Activity  {
 
             case R.id.action_strategies:
 
-                Intent didacticIntent =  new Intent(this, DidacticActivity.class);
+                Intent didacticIntent =  new Intent(this, PagedDidacticActivity.class);
                 this.startActivity(didacticIntent);
 
             case R.id.action_start_stop:

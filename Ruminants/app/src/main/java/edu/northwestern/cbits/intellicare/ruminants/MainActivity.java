@@ -176,14 +176,29 @@ public class MainActivity extends ConsentedActivity
     }
 
    // replay intro from menu
-   public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-
+   public boolean onOptionsItemSelected(MenuItem item) 
+   {
+        switch (item.getItemId()) 
+        {
             case R.id.action_replay_intro:
-
-            Intent introIntent =  new Intent(this, IntroActivity.class);
-            introIntent.putExtra("skipCheck", true);
-            this.startActivity(introIntent);
+	            Intent introIntent =  new Intent(this, PagedIntroActivity.class);
+	            introIntent.putExtra("skipCheck", true);
+	            this.startActivity(introIntent);
+	            
+	            break;
+			case R.id.action_settings:
+				Intent settingsIntent = new Intent(this, SettingsActivity.class);
+				this.startActivity(settingsIntent);
+				
+				break;
+			case R.id.action_feedback:
+				this.sendFeedback(this.getString(R.string.app_name));
+					
+				break;
+			case R.id.action_faq:
+				this.showFaq(this.getString(R.string.app_name));
+					
+				break;
         }
 
         return super.onOptionsItemSelected(item);
