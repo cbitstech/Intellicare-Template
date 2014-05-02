@@ -18,6 +18,7 @@
 	<string name="label_no">No</string>
 	
 	<string name="time_select_placeholder">(Tap to select the time.)</string>
+	<string name="duration_select_placeholder">(Tap to select the duration.)</string>
 
 	<string name="button_select_time">Select Time</string>
 			
@@ -38,6 +39,16 @@
 	<string name="question_comments">Do you have any additional notes or comments?</string>					
 	<string name="hint_comments">Enter comments here. (Optional)</string>					
 
+	<string name="question_nap_length">How long did you nap?</string>
+						
+	<string name="question_alcohol">Did you have any alcoholic beverages yesterday?</string>					
+	<string name="question_alcohol_amount">How much did you drink?</string>					
+	<string name="question_alcohol_time">When was your last drink?</string>					
+
+	<string name="question_caffeine">Did you have any caffeinated beverages yesterday?</string>					
+	<string name="question_caffeine_amount">How much did you drink?</string>					
+	<string name="question_caffeine_time">When was your last drink?</string>					
+					
 	<string name="question_refreshed">How rested or refreshed did you feel when you woke up for the day?</string>					
 	
 	<string name="label_not_rested">Not at all rested</string>
@@ -47,8 +58,13 @@
 	<string name="label_very_rested">Very well-rested</string>					
 			
 	<string name="bullet_one">1.</string>
+	<string name="bullet_one_a">1a.</string>
 	<string name="bullet_two">2.</string>
+	<string name="bullet_two_a">2a.</string>
+	<string name="bullet_two_b">2b.</string>
 	<string name="bullet_three">3.</string>
+	<string name="bullet_three_a">3a.</string>
+	<string name="bullet_three_b">3b.</string>
 	<string name="bullet_four">4.</string>
 	<string name="bullet_five">5.</string>
 	<string name="bullet_six">6.</string>
@@ -56,7 +72,9 @@
 	<string name="bullet_eight">8.</string>
 	<string name="bullet_nine">9.</string>
 	<string name="bullet_ten">10.</string>
-
+	<string name="bullet_eleven">11.</string>
+	<string name="bullet_twelve">12.</string>
+	
 	<string name="message_complete_nap">Please answer the question about napping to continue.</string>
 	<string name="message_complete_earlier">Please answer the question about waking earlier than desired to continue.</string>
 	<string name="message_complete_bedtime">Please enter when you went to bed to continue. (A close guess will work.)</string>
@@ -66,7 +84,9 @@
 	<string name="message_complete_sleep_delay">Please enter how long it took to get to sleep. (A close guess will work.)</string>
 	<string name="message_complete_wake_count">Please enter how many times you woke up in the night. (A close guess will work.)</string>
 	<string name="message_complete_sleep_quality">Please enter the quality of your sleep.</string>
-			
+	<string name="message_complete_alcohol">Please enter your alcohol consumption.</string>
+	<string name="message_complete_caffeine">Please enter your caffeine consumption.</string>
+				
 	<string name="label_immediately">Immediately</string>																	
 	<string name="label_never">Never</string>																	
 
@@ -169,6 +189,13 @@
     <string name="db_create_sleep_diary_table">CREATE TABLE IF NOT EXISTS sleep_diaries(_id INTEGER PRIMARY KEY, did_nap INTEGER DEFAULT 0, woke_earlier INTEGER DEFAULT 0, bed_hour INTEGER DEFAULT 12, bed_minute INTEGER DEFAULT 0, sleep_hour INTEGER DEFAULT 12, sleep_minute INTEGER DEFAULT 0, wake_hour INTEGER DEFAULT 12, wake_minute INTEGER DEFAULT 0, up_hour INTEGER DEFAULT 12, up_minute INTEGER DEFAULT 0, sleep_delay INTEGER DEFAULT 0,wake_count INTEGER DEFAULT 0, sleep_quality INTEGER DEFAULT 0, timestamp INTEGER);</string>
     <string name="db_update_sleep_diary_add_comments">ALTER TABLE sleep_diaries ADD COLUMN comments TEXT;</string>
     <string name="db_update_sleep_diary_add_rested">ALTER TABLE sleep_diaries ADD COLUMN rested INTEGER DEFAULT 0;</string>
+    <string name="db_update_sleep_diary_add_nap_duration">ALTER TABLE sleep_diaries ADD COLUMN nap_duration TEXT;</string>
+    <string name="db_update_sleep_diary_add_had_alcohol">ALTER TABLE sleep_diaries ADD COLUMN had_alcohol TEXT;</string>
+    <string name="db_update_sleep_diary_add_alcohol_amount">ALTER TABLE sleep_diaries ADD COLUMN alcohol_amount TEXT;</string>
+    <string name="db_update_sleep_diary_add_alcohol_time">ALTER TABLE sleep_diaries ADD COLUMN alcohol_time TEXT;</string>
+    <string name="db_update_sleep_diary_add_had_caffeine">ALTER TABLE sleep_diaries ADD COLUMN had_caffeine TEXT;</string>
+    <string name="db_update_sleep_diary_add_caffeine_amount">ALTER TABLE sleep_diaries ADD COLUMN caffeine_amount TEXT;</string>
+    <string name="db_update_sleep_diary_add_caffeine_time">ALTER TABLE sleep_diaries ADD COLUMN caffeine_time TEXT;</string>
     
     <string name="db_create_sensor_readings_table">CREATE TABLE IF NOT EXISTS sensor_readings(_id INTEGER PRIMARY KEY, name TEXT, value REAL, recorded INTEGER);</string>
     
@@ -276,5 +303,35 @@
 	
 	<string name="title_clock_tip">Did you know?</string>
 	<string name="message_clock_tip">Slumber Time includes a built-in alarm clock that includes bedtime tools when you\'re ready to go to bed.\n\nAll you need to do is lay your phone on it\'s side. Use the built-in alarms to wake up each morning to your favorite songs!</string>
+	
+	<string-array name="nap_labels">
+        <item>Less than 15 minutes</item>
+        <item>Less than an hour</item>
+        <item>Less than 2 hours</item>
+        <item>More than 2 hours</item>
+   	</string-array>
+			
+	<string-array name="alcohol_amount_labels">
+        <item>1 standard drink (a can of beer, glass of wine, shot of liquor)</item>
+        <item>2 standard drinks</item>
+        <item>4 standard drinks</item>
+        <item>More than 4 standard drinks</item>
+   	</string-array>
+
+	<string-array name="caffeine_amount_labels">
+        <item>50 mg or less (can of cola, cup of tea)</item>
+        <item>80 mg or less (can of energy drink)</item>
+        <item>100 mg or less (cup of instant coffee)</item>
+        <item>140 mg or less (cup of filtered coffee)</item>
+        <item>More than 140 mg</item>
+   	</string-array>
+	
+	<string-array name="alcohol_time_labels">
+        <item>Immediately before bed</item>
+        <item>30 minutes before bed</item>
+        <item>An hour before bed</item>
+        <item>Two hours before bed</item>
+        <item>More than two hours before bed</item>
+   	</string-array>
 </resources>
 
