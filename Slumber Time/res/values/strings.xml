@@ -273,6 +273,8 @@
 	<string name="summary_earlier">Woke up earlier than desired.</string>
 
 	<string name="message_no_logs">No sleep logs have been created.</string>
-			
+	
+	<string name="title_clock_tip">Did you know?</string>
+	<string name="message_clock_tip">Slumber Time includes a built-in alarm clock that includes bedtime tools when you\'re ready to go to bed.\n\nAll you need to do is lay your phone on it\'s side. Use the built-in alarms to wake up each morning to your favorite songs!</string>
 </resources>
 

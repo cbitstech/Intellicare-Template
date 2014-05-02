@@ -64,6 +64,8 @@ public class HomeActivity extends PortraitActivity
 
 	private static final String APP_ID = "62e48583d6763b21b5ccf7186bd44089";
 	protected static final String SELECTED_TIME_RANGE = "setting_selected_time_range";
+
+	protected static final String SHOWED_CLOCK_TIP = "show_clock_tip";
 	
 	@SuppressLint("SetJavaScriptEnabled")
 	protected void onResume()
@@ -138,7 +140,7 @@ public class HomeActivity extends PortraitActivity
 		HashMap<String, Object> payload = new HashMap<String, Object>();
 		LogManager.getInstance(this).log("launched_home_activity", payload);
 		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		int durationIndex = prefs.getInt(HomeActivity.SELECTED_TIME_RANGE, -1);
 		
@@ -147,6 +149,24 @@ public class HomeActivity extends PortraitActivity
 			String duration = this.getResources().getStringArray(R.array.graph_time_intervals)[durationIndex];
 			
 			this.getSupportActionBar().setSubtitle(this.getString(R.string.home_subtitle, duration));
+		}
+		
+		if (prefs.getBoolean(HomeActivity.SHOWED_CLOCK_TIP, false) == false)
+		{
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(R.string.title_clock_tip);
+			builder.setMessage(R.string.message_clock_tip);
+			builder.setPositiveButton(R.string.action_close, new DialogInterface.OnClickListener() 
+			{
+				public void onClick(DialogInterface dialog, int which) 
+				{
+					Editor e = prefs.edit();
+					e.putBoolean(HomeActivity.SHOWED_CLOCK_TIP, true);
+					e.commit();
+				}
+			});
+			
+			builder.create().show();
 		}
 	}
 
@@ -409,6 +429,8 @@ public class HomeActivity extends PortraitActivity
 		}
 		else if (item.getItemId() == R.id.action_feedback)
 			this.sendFeedback(this.getString(R.string.app_name));
+		else if (item.getItemId() == R.id.action_faq)
+			this.showFaq(this.getString(R.string.app_name));
 		else if (item.getItemId() == R.id.action_chart)
 		{
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);

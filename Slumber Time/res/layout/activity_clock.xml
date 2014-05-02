@@ -7,17 +7,27 @@
     android:padding="16dp"
     android:id="@+id/clock_root">
     <LinearLayout android:orientation="vertical" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1">
-        <ImageView android:id="@+id/button_settings" 
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:padding="12dp"
-            android:src="@drawable/clock_settings" />
-        <TextView android:id="@+id/date_view" 
+        <LinearLayout android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="22sp"
-            android:gravity="center"
-            android:textColor="#ffffff" />
+            android:layout_height="wrap_content">
+	        <ImageView android:id="@+id/button_settings" 
+	            android:layout_width="48dp"
+	            android:layout_height="48dp"
+	            android:padding="12dp"
+	            android:src="@drawable/clock_settings" />
+	        <TextView android:id="@+id/date_view" 
+	            android:layout_width="0dp"
+	            android:layout_weight="1"
+	            android:layout_height="48dp"
+	            android:paddingTop="0dp"
+	            android:paddingBottom="0dp"
+	            android:paddingLeft="0dp"
+	            android:paddingRight="12dp"
+	            android:textSize="22sp"
+	            android:gravity="right|center"
+	            android:textColor="#ffffff" />
+        </LinearLayout>
+        <View android:layout_width="1dp" android:layout_height="0dp"  android:layout_weight="1" />
         <LinearLayout android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -37,7 +47,7 @@
 	            android:textColor="#ffffff" />
         	<View android:layout_width="0dp" android:layout_height="1dp"  android:layout_weight="1" />
         </LinearLayout>
-        <View android:layout_width="0dp" android:layout_height="1dp"  android:layout_weight="1" />
+        <View android:layout_width="0dp" android:layout_height="0dp"  android:layout_weight="1" />
         <TextView android:id="@+id/appointment_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
