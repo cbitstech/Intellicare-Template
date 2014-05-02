@@ -1,5 +1,6 @@
 package edu.northwestern.cbits.intellicare.mantra.activities;
 
+import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.mantra.Constants;
 import edu.northwestern.cbits.intellicare.mantra.GetImageListAndSizesTask;
 import edu.northwestern.cbits.intellicare.mantra.GetImagesTask;
@@ -23,6 +24,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ProgressBar;
 
+
 /**
  * Handles the passing of a URL from another Android app (e.g. Google Chrome) to this one.
  * 
@@ -30,7 +32,7 @@ import android.widget.ProgressBar;
  * @author mohrlab
  *
  */
-public class ProgressActivity extends Activity {
+public class ProgressActivity extends ConsentedActivity {
 	private static final String CN = "ProgressActivity";
 	private Activity self;
 	
