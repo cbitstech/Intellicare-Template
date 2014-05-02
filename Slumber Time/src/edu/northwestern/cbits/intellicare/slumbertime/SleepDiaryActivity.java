@@ -8,9 +8,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences.Editor;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -28,6 +31,7 @@ import edu.northwestern.cbits.intellicare.logging.LogManager;
 public class SleepDiaryActivity extends ConsentedActivity
 {
 	protected static final long DAY_LENGTH = (1000 * 3600 * 24);
+	private static final String SHOWED_INTRO = "showed_diary_intro";
 
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -42,6 +46,41 @@ public class SleepDiaryActivity extends ConsentedActivity
 	public void onResume()
 	{
 		super.onResume();
+
+		final SleepDiaryActivity me = this;
+		
+		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		if (prefs.getBoolean(SleepDiaryActivity.SHOWED_INTRO, false) == false)
+		{
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(R.string.title_what_is_sleep_log);
+			builder.setMessage(R.string.message_what_is_sleep_log);
+			
+			builder.setPositiveButton(R.string.action_next, new DialogInterface.OnClickListener() 
+			{
+				public void onClick(DialogInterface dialog, int which) 
+				{
+					AlertDialog.Builder builder = new AlertDialog.Builder(me);
+					builder.setTitle(R.string.title_why_sleep_log);
+					builder.setMessage(R.string.message_why_sleep_log);
+					
+					builder.setPositiveButton(R.string.action_close, new DialogInterface.OnClickListener() 
+					{
+						public void onClick(DialogInterface dialog, int which) 
+						{
+							Editor e = prefs.edit();
+							e.putBoolean(SleepDiaryActivity.SHOWED_INTRO, true);
+							e.commit();
+						}
+					});
+					
+					builder.create().show();
+				}
+			});
+			
+			builder.create().show();
+		}
 
 		ListView diaryList = (ListView) this.findViewById(R.id.list_diaries);
 		
@@ -81,8 +120,6 @@ public class SleepDiaryActivity extends ConsentedActivity
 		};
 		
 		diaryList.setAdapter(adapter);
-		
-		final SleepDiaryActivity me = this;
 		
 		diaryList.setOnItemLongClickListener(new OnItemLongClickListener()
 		{

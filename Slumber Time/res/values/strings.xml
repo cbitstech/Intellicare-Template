@@ -333,5 +333,11 @@
         <item>Two hours before bed</item>
         <item>More than two hours before bed</item>
    	</string-array>
+   	
+	<string name="title_what_is_sleep_log">What is a Sleep Log?</string>
+	<string name="message_what_is_sleep_log">A sleep log is a way to track your sleep habits and trends in your sleep. It can help you see what can be improved or changed about your sleep routine. Ideally, you should complete the sleep log every day within a couple of hours of waking up to get the best and most consistent information about your sleep!\n\nSlumber Time\'s sleep log is short and easy to complete.</string>
+
+	<string name="title_why_sleep_log">Why should I use a Sleep Log?</string>
+	<string name="message_why_sleep_log">Slumber Time will give you feedback on your sleep data using graphs and charts (link here if necessary). We recommend that you also review each entry in your sleep log to see if you think there are any patterns or activities that help or worsen your sleep. The more you fill out your sleep log, the more information you’ll have on what helps or hurts your sleep!</string>
 </resources>
 
