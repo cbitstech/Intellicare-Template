@@ -20,7 +20,7 @@ import java.util.logging.LogManager;
  * Created by Gwen on 3/12/14.
  */
 public class ProfileActivity extends Activity {
-
+/*
     private static final String SELECTED_RADIO_RUMINATING_LATELY = "ruminating_lately";
     private static final String SELECTED_HELP_FREQUENCY = "help_frequency";
     private static final String SELECTED_ISSUES = "commonly_encountered_issues";
@@ -76,7 +76,7 @@ public class ProfileActivity extends Activity {
 
         if (item.getItemId() == R.id.action_profile_save)
         {
-/*            RadioGroup rumLately = (RadioGroup) this.findViewById(R.id.radios_ruminating_lately);
+            RadioGroup rumLately = (RadioGroup) this.findViewById(R.id.radios_ruminating_lately);
             int rumChecked = rumLately.getCheckedRadioButtonId();
 
             if (rumChecked != -1)
@@ -85,7 +85,7 @@ public class ProfileActivity extends Activity {
 
             EditText issues = (EditText) this.findViewById(R.id.field_rumination_content);
             outState.putString(ProfileActivity.SELECTED_ISSUES, issues.getEditableText().toString());
-*/
+
             ContentValues values = new ContentValues();
             HashMap<String, Object> payload = new HashMap<String, Object>();
 
@@ -101,7 +101,7 @@ public class ProfileActivity extends Activity {
 
             values.put(RuminantsContentProvider.PROFILE_RUMINATING_LATELY, (rumChecked == R.id.rum_yes));
 
-            payload.put("ruminating_lately", (rumChecked == R.id.rum_yes)); */
+            payload.put("ruminating_lately", (rumChecked == R.id.rum_yes));
 
             // concerned this is not going to store notifications correctly
 
@@ -129,5 +129,5 @@ public class ProfileActivity extends Activity {
 
 
         return true;
-    }
+    } */
 }

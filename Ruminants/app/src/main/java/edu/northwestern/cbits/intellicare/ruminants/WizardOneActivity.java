@@ -146,11 +146,11 @@ public class WizardOneActivity extends Activity
 
             payload.put("rumination_isOver", (rumChecked == R.id.rum_yes));
 
-            if (this._rumDuration == -1)
+           /* if (this._rumDuration == -1)
             {
                 Toast.makeText(this, R.string.message_complete_rum_duration, Toast.LENGTH_SHORT).show();
                 return true;
-            }
+            } */
 
             /*
             Spinner emotionSpinner = (Spinner) this.findViewById(R.id.emotion_spinner);
@@ -164,8 +164,22 @@ public class WizardOneActivity extends Activity
 
             // ??
             values.put(RuminantsContentProvider.WIZARD_ONE_EMOTION, (emoChecked == R.id.emotion_one));
-            payload.put("emotion", (emoChecked == R.id.emotion_one)); */
+            payload.put("emotion", (emoChecked == R.id.emotion_one));
 
+            Spinner durationSpinner = (Spinner) this.findViewById(R.id.duration_spinner);
+            int durChecked = durationSpinner.getSelectedItem();
+
+            if (durChecked == -1)
+            {
+                Toast.makeText(this, R.string.message_complete_emo, Toast.LENGTH_SHORT).show();
+                return true;
+            }
+
+            // ??
+            values.put(RuminantsContentProvider.WIZARD_ONE_DURATION, (durChecked == R.id.duration_one));
+            payload.put("duration", (durChecked == R.id.duration_one));
+
+             */
 
             // toast required if not completed
             values.put(RuminantsContentProvider.WIZARD_ONE_DURATION, this._rumDuration);

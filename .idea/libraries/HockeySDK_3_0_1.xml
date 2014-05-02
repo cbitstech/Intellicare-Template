@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="HockeySDK-3.0.1">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/Ruminants/app/build/exploded-aar/Intellicare-Template/IntellicareTemplate/unspecified/libs/HockeySDK-3.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/IntellicareTemplate/libs/HockeySDK-3.0.1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

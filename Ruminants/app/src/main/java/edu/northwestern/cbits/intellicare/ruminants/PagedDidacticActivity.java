@@ -3,6 +3,7 @@ package edu.northwestern.cbits.intellicare.ruminants;
 import java.security.SecureRandom;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -167,7 +168,8 @@ public class PagedDidacticActivity extends ConsentedActivity
             	return true;
 
             case R.id.action_done:
-            	this.finish();
+                Intent mainIntent = new Intent(this, MainActivity.class);
+                this.startActivity(mainIntent);
 
             	return true;
         }
