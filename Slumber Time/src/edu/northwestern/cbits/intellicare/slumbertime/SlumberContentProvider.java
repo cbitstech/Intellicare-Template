@@ -435,9 +435,18 @@ public class SlumberContentProvider extends ContentProvider
 		double minValue = Double.MAX_VALUE;
 		double maxValue = 0 - Double.MAX_VALUE;
 		
+		double[] readings = new double[c.getCount()];
+		long[] recordeds = new long[readings.length];
+		int index = 0;
+		
 		while (c.moveToNext())
 		{
 			double reading = c.getDouble(c.getColumnIndex(SlumberContentProvider.READING_VALUE));
+			
+			readings[index] = reading;
+			recordeds[index] = c.getLong(c.getColumnIndex(SlumberContentProvider.READING_RECORDED));
+
+			index += 1;
 			
 			if (reading > maxValue)
 				maxValue = reading;
@@ -450,14 +459,16 @@ public class SlumberContentProvider extends ContentProvider
 			maxValue = SlumberContentProvider.MAX_LIGHT_LEVEL;
 
 		double spread = maxValue - minValue;
-
-		c.moveToPosition(-1);
 		
+		c.close();
+		
+
 		DescriptiveStatistics stats = new DescriptiveStatistics();
 		
-		while (c.moveToNext())
+		for (int i = 0; i < readings.length; i++)
 		{
-			double reading = c.getDouble(c.getColumnIndex(SlumberContentProvider.READING_VALUE));
+			double reading = readings[i];
+			long recorded = recordeds[i];
 			
 			if (reading > maxValue)
 				reading = maxValue;
@@ -467,14 +478,12 @@ public class SlumberContentProvider extends ContentProvider
 			
 			double normalized = (reading - minValue) / spread;
 			
-			Object[] values = {c.getLong(c.getColumnIndex(SlumberContentProvider.READING_RECORDED)), normalized, minValue, spread };
+			Object[] values = {recorded, normalized, minValue, spread };
 			
 			retCursor.addRow(values);
 			
 			stats.addValue(normalized);
 		}
-		
-		c.close();
 		
 		retCursor.moveToPosition(-1);
 

@@ -124,7 +124,7 @@
 	<string name="dim_delay_immediately">Immediately</string>
 	
 	<string name="placeholder_sleep_efficiency">XX%</string>
-	<string name="label_sleep_efficiency">Sleep Efficiency</string>
+	<string name="label_sleep_efficiency">Sleep Efficiency &amp; Duration</string>
 	
 	<string name="title_clock_log">Sleep Log</string>
 	<string name="hint_log_description">Please record any sleep notes here.</string>

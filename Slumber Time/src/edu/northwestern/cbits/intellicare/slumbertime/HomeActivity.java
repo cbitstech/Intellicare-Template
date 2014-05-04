@@ -1,6 +1,7 @@
 package edu.northwestern.cbits.intellicare.slumbertime;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.CrashManagerListener;
 
+import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +30,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -219,7 +222,7 @@ public class HomeActivity extends PortraitActivity
 
 		graphString = graphString.replaceAll("VALUES_JSON", graphValues.toString());
 
-/*		try 
+		try 
 		{
 			graphString = graphString.replaceAll("VALUES_JSON", graphValues.toString());
 
@@ -229,11 +232,6 @@ public class HomeActivity extends PortraitActivity
 		{
 			LogManager.getInstance(context).logException(e);
 		} 
-		catch (JSONException e) 
-		{
-			LogManager.getInstance(context).logException(e);
-		}
-*/
 		
 		return graphString;
 	}
@@ -313,7 +311,7 @@ public class HomeActivity extends PortraitActivity
 			JSONObject sleep = new JSONObject();
 			sleep.put("key", context.getString(R.string.label_sleep_efficiency));
 			sleep.put("color", HomeActivity.colorForKey(context, sleep.getString("key")));
-			sleep.put("renderer", "scatterplot");
+			sleep.put("renderer", "scatterplot-custom");
 			JSONArray sleepValues = new JSONArray();
 			
 			String where = SlumberContentProvider.DIARY_TIMESTAMP + " > ?";
