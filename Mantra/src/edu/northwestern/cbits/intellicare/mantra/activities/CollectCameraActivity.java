@@ -8,8 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import edu.northwestern.cbits.intellicare.mantra.CameraPreview;
-import edu.northwestern.cbits.intellicare.mantra.FocusBoardManager;
-import edu.northwestern.cbits.intellicare.mantra.FocusImage;
+import edu.northwestern.cbits.intellicare.mantra.MantraBoardManager;
+import edu.northwestern.cbits.intellicare.mantra.MantraImage;
 import edu.northwestern.cbits.intellicare.mantra.R;
 
 import android.app.Activity;
@@ -54,7 +54,7 @@ public class CollectCameraActivity extends Activity {
 	};
 	private static final String TAG = "CollectCamera";
 	private long mFocusBoardId;
-	private FocusBoardManager mFocusBoardManager;
+	private MantraBoardManager mFocusBoardManager;
 
 	/** A safe way to get an instance of the Camera object. */
 	public static Camera getCameraInstance() {
@@ -81,7 +81,7 @@ public class CollectCameraActivity extends Activity {
 		mFocusBoardId = intent.getLongExtra(
 				NewFocusBoardActivity.FOCUS_BOARD_ID, -1);
 
-		mFocusBoardManager = FocusBoardManager.get(this);
+		mFocusBoardManager = MantraBoardManager.get(this);
 	}
 
 	@Override
@@ -149,15 +149,14 @@ public class CollectCameraActivity extends Activity {
 	}
 
 	private void createFocusImage(File pictureFile) {
-		FocusImage image = mFocusBoardManager.createFocusImage(
+		MantraImage image = mFocusBoardManager.createFocusImage(
 				mFocusBoardId, pictureFile.getAbsolutePath(), "SOME IMAGE CAPTION"
 			);
 	}
 
 	private void startFocusBoardActivity() {
 // CJK		Intent intent = new Intent(CollectCameraActivity.this,
-//		FocusBoardActivity.class);
-		Intent intent = new Intent(CollectCameraActivity.this, SoloFocusBoardActivity.class);
+		Intent intent = new Intent(CollectCameraActivity.this, SingleMantraBoardActivity.class);
 		intent.putExtra(NewFocusBoardActivity.FOCUS_BOARD_ID, mFocusBoardId);
 		startActivity(intent);
 	}

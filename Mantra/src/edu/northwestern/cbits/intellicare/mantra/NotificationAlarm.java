@@ -80,11 +80,11 @@ public class NotificationAlarm extends BroadcastReceiver
         	 Log.d(CN+".onReceive", "at h = " + currHour + ", m = " + currMin + ", MAKE STARTING NOTIFICATION");
         	 
         	 // put the user's list of mantra boards in the notification
-        	 FocusBoardCursor mantraItemCursor = FocusBoardManager.get(context).queryFocusBoards();
+        	 FocusBoardCursor mantraItemCursor = MantraBoardManager.get(context).queryFocusBoards();
         	 ArrayList<String> al = new ArrayList<String>();
         	 while(mantraItemCursor.moveToNext()) {
         		 al.add(
-        				 FocusBoardManager.get(context).getFocusBoard(
+        				 MantraBoardManager.get(context).getFocusBoard(
         						 mantraItemCursor.getLong(
         								 mantraItemCursor.getColumnIndex("_id")
 								 )

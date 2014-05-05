@@ -171,7 +171,7 @@ public class ProgressActivity extends ConsentedActivity {
 		}
 		else if(extras.getBoolean(MediaScannerService.INTENT_KEY_TO_RECEIVER_STRINGARRAY)) {
 			Log.d(CN+".handleExternalIntents", "intent from new-images notification alarm");
-			SoloFocusBoardActivity.startBrowsePhotosActivity(this);
+			SingleMantraBoardActivity.startBrowsePhotosActivity(this);
 		}
 	}
 

@@ -9,10 +9,10 @@ import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.mantra.NotificationAlarm;
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusBoardCursor;
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusImageCursor;
-import edu.northwestern.cbits.intellicare.mantra.FocusBoard;
-import edu.northwestern.cbits.intellicare.mantra.FocusBoardGridFragment;
-import edu.northwestern.cbits.intellicare.mantra.FocusBoardManager;
-import edu.northwestern.cbits.intellicare.mantra.FocusImage;
+import edu.northwestern.cbits.intellicare.mantra.MantraBoard;
+import edu.northwestern.cbits.intellicare.mantra.MantraBoardGridFragment;
+import edu.northwestern.cbits.intellicare.mantra.MantraBoardManager;
+import edu.northwestern.cbits.intellicare.mantra.MantraImage;
 import edu.northwestern.cbits.intellicare.mantra.PictureUtils;
 import edu.northwestern.cbits.intellicare.mantra.R;
 import edu.northwestern.cbits.intellicare.mantra.Util;
@@ -75,7 +75,7 @@ public class IndexActivity extends ConsentedActivity {
 		
 		final IndexActivity me = this;
 		
-		FocusBoardCursor mantraItemCursor = FocusBoardManager.get(self).queryFocusBoards();
+		FocusBoardCursor mantraItemCursor = MantraBoardManager.get(self).queryFocusBoards();
 		
 		if (mantraItemCursor.getCount() == 0)
 		{
@@ -144,7 +144,7 @@ public class IndexActivity extends ConsentedActivity {
 		self.setContentView(R.layout.no_fragments_home_activity);
 		final GridView gv = (GridView) self.findViewById(R.id.gridview);
 
-		FocusBoardCursor mantraItemCursor = FocusBoardManager.get(self).queryFocusBoards();
+		FocusBoardCursor mantraItemCursor = MantraBoardManager.get(self).queryFocusBoards();
 //		Util.logCursor(mantraItemCursor);
 		
 		@SuppressWarnings("deprecation")
@@ -155,12 +155,12 @@ public class IndexActivity extends ConsentedActivity {
 				// set the image
 				final int imageId = focusBoardCursor.getInt(focusBoardCursor.getColumnIndex("_id")); 
 				Log.d(CN+".CursorAdapter.bindView", "imageId = " + imageId);
-				final FocusImageCursor imageCursor = FocusBoardManager.get(homeActivity).queryFocusImages(imageId);
+				final FocusImageCursor imageCursor = MantraBoardManager.get(homeActivity).queryFocusImages(imageId);
 //				Util.logCursor(imageCursor);
 				// if the mantra item has an image, then display the first one
 				if(imageCursor.getCount() > 0) {
 					imageCursor.moveToFirst();
-					FocusImage image = imageCursor.getFocusImage();
+					MantraImage image = imageCursor.getFocusImage();
 					Log.d(CN+".CursorAdapter.bindView", "image == null = " + (image == null));
 					ImageView iv = (ImageView) mantraItemView.findViewById(R.id.imageThumb);
 					Log.d(CN+".CursorAdapter.bindView", "image.getPath() = " + image.getPath());
@@ -188,7 +188,7 @@ public class IndexActivity extends ConsentedActivity {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				Intent intent = new Intent(self, SoloFocusBoardActivity.class);
+				Intent intent = new Intent(self, SingleMantraBoardActivity.class);
 				intent.putExtra(NewFocusBoardActivity.FOCUS_BOARD_ID, id);
 				
 				Uri uri = self.getIntent().getData();
@@ -238,7 +238,7 @@ public class IndexActivity extends ConsentedActivity {
 									
 									@Override
 									public void onClick(DialogInterface dialog, int which) {
-										int rowsDeleted = FocusBoardManager.get(self).deleteFocusBoard(id);
+										int rowsDeleted = MantraBoardManager.get(self).deleteFocusBoard(id);
 										((IndexActivity) self).attachGridView(self);
 										Log.d(CN+".onItemLongClick....onClick", "deleted row = " + id + "; deleted row count = " + rowsDeleted);
 									}
@@ -318,7 +318,7 @@ public class IndexActivity extends ConsentedActivity {
 		// get the current caption
 		// v2: via database
 		final View v = self.getLayoutInflater().inflate(R.layout.edit_text_field, null);
-		FocusBoard fb = FocusBoardManager.get(self).getFocusBoard(id);
+		MantraBoard fb = MantraBoardManager.get(self).getFocusBoard(id);
 		((EditText) v.findViewById(R.id.text_dialog)).setText(fb.getMantra());
 
 		AlertDialog.Builder editTextDlg = new AlertDialog.Builder(self);
@@ -330,9 +330,9 @@ public class IndexActivity extends ConsentedActivity {
 				// update the selected mantra's text
 //				Toast.makeText(self, "Mantra text should change.", Toast.LENGTH_SHORT).show();
 				String newMantra = ((EditText) v.findViewById(R.id.text_dialog)).getText().toString();
-				FocusBoard fb = FocusBoardManager.get(self).getFocusBoard(id);
+				MantraBoard fb = MantraBoardManager.get(self).getFocusBoard(id);
 				fb.setMantra(newMantra);
-				long updateRet = FocusBoardManager.get(self).setFocusBoard(fb);
+				long updateRet = MantraBoardManager.get(self).setFocusBoard(fb);
 				Log.d(CN+".onItemLongClick....onClick", "updateRet = " + updateRet);
 				attachGridView(self);
 			}

@@ -4,65 +4,65 @@ import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusBoardCursor
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusImageCursor;
 import android.content.Context;
 
-public class FocusBoardManager {
+public class MantraBoardManager {
 
 	public static final int COL_INDEX_FILE_PATH = 2;
-	private static FocusBoardManager sFocusBoardManager;
+	private static MantraBoardManager sFocusBoardManager;
 
 	private Context mAppContext;
 	private DatabaseHelper mDatabaseHelper;
 
-	private FocusBoardManager(Context appContext) {
+	private MantraBoardManager(Context appContext) {
 		mAppContext = appContext;
 		mDatabaseHelper = new DatabaseHelper(mAppContext);
 	}
 
-	public static FocusBoardManager get(Context c) {
+	public static MantraBoardManager get(Context c) {
 		if (sFocusBoardManager == null) {
 			// use the app context to avoid leaking activities
-			sFocusBoardManager = new FocusBoardManager(
+			sFocusBoardManager = new MantraBoardManager(
 					c.getApplicationContext());
 		}
 		return sFocusBoardManager;
 	}
 
-	public FocusBoard createFocusBoard(String mantra) {
-		FocusBoard focusBoard = new FocusBoard();
-		focusBoard.setMantra(mantra);
-		focusBoard.setId(mDatabaseHelper.insertFocusBoard(focusBoard));
-		return focusBoard;
+	public MantraBoard createFocusBoard(String mantra) {
+		MantraBoard mantraBoard = new MantraBoard();
+		mantraBoard.setMantra(mantra);
+		mantraBoard.setId(mDatabaseHelper.insertFocusBoard(mantraBoard));
+		return mantraBoard;
 	}
 	
-	public FocusImage createFocusImage(long focusBoardId, String imagePath, String imageCaption) {
-		FocusImage focusImage = new FocusImage();
-		focusImage.setFocusBoardId(focusBoardId);
-		focusImage.setPath(imagePath);
-		focusImage.setCaption(imageCaption);
-		focusImage.setId(mDatabaseHelper.insertFocusImage(focusImage));
-		return focusImage;
+	public MantraImage createFocusImage(long focusBoardId, String imagePath, String imageCaption) {
+		MantraImage mantraImage = new MantraImage();
+		mantraImage.setFocusBoardId(focusBoardId);
+		mantraImage.setPath(imagePath);
+		mantraImage.setCaption(imageCaption);
+		mantraImage.setId(mDatabaseHelper.insertFocusImage(mantraImage));
+		return mantraImage;
 	}
 	
 	public FocusBoardCursor queryFocusBoards() {
 		return mDatabaseHelper.queryFocusBoards();
 	}
 	
-	public FocusBoard getFocusBoard(long id) {
-		FocusBoard focusBoard = null;
+	public MantraBoard getFocusBoard(long id) {
+		MantraBoard mantraBoard = null;
 		FocusBoardCursor cursor = mDatabaseHelper.queryFocusBoard(id);
 		cursor.moveToFirst();
 		if (!cursor.isAfterLast()) {
-			focusBoard = cursor.getFocusBoard();
+			mantraBoard = cursor.getFocusBoard();
 		}
 		cursor.close();
-		return focusBoard;
+		return mantraBoard;
 	}
 	
-	public long setFocusBoard(FocusBoard focusBoard) {
-		FocusBoardCursor cursor = mDatabaseHelper.queryFocusBoard(focusBoard.getId());
+	public long setFocusBoard(MantraBoard mantraBoard) {
+		FocusBoardCursor cursor = mDatabaseHelper.queryFocusBoard(mantraBoard.getId());
 		cursor.moveToFirst();
 		long ret = -1;
 		if(!cursor.isAfterLast()) {
-			ret = mDatabaseHelper.updateFocusBoard(focusBoard);
+			ret = mDatabaseHelper.updateFocusBoard(mantraBoard);
 		}
 		cursor.close();
 		return ret;
@@ -84,23 +84,23 @@ public class FocusBoardManager {
 		return mDatabaseHelper.queryFocusImages(focusBoardId);
 	}
 	
-	public FocusImage getFocusImage(long id) {
-		FocusImage focusImage = null;
+	public MantraImage getFocusImage(long id) {
+		MantraImage mantraImage = null;
 		FocusImageCursor cursor = mDatabaseHelper.queryFocusImage(id);
 		cursor.moveToFirst();
 		if (!cursor.isAfterLast()) {
-			focusImage = cursor.getFocusImage();
+			mantraImage = cursor.getFocusImage();
 		}
 		cursor.close();
-		return focusImage;
+		return mantraImage;
 	}
 	
-	public long setFocusImage(FocusImage focusImage) {
-		FocusImageCursor cursor = mDatabaseHelper.queryFocusImage(focusImage.getId());
+	public long setFocusImage(MantraImage mantraImage) {
+		FocusImageCursor cursor = mDatabaseHelper.queryFocusImage(mantraImage.getId());
 		cursor.moveToFirst();
 		long ret = -1;
 		if(!cursor.isAfterLast()) {
-			ret = mDatabaseHelper.updateFocusImage(focusImage);
+			ret = mDatabaseHelper.updateFocusImage(mantraImage);
 		}
 		cursor.close();
 		return ret;

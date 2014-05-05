@@ -1,11 +1,11 @@
 package edu.northwestern.cbits.intellicare.mantra;
 
-public class FocusBoard {
+public class MantraBoard {
 
 	private long mId;
 	private String mMantra;
 
-	public FocusBoard() {
+	public MantraBoard() {
 		mId = -1;
 		mMantra = "";
 	}

@@ -16,9 +16,9 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class FocusImageGridFragment extends Fragment {
+public class MantraImageGridFragment extends Fragment {
 
-	private static final String CN = "FocusImageGridFragment";
+	private static final String CN = "MantraImageGridFragment";
 	private FocusImageCursor mCursor;
 	
 	LayoutInflater inflater; ViewGroup container;
@@ -39,9 +39,9 @@ public class FocusImageGridFragment extends Fragment {
 		View view = inflater.inflate(R.layout.focus_images_grid, container,false);
 		Intent intent = getActivity().getIntent();
 		long focusBoardId = intent.getLongExtra(NewFocusBoardActivity.FOCUS_BOARD_ID, -1);
-		mCursor = FocusBoardManager.get(getActivity()).queryFocusImages(focusBoardId);
+		mCursor = MantraBoardManager.get(getActivity()).queryFocusImages(focusBoardId);
 		Util.logCursor(mCursor);
-		FocusImageCursorAdapter adapter = new FocusImageCursorAdapter(getActivity(), mCursor);
+		MantraImageCursorAdapter adapter = new MantraImageCursorAdapter(getActivity(), mCursor);
 		GridView gv = (GridView) view.findViewById(R.id.gridview);
 		gv.setAdapter(adapter);
 		
@@ -53,7 +53,7 @@ public class FocusImageGridFragment extends Fragment {
 				Intent intent = new Intent();
 				intent.setAction(android.content.Intent.ACTION_VIEW);
 				mCursor.moveToPosition(positionInView);
-				String filePath = mCursor.getString(FocusBoardManager.COL_INDEX_FILE_PATH);
+				String filePath = mCursor.getString(MantraBoardManager.COL_INDEX_FILE_PATH);
 				Log.d(CN+".onItemClick", "filePath = " + filePath);
 				intent.setDataAndType(Uri.fromFile(new File(filePath)), "image/*");
 				startActivity(intent);

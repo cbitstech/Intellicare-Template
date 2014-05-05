@@ -1,7 +1,7 @@
 package edu.northwestern.cbits.intellicare.mantra.activities;
 
-import edu.northwestern.cbits.intellicare.mantra.FocusBoard;
-import edu.northwestern.cbits.intellicare.mantra.FocusBoardManager;
+import edu.northwestern.cbits.intellicare.mantra.MantraBoard;
+import edu.northwestern.cbits.intellicare.mantra.MantraBoardManager;
 import edu.northwestern.cbits.intellicare.mantra.R;
 import android.app.Activity;
 import android.content.Intent;
@@ -21,7 +21,7 @@ public class NewFocusBoardActivity extends Activity implements OnItemSelectedLis
 
 	public final static String CN = "NewFocusBoardActivity";
 	public final static String FOCUS_BOARD_ID = "edu.northwestern.cbits.intellicare.mantra.FOCUS_BOARD_ID";
-	private FocusBoardManager mFocusBoardManager;
+	private MantraBoardManager mFocusBoardManager;
 	private static NewFocusBoardActivity self = null;
 	
 	@Override
@@ -32,7 +32,7 @@ public class NewFocusBoardActivity extends Activity implements OnItemSelectedLis
 		
 		Log.d(CN+".onCreate", "entered");
 		
-		mFocusBoardManager = FocusBoardManager.get(this);
+		mFocusBoardManager = MantraBoardManager.get(this);
 		populateSpinner();
 		
 		addCancelListener();
@@ -78,8 +78,7 @@ public class NewFocusBoardActivity extends Activity implements OnItemSelectedLis
 
 	private void addSubmitListener() {
 		Button submitButton = (Button) findViewById(R.id.new_focus_board_submit);
-//		final Intent intent = new Intent(this, FocusBoardActivity.class);
-		final Intent intent = new Intent(this, SoloFocusBoardActivity.class);
+		final Intent intent = new Intent(this, SingleMantraBoardActivity.class);
 		submitButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -89,17 +88,17 @@ public class NewFocusBoardActivity extends Activity implements OnItemSelectedLis
 				if (mantra.equals("")) {
 					Toast.makeText(NewFocusBoardActivity.this, R.string.empty_mantra_toast, Toast.LENGTH_SHORT) .show();
 				} else {
-					FocusBoard focusBoard = mFocusBoardManager.createFocusBoard(mantra);
-					intent.putExtra(FOCUS_BOARD_ID, focusBoard.getId());
+					MantraBoard mantraBoard = mFocusBoardManager.createFocusBoard(mantra);
+					intent.putExtra(FOCUS_BOARD_ID, mantraBoard.getId());
 
 					// handle image-URI-passing intent from HomeActivity
-					Intent intentFromHomeActivity = getIntent();
-					if(intentFromHomeActivity != null) {
-						Uri uriFromImageBrowser = intentFromHomeActivity.getData();
+					Intent intentFromIndexActivity = getIntent();
+					if(intentFromIndexActivity != null) {
+						Uri uriFromImageBrowser = intentFromIndexActivity.getData();
 						if(uriFromImageBrowser != null) {
 							// get the URL returned by the image browser
 							Log.d(CN+".addSubmitListener", "uriFromImageBrowser = " + uriFromImageBrowser.toString());
-							intent.setData(intentFromHomeActivity.getData());
+							intent.setData(intentFromIndexActivity.getData());
 						}
 					}
 					
