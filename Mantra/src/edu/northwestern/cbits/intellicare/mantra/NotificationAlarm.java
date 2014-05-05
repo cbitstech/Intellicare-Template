@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusBoardCursor;
+import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.MantraBoardCursor;
 import edu.northwestern.cbits.intellicare.mantra.activities.ProgressActivity;
 import edu.northwestern.cbits.intellicare.mantra.activities.ReviewActivity;
 //import edu.northwestern.cbits.intellicare.mantra.activities.TransparentActivity;
@@ -43,7 +43,7 @@ public class NotificationAlarm extends BroadcastReceiver
 {	
 	public static final String _12H_RENOTIFICATION = "12hRenotification";
 	private static final String CN = "NotificationAlarm";
-	public final static int IMAGE_SCAN_RATE_MINUTES = 1;
+	public final static int IMAGE_SCAN_RATE_MINUTES = 5;
 	private final static int ALARM_POLLING_RATE_MILLIS = 1000 * 60 * IMAGE_SCAN_RATE_MINUTES; 				// Millisec * Second * Minute
 	private static boolean isAlreadyCalled = false;
 	private Context self = null;
@@ -80,11 +80,11 @@ public class NotificationAlarm extends BroadcastReceiver
         	 Log.d(CN+".onReceive", "at h = " + currHour + ", m = " + currMin + ", MAKE STARTING NOTIFICATION");
         	 
         	 // put the user's list of mantra boards in the notification
-        	 FocusBoardCursor mantraItemCursor = FocusBoardManager.get(context).queryFocusBoards();
+        	 MantraBoardCursor mantraItemCursor = MantraBoardManager.get(context).queryFocusBoards();
         	 ArrayList<String> al = new ArrayList<String>();
         	 while(mantraItemCursor.moveToNext()) {
         		 al.add(
-        				 FocusBoardManager.get(context).getFocusBoard(
+        				 MantraBoardManager.get(context).getFocusBoard(
         						 mantraItemCursor.getLong(
         								 mantraItemCursor.getColumnIndex("_id")
 								 )

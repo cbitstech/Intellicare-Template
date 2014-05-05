@@ -1,6 +1,6 @@
 package edu.northwestern.cbits.intellicare.mantra;
 
-import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusBoardCursor;
+import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.MantraBoardCursor;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -10,11 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class FocusBoardCursorAdapter extends CursorAdapter {
+public class MantraBoardCursorAdapter extends CursorAdapter {
 	
-	private FocusBoardCursor mFocusBoardCursor;
+	private MantraBoardCursor mFocusBoardCursor;
 
-	public FocusBoardCursorAdapter(Context context, FocusBoardCursor cursor) {
+	public MantraBoardCursorAdapter(Context context, MantraBoardCursor cursor) {
 		super(context, cursor, 0);
 		mFocusBoardCursor = cursor;
 	}
@@ -27,8 +27,8 @@ public class FocusBoardCursorAdapter extends CursorAdapter {
 	
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-		FocusBoard focusBoard = mFocusBoardCursor.getFocusBoard();
+		MantraBoard mantraBoard = mFocusBoardCursor.getFocusBoard();
 		TextView mantraTextView = (TextView)view;
-		mantraTextView.setText(focusBoard.getMantra());
+		mantraTextView.setText(mantraBoard.getMantra());
 	}
 }

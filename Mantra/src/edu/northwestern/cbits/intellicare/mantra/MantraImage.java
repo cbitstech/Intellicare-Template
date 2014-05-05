@@ -1,13 +1,13 @@
 package edu.northwestern.cbits.intellicare.mantra;
 
-public class FocusImage {
+public class MantraImage {
 
 	private long mId;
 	private long mFocusBoardId;
 	private String mPath;
 	private String mCaption;
 
-	public FocusImage() {
+	public MantraImage() {
 		mId = -1;
 	}
 

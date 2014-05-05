@@ -1,6 +1,6 @@
 package edu.northwestern.cbits.intellicare.mantra;
 
-import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusImageCursor;
+import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.MantraImageCursor;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,11 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-public class FocusImageCursorAdapter extends CursorAdapter {
+public class MantraImageCursorAdapter extends CursorAdapter {
 	
-	private FocusImageCursor mFocusImageCursor;
+	private MantraImageCursor mFocusImageCursor;
 
-	public FocusImageCursorAdapter(Context context, FocusImageCursor cursor) {
+	public MantraImageCursorAdapter(Context context, MantraImageCursor cursor) {
 		super(context, cursor, 0);
 		mFocusImageCursor = cursor;
 	}
@@ -29,9 +29,9 @@ public class FocusImageCursorAdapter extends CursorAdapter {
 	
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-		FocusImage focusImage = mFocusImageCursor.getFocusImage();
+		MantraImage mantraImage = mFocusImageCursor.getFocusImage();
 		ImageView imageView = (ImageView)view;
-		imageView.setImageDrawable(drawablePhoto(focusImage.getPath(), context));
+		imageView.setImageDrawable(drawablePhoto(mantraImage.getPath(), context));
 	}
 	
 	private Drawable drawablePhoto(String path, Context context) {

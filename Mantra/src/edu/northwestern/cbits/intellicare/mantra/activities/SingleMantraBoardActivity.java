@@ -33,22 +33,22 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusImageCursor;
-import edu.northwestern.cbits.intellicare.mantra.FocusBoard;
-import edu.northwestern.cbits.intellicare.mantra.FocusBoardManager;
-import edu.northwestern.cbits.intellicare.mantra.FocusImage;
+import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.MantraImageCursor;
+import edu.northwestern.cbits.intellicare.mantra.MantraBoard;
+import edu.northwestern.cbits.intellicare.mantra.MantraBoardManager;
+import edu.northwestern.cbits.intellicare.mantra.MantraImage;
 import edu.northwestern.cbits.intellicare.mantra.MediaScannerService;
 import edu.northwestern.cbits.intellicare.mantra.Paths;
 import edu.northwestern.cbits.intellicare.mantra.PictureUtils;
 import edu.northwestern.cbits.intellicare.mantra.R;
 import edu.northwestern.cbits.intellicare.mantra.Util;
 
-public class SoloFocusBoardActivity extends ActionBarActivity {
+public class SingleMantraBoardActivity extends ActionBarActivity {
 
-	private static final String CN = "FocusBoardActivity";
-	private final SoloFocusBoardActivity self = this;
+	private static final String CN = "SingleMantraBoardActivity";
+	private final SingleMantraBoardActivity self = this;
 	
-	private FocusBoardManager mManager;
+	private MantraBoardManager mManager;
 	private long mFocusBoardId = -1;
 
 	private static int RESULT_LOAD_IMAGE = 1;
@@ -56,7 +56,7 @@ public class SoloFocusBoardActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d("FocusBoardActivity.onCreate", "entered");
+		Log.d(CN+".onCreate", "entered");
 
 		this.setContentView(R.layout.solo_focus_board_activity);
 
@@ -73,11 +73,11 @@ public class SoloFocusBoardActivity extends ActionBarActivity {
 		Intent intent = this.getIntent();
 
 		this.mFocusBoardId = intent.getLongExtra(NewFocusBoardActivity.FOCUS_BOARD_ID, -1);
-		mManager = FocusBoardManager.get(this);
+		mManager = MantraBoardManager.get(this);
 
-		FocusBoard focusBoard = mManager.getFocusBoard(this.mFocusBoardId);
+		MantraBoard mantraBoard = mManager.getFocusBoard(this.mFocusBoardId);
 
-		this.getSupportActionBar().setTitle(focusBoard.getMantra());
+		this.getSupportActionBar().setTitle(mantraBoard.getMantra());
 
 		try 
 		{
@@ -98,7 +98,7 @@ public class SoloFocusBoardActivity extends ActionBarActivity {
 		setContentView(R.layout.no_fragments_home_activity);
 		final GridView gv = (GridView) this.findViewById(R.id.gridview);
 
-		final FocusImageCursor cursor = FocusBoardManager.get(this).queryFocusImages(this.mFocusBoardId);
+		final MantraImageCursor cursor = MantraBoardManager.get(this).queryFocusImages(this.mFocusBoardId);
 		Util.logCursor(cursor);
 		
 		@SuppressWarnings("deprecation")
@@ -106,19 +106,19 @@ public class SoloFocusBoardActivity extends ActionBarActivity {
 
 			public void bindView(View view, Context context, Cursor c) 
 			{
-				if (c instanceof FocusImageCursor)
+				if (c instanceof MantraImageCursor)
 				{
-					FocusImageCursor mFocusImageCursor = (FocusImageCursor) c;
-					FocusImage focusImage = mFocusImageCursor.getFocusImage();
+					MantraImageCursor mFocusImageCursor = (MantraImageCursor) c;
+					MantraImage mantraImage = mFocusImageCursor.getFocusImage();
 					ImageView imageView = (ImageView) view.findViewById(R.id.imageThumb);
-					Drawable d = PictureUtils.getScaledDrawable(self, focusImage.getPath());
+					Drawable d = PictureUtils.getScaledDrawable(self, mantraImage.getPath());
 					imageView.setImageDrawable(d);
 
 					// view.setBackgroundColor(0x80ff0000);
 
 					// set the caption
 					TextView tv = (TextView) view.findViewById(R.id.imageCaption);
-					String captionText = focusImage.getCaption();
+					String captionText = mantraImage.getCaption();
 					tv.setText(captionText);
 				}
 			}
@@ -141,7 +141,7 @@ public class SoloFocusBoardActivity extends ActionBarActivity {
 				Intent intent = new Intent();
 				intent.setAction(android.content.Intent.ACTION_VIEW);
 				cursor.moveToPosition(positionInView);
-				String filePath = cursor.getString(FocusBoardManager.COL_INDEX_FILE_PATH);
+				String filePath = cursor.getString(MantraBoardManager.COL_INDEX_FILE_PATH);
 				Log.d(CN+".onItemClick", "filePath = " + filePath);
 				intent.setDataAndType(Uri.fromFile(new File(filePath)), "image/*");
 				startActivity(intent);
@@ -176,7 +176,7 @@ public class SoloFocusBoardActivity extends ActionBarActivity {
 								// get the current caption
 								// v2: via database
 								final View v = self.getLayoutInflater().inflate(R.layout.edit_text_field, null);
-								FocusImage fi = FocusBoardManager.get(self).getFocusImage(id);
+								MantraImage fi = MantraBoardManager.get(self).getFocusImage(id);
 								((EditText) v.findViewById(R.id.text_dialog)).setText(fi.getCaption());
 
 								AlertDialog.Builder editTextDlg = new AlertDialog.Builder(self);
@@ -188,9 +188,9 @@ public class SoloFocusBoardActivity extends ActionBarActivity {
 										// update the selected mantra's text
 //										Toast.makeText(self, "Mantra text should change.", Toast.LENGTH_SHORT).show();
 										String newCaption = ((EditText) v.findViewById(R.id.text_dialog)).getText().toString();
-										FocusImage fi = FocusBoardManager.get(self).getFocusImage(id);
+										MantraImage fi = MantraBoardManager.get(self).getFocusImage(id);
 										fi.setCaption(newCaption);
-										long updateRet = FocusBoardManager.get(self).setFocusImage(fi);
+										long updateRet = MantraBoardManager.get(self).setFocusImage(fi);
 										Log.d(CN+".onItemLongClick....onClick", "updateRet = " + updateRet);
 										attachGridView();
 									}
@@ -211,7 +211,7 @@ public class SoloFocusBoardActivity extends ActionBarActivity {
 									
 									@Override
 									public void onClick(DialogInterface dialog, int which) {
-										int rowsDeleted = FocusBoardManager.get(self).deleteFocusImage(id);
+										int rowsDeleted = MantraBoardManager.get(self).deleteFocusImage(id);
 										attachGridView();
 										Log.d(CN+".onItemLongClick....onClick", "deleted row = " + id + "; deleted row count = " + rowsDeleted);
 									}
@@ -273,8 +273,8 @@ public class SoloFocusBoardActivity extends ActionBarActivity {
 			
 			if(selectedImage != null && selectedImage.toString().length() > 0) {
 				mFocusBoardId = intent.getLongExtra(NewFocusBoardActivity.FOCUS_BOARD_ID, -1);
-				mManager = FocusBoardManager.get(this);
-				FocusBoard focusBoard = mManager.getFocusBoard(mFocusBoardId);
+				mManager = MantraBoardManager.get(this);
+				MantraBoard mantraBoard = mManager.getFocusBoard(mFocusBoardId);
 
 				Log.d(CN+".handleSelectedImageIntent", "selectedImage = " + selectedImage.toString());
 				String filePathToImageInTmpFolder = Paths.getRealPathFromURI(this, selectedImage).trim();
@@ -313,11 +313,11 @@ public class SoloFocusBoardActivity extends ActionBarActivity {
 		Log.d(CN+".applyNewImageToMantra", "entered");
 		// search the image set for a particular image path, and if the image isn't already associated with the board,
 		// then associate it. 
-		FocusImageCursor fic = mManager.queryFocusImages(mFocusBoardId );
+		MantraImageCursor fic = mManager.queryFocusImages(mFocusBoardId );
 		boolean imageAlreadyAssociated = false;
 		Util.logCursor(fic);
 		while(fic.moveToNext()) {
-			String path = fic.getString(FocusBoardManager.COL_INDEX_FILE_PATH).trim();
+			String path = fic.getString(MantraBoardManager.COL_INDEX_FILE_PATH).trim();
 			Log.d(CN+".applyNewImageToMantra", "path.equals(filePathToImage) = " + (path.equals(imageFile.getAbsolutePath())) + "; path = \"" + path + "\"" + "; imageFile.getAbsolutePath() = \"" + imageFile.getAbsolutePath() + "\"");
 			if(path.equals(imageFile.getAbsolutePath())) {
 				Toast.makeText(this, "Image already applied. Consider choosing a different one!", Toast.LENGTH_LONG).show();
