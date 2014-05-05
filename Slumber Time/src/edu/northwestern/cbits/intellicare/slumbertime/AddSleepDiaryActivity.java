@@ -4,8 +4,10 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -24,6 +27,8 @@ import edu.northwestern.cbits.intellicare.logging.LogManager;
 public class AddSleepDiaryActivity extends ConsentedActivity
 {
 	private static final String SELECTED_RADIO = "selected_radio";
+	private static final String SELECTED_RADIO_ALCOHOL = "selected_alcohol";
+	private static final String SELECTED_RADIO_CAFFEINE = "selected_caffeine";
 	private static final String SELECTED_EARLIER = "selected_earlier";
 	private static final String SELECTED_BED_HOUR = "selected_bed_hour";
 	private static final String SELECTED_BED_MINUTE = "selected_bed_minute";
@@ -50,6 +55,11 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 	protected int _wakeCount = -1;
 	protected int _sleepQuality = -1;
 	protected int _sleepRested = -1;
+	protected String _napDuration = null;
+	protected String _alcoholAmount = null;
+	protected String _alcoholTime = null;
+	protected String _caffeineTime = null;
+	protected String _caffeineAmount = null;
 
 	public static final Uri URI = Uri.parse("intellicare://slumber/sleep-diary");
 
@@ -64,7 +74,19 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 		
 		if (napChecked != -1)
 			outState.putInt(AddSleepDiaryActivity.SELECTED_RADIO, napChecked);
+
+		RadioGroup alcoholRadios = (RadioGroup) this.findViewById(R.id.radios_alcohol);
+		int alcoholChecked = alcoholRadios.getCheckedRadioButtonId();
 		
+		if (alcoholChecked != -1)
+			outState.putInt(AddSleepDiaryActivity.SELECTED_RADIO_ALCOHOL, alcoholChecked);
+		
+		RadioGroup caffeineRadios = (RadioGroup) this.findViewById(R.id.radios_caffeine);
+		int caffeineChecked = caffeineRadios.getCheckedRadioButtonId();
+		
+		if (caffeineChecked != -1)
+			outState.putInt(AddSleepDiaryActivity.SELECTED_RADIO_CAFFEINE, caffeineChecked);
+
 		RadioGroup earlierRadios = (RadioGroup) this.findViewById(R.id.radios_earlier);
 		int earlierChecked = earlierRadios.getCheckedRadioButtonId();
 
@@ -437,7 +459,7 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 		{
 			public void onProgressChanged(SeekBar bar, int position, boolean fromUser) 
 			{
-				me._sleepQuality   = position;
+				me._sleepQuality = position;
 
 				switch (position)
 				{
@@ -469,11 +491,6 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 
 			}
 		});
-
-		
-		
-		
-		
 		
 		final TextView restedLabel = (TextView) this.findViewById(R.id.label_rested);
 		
@@ -521,10 +538,205 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 		});
 
 		RadioGroup nap = (RadioGroup) this.findViewById(R.id.radios_nap);
+		
+		final View napLength = this.findViewById(R.id.question_nap_length);
+		final TextView napLengthTap = (TextView) this.findViewById(R.id.field_nap_length);
+		
+		nap.setOnCheckedChangeListener(new OnCheckedChangeListener()
+		{
+			public void onCheckedChanged(RadioGroup arg0, int id) 
+			{
+				if (id == R.id.nap_yes)
+				{
+					napLength.setVisibility(View.VISIBLE);
+					napLengthTap.setVisibility(View.VISIBLE);
+				}
+				else
+				{
+					napLength.setVisibility(View.GONE);
+					napLengthTap.setVisibility(View.GONE);
+				}
+			}
+		});
+		
+		napLengthTap.setOnClickListener(new OnClickListener()
+		{
+			public void onClick(View arg0) 
+			{
+				AlertDialog.Builder builder = new AlertDialog.Builder(me);
+				builder.setTitle(R.string.question_nap_length);
+				
+				final String[] items = me.getResources().getStringArray(R.array.nap_labels);
+				
+				builder.setItems(items, new DialogInterface.OnClickListener() 
+				{
+					public void onClick(DialogInterface dialog, int which) 
+					{
+						me._napDuration = items[which];
+						napLengthTap.setText(items[which]);
+					}
+				});
+				
+				builder.create().show();
+			}
+		});
 
 		if (savedInstanceState.containsKey(AddSleepDiaryActivity.SELECTED_RADIO))
 			nap.check(savedInstanceState.getInt(AddSleepDiaryActivity.SELECTED_RADIO));
 
+		RadioGroup alcohol = (RadioGroup) this.findViewById(R.id.radios_alcohol);
+		
+		final View alcoholAmount = this.findViewById(R.id.question_alcohol_quantity);
+		final TextView alcoholAmountTap = (TextView) this.findViewById(R.id.field_alcohol_quantity);
+
+		final View alcoholTime = this.findViewById(R.id.question_alcohol_time);
+		final TextView alcoholTimeTap = (TextView) this.findViewById(R.id.field_alcohol_time);
+
+		alcohol.setOnCheckedChangeListener(new OnCheckedChangeListener()
+		{
+			public void onCheckedChanged(RadioGroup arg0, int id) 
+			{
+				if (id == R.id.alcohol_yes)
+				{
+					alcoholTime.setVisibility(View.VISIBLE);
+					alcoholTimeTap.setVisibility(View.VISIBLE);
+					alcoholAmount.setVisibility(View.VISIBLE);
+					alcoholAmountTap.setVisibility(View.VISIBLE);
+				}
+				else
+				{
+					alcoholTime.setVisibility(View.GONE);
+					alcoholTimeTap.setVisibility(View.GONE);
+					alcoholAmount.setVisibility(View.GONE);
+					alcoholAmountTap.setVisibility(View.GONE);
+				}
+			}
+		});
+		
+		alcoholAmountTap.setOnClickListener(new OnClickListener()
+		{
+			public void onClick(View arg0) 
+			{
+				AlertDialog.Builder builder = new AlertDialog.Builder(me);
+				builder.setTitle(R.string.question_alcohol_amount);
+				
+				final String[] items = me.getResources().getStringArray(R.array.alcohol_amount_labels);
+				
+				builder.setItems(items, new DialogInterface.OnClickListener() 
+				{
+					public void onClick(DialogInterface dialog, int which) 
+					{
+						me._alcoholAmount  = items[which];
+						alcoholAmountTap.setText(items[which]);
+					}
+				});
+				
+				builder.create().show();
+			}
+		});
+
+		alcoholTimeTap.setOnClickListener(new OnClickListener()
+		{
+			public void onClick(View arg0) 
+			{
+				AlertDialog.Builder builder = new AlertDialog.Builder(me);
+				builder.setTitle(R.string.question_alcohol_time);
+				
+				final String[] items = me.getResources().getStringArray(R.array.alcohol_time_labels);
+				
+				builder.setItems(items, new DialogInterface.OnClickListener() 
+				{
+					public void onClick(DialogInterface dialog, int which) 
+					{
+						me._alcoholTime   = items[which];
+						alcoholTimeTap.setText(items[which]);
+					}
+				});
+				
+				builder.create().show();
+			}
+		});
+
+		if (savedInstanceState.containsKey(AddSleepDiaryActivity.SELECTED_RADIO_ALCOHOL))
+			alcohol.check(savedInstanceState.getInt(AddSleepDiaryActivity.SELECTED_RADIO_ALCOHOL));
+
+
+		RadioGroup caffeine = (RadioGroup) this.findViewById(R.id.radios_caffeine);
+		
+		final View caffeineAmount = this.findViewById(R.id.question_caffeine_quantity);
+		final TextView caffeineAmountTap = (TextView) this.findViewById(R.id.field_caffeine_quantity);
+
+		final View caffeineTime = this.findViewById(R.id.question_caffeine_time);
+		final TextView caffeineTimeTap = (TextView) this.findViewById(R.id.field_caffeine_time);
+
+		caffeine.setOnCheckedChangeListener(new OnCheckedChangeListener()
+		{
+			public void onCheckedChanged(RadioGroup arg0, int id) 
+			{
+				if (id == R.id.caffeine_yes)
+				{
+					caffeineTime.setVisibility(View.VISIBLE);
+					caffeineTimeTap.setVisibility(View.VISIBLE);
+					caffeineAmount.setVisibility(View.VISIBLE);
+					caffeineAmountTap.setVisibility(View.VISIBLE);
+				}
+				else
+				{
+					caffeineTime.setVisibility(View.GONE);
+					caffeineTimeTap.setVisibility(View.GONE);
+					caffeineAmount.setVisibility(View.GONE);
+					caffeineAmountTap.setVisibility(View.GONE);
+				}
+			}
+		});
+		
+		caffeineAmountTap.setOnClickListener(new OnClickListener()
+		{
+			public void onClick(View arg0) 
+			{
+				AlertDialog.Builder builder = new AlertDialog.Builder(me);
+				builder.setTitle(R.string.question_caffeine_amount);
+				
+				final String[] items = me.getResources().getStringArray(R.array.caffeine_amount_labels);
+				
+				builder.setItems(items, new DialogInterface.OnClickListener() 
+				{
+					public void onClick(DialogInterface dialog, int which) 
+					{
+						me._caffeineAmount  = items[which];
+						caffeineAmountTap.setText(items[which]);
+					}
+				});
+				
+				builder.create().show();
+			}
+		});
+
+		caffeineTimeTap.setOnClickListener(new OnClickListener()
+		{
+			public void onClick(View arg0) 
+			{
+				AlertDialog.Builder builder = new AlertDialog.Builder(me);
+				builder.setTitle(R.string.question_caffeine_time);
+				
+				final String[] items = me.getResources().getStringArray(R.array.alcohol_time_labels);
+				
+				builder.setItems(items, new DialogInterface.OnClickListener() 
+				{
+					public void onClick(DialogInterface dialog, int which) 
+					{
+						me._caffeineTime = items[which];
+						caffeineTimeTap.setText(items[which]);
+					}
+				});
+				
+				builder.create().show();
+			}
+		});
+
+		if (savedInstanceState.containsKey(AddSleepDiaryActivity.SELECTED_RADIO_CAFFEINE))
+			caffeine.check(savedInstanceState.getInt(AddSleepDiaryActivity.SELECTED_RADIO_CAFFEINE));
+		
 		RadioGroup earlier = (RadioGroup) this.findViewById(R.id.radios_earlier);
 
 		if (savedInstanceState.containsKey(AddSleepDiaryActivity.SELECTED_EARLIER))
@@ -554,9 +766,59 @@ public class AddSleepDiaryActivity extends ConsentedActivity
 				return true;
 			}
 			
-			values.put(SlumberContentProvider.DIARY_NAP, (napChecked == R.id.nap_yes));
+			if (napChecked == R.id.nap_yes)
+			{
+				values.put(SlumberContentProvider.DIARY_NAP, true);
+				
+				if (this._napDuration != null)
+					values.put(SlumberContentProvider.DIARY_NAP_DURATION, this._napDuration);
+			}
 
 			payload.put("napped", (napChecked == R.id.nap_yes));
+			
+			RadioGroup alcoholRadios = (RadioGroup) this.findViewById(R.id.radios_alcohol);
+			int alcoholChecked = alcoholRadios.getCheckedRadioButtonId();
+			
+			if (alcoholChecked == -1)
+			{
+				Toast.makeText(this, R.string.message_complete_alcohol, Toast.LENGTH_SHORT).show();
+				return true;
+			}
+			
+			if (alcoholChecked == R.id.alcohol_yes)
+			{
+				values.put(SlumberContentProvider.DIARY_ALCOHOL, true);
+				
+				if (this._alcoholAmount != null)
+					values.put(SlumberContentProvider.DIARY_ALCOHOL_AMOUNT, this._alcoholAmount);
+
+				if (this._alcoholTime != null)
+					values.put(SlumberContentProvider.DIARY_ALCOHOL_TIME, this._alcoholTime);
+			}
+
+			payload.put("alcohol", (alcoholChecked == R.id.alcohol_yes));
+
+			RadioGroup caffeineRadios = (RadioGroup) this.findViewById(R.id.radios_caffeine);
+			int caffeineChecked = caffeineRadios.getCheckedRadioButtonId();
+			
+			if (caffeineChecked == -1)
+			{
+				Toast.makeText(this, R.string.message_complete_caffeine, Toast.LENGTH_SHORT).show();
+				return true;
+			}
+			
+			if (caffeineChecked == R.id.caffeine_yes)
+			{
+				values.put(SlumberContentProvider.DIARY_CAFFEINE, true);
+				
+				if (this._caffeineAmount != null)
+					values.put(SlumberContentProvider.DIARY_CAFFEINE_AMOUNT, this._caffeineAmount);
+
+				if (this._caffeineTime != null)
+					values.put(SlumberContentProvider.DIARY_CAFFEINE_TIME, this._caffeineTime);
+			}
+
+			payload.put("caffeine", (caffeineChecked == R.id.caffeine_yes));
 
 			RadioGroup earlierRadios = (RadioGroup) this.findViewById(R.id.radios_earlier);
 

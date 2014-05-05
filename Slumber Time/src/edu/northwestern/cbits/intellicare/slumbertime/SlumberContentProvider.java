@@ -68,7 +68,7 @@ public class SlumberContentProvider extends ContentProvider
     public static final Uri SLEEP_DIARIES_URI = Uri.parse("content://" + AUTHORITY + "/" + SLEEP_DIARIES_TABLE);
     public static final Uri SENSOR_READINGS_URI = Uri.parse("content://" + AUTHORITY + "/" + SENSOR_READINGS_TABLE);
 
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
 
     public static final String ALARM_NAME = "name";
     public static final String ALARM_HOUR = "hour";
@@ -121,6 +121,14 @@ public class SlumberContentProvider extends ContentProvider
 
 	public static final String READING_MINIMUM = "reading_minimum";
 	public static final String READING_MULTIPLIER = "reading_multiplier";
+
+	public static final String DIARY_NAP_DURATION = "nap_duration";
+	public static final String DIARY_ALCOHOL = "had_alcohol";
+	public static final String DIARY_ALCOHOL_AMOUNT = "alcohol_amount";
+	public static final String DIARY_ALCOHOL_TIME = "alcohol_time";
+	public static final String DIARY_CAFFEINE = "had_caffeine";
+	public static final String DIARY_CAFFEINE_AMOUNT = "caffeine_amount";
+	public static final String DIARY_CAFFEINE_TIME = "caffeine_time";
 
     private UriMatcher _matcher = new UriMatcher(UriMatcher.NO_MATCH);
     private SQLiteDatabase _db = null;
@@ -189,6 +197,14 @@ public class SlumberContentProvider extends ContentProvider
 	                	db.execSQL(context.getString(R.string.db_create_sensor_readings_table));
 	                case 7:
 	                	db.execSQL(context.getString(R.string.db_update_sleep_diary_add_rested));
+	                case 8:
+	                	db.execSQL(context.getString(R.string.db_update_sleep_diary_add_nap_duration));
+	                	db.execSQL(context.getString(R.string.db_update_sleep_diary_add_had_alcohol));
+	                	db.execSQL(context.getString(R.string.db_update_sleep_diary_add_alcohol_amount));
+	                	db.execSQL(context.getString(R.string.db_update_sleep_diary_add_alcohol_time));
+	                	db.execSQL(context.getString(R.string.db_update_sleep_diary_add_had_caffeine));
+	                	db.execSQL(context.getString(R.string.db_update_sleep_diary_add_caffeine_amount));
+	                	db.execSQL(context.getString(R.string.db_update_sleep_diary_add_caffeine_time));
 	                default:
                         break;
             	}
@@ -419,9 +435,18 @@ public class SlumberContentProvider extends ContentProvider
 		double minValue = Double.MAX_VALUE;
 		double maxValue = 0 - Double.MAX_VALUE;
 		
+		double[] readings = new double[c.getCount()];
+		long[] recordeds = new long[readings.length];
+		int index = 0;
+		
 		while (c.moveToNext())
 		{
 			double reading = c.getDouble(c.getColumnIndex(SlumberContentProvider.READING_VALUE));
+			
+			readings[index] = reading;
+			recordeds[index] = c.getLong(c.getColumnIndex(SlumberContentProvider.READING_RECORDED));
+
+			index += 1;
 			
 			if (reading > maxValue)
 				maxValue = reading;
@@ -434,14 +459,16 @@ public class SlumberContentProvider extends ContentProvider
 			maxValue = SlumberContentProvider.MAX_LIGHT_LEVEL;
 
 		double spread = maxValue - minValue;
-
-		c.moveToPosition(-1);
 		
+		c.close();
+		
+
 		DescriptiveStatistics stats = new DescriptiveStatistics();
 		
-		while (c.moveToNext())
+		for (int i = 0; i < readings.length; i++)
 		{
-			double reading = c.getDouble(c.getColumnIndex(SlumberContentProvider.READING_VALUE));
+			double reading = readings[i];
+			long recorded = recordeds[i];
 			
 			if (reading > maxValue)
 				reading = maxValue;
@@ -451,14 +478,12 @@ public class SlumberContentProvider extends ContentProvider
 			
 			double normalized = (reading - minValue) / spread;
 			
-			Object[] values = {c.getLong(c.getColumnIndex(SlumberContentProvider.READING_RECORDED)), normalized, minValue, spread };
+			Object[] values = {recorded, normalized, minValue, spread };
 			
 			retCursor.addRow(values);
 			
 			stats.addValue(normalized);
 		}
-		
-		c.close();
 		
 		retCursor.moveToPosition(-1);
 
