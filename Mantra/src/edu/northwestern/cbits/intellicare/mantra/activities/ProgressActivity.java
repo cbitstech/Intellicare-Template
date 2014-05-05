@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -204,7 +205,8 @@ public class ProgressActivity extends ConsentedActivity {
 		    }
 		};
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Theme_AppCompat_Light));
 		builder.setMessage("Download and choose from the images at this URL?: \"" + url + "\"")
 			.setPositiveButton("Yes", dialogClickListener)
 		    .setNegativeButton("No", dialogClickListener)
