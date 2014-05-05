@@ -17,6 +17,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,7 +30,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -62,7 +62,7 @@ public class ScheduleActivity extends ConsentedActivity
         
         final ActionBar actionBar = this.getSupportActionBar();
         
-		actionBar.setTitle("tOdO: Schedule ActiviTY");
+		actionBar.setTitle(R.string.title_schedule);
         
         ViewPager pager = (ViewPager) this.findViewById(R.id.pager_content);
         pager.setOffscreenPageLimit(0);
@@ -201,7 +201,7 @@ public class ScheduleActivity extends ConsentedActivity
 	    	
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			
-			builder.setTitle("SeLeCt sUppORTeR");
+			builder.setTitle(R.string.title_select_supporter);
 			
 			List<ContactRecord> contacts = ContactCalibrationHelper.fetchContactRecords(this);
 			
@@ -245,6 +245,14 @@ public class ScheduleActivity extends ConsentedActivity
 				}
 			});
 			
+			builder.setOnCancelListener(new OnCancelListener()
+			{
+				public void onCancel(DialogInterface arg0) 
+				{
+					me.finish();
+				}
+			});
+			
 			builder.create().show();
     	}
     }
@@ -255,7 +263,8 @@ public class ScheduleActivity extends ConsentedActivity
         final ViewPager pager = (ViewPager) this.findViewById(R.id.pager_content);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("What CoULD you MaKE TimE For THis WeeK?");
+        builder.setCancelable(false);
+		builder.setTitle(R.string.title_make_time);
 		
 		final String[] activities = this.getResources().getStringArray(R.array.positive_activities);
 		
@@ -270,7 +279,7 @@ public class ScheduleActivity extends ConsentedActivity
 				else
 				{
 		    		AlertDialog.Builder builder = new AlertDialog.Builder(me);
-		    		builder.setTitle("What WOUlD YOu LIKe To DO?");
+		    		builder.setTitle(R.string.title_select_activity);
 		    		
 		    		final String[] meetUpActivities = me.getActivities();
 		    		
@@ -281,7 +290,7 @@ public class ScheduleActivity extends ConsentedActivity
 							if (which == meetUpActivities.length - 1) // Other
 							{
 								AlertDialog.Builder builder = new AlertDialog.Builder(me);
-								builder.setTitle("AdD neW AcTivItY");
+								builder.setTitle(R.string.title_new_activity);
 
 								LayoutInflater inflater = (LayoutInflater) me.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 								View view = inflater.inflate(R.layout.view_new_activity, null);
@@ -302,7 +311,7 @@ public class ScheduleActivity extends ConsentedActivity
 								
 								builder.setView(view);
 								
-								builder.setPositiveButton("cONTinUE", new DialogInterface.OnClickListener() 
+								builder.setPositiveButton(R.string.action_continue, new DialogInterface.OnClickListener() 
 								{
 									public void onClick(DialogInterface dialog, int which) 
 									{		

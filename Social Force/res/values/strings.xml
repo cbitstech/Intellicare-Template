@@ -10,7 +10,12 @@
     <string name="placeholder_rate">Rate&#8230;</string>
 
 	<string name="action_schedule">Schedule</string>
-    
+	<string name="action_continue">Continue</string>
+	<string name="action_yes">Yes</string>
+	<string name="action_no">No</string>
+		
+	<string name="subtitle_main">Pinch to zoom, tap a friend</string>
+	
     <string-array name="contact_roles">
         <item>Very Positive</item>
         <item>Positive</item>
@@ -29,7 +34,7 @@
     <string name="toast_no_companionship" formatted="false">%s does not provide companionship.</string>
 
     <string-array name="positive_activities">
-        <item>Meet up with a friend.</item>
+        <item>Meet up &amp; hang out.</item>
         <item>Call a friend.</item>
         <item>Text (SMS) a friend.</item>
     </string-array>
@@ -65,4 +70,28 @@
     
     <string name="instructions_review">Use this sliding scale to rate your experience of the activity you scheduled. Remember to rate what the activity was like WITH THAT PERSON.\n\nBy ""terrible"", we mean you didn\'t interact at all with the person, kind of like you were standing together in the same space but not talking the person you were with was rude doing the activity with this person lowered your mood you most likely not interact with this person in this way again.</string>
     <string name="title_review">Please rate your experience!</string>
+
+    <string name="title_make_time">What could you do this week?</string>
+    <string name="title_select_activity">Select an activity.</string>
+    <string name="title_new_activity">Create new activity.</string>
+    <string name="title_schedule">Schedule Activity</string>
+    
+    <string name="instruction_new_activity">Please enter a new activity.</string>
+    <string name="hint_new_activity">Your new activity&#8320;</string>
+    <string name="title_select_supporter">Select a supporter.</string>
+    
+    <string name="network_step_one">Step 1: Meet new people.</string>
+    <string name="network_step_one_content">The easiest way to meet people is to do something you like doing in the company of others.\n\nSince the main focus is the activity you are doing, not just meeting others, there will be less pressure on you than in a setting where the whole purpose is to meet people. That sounds just plain stressful!\n\nEven if you don\'t find anyone in particular that you enjoy, you will still have been doing something pleasant, something you like, and you won\'t feel like you wasted your time.</string>
+    <string name="network_step_one_a_content">Join a club or Meetup group.\n\nThere are tons of groups in your area, doing a lot of the things to do!</string>
+    
+    <string name="network_step_two">Step 2: Be friendly.</string>
+    <string name="network_step_two_content">[Friendly content goes here!]</string>
+    
+    <string name="network_step_three">Step 3: Plan activities.</string>
+    <string name="question_satisfied">Are you satisfied with your network?</string>
+    
+    <string name="label_emotional_support">Emotional Support</string>
+    <string name="label_practical_support">Practical Support</string>
+    <string name="label_companionship">Companionship</string>
+    <string name="label_advice">Advice</string>
 </resources>

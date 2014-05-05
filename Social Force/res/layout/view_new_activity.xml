@@ -3,7 +3,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="8dp">
-    <TextView android:text="pLease ENTER A neW ActiVITY."
+    <TextView android:text="@string/instruction_new_activity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
         android:textSize="18sp"/>
@@ -12,5 +12,5 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginTop="8dp"
-	    android:hint="EnTER nEW aCTIvitY" />
+	    android:hint="@string/hint_new_activity" />
 </LinearLayout>

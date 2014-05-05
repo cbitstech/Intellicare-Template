@@ -21,10 +21,11 @@
 				display: block;
 			} 
 		</style>
-	</head>
-	<body>
 		<script src="../vendor/jquery-1.11.0.min.js" charset="utf-8"></script>
 		<script src="../vendor/d3.v3.js"></script>
+		<script src="../vendor/fastclick.js"></script>
+	</head>
+	<body>
 		<script>
 			var root = VALUES_JSON;
 
@@ -35,6 +36,8 @@
 			
 			if (width < size)
 				size = width;
+				
+			size = size * 0.75;
 		
 			var diameter = size,
     			format = d3.format(",d"),
@@ -42,7 +45,7 @@
 
 			var bubble = d3.layout.pack()
    						   .sort(null)
-   						   .size([width, height])
+   						   .size([width, size])
    						   .padding(5);
 
 			var svg = d3.select("body").append("svg")
@@ -57,16 +60,11 @@
 						  .attr("class", "node")
 						  .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
-//			node.append("title")
-//				.text(function(d) { return d.className + ": " + format(d.value); });
-
 			node.append("circle")
 				.attr("r", function(d) { return d.r; })
 				.style("fill", function(d) 
 				{ 
 					var i = 0;
-					
-					console.log("PKG: " +  d.packageName);
 					
 					for (i = 0; i < root["children"].length; i++)
 					{
@@ -74,17 +72,37 @@
 						
 						if (child["name"] === d.className)
 						{
-							console.log("JSON: " + JSON.stringify(child));
-							
-							if ("color" in child)
+							if ("colors" in child)
 							{
-								return child["color"];
+								return child["colors"][Math.floor(Math.random() * child["colors"].length)];
 							}
 						}
 					}
 				
 					return color(d.packageName); 
 				});
+				
+			var start = false;
+
+			$("g").bind("touchstart", function(event)
+			{
+				start = true;
+			});
+
+			$(window).bind("scroll", function(event)
+			{
+				start = false;
+			});
+
+			$("g").bind("touchend", function(eventObj)
+			{
+				if (start)
+				{
+					android.selectByName($(eventObj.target).parent().find("text").text());
+				}
+					
+				start = false;
+			});
 
 			node.append("text")
 				.attr("dy", ".3em")
@@ -109,7 +127,7 @@
   				recurse(null, root);
   				return {children: classes};
 			}
-			d3.select(self.frameElement).style("height", height + "px");
+			d3.select(self.frameElement).style("height", size + "px");
 			d3.select(self.frameElement).style("width", width + "px");
 		</script>
 	</body>
