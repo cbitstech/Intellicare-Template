@@ -201,30 +201,36 @@ public class MainActivity extends ConsentedActivity
 		
 		for (ContactRecord contact : contacts)
 		{
-			if (contact.level != -1 && contact.name != null && contact.name.trim().length() > 0)
+			if (contact.level <= 2 && contact.level >= 0 && contact.name != null && contact.name.trim().length() > 0)
 			{
 				JSONObject bubble = new JSONObject();
 				bubble.put("name", contact.name);
 				bubble.put("size", contact.count);
 				
-				bubble.put("color", "#808080");
-
 				if (ContactCalibrationHelper.isAdvice(context, contact))
 				{
+					Log.e("SF", "ADVICE");
 					bubble.put("color", "#0099CC");
 				}
 				else if (ContactCalibrationHelper.isCompanion(context, contact))
 				{
+					Log.e("SF", "COMPANION");
 					bubble.put("color", "#9933CC");
 				}
 				else if (ContactCalibrationHelper.isEmotional(context, contact))
 				{
+					Log.e("SF", "EMOTIONAL");
 					bubble.put("color", "#CC0000");
-					
 				}
 				else if (ContactCalibrationHelper.isPractical(context, contact))
 				{
+					Log.e("SF", "PRACTICAL");
 					bubble.put("color", "#669900");
+				}
+				else
+				{
+					Log.e("SF", "DEFAULT");
+					bubble.put("color", "#808080");
 				}
 				
 				children.put(bubble);

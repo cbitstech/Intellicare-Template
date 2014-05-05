@@ -26,7 +26,6 @@
 		<script src="../vendor/jquery-1.11.0.min.js" charset="utf-8"></script>
 		<script src="../vendor/d3.v3.js"></script>
 		<script>
-		
 			var root = VALUES_JSON;
 
 			var width = $(window).width();
@@ -44,7 +43,7 @@
 			var bubble = d3.layout.pack()
    						   .sort(null)
    						   .size([width, height])
-   						   .padding(1.5);
+   						   .padding(5);
 
 			var svg = d3.select("body").append("svg")
 		   				.attr("width", width)
@@ -63,12 +62,40 @@
 
 			node.append("circle")
 				.attr("r", function(d) { return d.r; })
-				.style("fill", function(d) { return color(d.packageName); });
+				.style("fill", function(d) 
+				{ 
+					var i = 0;
+					
+					console.log("PKG: " +  d.packageName);
+					
+					for (i = 0; i < root["children"].length; i++)
+					{
+						var child = root["children"][i];
+						
+						if (child["name"] === d.className)
+						{
+							console.log("JSON: " + JSON.stringify(child));
+							
+							if ("color" in child)
+							{
+								return child["color"];
+							}
+						}
+					}
+				
+					return color(d.packageName); 
+				});
 
 			node.append("text")
 				.attr("dy", ".3em")
 		      	.style("text-anchor", "middle")
-    			.text(function(d) { return d.className.substring(0, d.r / 3); });
+		      	.style("font-weight", "bold")
+		      	.style("fill", "#ffffff")
+		      	.style("font-size", function(d)
+		      	{
+		      		return ((d.r * 3.5) / d.className.length) + "px";
+		      	})
+    			.text(function(d) { return d.className; });
 
 			// Returns a flattened hierarchy containing all leaf nodes under the root.
 			function classes(root) {
