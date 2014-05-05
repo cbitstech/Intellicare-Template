@@ -186,7 +186,7 @@ public class ImageExtractor
 			fileName.matches(".*\\.(PNG|png).*") ? ".png" :
 				fileName.matches(".*\\.(GIF|gif).*") ? ".gif" :
 					fileName.matches(".*\\.(TIF|tif).*") ? ".tif" :
-						"";
+						".jpg";																// if all else fails, naively assume it's a JPG. EX: i.chzbgr.com uses extensionless GUIDs for image names. These will never appear in the download folder.
 	}
 	
 	

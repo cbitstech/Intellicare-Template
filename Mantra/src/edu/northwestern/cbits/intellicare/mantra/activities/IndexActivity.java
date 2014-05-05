@@ -218,7 +218,7 @@ public class IndexActivity extends ConsentedActivity {
 					// on user clicking the Edit or Delete option...
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						Toast.makeText(self, "You chose " + optionItems[which] + "; which = " + which, Toast.LENGTH_SHORT).show();
+//						Toast.makeText(self, "You chose " + optionItems[which] + "; which = " + which, Toast.LENGTH_SHORT).show();
 						
 						// which option from the dialog menu did the user select?
 						switch(which) {
@@ -328,7 +328,7 @@ public class IndexActivity extends ConsentedActivity {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// update the selected mantra's text
-				Toast.makeText(self, "Mantra text should change.", Toast.LENGTH_SHORT).show();
+//				Toast.makeText(self, "Mantra text should change.", Toast.LENGTH_SHORT).show();
 				String newMantra = ((EditText) v.findViewById(R.id.text_dialog)).getText().toString();
 				FocusBoard fb = FocusBoardManager.get(self).getFocusBoard(id);
 				fb.setMantra(newMantra);
