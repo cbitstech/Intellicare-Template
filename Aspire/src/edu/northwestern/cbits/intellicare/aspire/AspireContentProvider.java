@@ -1,4 +1,23 @@
 package edu.northwestern.cbits.intellicare.aspire;
+import java.io.BufferedOutputStream;
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Locale;
+
+import javax.net.ssl.SSLException;
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,7 +25,11 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class AspireContentProvider extends ContentProvider 
 {
@@ -38,6 +61,8 @@ public class AspireContentProvider extends ContentProvider
 
 	private static final int DATABASE_VERSION = 4;
 	public static final String ID = "_id";
+
+	private static HashMap<String, String> _cachedHashes = new HashMap<String, String>();
 
     private UriMatcher _matcher = new UriMatcher(UriMatcher.NO_MATCH);
 	private SQLiteDatabase _db = null;
@@ -246,5 +271,239 @@ public class AspireContentProvider extends ContentProvider
         }
 		
 		return 0;
+	}
+
+	private static String createHash(Context context, String string)
+	{
+		if (string == null)
+			return null;
+
+		String hash = AspireContentProvider._cachedHashes.get(string);
+
+		if (hash != null)
+			return hash;
+
+		try
+		{
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			byte[] digest = md.digest(string.getBytes("UTF-8"));
+
+			hash = (new BigInteger(1, digest)).toString(16);
+
+			while (hash.length() < 32)
+			{
+				hash = "0" + hash;
+			}
+		}
+		catch (NoSuchAlgorithmException e)
+		{
+			LogManager.getInstance(context).logException(e);
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			LogManager.getInstance(context).logException(e);
+		}
+
+		AspireContentProvider._cachedHashes.put(string, hash);
+
+		return hash;
+	}
+
+	private static File fetchCacheDir(Context context)
+	{
+		File cache = context.getExternalCacheDir();
+
+		if (cache.exists() == false)
+			cache.mkdirs();
+
+		return cache;
+	}
+
+	public static Uri fetchResizedImage(final Context context, final Uri uri, final int width, final int height) 
+	{
+		if (uri == null)
+			return null;
+
+		Uri resized = Uri.parse(uri.toString() + "/" + height + "-" + width);
+
+		String hashString = AspireContentProvider.createHash(context, resized.toString());
+
+		final File cachedFile = new File(AspireContentProvider.fetchCacheDir(context), hashString);
+
+		if (cachedFile.exists())
+		{
+			cachedFile.setLastModified(System.currentTimeMillis());
+
+			return Uri.fromFile(cachedFile);
+		}
+		else
+		{
+			Uri cached = AspireContentProvider.fetchCachedUri(context, uri);
+
+			if (cached != null)
+			{
+		        BitmapFactory.Options opts = new BitmapFactory.Options();
+				opts.inJustDecodeBounds = true;
+				opts.inInputShareable = true;
+				opts.inPurgeable = true;
+
+				BitmapFactory.decodeFile(cached.getPath(), opts);
+
+				int scale = 1;
+
+				int thisWidth = width;
+				int thisHeight = height;
+
+				while ((thisWidth > 0 && thisHeight > 0) && (opts.outWidth > thisWidth || opts.outHeight > thisHeight))
+				{
+					scale *= 2;
+
+					thisWidth = thisWidth * 2;
+					thisHeight = thisHeight * 2;
+				}
+
+				if (scale < 1)
+					scale = 1;
+
+				opts = new BitmapFactory.Options();		
+				opts.inDither = false;
+				opts.inPurgeable = true;
+				opts.inInputShareable = true;
+				opts.inSampleSize = scale;
+
+				try
+				{
+					Bitmap bitmap = BitmapFactory.decodeFile(cached.getPath(), opts);
+
+					if (bitmap != null)
+					{
+						cachedFile.createNewFile();
+
+						FileOutputStream fout = new FileOutputStream(cachedFile);
+
+						bitmap.compress(CompressFormat.PNG, 100, fout);
+
+						fout.close();
+
+						bitmap.recycle();
+						
+						return Uri.fromFile(cachedFile);
+					}
+					else
+					{
+						File f = new File(cached.getPath());
+
+						if (f.exists())
+							f.delete();
+					}
+				}
+				catch (OutOfMemoryError e)
+				{
+					LogManager.getInstance(context).logException(e);
+				}
+				catch (FileNotFoundException e) 
+				{
+					LogManager.getInstance(context).logException(e);
+				} 
+				catch (IOException e) 
+				{
+					LogManager.getInstance(context).logException(e);
+				}
+			}
+		}
+
+		return null;
+	}
+
+	public static Uri fetchCachedUri(final Context context, final Uri uri) 
+	{
+		if ("file".equals(uri.getScheme().toLowerCase(Locale.ENGLISH)))
+			return uri;
+
+		if (uri == null || uri.getScheme() == null)
+			return null;
+
+		Uri.Builder builder = uri.buildUpon();
+
+		if ("https".equals(uri.getScheme().toLowerCase(Locale.getDefault())) && "freshcomics.us".equals(uri.getHost()))
+			builder.scheme("http");
+
+		final Uri fetchUri = builder.build();
+
+		final String hashString = AspireContentProvider.createHash(context, fetchUri.toString());
+
+		final File cacheDir = AspireContentProvider.fetchCacheDir(context);
+		final File cachedFile = new File(cacheDir, hashString);
+
+		if (cachedFile.exists() && cachedFile.length() > 0)
+		{
+			cachedFile.setLastModified(System.currentTimeMillis());
+			return Uri.fromFile(cachedFile);
+		}
+
+		File tempFile = null;
+
+		try 
+		{
+			InputStream in = context.getContentResolver().openInputStream(fetchUri);
+
+			tempFile = File.createTempFile(hashString, "tmp", cacheDir);
+
+			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(tempFile));
+
+			byte[] buffer = new byte[8192];
+			int read = 0;
+
+			while ((read = in.read(buffer, 0, buffer.length)) != -1)
+			{
+				out.write(buffer, 0, read);
+			}
+
+			out.flush();
+			out.close();
+
+			tempFile.renameTo(cachedFile);
+		} 
+		catch (SocketTimeoutException e)
+		{
+			LogManager.getInstance(context).logException(e);
+		}
+		catch (SocketException e)
+		{
+			LogManager.getInstance(context).logException(e);
+		}
+		catch (SSLException e)
+		{
+			LogManager.getInstance(context).logException(e);
+		}
+		catch (UnknownHostException e)
+		{
+			LogManager.getInstance(context).logException(e);
+		}
+		catch (EOFException e)
+		{
+			LogManager.getInstance(context).logException(e);
+		}
+		catch (FileNotFoundException e) 
+		{
+			LogManager.getInstance(context).logException(e);
+		}
+		catch (IOException e) 
+		{
+			LogManager.getInstance(context).logException(e);
+		} 
+		finally
+		{
+			if (tempFile != null && tempFile.exists())
+				tempFile.delete();
+		}
+
+		if (cachedFile.exists() && cachedFile.length() > 0)
+		{
+			cachedFile.setLastModified(System.currentTimeMillis());
+			return Uri.fromFile(cachedFile);
+		}
+
+		return null;
 	}
 }

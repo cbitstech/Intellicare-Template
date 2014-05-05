@@ -183,12 +183,13 @@
 	<string name="creator_lkt">Louise K. Thornton</string>
 	<string name="creator_smk">Susan Mae Kaiser</string>
 	<string name="creator_dcm">David C. Mohr</string>
-	<string name="creator_sms">Stephen S. Schueller</string>
+	<string name="creator_sms">Stephen M. Schueller</string>
 	<string name="creator_cjk">Chris J. Karr</string>
 	<string name="creator_lxs">Laurie Stark</string>
 	<string name="creator_gab">Gabriel A. Saravia</string>
 	<string name="creator_jxd">Jenna Duffecy</string>
 	<string name="creator_mxb">Mark Begale</string>
+	<string name="creator_gas">Gwendolyn Smuda</string>
 								
 	<string name="role_clinical_lead">Clincal Designer</string>
 	<string name="role_tech_lead">Technology Designer</string>
@@ -216,4 +217,11 @@
     
     <string name="title_missing_faq">Missing FAQ</string>
     <string name="message_missing_faq">The HTML file for the frequently asked questions is not available within this app.</string>
+    
+    <string name="action_next">Next</string>
+    <string name="action_back">Back</string>
+    <string name="action_done">Done</string>
+    
+   	<string name="subtitle_pages" formatted="false">Page %d of %d</string>
+    
 </resources>

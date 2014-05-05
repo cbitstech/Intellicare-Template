@@ -1,0 +1,41 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent" 
+	android:orientation="vertical"
+	android:background="#e0e0e0">
+	<TextView android:id="@+id/network"
+	    android:layout_width="match_parent"
+	    android:layout_height="0dp"
+	    android:layout_weight="1"
+	    android:gravity="center"
+	    android:text="NetWOrK gOeS hEre!!!" />
+	<LinearLayout android:layout_height="wrap_content"
+	    android:layout_width="match_parent"
+	    android:orientation="vertical"
+	    android:padding="8dp"
+	    android:layout_margin="8dp"
+	    android:background="@drawable/card_background">
+		<TextView android:id="@+id/network"
+		    android:layout_width="match_parent"
+		    android:layout_height="0dp"
+		    android:layout_weight="1"
+		    android:gravity="center"
+		    android:singleLine="false"
+		    android:textSize="18sp"
+		    android:text="aRe You SATISfiED wiTH YOur NeTwORK?" />
+	    <LinearLayout android:orientation="horizontal"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content">
+	        <Button android:id="@+id/button_no"
+	            android:layout_width="0dp"
+	            android:layout_height="48dp"
+	            android:layout_weight="1"
+	            android:text="nO!!" />
+	        <Button android:id="@+id/button_yes"
+	            android:layout_width="0dp"
+	            android:layout_height="48dp"
+	            android:layout_weight="1"
+	            android:text="yEs!!" />
+	    </LinearLayout>
+	</LinearLayout>    
+</LinearLayout> 

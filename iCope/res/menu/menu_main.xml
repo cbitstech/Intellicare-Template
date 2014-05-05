@@ -7,6 +7,10 @@
         robot:showAsAction="always"
         android:icon="@drawable/ic_action_add"
         android:title="@string/action_add_message" />
+    <item android:id="@+id/action_faq"
+        android:title="@string/action_faq"
+        robot:showAsAction="never"
+        android:showAsAction="never" />
     <item
         android:id="@+id/action_settings"
         robot:showAsAction="never"

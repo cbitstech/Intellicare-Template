@@ -7,14 +7,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -143,8 +146,35 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
 		payload.put(GroupActivity.GROUP_NAME, this.getSupportActionBar().getTitle());
 		LogManager.getInstance(this).log("viewed_track", payload);
 		
-		ViewPager pager = (ViewPager) this.findViewById(R.id.track_backgrounds);
-		
+		final ViewPager pager = (ViewPager) this.findViewById(R.id.track_backgrounds);
+
+        pager.setPageTransformer(false, new ViewPager.PageTransformer() {
+            @Override
+            public void transformPage(View view, float position) {
+                int pageWidth = view.getWidth();
+
+                if (position < -1) { // [-Infinity,-1)
+                    // This page is way off-screen to the left.
+                    view.setAlpha(0);
+
+                } else if (position <= 0) { // [-1,0]
+                    // Use the default slide transition when moving to the left page
+                    view.setAlpha(1);
+                    view.setTranslationX(0);
+
+                } else if (position <= 1) { // (0,1]
+                    // Fade the page out.
+                    view.setAlpha(1 - position);
+
+                    // Counteract the default slide transition
+                    view.setTranslationX(pageWidth * -position);
+
+                } else { // (1,+Infinity]
+                    // This page is way off-screen to the right.
+                    view.setAlpha(0);
+                }
+            }
+        });
 		PagerAdapter adapter = new PagerAdapter()
 		{
 			public int getCount() 
@@ -175,18 +205,17 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
 				if (toRemove >= 0)
 					container.removeViewAt(toRemove);
 			}
+
+            public final Integer IMAGE_ID = 0;
 			
-			public Object instantiateItem (ViewGroup container, int position)
+			public Object instantiateItem (ViewGroup container, final int position)
 			{
 				ImageView image = new ImageView(container.getContext());
-				
-				int imageId = 0;
-				
+
+                int imageId = R.drawable.boat;
+
 				switch (position)
 				{
-					case 0:
-						imageId = R.drawable.boat;
-						break;
 					case 1:
 						imageId = R.drawable.butterfly;
 						break;
@@ -209,6 +238,29 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
 				
 				image.setImageResource(imageId);
 				image.setTag(Integer.valueOf(imageId));
+
+                image.setOnClickListener(new View.OnClickListener()
+                {
+                    public void onClick(View view)
+                    {
+                        Log.e("PC", "DRAG!");
+
+                        int dragLength = 16;
+                        view.performHapticFeedback(1);
+                        pager.beginFakeDrag();
+
+
+                        if (position != pager.getAdapter().getCount() - 1) {
+                            pager.fakeDragBy(0 - dragLength);
+                        }
+                        else
+                        {
+                            pager.fakeDragBy(dragLength);
+                        }
+
+                        pager.endFakeDrag();
+                    }
+                });
 				
 				container.addView(image);
 
@@ -226,11 +278,41 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
 		
 		pager.setAdapter(adapter);
 		pager.setOffscreenPageLimit(1);
+
+        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position)
+            {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putInt("cover_art_" + me._trackUri, Integer.valueOf(position));
+                editor.commit();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 		
 		this._controller.setAnchorView(pager);
 		
 		if (this.getIntent().getBooleanExtra(PlayerActivity.REQUEST_STRESS, false))
 			this.fetchStress();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (prefs.contains("cover_art_" + me._trackUri))
+        {
+            int imageId = prefs.getInt("cover_art_" + me._trackUri, 0);
+
+            pager.setCurrentItem(imageId);
+        }
 	}
 	
 	public void onPause()
@@ -275,7 +357,7 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
 		{
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder = builder.setTitle(this._trackTitle);
-			builder = builder.setMessage(this._trackDescription);
+			builder = builder.setMessage(this._trackDescription + " (Swipe to change track image.)");
 			
 			builder.create().show();
 		}

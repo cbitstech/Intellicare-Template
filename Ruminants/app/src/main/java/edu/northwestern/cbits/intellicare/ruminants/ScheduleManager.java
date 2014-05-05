@@ -21,17 +21,17 @@ import edu.northwestern.cbits.intellicare.StatusNotificationManager;
  * Created by Gwen on 3/14/14.
  */
 public class ScheduleManager {
-//    public static final String REMINDER_HOUR = "preferred_hour";
-//    public static final String REMINDER_MINUTE = "preferred_minutes";
+    public static final String REMINDER_HOUR = "hour";
+    public static final String REMINDER_MINUTE = "minute";
 
-    public static final int DEFAULT_PROFILE_HOUR = 9;
-    public static final int DEFAULT_PROFILE_MINUTE = 00;
+    public static final int DEFAULT_HOUR = 9;
+    public static final int DEFAULT_MINUTE = 00;
 
 //    private static final String LAST_PROFILE_NOTIFICATION = "last_notification";
 //    private static final String LAST_PROFILE_NOTIFICATION = "last_notification";
 
     private static final int HELPER_NOTIFICATION_ID = 1234567;
-    private static final int PROFILE_NOTIFICATION_ID = 1234568;
+//    private static final int PROFILE_NOTIFICATION_ID = 1234568;
 
     private static ScheduleManager _instance = null;
 
@@ -64,69 +64,27 @@ public class ScheduleManager {
     {
         long now = System.currentTimeMillis();
 
-//        int hour = prefs.getInt(ScheduleManager.REMINDER_HOUR, ScheduleManager.DEFAULT_HOUR);
-//        int minutes = prefs.getInt(ScheduleManager.REMINDER_MINUTE, ScheduleManager.DEFAULT_MINUTE);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
+
+        int settingsHour = prefs.getInt(ScheduleManager.REMINDER_HOUR, ScheduleManager.DEFAULT_HOUR);
+        int settingsMinute = prefs.getInt(ScheduleManager.REMINDER_MINUTE, ScheduleManager.DEFAULT_MINUTE);
 
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(now);
-        // c.set(Calendar.HOUR_OF_DAY, hour);
-        // c.set(Calendar.MINUTE, minutes);
-        // c.set(Calendar.SECOND, 0);
-        // c.set(Calendar.MILLISECOND, 0);
 
         long scheduled = c.getTimeInMillis();
 
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
-        int day = c.get(Calendar.DAY_OF_WEEK);
-
-        // Profile notification...
-        if (hour == ScheduleManager.DEFAULT_PROFILE_HOUR && minute == ScheduleManager.DEFAULT_PROFILE_MINUTE &&
-                Calendar.MONDAY == day)
-        {
-            Intent intent = new Intent(this._context, ProfileActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this._context);
-            builder.setContentIntent(pendingIntent);
-            builder.setAutoCancel(true);
-            builder.setContentTitle(this._context.getString(R.string.profile_note_title));
-            builder.setContentText(this._context.getString(R.string.profile_note_message));
-            builder.setTicker(this._context.getString(R.string.profile_note_message));
-            builder.setSmallIcon(R.drawable.ic_action_chat);
-
-            Notification note = builder.build();
-
-            NotificationManager noteManager = (NotificationManager) this._context.getSystemService(android.content.Context.NOTIFICATION_SERVICE);
-            noteManager.notify(ScheduleManager.PROFILE_NOTIFICATION_ID, note);
-       }
-
-        int helpFrequency = 0;
-
-        String[] columns = { "help_frequency"};
-
-        Cursor k = this._context.getContentResolver().query(RuminantsContentProvider.PROFILE_URI, columns, null, null, "_id DESC");
-
-        if (k.moveToNext())
-            helpFrequency = k.getInt(k.getColumnIndex("help_frequency"));
-
-        k.close();
 
         boolean timeToFire = false;
 
-        if ((helpFrequency == 1) && (hour == 9 && minute == 0)) {
+        if (hour == settingsHour && minute == settingsMinute) {
             timeToFire = true;
         }
-        else if ((helpFrequency == 2) && ((hour == 9 && minute == 0|| hour == 13 && minute == 0))) {
-            timeToFire = true;
-        }
-        else if  ((helpFrequency == 3) && ((hour == 9 && minute == 0 || hour == 13 && minute == 0 || hour == 18 && minute == 0))) {
-            timeToFire = true;
-        }
-        /*Testing below
-        else if ((hour == 14 && minute == 52)) {
-            timeToFire = true;
-        } */
+        else  {
+            timeToFire = false;
+        };
 
         // Helper notification...
         if (timeToFire)
@@ -143,7 +101,7 @@ public class ScheduleManager {
             builder.setContentTitle(title);
             builder.setContentText(message);
             builder.setTicker(this._context.getString(R.string.help_note_message));
-            builder.setSmallIcon(R.drawable.ic_action_star);
+            builder.setSmallIcon(R.drawable.notification);
 
             Notification note = builder.build();
 
@@ -152,7 +110,39 @@ public class ScheduleManager {
 
             Uri u = Uri.parse("intellicare://ruminants/tool-chooser");
 
-            StatusNotificationManager.getInstance(this._context).notifyBigText(ScheduleManager.HELPER_NOTIFICATION_ID, R.drawable.ic_action_star, title, message, pendingIntent, u);
+            StatusNotificationManager.getInstance(this._context).notifyBigText(ScheduleManager.HELPER_NOTIFICATION_ID, R.drawable.ic_action_process_start, title, message, pendingIntent, u);
         }
+
+        /* Profile notification, depricate
+        if (hour == ScheduleManager.DEFAULT_PROFILE_HOUR && minute == ScheduleManager.DEFAULT_PROFILE_MINUTE &&
+                Calendar.MONDAY == day)
+        {
+            Intent intent = new Intent(this._context, ProfileActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this._context);
+            builder.setContentIntent(pendingIntent);
+            builder.setAutoCancel(true);
+            builder.setContentTitle(this._context.getString(R.string.profile_note_title));
+            builder.setContentText(this._context.getString(R.string.profile_note_message));
+            builder.setTicker(this._context.getString(R.string.profile_note_message));
+            builder.setSmallIcon(R.drawable.notification);
+
+            Notification note = builder.build();
+
+            NotificationManager noteManager = (NotificationManager) this._context.getSystemService(android.content.Context.NOTIFICATION_SERVICE);
+            noteManager.notify(ScheduleManager.PROFILE_NOTIFICATION_ID, note);
+       } */
+
+       /* int helpFrequency = 0;
+
+        String[] columns = { "help_frequency"};
+
+        Cursor k = this._context.getContentResolver().query(RuminantsContentProvider.PROFILE_URI, columns, null, null, "_id DESC");
+
+        if (k.moveToNext())
+            helpFrequency = k.getInt(k.getColumnIndex("help_frequency"));
+
+        k.close(); */
     }
 }

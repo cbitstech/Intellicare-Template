@@ -18,6 +18,11 @@ public class HelpActivity extends SequentialPageActivity
 	{
 		return R.array.help_titles;
 	}
+
+	public int subtitlesSequence() 
+	{
+		return R.array.help_subtitles;
+	}
 	
 	public void onSequenceComplete()
 	{

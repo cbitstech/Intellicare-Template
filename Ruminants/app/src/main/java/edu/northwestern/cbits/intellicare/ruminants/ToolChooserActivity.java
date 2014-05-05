@@ -3,15 +3,16 @@ package edu.northwestern.cbits.intellicare.ruminants;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.ListView;
 import android.widget.TextView;
 import java.util.ArrayList;
@@ -25,6 +26,8 @@ public class ToolChooserActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tool_chooser);
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         ScheduleManager.getInstance(this.getApplicationContext());
     }
@@ -52,7 +55,7 @@ public class ToolChooserActivity extends Activity {
 
     tools.add(new Tool(this.getString(R.string.tool_worry_practice), this.getString(R.string.desc_worry_practice), R.drawable.ic_action_alarms, new Intent(this, WorryPracticeActivity.class)));
     tools.add(new Tool(this.getString(R.string.survey_wizard_title), this.getString(R.string.desc_survey_wizard), R.drawable.ic_action_keyboard, new Intent(this, WizardOneActivity.class)));
-    tools.add(new Tool(this.getResources().getString(R.string.tool_didactic_content), this.getString(R.string.desc_didactic_content), R.drawable.ic_action_slideshow, new Intent(this, DidacticActivity.class)));
+    tools.add(new Tool(this.getResources().getString(R.string.tool_didactic_content), this.getString(R.string.desc_didactic_content), R.drawable.ic_action_slideshow, new Intent(this, PagedDidacticActivity.class)));
 
     ListView toolsList = (ListView) this.findViewById(R.id.rum_tools);
 
@@ -96,6 +99,37 @@ public class ToolChooserActivity extends Activity {
      });
     }
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        this.getMenuInflater().inflate(R.menu.menu_activity_tool_tracker, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                Intent upIntent = NavUtils.getParentActivityIntent(this);
+                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                    // This activity is NOT part of this app's task, so create a new task
+                    // when navigating up, with a synthesized back stack.
+                    TaskStackBuilder.create(this)
+                            // Add all of this activity's parents to the back stack
+                            .addNextIntentWithParentStack(upIntent)
+                                    // Navigate up to the closest parent
+                            .startActivities();
+                } else {
+                    // This activity is part of this app's task, so simply
+                    // navigate up to the logical parent activity.
+                    NavUtils.navigateUpTo(this, upIntent);
+                }
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     protected void onPause()
     {

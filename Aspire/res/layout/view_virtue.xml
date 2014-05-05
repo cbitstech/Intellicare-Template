@@ -1,0 +1,21 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1" >
+	 <ImageView android:id="@+id/image_background" 
+	     android:layout_width="match_parent"
+	     android:layout_height="match_parent" 
+	     android:scaleType="centerCrop" />
+	 <TextView android:id="@+id/card_name"
+	     android:layout_gravity="center"
+	     android:layout_width="match_parent"
+	     android:layout_height="wrap_content"
+	     android:textStyle="bold"
+	     android:textColor="#ffffff"
+	     android:textSize="48sp" 
+	     android:shadowColor="#000000"
+	     android:shadowRadius="8.0"
+	     android:shadowDx="0"
+	     android:shadowDy="0"
+	     android:gravity="center" />
+</FrameLayout>

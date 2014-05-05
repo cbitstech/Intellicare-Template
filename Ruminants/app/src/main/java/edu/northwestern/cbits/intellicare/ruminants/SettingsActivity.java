@@ -5,6 +5,8 @@ package edu.northwestern.cbits.intellicare.ruminants;
  */
 import java.util.HashMap;
 
+import edu.northwestern.cbits.intellicare.ConsentedActivity;
+
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.SharedPreferences;
@@ -58,7 +60,7 @@ public class SettingsActivity extends PreferenceActivity
         }
         else if (key.equals("settings_reminder_time"))
         {
-/*            final SettingsActivity me = this;
+            final SettingsActivity me = this;
 
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -80,17 +82,15 @@ public class SettingsActivity extends PreferenceActivity
                     payload.put("full_mode", prefs.getBoolean("settings_full_mode", true));
                     //LogManager.getInstance(me).log("set_reminder_time", payload);
                 }
-            }, prefs.getInt(ScheduleManager.REMINDER_HOUR, 18), prefs.getInt(ProfileScheduleManager.REMINDER_MINUTE, 0), DateFormat.is24HourFormat(this));
+            }, prefs.getInt(ScheduleManager.REMINDER_HOUR, 18), prefs.getInt(ScheduleManager.REMINDER_MINUTE, 0), DateFormat.is24HourFormat(this));
 
             dialog.show();
-*/
+
             return true;
         }
-        /*else if (key.equals("copyright_statement"))
-            ConsentedActivity.showCopyrightDialog(this); */
+        else if (key.equals("copyright_statement"))
+            ConsentedActivity.showCopyrightDialog(this);
 
         return super.onPreferenceTreeClick(screen, preference);
     }
-
 }
-

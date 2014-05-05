@@ -7,7 +7,10 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -36,6 +39,8 @@ public class ToolTrackerActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tool_tracker);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
 
@@ -122,7 +127,7 @@ public class ToolTrackerActivity extends Activity {
 
         toolLogs.add(new toolLog(this.getString(R.string.wpt_use) + " " + RuminantsContentProvider.WPT_COUNT, practicePrompt(this), R.drawable.ic_action_alarms, new Intent(this, WorryPracticeActivity.class)));
         toolLogs.add(new toolLog(this.getResources().getString(R.string.worry_log_use) + " " + RuminantsContentProvider.LOG_COUNT, wizardOnePrompt(this), R.drawable.ic_action_keyboard, new Intent(this, WizardOneActivity.class)));
-        toolLogs.add(new toolLog(this.getString(R.string.didactic_content_use) + " " + RuminantsContentProvider.DIDACTIC_COUNT, didacticPrompt(this), R.drawable.ic_action_slideshow, new Intent(this, DidacticActivity.class)));
+        toolLogs.add(new toolLog(this.getString(R.string.didactic_content_use) + " " + RuminantsContentProvider.DIDACTIC_COUNT, didacticPrompt(this), R.drawable.ic_action_slideshow, new Intent(this, PagedDidacticActivity.class)));
 
         ListView toolList = (ListView) this.findViewById(R.id.tool_use_log);
 
@@ -141,10 +146,11 @@ public class ToolTrackerActivity extends Activity {
                 use.setText(t.use);
                 prompt.setText(t.prompt);
 
+                /*
                 ImageView icon = (ImageView) convertView.findViewById(R.id.tool_icon);
 
                 if (t.icon != 0)
-                    icon.setImageDrawable(me.getResources().getDrawable(t.icon));
+                    icon.setImageDrawable(me.getResources().getDrawable(t.icon)); */
 
                 return convertView;
             }
@@ -163,6 +169,24 @@ public class ToolTrackerActivity extends Activity {
 
     };
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        this.getMenuInflater().inflate(R.menu.menu_activity_tool_tracker, menu);
+
+        return true;
+    }
+
+    // strategies, play/pause in action bar
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     protected void onPause()
     {

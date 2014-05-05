@@ -10,19 +10,16 @@
         android:layout_height="wrap_content"
         android:layout_weight="1">
 
-        <ImageView android:id="@+id/icon_tool"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginRight="8dp"
-            android:src="@drawable/clock_checklist_dark"
-            android:layout_gravity="center_horizontal|top"
-            layout_width="wrap_content" />
-
         <TextView android:id="@+id/label_tool_description"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
-		    android:textSize="16sp"
-            android:gravity="center_horizontal"
-            android:textStyle="bold" />
+		    android:textSize="22sp" />
     </LinearLayout>
+
+    <ImageView android:id="@+id/icon_tool"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/clock_checklist_dark"
+        android:layout_gravity="center_horizontal|top"
+        layout_width="wrap_content" />
 </LinearLayout>

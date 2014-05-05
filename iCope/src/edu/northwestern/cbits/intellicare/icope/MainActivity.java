@@ -243,6 +243,14 @@ public class MainActivity extends ConsentedActivity
 				this.startActivity(settingsIntent);
 				
 				break;
+			case R.id.action_feedback:
+				this.sendFeedback(this.getString(R.string.app_name));
+					
+				break;
+			case R.id.action_faq:
+				this.showFaq(this.getString(R.string.app_name));
+					
+				break;
 			default:
 				break;
 		}

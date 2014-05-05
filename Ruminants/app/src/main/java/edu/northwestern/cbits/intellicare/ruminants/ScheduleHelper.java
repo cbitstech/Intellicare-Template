@@ -15,7 +15,7 @@ public class ScheduleHelper extends BroadcastReceiver
     {
         ScheduleManager manager = ScheduleManager.getInstance(context);
 
-        Log.e("CAR", "SHOULD FIRE!");
+       // Log.e("CAR", "SHOULD FIRE!");
 
         manager.updateSchedule();
     }

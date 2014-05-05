@@ -4,6 +4,10 @@
         robot:showAsAction="always"
         android:title="@string/action_add_value"/>
     <item
+        android:id="@+id/action_graph"
+        robot:showAsAction="never"
+        android:title="@string/action_graph" />
+    <item
         android:id="@+id/action_settings"
         robot:showAsAction="never"
         android:title="@string/action_settings"/>

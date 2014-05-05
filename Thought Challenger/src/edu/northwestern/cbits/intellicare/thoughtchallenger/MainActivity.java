@@ -43,7 +43,7 @@ public class MainActivity extends ConsentedActivity
 		{
 			public void onClick(View arg0) 
 			{
-				Intent intent = new Intent(me, CatchActivity.class);
+				Intent intent = new Intent(me, ChallengeActivity.class);
 				
 				me.startActivity(intent);
 			}
@@ -73,7 +73,7 @@ public class MainActivity extends ConsentedActivity
 					{
 						public void onClick(DialogInterface dialog, int which) 
 						{
-							Intent intent = new Intent(me, CatchActivity.class);
+							Intent intent = new Intent(me, ChallengeActivity.class);
 							me.startActivity(intent);
 						}
 					});
@@ -121,7 +121,7 @@ public class MainActivity extends ConsentedActivity
 				return false;
 			}
 		});
-	
+		
 		cloud.loadDataWithBaseURL("file:///android_asset/www/", this.generatePage(), "text/html", null, null);
 		
 		HashMap<String, Object> payload = new HashMap<String, Object>();
@@ -189,6 +189,10 @@ public class MainActivity extends ConsentedActivity
 				break;
 			case R.id.action_feedback:
 				this.sendFeedback(this.getString(R.string.app_name));
+					
+				break;
+			case R.id.action_faq:
+				this.showFaq(this.getString(R.string.app_name));
 					
 				break;
 		}

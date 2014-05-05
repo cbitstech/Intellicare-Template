@@ -4,7 +4,7 @@
     <string name="action_add_message">Add Card</string>
     <string name="action_edit">Edit Card</string>
     <string name="action_save_card">Save Card</string>
-    <string name="action_schedule">Schedule&#8230;</string>
+    <string name="action_schedule">Tap card to schedule&#8230;</string>
     <string name="action_not_now">Not Now</string>
     <string name="action_helpful">Helpful</string>
     <string name="action_not_helpful">Not Helpful</string>

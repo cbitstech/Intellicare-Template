@@ -103,7 +103,7 @@ public class LibraryActivity extends ConsentedActivity
 				
 				TextView scheduleLink = (TextView) view.findViewById(R.id.link_schedule);
 				
-				scheduleLink.setOnClickListener(new View.OnClickListener()
+				view.setOnClickListener(new View.OnClickListener()
 				{
 					public void onClick(View arg0) 
 					{

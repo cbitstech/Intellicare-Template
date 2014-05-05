@@ -27,6 +27,13 @@
     <string name="desc_single_path">1 path</string>
     <string name="desc_paths" formatted="false">%d paths</string>
     
+    <string name="hint_swipe_card">Swipe left &amp; right to view more cards.</string>
+    
+    <string name="title_graph">This Week in Virtue</string>
+    <string name="subtitle_graph" formatted="false">%d virtues exercised</string>
+    <string name="subtitle_graph_single">1 virtue exercised</string>
+    
+    <string name="action_graph">Graph Progress</string>
     <string name="action_add_value">Add Value</string>
     <string name="action_use_card">Use Card</string>
     <string name="action_add_path">Add Path</string>
@@ -34,7 +41,7 @@
     <string name="action_delete">Delete</string>
     
     <string name="text_live_value">Live your value today!</string>
-    <string name="text_value_placeholder">Finish an app each day.</string>
+    <string name="text_value_placeholder"></string>
 
     <string name="title_delete_task">Delete Task?</string>
     <string name="message_delete_task">Are you sure that you wish to remove this task from this value?</string>

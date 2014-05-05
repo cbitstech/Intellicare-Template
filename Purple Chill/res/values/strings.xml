@@ -370,6 +370,28 @@
         <item>http://intellicare.cbits.northwestern.edu/static/audio/muscle/04_pmr.mp3</item>
         <item>http://intellicare.cbits.northwestern.edu/static/audio/muscle/03_pmr.mp3</item>
    	</string-array>
+
+    <string-array name="remote_media_titles">
+        <item>Autogenic Practice</item>
+        <item>Rest (Courtesy of MIT Medical)</item>
+        <item>Bedtime Relaxation (Courtesy of MIT Medical)</item>
+        <item>Body Scan for Sleep (Courtesy of UCLA)</item>
+        <item>Abdominal Breathing</item>
+        <item>Nostril Breathing (Male Narrator)</item>
+        <item>Practice breathing through your nose rather than your mouth.</item>
+        <item>Introduction to Mindfulness</item>
+        <item>Practicing Mindfulness through Eating</item>
+        <item>Mindfulness of Thoughts</item>
+        <item>Mindfulness of your Body</item>
+        <item>Introduction to PMR</item>
+        <item>PMR for 4 Muscle Groups</item>
+        <item>PMR for Relaxation</item>
+        <item>Practicing PMR with Tension</item>
+        <item>Letting go of tension (long)</item>
+        <item>Letting go of tension (short)</item>
+    </string-array>
+
+
    	
 	<string name="title_download_queue">Audio Downloads</string>
 	<string name="subtitle_download_queue" formatted="false">Remaining downloads: %d of %d</string>
@@ -388,6 +410,10 @@
     
   	<string name="title_instructions">Instructions</string>
   	<string name="action_continue">Continue</string>
+
+    <string name="connect_to_internet">Connect to the internet to download Purple Chill audio.</string>
+    <string name="no_internet">No Internet Connection</string>
+    <string name="ok">OK</string>
   	
   	<string name="title_pmr_exercise">Muscle Group Visualization</string>
   	<string name="subtitle_pmr_exercise">Duration: 5 minutes</string>
@@ -396,4 +422,5 @@
   	<string name="title_dot_exercise">Breathing Dot Visualization</string>
   	<string name="subtitle_dot_exercise">Duration: 1 minute, 40 seconds</string>
   	<string name="message_dot_exercise">To use this tool, inhale as the dot expands. Try to match the timing of the dot. When the dot contracts, exhale along with it. If you begin to feel lightheaded, try to slow down your breath. You may wish to watch the dot first without breathing along. The dot will guide you through five deep breathing cycles. Remember to sit comfortably and breathe into your stomach.</string>
+    <string name="swipe_instructions">Swipe to change the track image.</string>
 </resources>

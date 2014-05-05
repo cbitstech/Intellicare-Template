@@ -22,7 +22,7 @@ public class AudioFileManager implements MediaPlayerControl, OnCompletionListene
 	public static final String TRACK_URI = "track_uri";
 	public static final String TRACK_TITLE = "track_title";
 	public static final String TRACK_DESCRIPTION = "track_description";
-	private static final int NOTIFICATION_ID = 901;
+	static final int NOTIFICATION_ID = 901;
 	
 	private static AudioFileManager _instance = null;
 	
@@ -213,6 +213,9 @@ public class AudioFileManager implements MediaPlayerControl, OnCompletionListene
 
 		NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		manager.notify(AudioFileManager.NOTIFICATION_ID, note);
+		
+		Intent serviceIntent = new Intent(this._context, MonitorService.class);
+		this._context.startService(serviceIntent);
 	}
 
 	public void setTrackUri(Uri uri, String title, String description, OnPreparedListener listener) 

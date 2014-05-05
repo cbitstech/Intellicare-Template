@@ -19,7 +19,7 @@
     <string name="action_challenge">Challenge</string>
     <string name="action_review">Review</string>
     <string name="action_edit_tags">Edit Tags&#8230;</string>
-    <string name="action_select_distortion">Select Distortion&#8230;</string>
+    <string name="action_select_distortion">Distortions</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_add_tag">Add Tag</string>
     <string name="action_display">Display Options</string>
@@ -31,7 +31,7 @@
     <string name="link_examples">Examples</string>
     
     <string name="title_catch_help">Automatic Thoughts</string>
-    <string name="message_catch_help">(Content to be provided by Stephen&#8230;)</string>
+    <string name="message_catch_help">Thoughts are "sentences we tell ourselves" ("self talk").\n\nThoughts are the exact words that go through your head.\n\nImagine you had a recorder in your head. Enter what it would record.</string>
 
     <string name="title_review">Review</string>
     <string name="subtitle_review_single">1 thought</string>
@@ -133,13 +133,13 @@
    	</string-array>
    	
   	<string-array name="list_distortions">
-        <item>Absolutes: Thinking in extremes, all good or all bad, the best or the worst. Perfectionism, 0\%% or 100\%%, perfect or a failure.</item>
-        <item>Guesses: Making guesses or jumping to conclusions that are overly negative. These guesses include thinking you know what others are thinking and that they are thinking negatively about you.</item>
+        <item>Absolutes: Thinking in extremes, all good or all bad, the best or the worst, perfect or a failure.</item>
+        <item>Guesses: Making guesses or jumping to conclusions that are overly negative. E.g. thinking you know what others are thinking (and it\'s bad).</item>
         <item>Tunnel Vision: Seeing only the things that confirm your negative view while ignoring positive experiences.</item>
-        <item>Magnifying or Minimizing: Magnifying negative things, blowing their importance or consequences out of proportion. Minimizing positive things, shrinking down their significance.</item>
+        <item>Magnifying or Minimizing: Blowing the importance or consequences of negative things out of proportion or shrinking the significance of positive things.</item>
         <item>Labeling: Attaching a negative label, instead of seeing an error or problem.</item>
-        <item>Overgeneralization: Taking one negative characteristic or event and seeing it as a never-ending pattern.</item>
-        <item>Personalization: You take responsibility for thing that you don\'t have control over.</item>
+        <item>Overgeneralization: Taking a characteristic or event and seeing it as a never-ending pattern.</item>
+        <item>Personalization: Taking responsibility for things you can\'t control.</item>
         <item>"Should"ing yourself: Telling yourself you should, ought, and must do something.</item>
     </string-array>
    	<string name="title_distortions">Choose a Distortion</string>

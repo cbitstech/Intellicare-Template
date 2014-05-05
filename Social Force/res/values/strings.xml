@@ -1,0 +1,68 @@
+<resources>
+    <string name="app_name">Social Force</string>
+    <string name="title_welcome" formatted="false">Page %d of 4</string>
+    <string name="subtitle_welcome">Social Force Introduction</string>
+    <string name="subtitle_rating" formatted="false">Step %d of 6</string>
+    <string name="title_people_rater">People Rater</string>
+    <string name="title_people_rater_tool">Rate Contacts</string>
+    <string name="title_people_category_tool">Categorize Contacts</string>
+    <string name="title_my_network">My Network</string>
+    <string name="placeholder_rate">Rate&#8230;</string>
+
+	<string name="action_schedule">Schedule</string>
+    
+    <string-array name="contact_roles">
+        <item>Very Positive</item>
+        <item>Positive</item>
+        <item>Neutral / Don\'t Know</item>
+        <item>Negative</item>
+        <item>Very Negative</item>
+    </string-array>
+    
+    <string name="toast_practical" formatted="false">%s provides practical support.</string>
+    <string name="toast_no_practical" formatted="false">%s does not provide practical support.</string>
+    <string name="toast_emotional" formatted="false">%s provides emotional support.</string>
+    <string name="toast_no_emotional" formatted="false">%s does not provide emotional support.</string>
+    <string name="toast_advice" formatted="false">%s provides advice and information.</string>
+    <string name="toast_no_advice" formatted="false">%s does not provide advice and information.</string>
+    <string name="toast_companionship" formatted="false">%s provides companionship.</string>
+    <string name="toast_no_companionship" formatted="false">%s does not provide companionship.</string>
+
+    <string-array name="positive_activities">
+        <item>Meet up with a friend.</item>
+        <item>Call a friend.</item>
+        <item>Text (SMS) a friend.</item>
+    </string-array>
+
+    <string-array name="meetup_activities">
+        <item>Take a walk.</item>
+        <item>Grab coffee.</item>
+        <item>Share a meal.</item>
+        <item>See a movie.</item>
+    </string-array>
+    
+    <string name="button_lonely">I am lonely.</string>
+    <string name="button_bored">I am bored.</string>
+    <string name="button_advice">I need advice.</string>
+    <string name="button_help">I need help.</string>
+    <string name="button_happy">I am happy.</string>
+    
+    <string name="title_calendar_error">Scheduling Not Available</string>
+    <string name="message_calendar_error">Calendar scheduling is only available on Android 4.0 and newer devices.</string>
+    
+    <string name="activity_other">Other activity&#8230;</string>
+    <string name="action_rating">Rate Your Contacts</string>
+    <string name="action_network">Build Your Network</string>
+    
+    <string name="title_network">Build your network</string>
+    <string name="title_network_tricks">Tips &amp; Tricks</string>
+    <string name="subtitle_network_tricks">For Building Your Network</string>
+    <string name="title_network_meet">Meet New People</string>
+    <string name="title_network_recommendation">Recommendation</string>
+    <string name="tips_intro">Good news: you can create a better, more supportive circle of friends for your self.\n\nSelect a step below to proceed.</string>
+    
+    <string name="title_be_friendly">Be Friendly</string>
+    
+    <string name="instructions_review">Use this sliding scale to rate your experience of the activity you scheduled. Remember to rate what the activity was like WITH THAT PERSON.\n\nBy ""terrible"", we mean you didn\'t interact at all with the person, kind of like you were standing together in the same space but not talking the person you were with was rude doing the activity with this person lowered your mood you most likely not interact with this person in this way again.</string>
+    <string name="title_review">Please rate your experience!</string>
+</resources>

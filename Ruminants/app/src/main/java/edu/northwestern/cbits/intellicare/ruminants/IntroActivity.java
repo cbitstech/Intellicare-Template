@@ -19,6 +19,7 @@ import edu.northwestern.cbits.intellicare.ConsentedActivity;
  */
 public class IntroActivity extends ConsentedActivity {
 
+    // public static final int DISPLAY_SHOW_TITLE = 0;
     public static final String RUNBEFORE = "runBefore";
 
     public IntroActivity()
@@ -62,11 +63,13 @@ public class IntroActivity extends ConsentedActivity {
     {
         String[] contentValues = IntroActivity.contentValues(context, false);
         TextView content = (TextView) this.findViewById(R.id.content);
-        TextView pageNumber = (TextView) this.findViewById(R.id.pageNumber);
+        //TextView pageNumber = (TextView) this.findViewById(R.id.pageNumber);
 
         content.setText(contentValues[index]);
-        pageNumber.setText((index + 1) + " of " + contentValues.length);
+        //pageNumber.setText((index + 1) + " of " + contentValues.length);
 
+        setTitle("Page " + (index + 1) + " of " + contentValues.length);
+        //setSubtitle("");
     }
 
     public static String[] contentValues(Context context, boolean includeAll)
@@ -82,7 +85,7 @@ public class IntroActivity extends ConsentedActivity {
 
         Log.e("Cows", "sizeStack = "+sizeStack );
 
-        // fix reference to index
+
         if (page >= 10)
         {
             Intent launchIntent = new Intent(this, MainActivity.class);
@@ -125,12 +128,21 @@ public class IntroActivity extends ConsentedActivity {
             case R.id.action_previous:
                 // Go to the previous step in the wizard. If there is no previous step,
                 // setCurrentItem will do nothing.
+                /*if (this.mCurrentPage == -1)
+                {
+                    invalidateOptionsMenu();
+                    item.setVisible(false);
+                    item.setTitle("why");
+                } */
                 this.goTo(this.mCurrentPage - 1);
                 return true;
 
             case R.id.action_next:
                 // Advance to the next step in the wizard. If there is no next step, setCurrentItem
                 // will do nothing.
+                if (this.mCurrentPage == 8){
+                    item.setTitle("Finish");
+                }
                 this.goTo(this.mCurrentPage + 1);
                 return true;
         }

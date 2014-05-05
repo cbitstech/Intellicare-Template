@@ -5,18 +5,26 @@
     android:layout_height="match_parent"
     android:weightSum="1">
 
-    <ImageView
-        android:layout_width="2118dp"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageView"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/work_title"
+        android:id="@+id/textView"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/dancing" />
+        android:layout_margin="6dp"
+        android:textStyle="bold" />
 
     <ListView
         android:layout_width="match_parent"
+        android:layout_height="348dp"
+        android:id="@+id/tool_use_log" />
+
+    <ImageView
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tool_use_log"
-        android:layout_gravity="bottom" />
+        android:id="@+id/imageView"
+        android:src="@drawable/dancing" />
 
 
 </LinearLayout>

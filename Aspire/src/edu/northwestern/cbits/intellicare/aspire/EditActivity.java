@@ -34,7 +34,7 @@ public class EditActivity extends ConsentedActivity
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_edit);
 		
-		this._cardId  = this.getIntent().getLongExtra(EditActivity.CARD_ID, -1);
+		this._cardId = this.getIntent().getLongExtra(EditActivity.CARD_ID, -1);
 		
 		if (this._cardId != -1)
 		{

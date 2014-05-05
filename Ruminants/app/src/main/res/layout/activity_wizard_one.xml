@@ -13,7 +13,7 @@
                 android:textSize="18sp"
                 android:layout_marginLeft="24dp"
                 android:layout_marginTop="12dp"
-                android:layout_marginBottom="6dp"
+                android:layout_marginBottom="12dp"
                 android:focusable="true" />
         <RadioGroup android:id="@+id/radios_ruminating"
             android:layout_width="match_parent"
@@ -28,13 +28,15 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="@string/label_yes"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:layout_marginBottom="16dp" />
             <RadioButton android:id="@+id/rum_no"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="@string/label_no"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:layout_marginBottom="16dp" />
         </RadioGroup>
         <TextView
             android:layout_width="match_parent"
@@ -54,7 +56,7 @@
             android:layout_marginLeft="24dp"
             android:layout_marginTop="0dp"
             android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="16dp"
             android:inputType="text"
             android:singleLine="false"
             android:hint="@string/hint_comments"/>
@@ -66,7 +68,7 @@
                 android:textStyle="bold"
                 android:textSize="18sp"
                 android:layout_marginLeft="24dp"
-                android:layout_marginBottom="6dp"
+                android:layout_marginBottom="16dp"
                 android:focusable="true" />
 
         <Spinner
@@ -75,7 +77,8 @@
             android:id="@+id/emotion_spinner"
             android:layout_weight="1"
             android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp" />
+            android:layout_marginRight="24dp"
+            android:layout_marginBottom="16dp" />
 
         <TextView android:layout_weight="1"
                 android:layout_width="wrap_content"
@@ -85,15 +88,8 @@
                 android:textStyle="bold"
                 android:textSize="18sp"
                 android:layout_marginLeft="24dp"
-                android:layout_marginBottom="6dp"
+                android:layout_marginBottom="16dp"
             android:focusable="true" />
-        <SeekBar android:id="@+id/field_rumination_duration"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="24dp"
-            android:layout_marginBottom="0dp" />
 
         <LinearLayout android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -110,6 +106,12 @@
             android:layout_weight="2"
             android:gravity="center" />
 
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/duration_spinner"
+                android:layout_weight="2" />
+
         </LinearLayout>
 
 
@@ -122,7 +124,7 @@
             android:textSize="18sp"
             android:layout_marginLeft="24dp"
             android:layout_marginTop="6dp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="16dp"
             android:layout_marginRight="8dp"
             android:focusable="true" />
         <EditText android:id="@+id/field_attempted_stop_methods"
@@ -131,7 +133,7 @@
             android:layout_marginLeft="24dp"
             android:layout_marginTop="0dp"
             android:layout_marginRight="24dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="16dp"
             android:inputType="text"
             android:singleLine="false"
             android:hint="@string/hint_comments"/>
@@ -152,7 +154,7 @@
             android:layout_marginLeft="24dp"
             android:layout_marginTop="0dp"
             android:layout_marginRight="24dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="16dp"
             android:inputType="text"
             android:singleLine="false"
             android:hint="@string/hint_comments"/>

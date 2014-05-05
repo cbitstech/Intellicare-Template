@@ -11,11 +11,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.os.Vibrator;
 
 public class WorryPracticeActivity extends Activity  {
 
@@ -33,6 +36,74 @@ public class WorryPracticeActivity extends Activity  {
             public void onClick(DialogInterface dialog, int id)
             {   //send user to next dialog
                 me.showTimePicker();
+            }
+        });
+
+        if (!timerHasStarted) {
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        this.getMenuInflater().inflate(R.menu.menu_wpt, menu);
+
+        return true;
+    }
+
+    // strategies, play/pause in action bar
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+
+            case R.id.action_strategies:
+
+                Intent didacticIntent =  new Intent(this, PagedDidacticActivity.class);
+                this.startActivity(didacticIntent);
+
+            case R.id.action_start_stop:
+
+                final WorryPracticeActivity me = this;
+
+                if (me.countDownTimer != null)
+                {
+                    if (!timerHasStarted) {
+                        me.countDownTimer.start();
+                        me.timerHasStarted = true;
+                        item.setIcon(R.drawable.ic_action_stop);
+                    }
+                    else {
+                        countDownTimer.cancel();
+                        timerHasStarted = false;
+                        item.setIcon(R.drawable.ic_action_play);
+                    }
+                }
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    // modal dialogue after timer is done
+    public void wptOver() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage(R.string.wpt_complete);
+        builder.setTitle(R.string.wpt_complete_title);
+
+        final WorryPracticeActivity me = this;
+
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
+        {
+            Intent mainIntent =  new Intent(me, MainActivity.class);
+
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                startActivity(mainIntent);
             }
         });
 
@@ -86,6 +157,11 @@ public class WorryPracticeActivity extends Activity  {
 
                         minute.setText(R.string.timeup);
                         second.setText("");
+
+                        // getSystemService(VIBRATOR_SERVICE);
+                        // vibrate(1000);
+
+                        wptOver();
                     }
                     @Override
                     public void onTick(long millisUntilFinished) {
@@ -114,17 +190,6 @@ public class WorryPracticeActivity extends Activity  {
 
                 };
 
-                final Button reset = (Button) me.findViewById(R.id.reset_button);
-                reset.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        me.countDownTimer.start();
-                    }
-                });
-
-
             }
         });
 
@@ -134,7 +199,6 @@ public class WorryPracticeActivity extends Activity  {
     }
 
     private static String LAST_SELECTED_DURATION = "last_selected_duration";
-
 
     protected void onResume() {
         super.onResume();
@@ -153,39 +217,8 @@ public class WorryPracticeActivity extends Activity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_worry_practice_tool);
 
-        final WorryPracticeActivity me = this;
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        final Button startB = (Button) this.findViewById(R.id.start_button);
-        startB.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                if (me.countDownTimer != null)
-                {
-                    if (!timerHasStarted) {
-                        me.countDownTimer.start();
-                        me.timerHasStarted = true;
-                        startB.setText(R.string.stop_wpt);
-                    }
-                    else {
-                        countDownTimer.cancel();
-                        timerHasStarted = false;
-                        startB.setText(R.string.start_wpt);
-                    }
-                }
-            }
-        });
-
-        final Button didactic = (Button) this.findViewById(R.id.didactic_button);
-        didactic.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Intent didacticIntent =  new Intent(me, DidacticActivity.class);
-                me.startActivity(didacticIntent);
-            }
-        });
     }
 
 }

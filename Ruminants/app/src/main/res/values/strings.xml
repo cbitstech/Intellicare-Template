@@ -13,7 +13,7 @@
     <string name="question_help_frequency">How often would you like help?</string> <!-- add note that this is notification -->
     <string name="times_per_day">time(s) per day</string>
 
-    <string name="action_save_profile">Save Profile</string>
+    <string name="action_save_profile">Done</string>
     <string name="toast_profile_recorded">Your profile has been saved.</string>
 
     <string name="title_settings">Settings</string>
@@ -26,19 +26,19 @@
     <string name="help_note_message">Try a rumination tool.</string>
 
     <!-- Main menu -->
-    <string name="tool_didactic_content">Strategies</string>
+    <string name="tool_didactic_content">View random strategy</string>
     <string name="desc_didactic_content">Learn how to manage worries</string>
     <string name="survey_wizard_title">Logging</string>
     <string name="desc_survey_wizard">Describe your worries</string>
     <string name="tool_worry_practice">Worry Practice Tool</string>
     <string name="desc_worry_practice">Control when you worry.</string>
-    <string name="tool_replay_intro">Replay Intro</string>
+    <string name="tool_replay_intro">Intro</string>
     <string name="desc_replay_intro"></string> <!-- Mark -->
-    <string name="profile_wizard">Profile</string>
-    <string name="desc_profile_wizard">Your worry settings</string>
+    <string name="profile_wizard">Worry Profile</string>
+    <string name="desc_profile_wizard">Your worry profile</string>
     <string name="main_activity_title">Cows Are Ruminants</string>
 
-    <string name="hint_comments">One thing you\'ve worried about lately.</string>
+    <string name="hint_comments">Your worry concerns...</string>
 
     <!-- Worry Practice Tool Details -->
     <string name="wpt_instructions_title">Using the Worry Practice Tool</string>
@@ -75,12 +75,7 @@
     <!-- Wizard One / Logging Values -->
     <string name="label_no">No</string>
     <string name="label_yes">Yes</string>
-    <string name="label_a_few_min">A Few Minutes</string>
-    <string name="label_thirty_min">30 Minutes</string>
-    <string name="label_an_hour">An Hour</string>
-    <string name="label_a_few_hours">A Few Hours</string>
-    <string name="label_all_day">All Day</string>
-    <string name="action_save_wizard_one">Submit</string>
+    <string name="action_save_wizard_one">Done</string>
 
 
     <!-- Wizard One / Rumination Diary Questions -->
@@ -122,6 +117,14 @@
         <item>Nervousness</item>
     </string-array>
 
+    <string-array name="durations">
+        <item>A Few Minutes</item>
+        <item>30 Minutes</item>
+        <item>An Hour</item>
+        <item>A Few Hours</item>
+        <item>All Day</item>
+    </string-array>
+
 
     <string-array name="pun_bank">
         <item>rumination - udderly unfun</item>
@@ -140,8 +143,6 @@
         <item>herd about worry practice?</item>
         <item>let thoughts range free</item>
         <item>hoof it towards happiness</item>
-        <!-- Pretty sure no one sees this one. -->
-        <item>empty your fourth stomach</item>
     </string-array>
 
     <string-array name="intro_content">
@@ -234,7 +235,7 @@
     <string name="wpt_use">Worry Practices: </string>
     <string name="worry_log_use">Logged Worries: </string>
     <string name="didactic_content_use">Strategies Viewed:</string>
-    <string name="tool_log_title">Worry Stats</string>
+    <string name="tool_log_title">Worry Work</string>
     <string name="tool_use_log">Stats</string>
     <string name="desc_tool_chooser_log">The work you\'ve done</string>
 
@@ -285,6 +286,11 @@
 	_id INTEGER PRIMARY KEY,
     didactic_timestamp INTEGER)</string>
     <string name="profile_explaination">Change your notification preferences here...</string>
-
+    <string name="wpt_complete">Nice work concentrating. Now move on!</string>
+    <string name="wpt_complete_title">Worry practice is over.</string>
+    <string name="work_title">con-GRASS-ulations!</string>
+    <string name="reuse_tool">Touch here to use this tool again</string>
+    <string name="action_set_notification_preferences">Notification Preferences</string>
+    <string name="settings_reminder_time">Set Reminder Time</string>
 
 </resources>
