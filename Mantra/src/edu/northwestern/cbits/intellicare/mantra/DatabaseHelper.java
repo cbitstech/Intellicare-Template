@@ -19,7 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	private static final String TABLE_MANTRA_IMAGES = "mantra_images";
 	private static final String COLUMN_MANTRA_IMAGE_ID = "_id";
-	private static final String COLUMN_MANTRA_IMAGE_FOCUS_BOARD_ID = "focus_board_id";
+	private static final String COLUMN_MANTRA_IMAGE_MANTRA_BOARD_ID = "focus_board_id";
 	private static final String COLUMN_MANTRA_IMAGE_PATH = "path";
 	private static final String COLUMN_MANTRA_IMAGE_CAPTION = "caption";
 
@@ -37,7 +37,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL("CREATE TABLE " + TABLE_MANTRA_IMAGES + "("
 				+ COLUMN_MANTRA_IMAGE_ID
 				+ " integer primary key autoincrement, "
-				+ COLUMN_MANTRA_IMAGE_FOCUS_BOARD_ID + " integer, "
+				+ COLUMN_MANTRA_IMAGE_MANTRA_BOARD_ID + " integer, "
 				+ COLUMN_MANTRA_IMAGE_PATH + " text, "
 				+ COLUMN_MANTRA_IMAGE_CAPTION  + " text)"
 				);
@@ -54,7 +54,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	/*** image CRUD ***/ 
 	
 	public MantraImageCursor queryFocusImages(long focusBoardId) {
-		String selection = COLUMN_MANTRA_IMAGE_FOCUS_BOARD_ID + " = ?";
+		String selection = COLUMN_MANTRA_IMAGE_MANTRA_BOARD_ID + " = ?";
 		String[] selectionArgs = new String[] { String.valueOf(focusBoardId) };
 		Cursor wrapped = getReadableDatabase().query(TABLE_MANTRA_IMAGES, null,
 				selection, selectionArgs, null, null, null);
@@ -72,7 +72,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	public long insertFocusImage(MantraImage mantraImage) {
 		ContentValues cv = new ContentValues();
-		cv.put(COLUMN_MANTRA_IMAGE_FOCUS_BOARD_ID, mantraImage.getFocusBoardId());
+		cv.put(COLUMN_MANTRA_IMAGE_MANTRA_BOARD_ID, mantraImage.getFocusBoardId());
 		cv.put(COLUMN_MANTRA_IMAGE_PATH, mantraImage.getPath());
 		cv.put(COLUMN_MANTRA_IMAGE_CAPTION, mantraImage.getCaption());
 		return getWritableDatabase().insert(TABLE_MANTRA_IMAGES, null, cv);
@@ -80,7 +80,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	public long updateFocusImage(MantraImage mantraImage) {
 		ContentValues cv = new ContentValues();
-		cv.put(COLUMN_MANTRA_IMAGE_FOCUS_BOARD_ID, mantraImage.getFocusBoardId());
+		cv.put(COLUMN_MANTRA_IMAGE_MANTRA_BOARD_ID, mantraImage.getFocusBoardId());
 		cv.put(COLUMN_MANTRA_IMAGE_PATH, mantraImage.getPath());
 		cv.put(COLUMN_MANTRA_IMAGE_CAPTION, mantraImage.getCaption());
 		return getWritableDatabase().update(
@@ -170,7 +170,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			MantraImage mantraImage = new MantraImage();
 			long focusImageId = getLong(getColumnIndex(COLUMN_MANTRA_IMAGE_ID));
 			mantraImage.setId(focusImageId);
-			long focusBoardId = getLong(getColumnIndex(COLUMN_MANTRA_IMAGE_FOCUS_BOARD_ID));
+			long focusBoardId = getLong(getColumnIndex(COLUMN_MANTRA_IMAGE_MANTRA_BOARD_ID));
 			mantraImage.setFocusBoardId(focusBoardId);
 			String imagePath = getString(getColumnIndex(COLUMN_MANTRA_IMAGE_PATH));
 			mantraImage.setPath(imagePath);
