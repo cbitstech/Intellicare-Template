@@ -2,7 +2,7 @@ package edu.northwestern.cbits.intellicare.mantra;
 
 import java.io.File;
 
-import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusImageCursor;
+import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.MantraImageCursor;
 import edu.northwestern.cbits.intellicare.mantra.activities.NewFocusBoardActivity;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,7 +19,7 @@ import android.widget.AdapterView.OnItemClickListener;
 public class MantraImageGridFragment extends Fragment {
 
 	private static final String CN = "MantraImageGridFragment";
-	private FocusImageCursor mCursor;
+	private MantraImageCursor mCursor;
 	
 	LayoutInflater inflater; ViewGroup container;
 

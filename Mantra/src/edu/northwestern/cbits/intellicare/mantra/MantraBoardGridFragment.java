@@ -1,6 +1,6 @@
 package edu.northwestern.cbits.intellicare.mantra;
 
-import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusBoardCursor;
+import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.MantraBoardCursor;
 import edu.northwestern.cbits.intellicare.mantra.activities.NewFocusBoardActivity;
 import edu.northwestern.cbits.intellicare.mantra.activities.SingleMantraBoardActivity;
 import android.content.Intent;
@@ -19,7 +19,7 @@ import android.widget.Toast;
 public class MantraBoardGridFragment extends Fragment {
 
 	protected static final String CN = "MantraBoardGridFragment";
-	private FocusBoardCursor mCursor;
+	private MantraBoardCursor mCursor;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

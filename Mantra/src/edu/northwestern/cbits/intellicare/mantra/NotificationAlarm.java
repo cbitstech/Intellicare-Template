@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusBoardCursor;
+import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.MantraBoardCursor;
 import edu.northwestern.cbits.intellicare.mantra.activities.ProgressActivity;
 import edu.northwestern.cbits.intellicare.mantra.activities.ReviewActivity;
 //import edu.northwestern.cbits.intellicare.mantra.activities.TransparentActivity;
@@ -80,7 +80,7 @@ public class NotificationAlarm extends BroadcastReceiver
         	 Log.d(CN+".onReceive", "at h = " + currHour + ", m = " + currMin + ", MAKE STARTING NOTIFICATION");
         	 
         	 // put the user's list of mantra boards in the notification
-        	 FocusBoardCursor mantraItemCursor = MantraBoardManager.get(context).queryFocusBoards();
+        	 MantraBoardCursor mantraItemCursor = MantraBoardManager.get(context).queryFocusBoards();
         	 ArrayList<String> al = new ArrayList<String>();
         	 while(mantraItemCursor.moveToNext()) {
         		 al.add(

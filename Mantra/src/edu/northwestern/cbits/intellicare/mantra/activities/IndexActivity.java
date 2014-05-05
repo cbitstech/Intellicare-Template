@@ -7,8 +7,8 @@ import net.hockeyapp.android.CrashManagerListener;
 
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.mantra.NotificationAlarm;
-import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusBoardCursor;
-import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusImageCursor;
+import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.MantraBoardCursor;
+import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.MantraImageCursor;
 import edu.northwestern.cbits.intellicare.mantra.MantraBoard;
 import edu.northwestern.cbits.intellicare.mantra.MantraBoardGridFragment;
 import edu.northwestern.cbits.intellicare.mantra.MantraBoardManager;
@@ -75,7 +75,7 @@ public class IndexActivity extends ConsentedActivity {
 		
 		final IndexActivity me = this;
 		
-		FocusBoardCursor mantraItemCursor = MantraBoardManager.get(self).queryFocusBoards();
+		MantraBoardCursor mantraItemCursor = MantraBoardManager.get(self).queryFocusBoards();
 		
 		if (mantraItemCursor.getCount() == 0)
 		{
@@ -144,7 +144,7 @@ public class IndexActivity extends ConsentedActivity {
 		self.setContentView(R.layout.no_fragments_home_activity);
 		final GridView gv = (GridView) self.findViewById(R.id.gridview);
 
-		FocusBoardCursor mantraItemCursor = MantraBoardManager.get(self).queryFocusBoards();
+		MantraBoardCursor mantraItemCursor = MantraBoardManager.get(self).queryFocusBoards();
 //		Util.logCursor(mantraItemCursor);
 		
 		@SuppressWarnings("deprecation")
@@ -155,7 +155,7 @@ public class IndexActivity extends ConsentedActivity {
 				// set the image
 				final int imageId = focusBoardCursor.getInt(focusBoardCursor.getColumnIndex("_id")); 
 				Log.d(CN+".CursorAdapter.bindView", "imageId = " + imageId);
-				final FocusImageCursor imageCursor = MantraBoardManager.get(homeActivity).queryFocusImages(imageId);
+				final MantraImageCursor imageCursor = MantraBoardManager.get(homeActivity).queryFocusImages(imageId);
 //				Util.logCursor(imageCursor);
 				// if the mantra item has an image, then display the first one
 				if(imageCursor.getCount() > 0) {

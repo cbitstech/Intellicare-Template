@@ -1,6 +1,6 @@
 package edu.northwestern.cbits.intellicare.mantra;
 
-import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusBoardCursor;
+import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.MantraBoardCursor;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -12,9 +12,9 @@ import android.widget.TextView;
 
 public class MantraBoardCursorAdapter extends CursorAdapter {
 	
-	private FocusBoardCursor mFocusBoardCursor;
+	private MantraBoardCursor mFocusBoardCursor;
 
-	public MantraBoardCursorAdapter(Context context, FocusBoardCursor cursor) {
+	public MantraBoardCursorAdapter(Context context, MantraBoardCursor cursor) {
 		super(context, cursor, 0);
 		mFocusBoardCursor = cursor;
 	}

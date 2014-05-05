@@ -33,7 +33,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.FocusImageCursor;
+import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.MantraImageCursor;
 import edu.northwestern.cbits.intellicare.mantra.MantraBoard;
 import edu.northwestern.cbits.intellicare.mantra.MantraBoardManager;
 import edu.northwestern.cbits.intellicare.mantra.MantraImage;
@@ -98,7 +98,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 		setContentView(R.layout.no_fragments_home_activity);
 		final GridView gv = (GridView) this.findViewById(R.id.gridview);
 
-		final FocusImageCursor cursor = MantraBoardManager.get(this).queryFocusImages(this.mFocusBoardId);
+		final MantraImageCursor cursor = MantraBoardManager.get(this).queryFocusImages(this.mFocusBoardId);
 		Util.logCursor(cursor);
 		
 		@SuppressWarnings("deprecation")
@@ -106,9 +106,9 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 
 			public void bindView(View view, Context context, Cursor c) 
 			{
-				if (c instanceof FocusImageCursor)
+				if (c instanceof MantraImageCursor)
 				{
-					FocusImageCursor mFocusImageCursor = (FocusImageCursor) c;
+					MantraImageCursor mFocusImageCursor = (MantraImageCursor) c;
 					MantraImage mantraImage = mFocusImageCursor.getFocusImage();
 					ImageView imageView = (ImageView) view.findViewById(R.id.imageThumb);
 					Drawable d = PictureUtils.getScaledDrawable(self, mantraImage.getPath());
@@ -313,7 +313,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 		Log.d(CN+".applyNewImageToMantra", "entered");
 		// search the image set for a particular image path, and if the image isn't already associated with the board,
 		// then associate it. 
-		FocusImageCursor fic = mManager.queryFocusImages(mFocusBoardId );
+		MantraImageCursor fic = mManager.queryFocusImages(mFocusBoardId );
 		boolean imageAlreadyAssociated = false;
 		Util.logCursor(fic);
 		while(fic.moveToNext()) {

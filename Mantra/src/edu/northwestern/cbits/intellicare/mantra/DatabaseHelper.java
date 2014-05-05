@@ -53,21 +53,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	/*** image CRUD ***/ 
 	
-	public FocusImageCursor queryFocusImages(long focusBoardId) {
+	public MantraImageCursor queryFocusImages(long focusBoardId) {
 		String selection = COLUMN_MANTRA_IMAGE_FOCUS_BOARD_ID + " = ?";
 		String[] selectionArgs = new String[] { String.valueOf(focusBoardId) };
 		Cursor wrapped = getReadableDatabase().query(TABLE_MANTRA_IMAGES, null,
 				selection, selectionArgs, null, null, null);
-		return new FocusImageCursor(wrapped);
+		return new MantraImageCursor(wrapped);
 	}
 
-	public FocusImageCursor queryFocusImage(long id) {
+	public MantraImageCursor queryFocusImage(long id) {
 		String selection = COLUMN_MANTRA_IMAGE_ID + " = ?";
 		String[] selectionArgs = new String[] { String.valueOf(id) };
 		String limit = "1";
 		Cursor wrapped = getReadableDatabase().query(TABLE_MANTRA_IMAGES, null,
 				selection, selectionArgs, null, null, null, limit);
-		return new FocusImageCursor(wrapped);
+		return new MantraImageCursor(wrapped);
 	}
 
 	public long insertFocusImage(MantraImage mantraImage) {
@@ -99,19 +99,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		
 	/*** mantra board CRUD ***/ 
 	
-	public FocusBoardCursor queryFocusBoards() {
+	public MantraBoardCursor queryFocusBoards() {
 		Cursor wrapped = getReadableDatabase().query(TABLE_MANTRA_BOARDS, null,
 				null, null, null, null, COLUMN_MANTRA_BOARD_MANTRA);
-		return new FocusBoardCursor(wrapped);
+		return new MantraBoardCursor(wrapped);
 	}
 
-	public FocusBoardCursor queryFocusBoard(long id) {
+	public MantraBoardCursor queryFocusBoard(long id) {
 		String selection = COLUMN_MANTRA_BOARD_ID + " = ?";
 		String[] selectionArgs = new String[] { String.valueOf(id) };
 		String limit = "1";
 		Cursor wrapped = getReadableDatabase().query(TABLE_MANTRA_BOARDS, null,
 				selection, selectionArgs, null, null, null, limit);
-		return new FocusBoardCursor(wrapped);
+		return new MantraBoardCursor(wrapped);
 	}
 
 	public long insertFocusBoard(MantraBoard mantraBoard) {
@@ -140,8 +140,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	
 	/*** cursors over domain objects ***/
 	
-	public static class FocusBoardCursor extends CursorWrapper {
-		public FocusBoardCursor(Cursor c) {
+	public static class MantraBoardCursor extends CursorWrapper {
+		public MantraBoardCursor(Cursor c) {
 			super(c);
 		}
 
@@ -158,8 +158,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		}
 	}
 
-	public static class FocusImageCursor extends CursorWrapper {
-		public FocusImageCursor(Cursor c) {
+	public static class MantraImageCursor extends CursorWrapper {
+		public MantraImageCursor(Cursor c) {
 			super(c);
 		}
 
