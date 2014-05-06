@@ -13,7 +13,10 @@
 	<string name="action_continue">Continue</string>
 	<string name="action_yes">Yes</string>
 	<string name="action_no">No</string>
-		
+	
+	<string name="action_schedule_again">Yes, schedule again</string>
+	<string name="action_plan_activity">No, plan new activity</string>
+				
 	<string name="subtitle_main">Pinch to zoom, tap a friend</string>
 	
     <string-array name="contact_roles">
@@ -94,4 +97,25 @@
     <string name="label_practical_support">Practical Support</string>
     <string name="label_companionship">Companionship</string>
     <string name="label_advice">Advice</string>
+
+    <string name="suffix_via_social_force">(via Social Force for Intellicare)</string>
+    
+    <string name="note_message_event" formatted="false">%s - How did it go?</string>
+    
+    <string name="message_event_check" formatted="false">Did you do this with %s?</string>
+    <string name="title_try_again">Would you like to try again?</string>
+
+    <string-array name="actions_event">
+        <item>Yes, try this again.</item>
+        <item>No, plan a new activity.</item>
+        <item>No, take me home.</item>
+    </string-array>
+    
+    <string name="title_thanks_review">Thanks for the feedback!</string>
+    <string name="message_thanks_review">Would you like to do it again?</string>
+    
+    <string name="label_terrible">Terrible</string>
+    <string name="label_great">Great</string>
+    <string name="label_okay">Okay</string>
 </resources>
+

@@ -74,6 +74,8 @@ public class MainActivity extends ConsentedActivity
 				me.refreshBubbles();
 			}
         });
+        
+        ScheduleManager.getInstance(this);
     }        
     
     protected void onResume()
@@ -267,11 +269,6 @@ public class MainActivity extends ConsentedActivity
 		{
 //			Intent settingsIntent = new Intent(this, SettingsActivity.class);
 //			this.startActivity(settingsIntent);
-		}
-		else if (itemId == R.id.action_pleasure)
-		{
-			Intent intent = new Intent(this, EventReviewActivity.class);
-			this.startActivity(intent);
 		}
 		else if (itemId == R.id.action_rating)
 		{

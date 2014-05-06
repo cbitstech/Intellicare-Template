@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -22,9 +23,11 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -46,6 +49,7 @@ public class ScheduleActivity extends ConsentedActivity
 {
 	protected static final String CONTACT_KEY = "contact_key";
 	protected static final String SAVED_ACTIVITIES = "saved_activities";
+	private static final int ADD_CALENDAR = 51465;
 
 	private Menu _menu = null;
 	
@@ -468,20 +472,50 @@ public class ScheduleActivity extends ConsentedActivity
     		
 			Intent intent = new Intent(Intent.ACTION_INSERT);
 			intent.setData(Events.CONTENT_URI);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 			
 			intent.putExtra(Events.TITLE, this._activity.replace(".", ": " + this._contact.name));
 			
 			if (this._meetingActivity != null)
-				intent.putExtra(Events.DESCRIPTION, this._meetingActivity);
+				intent.putExtra(Events.DESCRIPTION, this._meetingActivity + " " + this.getString(R.string.suffix_via_social_force));
+			else
+				intent.putExtra(Events.DESCRIPTION, this.getString(R.string.suffix_via_social_force));
 			
-			this.startActivity(intent);
-			
-			this.finish();
+			this.startActivityForResult(intent, ScheduleActivity.ADD_CALENDAR);
 
     		return true;
     	}
 
         return super.onOptionsItemSelected(item);
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) 
+    {
+		String selection = CalendarContract.Events.DESCRIPTION + " LIKE ?";
+		String[] args = { "%" + this.getString(R.string.suffix_via_social_force) + "%" };
+
+		Cursor c = this.getContentResolver().query(CalendarContract.Events.CONTENT_URI, null, selection, args, CalendarContract.Events._ID + " DESC");
+		
+		if (c.moveToNext())
+		{
+			ContentValues values = new ContentValues();
+			
+			values.put(CalendarContract.Attendees.EVENT_ID, c.getLong(c.getColumnIndex(CalendarContract.Events._ID)));
+			values.put(CalendarContract.Attendees.ATTENDEE_NAME, this._contact.name);
+			values.put(CalendarContract.Attendees.ATTENDEE_TYPE, CalendarContract.Attendees.TYPE_NONE);
+			values.put(CalendarContract.Attendees.ATTENDEE_RELATIONSHIP, CalendarContract.Attendees.RELATIONSHIP_NONE);
+			values.put(CalendarContract.Attendees.ATTENDEE_STATUS, CalendarContract.Attendees.ATTENDEE_STATUS_ACCEPTED);
+			values.put(CalendarContract.Attendees.ATTENDEE_EMAIL, "");
+			
+			this.getContentResolver().insert(CalendarContract.Attendees.CONTENT_URI, values);
+		}
+		
+		c.close();
+		
+		this.finish();
+
+    	super.onActivityResult(requestCode, resultCode, data);
     }
 
 	protected String[] getActivities() 
