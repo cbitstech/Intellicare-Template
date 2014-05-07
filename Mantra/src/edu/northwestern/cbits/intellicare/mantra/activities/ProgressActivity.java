@@ -47,6 +47,8 @@ public class ProgressActivity extends ConsentedActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_progress);
 
+//		new ContextThemeWrapper(this, R.style.Theme_AppCompat_Light)
+		
 		self = this;
 
 		// set-up the image-scanner service + response.

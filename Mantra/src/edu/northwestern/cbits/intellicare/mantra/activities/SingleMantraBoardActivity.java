@@ -330,6 +330,8 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 			Toast.makeText(this, "Image applied!", Toast.LENGTH_SHORT).show();
 			mManager.createFocusImage(mFocusBoardId, imageFile.getAbsolutePath(), "SOME IMAGE CAPTION");
 		}
+		
+		fic.close();
 	}
 	
 	

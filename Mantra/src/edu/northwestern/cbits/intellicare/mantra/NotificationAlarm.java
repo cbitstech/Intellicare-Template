@@ -284,7 +284,7 @@ public class NotificationAlarm extends BroadcastReceiver
 			 n = new NotificationCompat.Builder(context)
 			 	.setContentTitle(appName)
 			 	.setContentText(message)
-			 	.setSmallIcon(R.drawable.abc_ic_go)
+			 	.setSmallIcon(R.drawable.ic_note_mantra)
 			 	.setContentIntent(pi)
 			 	.setAutoCancel(true)
 			 	.setContentIntent(PendingIntent.getActivity(context, 0, onClickIntent, 0))
@@ -294,7 +294,7 @@ public class NotificationAlarm extends BroadcastReceiver
 			 n = new NotificationCompat.Builder(context)
 			 	.setContentTitle(appName)
 			 	.setContentText(message)
-			 	.setSmallIcon(R.drawable.abc_ic_go)
+			 	.setSmallIcon(R.drawable.ic_note_mantra)
 			 	.setContentIntent(pi)
 			 	.setAutoCancel(true)
 			 	;
