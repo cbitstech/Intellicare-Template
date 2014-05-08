@@ -132,4 +132,10 @@ public class MoveProvider extends ContentProvider
 
 		return 0;
 	}
+
+	public static String fetchNextEventTitle(Context context) 
+	{
+		// TODO actual data...
+		return "Thu 2:25pm: Todo Practice";
+	}
 }

@@ -141,7 +141,7 @@ public class InspireActivity extends ConsentedActivity
 							me._selectedExercise = me.getString(R.string.exercise_unknown);
 						
 						intent.putExtra(Events.TITLE, me.getString(R.string.event_name, me._selectedExercise));
-						intent.putExtra(Events.DESCRIPTION, me.getString(R.string.event_description, Uri.encode(me._selectedExercise)));
+						intent.putExtra(Events.DESCRIPTION, me.getString(R.string.event_description));
 						
 						me.startActivity(intent);
 					}
