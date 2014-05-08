@@ -256,13 +256,13 @@ public class NetworkActivity extends ConsentedActivity
 		
 		pager.setCurrentItem(0, false);
 		
-		actionBar.setTitle(R.string.title_people_rater);
+		actionBar.setTitle(R.string.title_network);
 		actionBar.setSubtitle(me.getString(R.string.subtitle_rating, 1));
     }
     
     public boolean onCreateOptionsMenu(Menu menu) 
     {
-        this.getMenuInflater().inflate(R.menu.menu_intro, menu);
+        this.getMenuInflater().inflate(R.menu.menu_rate, menu);
         
         this._menu = menu;
 

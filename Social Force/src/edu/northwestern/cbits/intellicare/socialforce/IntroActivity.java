@@ -126,7 +126,7 @@ public class IntroActivity extends ConsentedActivity
 				{
 					MenuItem nextItem = me._menu.findItem(R.id.action_next);
 					MenuItem backItem = me._menu.findItem(R.id.action_back);
-					MenuItem doneItem = me._menu.findItem(R.id.action_done);
+					MenuItem doneItem = me._menu.findItem(R.id.action_rate);
 
 					switch(page)
 					{
@@ -165,7 +165,7 @@ public class IntroActivity extends ConsentedActivity
         this._menu = menu;
 
 		MenuItem backItem = this._menu.findItem(R.id.action_back);
-		MenuItem doneItem = this._menu.findItem(R.id.action_done);
+		MenuItem doneItem = this._menu.findItem(R.id.action_rate);
 
 		backItem.setVisible(false);
 		doneItem.setVisible(false);
@@ -189,7 +189,7 @@ public class IntroActivity extends ConsentedActivity
     		
     		return true;
     	}
-    	else if (item.getItemId() == R.id.action_done)
+    	else if (item.getItemId() == R.id.action_rate)
     	{
 			final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 			

@@ -2,7 +2,7 @@
     <string name="app_name">Social Force</string>
     <string name="title_welcome" formatted="false">Page %d of 4</string>
     <string name="subtitle_welcome">Social Force Introduction</string>
-    <string name="subtitle_rating" formatted="false">Step %d of 6</string>
+    <string name="subtitle_rating" formatted="false">Step %d of 5</string>
     <string name="title_people_rater">People Rater</string>
     <string name="title_people_rater_tool">Rate Contacts</string>
     <string name="title_people_category_tool">Categorize Contacts</string>
@@ -13,6 +13,7 @@
 	<string name="action_continue">Continue</string>
 	<string name="action_yes">Yes</string>
 	<string name="action_no">No</string>
+	<string name="action_rate">Rate</string>
 	
 	<string name="action_schedule_again">Yes, schedule again</string>
 	<string name="action_plan_activity">No, plan new activity</string>
@@ -117,5 +118,9 @@
     <string name="label_terrible">Terrible</string>
     <string name="label_great">Great</string>
     <string name="label_okay">Okay</string>
+    
+    <string name="title_settings">Settings</string>
+    <string name="label_contact_count" formatted="false">%s (%d calls &amp; texts)</string>
+    <string name="label_contact_count_single" formatted="false">%s (1 call or text)</string>
 </resources>
 

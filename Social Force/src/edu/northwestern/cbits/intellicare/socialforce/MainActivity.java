@@ -267,8 +267,8 @@ public class MainActivity extends ConsentedActivity
     	
 		if (itemId == R.id.action_settings)
 		{
-//			Intent settingsIntent = new Intent(this, SettingsActivity.class);
-//			this.startActivity(settingsIntent);
+			Intent settingsIntent = new Intent(this, SettingsActivity.class);
+			this.startActivity(settingsIntent);
 		}
 		else if (itemId == R.id.action_rating)
 		{

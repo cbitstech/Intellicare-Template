@@ -68,7 +68,7 @@ public class RatingActivity extends ConsentedActivity
 		{
 			public int getCount() 
 			{
-				return 6;
+				return 5;
 			}
 
 			public boolean isViewFromObject(View view, Object content) 
@@ -110,15 +110,6 @@ public class RatingActivity extends ConsentedActivity
 						view = webViewZero;
 						break;
 					case 1:
-						WebView webViewOne = new WebView(container.getContext());
-						
-						webViewOne.loadUrl("file:///android_asset/www/rating_1.html");
-						webViewOne.setTag("1");
-
-						view = webViewOne;
-
-						break;
-					case 2:
 						view = inflater.inflate(R.layout.view_contact_rater, null);
 						
 						if (view instanceof ListView)
@@ -146,17 +137,20 @@ public class RatingActivity extends ConsentedActivity
 			    	    			else
 			    	    				contactName.setText(contact.number);
 			    	    			
-			    	    			contactName.setText(contactName.getText() + " (" + contact.count + ")");
-
-			    					contactNumber.setText(contact.number);
+			    	    			if (contact.count != 1)
+			    	    				contactNumber.setText(me.getString(R.string.label_contact_count, contact.number, contact.count));
+			    	    			else
+			    	    				contactNumber.setText(me.getString(R.string.label_contact_count_single, contact.number));
 			    					
 			    					if (contact.level >= 0)
 			    					{
-			    						MenuItem nextItem = me._menu.findItem(R.id.action_next);
-			    						nextItem.setVisible(true);
-
+			    						if (me._menu != null)
+			    						{
+				    						MenuItem nextItem = me._menu.findItem(R.id.action_next);
+				    						nextItem.setVisible(true);
+			    						}
+			    						
 			    						contactType.setText(levels[contact.level]);
-				    					nextItem.setVisible(true);
 			    					}
 			    					else
 			    						contactType.setText(R.string.placeholder_rate);
@@ -202,7 +196,7 @@ public class RatingActivity extends ConsentedActivity
 						}
 
 						break;
-					case 3:
+					case 2:
 						WebView webViewThree = new WebView(container.getContext());
 						
 						webViewThree.loadUrl("file:///android_asset/www/rating_3.html");
@@ -210,7 +204,7 @@ public class RatingActivity extends ConsentedActivity
 						view = webViewThree;
 
 						break;
-					case 4:
+					case 3:
 						view = inflater.inflate(R.layout.view_contact_category, null);
 						
 						ListView list = (ListView) view.findViewById(R.id.rater_list);
@@ -230,6 +224,10 @@ public class RatingActivity extends ConsentedActivity
 								if (one.level < two.level)
 									return -1;
 								else if (one.level > two.level)
+									return 1;
+								else if (one.count < two.count)
+									return -1;
+								else if (one.count > two.count)
 									return 1;
 								
 								return one.name.compareTo(two.name);
@@ -257,9 +255,10 @@ public class RatingActivity extends ConsentedActivity
 		    	    			else
 		    	    				contactName.setText(contact.number);
 		    	    			
-		    	    			contactName.setText(contactName.getText() + " (" + contact.count + ")");
-
-		    					contactNumber.setText(contact.number);
+		    	    			if (contact.count != 1)
+		    	    				contactNumber.setText(me.getString(R.string.label_contact_count, contact.number, contact.count));
+		    	    			else
+		    	    				contactNumber.setText(me.getString(R.string.label_contact_count_single, contact.number));
 
 		    					final ImageView practical = (ImageView) convertView.findViewById(R.id.practical_item);
 
@@ -452,7 +451,7 @@ public class RatingActivity extends ConsentedActivity
 
 
 						break;
-					case 5:
+					case 4:
 						view = inflater.inflate(R.layout.view_my_network, null);
 						
 						SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
@@ -533,30 +532,24 @@ public class RatingActivity extends ConsentedActivity
 							doneItem.setVisible(false);
 							break;
 						case 1:
-							actionBar.setTitle(R.string.title_people_rater);
-							nextItem.setVisible(true);
-							backItem.setVisible(true);
-							doneItem.setVisible(false);
-							break;
-						case 2:
 							actionBar.setTitle(R.string.title_people_rater_tool);
 							nextItem.setVisible(true);
 							backItem.setVisible(true);
 							doneItem.setVisible(false);
 							break;
-						case 3:
+						case 2:
 							actionBar.setTitle(R.string.title_people_rater);
 							nextItem.setVisible(true);
 							backItem.setVisible(true);
 							doneItem.setVisible(false);
 							break;
-						case 4:
+						case 3:
 							actionBar.setTitle(R.string.title_people_category_tool);
 							nextItem.setVisible(true);
 							backItem.setVisible(true);
 							doneItem.setVisible(false);
 							break;
-						case 5:
+						case 4:
 							actionBar.setTitle(R.string.title_my_network);
 							nextItem.setVisible(false);
 							backItem.setVisible(true);
@@ -588,7 +581,7 @@ public class RatingActivity extends ConsentedActivity
     
     public boolean onCreateOptionsMenu(Menu menu) 
     {
-        this.getMenuInflater().inflate(R.menu.menu_intro, menu);
+        this.getMenuInflater().inflate(R.menu.menu_rate, menu);
         
         this._menu = menu;
 
