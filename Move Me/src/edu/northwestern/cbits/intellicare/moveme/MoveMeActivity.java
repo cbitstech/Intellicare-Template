@@ -7,53 +7,48 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.provider.CalendarContract.Events;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
-public class InspireActivity extends ConsentedActivity 
+public class MoveMeActivity extends ConsentedActivity 
 {
     protected String _selectedExercise = null;
 
 	protected void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.activity_inspire);
+        this.setContentView(R.layout.activity_move_me);
         
         ActionBar actionBar = this.getSupportActionBar();
         
-        actionBar.setTitle(R.string.title_inspire_me);
+        actionBar.setTitle(R.string.title_move_me);
+        
+		final MoveMeActivity me = this;
+
+        TextView howtos = (TextView) this.findViewById(R.id.button_howtos);
+        TextView activities = (TextView) this.findViewById(R.id.button_activities);
+        TextView motivators = (TextView) this.findViewById(R.id.button_motivators);
+        TextView doitnow = (TextView) this.findViewById(R.id.button_doitnow);
+
+        TextView schedule = (TextView) this.findViewById(R.id.button_schedule);
+        
+        schedule.setOnClickListener(new View.OnClickListener()
+        {
+			public void onClick(View v) 
+			{
+				me.launchSchedule();
+			}
+        });
     }
     
-    public boolean onCreateOptionsMenu(Menu menu) 
-    {
-        this.getMenuInflater().inflate(R.menu.menu_inspire, menu);
-
-        return true;
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) 
-    {
-    	int itemId = item.getItemId();
-    	
-    	if (itemId == R.id.action_music)
-    		this.launchMusicPlayer();
-    	else if (itemId == R.id.action_lessons)
-    		this.launchLessons();
-    	else if (itemId == R.id.action_schedule)
-    		this.launchSchedule();
-
-        return true;
-    }
-
 	@SuppressLint({ "InlinedApi", "NewApi" }) private void launchSchedule() 
 	{
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -75,7 +70,7 @@ public class InspireActivity extends ConsentedActivity
 			return;
 		}
 
-		final InspireActivity me = this;
+		final MoveMeActivity me = this;
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.title_schedule);
@@ -140,7 +135,7 @@ public class InspireActivity extends ConsentedActivity
 						if (me._selectedExercise == null)
 							me._selectedExercise = me.getString(R.string.exercise_unknown);
 						
-						intent.putExtra(Events.TITLE, me.getString(R.string.event_name, me._selectedExercise));
+						intent.putExtra(Events.TITLE, me._selectedExercise);
 						intent.putExtra(Events.DESCRIPTION, me.getString(R.string.event_description));
 						
 						me.startActivity(intent);
@@ -156,7 +151,7 @@ public class InspireActivity extends ConsentedActivity
 
 	private void launchLessons() 
 	{
-		final InspireActivity me = this;
+		final MoveMeActivity me = this;
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.title_learn_more);

@@ -37,7 +37,7 @@ public class MainActivity extends ConsentedActivity
         {
 			public void onClick(View view) 
 			{
-				Intent intent = new Intent(me, InspireActivity.class);
+				Intent intent = new Intent(me, MoveMeActivity.class);
 				me.startActivity(intent);
 			}
         });
@@ -81,7 +81,12 @@ public class MainActivity extends ConsentedActivity
 			this.sendFeedback(this.getString(R.string.app_name));
 		else if (item.getItemId() == R.id.action_faq)
 			this.showFaq(this.getString(R.string.app_name));
+		else if (item.getItemId() == R.id.action_calendar)
+		{
+			Intent settingsIntent = new Intent(this, CalendarActivity.class);
+			this.startActivity(settingsIntent);
+		}
 
-        return super.onOptionsItemSelected(item);
+		return super.onOptionsItemSelected(item);
     }
 }

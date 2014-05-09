@@ -90,7 +90,7 @@
     <string name="message_calendar_error">Calendar scheduling is only available on Android 4.0 and newer devices.</string>
     
     <string name="action_toggle">Toggle Timer</string>
-    <string name="title_exercise_timer">Boost My Mood</string>
+    <string name="title_exercise_timer">Timer</string>
 
     <string name="title_pre_mood">Select Pre-Exercise Mood</string>
     <string name="title_post_mood">Select Post-Exercise Mood</string>
@@ -169,5 +169,19 @@
 	
 	<string name="mood_range" formatted="false">From %d to %d</string>
 	<string name="duration_label" formatted="false">Time Spent: %ss</string>
+	
+	<string name="label_no_upcoming_events">No upcoming exercises&#8230;</string>
+	
+	<string name="action_how_tos">How To\'s</string>
+	<string name="action_activities">Activities</string>
+	<string name="action_motivators">Motivators</string>
+	<string name="action_do_it_now">Do It Now!</string>
+	<string name="action_schedule_now">Schedule Activity</string>
+	<string name="action_calendar">Upcoming Exercises</string>
 		
+	<string name="title_move_me">Move Me</string>
+	<string name="title_calendar">Exercise Calendar</string>
+	<string name="subtitle_calendar" formatted="false">%d upcoming exercises</string>
+	<string name="subtitle_calendar_single" formatted="false">1 upcoming exercise</string>
+	<string name="message_nothing_scheduled">No exercised scheduled.\n\nTap here to schedule an exercise.</string>
 </resources>
