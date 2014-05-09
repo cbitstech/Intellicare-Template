@@ -209,9 +209,9 @@ public class ProgressActivity extends ConsentedActivity {
 
 //		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Theme_AppCompat_Light));
-		builder.setMessage("Download and choose from the images at this URL?: \"" + url + "\"")
-			.setPositiveButton("Yes", dialogClickListener)
-		    .setNegativeButton("No", dialogClickListener)
+		builder.setMessage(self.getString(R.string.download_and_choose_from_the_images_at_this_url_) + ": \"" + url + "\"")
+			.setPositiveButton(self.getString(R.string.yes), dialogClickListener)
+		    .setNegativeButton(self.getString(R.string.no), dialogClickListener)
 		    .show();
 	}
 	

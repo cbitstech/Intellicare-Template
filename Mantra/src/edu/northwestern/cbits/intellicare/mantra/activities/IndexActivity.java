@@ -80,10 +80,10 @@ public class IndexActivity extends ConsentedActivity {
 		if (mantraItemCursor.getCount() == 0)
 		{
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle(R.string.title_create_board);
-			builder.setMessage(R.string.message_create_board);
+			builder.setTitle(self.getString(R.string.title_create_board));
+			builder.setMessage(self.getString(R.string.message_create_board));
 			
-			builder.setPositiveButton(R.string.action_yes, new DialogInterface.OnClickListener() 
+			builder.setPositiveButton(self.getString(R.string.action_yes), new DialogInterface.OnClickListener() 
 			{
 				public void onClick(DialogInterface dialog, int which) 
 				{
@@ -91,7 +91,7 @@ public class IndexActivity extends ConsentedActivity {
 				}
 			});
 			
-			builder.setNegativeButton(R.string.action_no, new DialogInterface.OnClickListener()
+			builder.setNegativeButton(self.getString(R.string.action_no), new DialogInterface.OnClickListener()
 			{
 				public void onClick(DialogInterface dialog, int which) 
 				{
@@ -107,7 +107,7 @@ public class IndexActivity extends ConsentedActivity {
 	protected void onResume() {
 		super.onResume();
 		
-		CrashManager.register(this, "fcd8e6aab20e0e4ce94c0f86da7deb96", new CrashManagerListener() 
+		CrashManager.register(this, self.getString(R.string.crash_manager_app_id), new CrashManagerListener() 
 		{
 			public boolean shouldAutoUploadCrashes() 
 			{
@@ -132,7 +132,7 @@ public class IndexActivity extends ConsentedActivity {
 		// if this activity was opened by a response to the image gallery,
 		// then inform the user they need to tap on a mantra with which they wish to associate an image.
 		if(!displayedMantraAttachToast && getIntent().getData() != null) {
-			Toast.makeText(this, "Now tap on a mantra to attach your selected image to it!", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, self.getString(R.string.now_tap_on_a_mantra_to_attach_your_selected_image_to_it_), Toast.LENGTH_LONG).show();
 			displayedMantraAttachToast = true;
 		}
 	}
@@ -189,7 +189,7 @@ public class IndexActivity extends ConsentedActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				Intent intent = new Intent(self, SingleMantraBoardActivity.class);
-				intent.putExtra(NewMantraBoardActivity.FOCUS_BOARD_ID, id);
+				intent.putExtra(NewMantraBoardActivity.MANTRA_BOARD_ID, id);
 				
 				Uri uri = self.getIntent().getData();
 				if(uri != null) {
@@ -208,11 +208,11 @@ public class IndexActivity extends ConsentedActivity {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, final View view, int position, final long id) {
 				// options
-				final String[] optionItems = new String[] { "Edit", "Delete" };
+				final String[] optionItems = new String[] { self.getString(R.string.edit), self.getString(R.string.delete) };
 				
 				// create dialog for list of options
 				AlertDialog.Builder dlg = new Builder(self);
-				dlg.setTitle("Modify Mantra");
+				dlg.setTitle(self.getString(R.string.modify_mantra));
 				dlg.setItems(optionItems, new OnClickListener() {
 					
 					// on user clicking the Edit or Delete option...
@@ -232,9 +232,9 @@ public class IndexActivity extends ConsentedActivity {
 								Log.d(CN+".onItemLongClick....onClick", "You chose " + optionItems[which]);
 								
 								AlertDialog.Builder dlg1 = new AlertDialog.Builder(self);
-								dlg1.setTitle("Confirm deletion");
-								dlg1.setMessage("Are you sure you want to delete this mantra?");
-								dlg1.setPositiveButton("Yes", new OnClickListener() {
+								dlg1.setTitle(self.getString(R.string.confirm_deletion));
+								dlg1.setMessage(self.getString(R.string.are_you_sure_you_want_to_delete_this_mantra_));
+								dlg1.setPositiveButton(self.getString(R.string.yes), new OnClickListener() {
 									
 									@Override
 									public void onClick(DialogInterface dialog, int which) {
@@ -322,8 +322,8 @@ public class IndexActivity extends ConsentedActivity {
 		((EditText) v.findViewById(R.id.text_dialog)).setText(fb.getMantra());
 
 		AlertDialog.Builder editTextDlg = new AlertDialog.Builder(self);
-		editTextDlg.setMessage("Edit the text");
-		editTextDlg.setPositiveButton("OK", new OnClickListener() {
+		editTextDlg.setMessage(self.getString(R.string.edit_the_text));
+		editTextDlg.setPositiveButton(self.getString(R.string.ok), new OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {

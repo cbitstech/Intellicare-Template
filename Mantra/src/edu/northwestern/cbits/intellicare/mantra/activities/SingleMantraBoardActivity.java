@@ -72,7 +72,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 
 		Intent intent = this.getIntent();
 
-		this.mFocusBoardId = intent.getLongExtra(NewMantraBoardActivity.FOCUS_BOARD_ID, -1);
+		this.mFocusBoardId = intent.getLongExtra(NewMantraBoardActivity.MANTRA_BOARD_ID, -1);
 		mManager = MantraBoardManager.get(this);
 
 		MantraBoard mantraBoard = mManager.getFocusBoard(this.mFocusBoardId);
@@ -155,11 +155,11 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, final View view, int position, final long id) {
 				// options
-				final String[] optionItems = new String[] { "Edit", "Remove" };
+				final String[] optionItems = new String[] { self.getString(R.string.edit), self.getString(R.string.remove) };
 				
 				// create dialog for list of options
 				AlertDialog.Builder dlg = new Builder(self);
-				dlg.setTitle("Modify Mantra");
+				dlg.setTitle(self.getString(R.string.modify_mantra));
 				dlg.setItems(optionItems, new OnClickListener() {
 					
 					// on user clicking the Edit or Delete option...
@@ -180,8 +180,8 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 								((EditText) v.findViewById(R.id.text_dialog)).setText(fi.getCaption());
 
 								AlertDialog.Builder editTextDlg = new AlertDialog.Builder(self);
-								editTextDlg.setMessage("Edit the text");
-								editTextDlg.setPositiveButton("OK", new OnClickListener() {
+								editTextDlg.setMessage(self.getString(R.string.edit_the_text));
+								editTextDlg.setPositiveButton(self.getString(R.string.ok), new OnClickListener() {
 									
 									@Override
 									public void onClick(DialogInterface dialog, int which) {
@@ -205,9 +205,9 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 								Log.d(CN+".onItemLongClick....onClick", "You chose " + optionItems[which]);
 								
 								AlertDialog.Builder dlg1 = new AlertDialog.Builder(self);
-								dlg1.setTitle("Confirm deletion");
-								dlg1.setMessage("The image and caption will be removed from this mantra, but will not be permanently deleted from your device. Proceed?");
-								dlg1.setPositiveButton("Yes", new OnClickListener() {
+								dlg1.setTitle(self.getString(R.string.confirm_deletion));
+								dlg1.setMessage(self.getString(R.string.the_image_and_caption_will_be_removed_from_this_mantra_but_will_not_be_permanently_deleted_from_your_device_proceed_));
+								dlg1.setPositiveButton(self.getString(R.string.yes), new OnClickListener() {
 									
 									@Override
 									public void onClick(DialogInterface dialog, int which) {
@@ -216,7 +216,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 										Log.d(CN+".onItemLongClick....onClick", "deleted row = " + id + "; deleted row count = " + rowsDeleted);
 									}
 								});
-								dlg1.setNegativeButton("No", new OnClickListener() {
+								dlg1.setNegativeButton(self.getString(R.string.no), new OnClickListener() {
 									
 									@Override
 									public void onClick(DialogInterface dialog, int which) {
@@ -272,7 +272,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 			Uri selectedImage = intent.getData();
 			
 			if(selectedImage != null && selectedImage.toString().length() > 0) {
-				mFocusBoardId = intent.getLongExtra(NewMantraBoardActivity.FOCUS_BOARD_ID, -1);
+				mFocusBoardId = intent.getLongExtra(NewMantraBoardActivity.MANTRA_BOARD_ID, -1);
 				mManager = MantraBoardManager.get(this);
 				MantraBoard mantraBoard = mManager.getFocusBoard(mFocusBoardId);
 
@@ -320,15 +320,15 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 			String path = fic.getString(MantraBoardManager.COL_INDEX_FILE_PATH).trim();
 			Log.d(CN+".applyNewImageToMantra", "path.equals(filePathToImage) = " + (path.equals(imageFile.getAbsolutePath())) + "; path = \"" + path + "\"" + "; imageFile.getAbsolutePath() = \"" + imageFile.getAbsolutePath() + "\"");
 			if(path.equals(imageFile.getAbsolutePath())) {
-				Toast.makeText(this, "Image already applied. Consider choosing a different one!", Toast.LENGTH_LONG).show();
+				Toast.makeText(this, self.getString(R.string.image_already_applied_consider_choosing_a_different_one_), Toast.LENGTH_LONG).show();
 				imageAlreadyAssociated = true;
 				break;
 			}
 		}
 		if(!imageAlreadyAssociated) {
 			Log.d(CN+".applyNewImageToMantra","for board " + mFocusBoardId + ", associating image = " + imageFile.getAbsolutePath());
-			Toast.makeText(this, "Image applied!", Toast.LENGTH_SHORT).show();
-			mManager.createFocusImage(mFocusBoardId, imageFile.getAbsolutePath(), "SOME IMAGE CAPTION");
+			Toast.makeText(this, self.getString(R.string.image_applied_), Toast.LENGTH_SHORT).show();
+			mManager.createFocusImage(mFocusBoardId, imageFile.getAbsolutePath(), getString(R.string.some_image_caption));
 		}
 		
 		fic.close();
@@ -449,7 +449,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 	private void startCollectCameraActivity() {
 		Log.d(CN+".startCollectCameraActivity", "entered");
 		Intent intent = new Intent(this, CollectCameraActivity.class);
-		intent.putExtra(NewMantraBoardActivity.FOCUS_BOARD_ID, mFocusBoardId);
+		intent.putExtra(NewMantraBoardActivity.MANTRA_BOARD_ID, mFocusBoardId);
 		startActivity(intent);
 	}
 }

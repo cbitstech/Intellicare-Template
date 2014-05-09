@@ -3,6 +3,7 @@ package edu.northwestern.cbits.intellicare.mantra;
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.MantraBoardCursor;
 import edu.northwestern.cbits.intellicare.mantra.activities.NewMantraBoardActivity;
 import edu.northwestern.cbits.intellicare.mantra.activities.SingleMantraBoardActivity;
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ public class MantraBoardGridFragment extends Fragment {
 
 	protected static final String CN = "MantraBoardGridFragment";
 	private MantraBoardCursor mCursor;
+	private Activity activity = null;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,7 +36,7 @@ public class MantraBoardGridFragment extends Fragment {
 		gv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				Intent intent = new Intent(getActivity(), SingleMantraBoardActivity.class);
-				intent.putExtra(NewMantraBoardActivity.FOCUS_BOARD_ID, id);
+				intent.putExtra(NewMantraBoardActivity.MANTRA_BOARD_ID, id);
 				
 				Uri uri = getActivity().getIntent().getData();
 				if(uri != null) {
@@ -48,8 +50,9 @@ public class MantraBoardGridFragment extends Fragment {
 		
 		// if this activity was opened by a response to the image gallery,
 		// then inform the user they need to tap on a mantra with which they wish to associate an image.
-		if(getActivity().getIntent().getData() != null) {
-			Toast.makeText(getActivity(), "Now tap on a mantra to attach your selected image to it!", Toast.LENGTH_LONG).show();
+		activity = getActivity();
+		if(activity.getIntent().getData() != null) {
+			Toast.makeText(getActivity(), activity.getString(R.string.now_tap_on_a_mantra_to_attach_your_selected_image_to_it_), Toast.LENGTH_LONG).show();
 		}
 		
 		return view;

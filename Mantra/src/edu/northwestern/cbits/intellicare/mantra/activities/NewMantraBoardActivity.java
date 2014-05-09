@@ -20,7 +20,7 @@ import android.widget.Toast;
 public class NewMantraBoardActivity extends Activity implements OnItemSelectedListener {
 
 	public final static String CN = "NewMantraBoardActivity";
-	public final static String FOCUS_BOARD_ID = "edu.northwestern.cbits.intellicare.mantra.FOCUS_BOARD_ID";
+	public final static String MANTRA_BOARD_ID = "edu.northwestern.cbits.intellicare.mantra.FOCUS_BOARD_ID";
 	private MantraBoardManager mFocusBoardManager;
 	private static NewMantraBoardActivity self = null;
 	
@@ -89,7 +89,7 @@ public class NewMantraBoardActivity extends Activity implements OnItemSelectedLi
 					Toast.makeText(NewMantraBoardActivity.this, R.string.empty_mantra_toast, Toast.LENGTH_SHORT) .show();
 				} else {
 					MantraBoard mantraBoard = mFocusBoardManager.createFocusBoard(mantra);
-					intent.putExtra(FOCUS_BOARD_ID, mantraBoard.getId());
+					intent.putExtra(MANTRA_BOARD_ID, mantraBoard.getId());
 
 					// handle image-URI-passing intent from HomeActivity
 					Intent intentFromIndexActivity = getIntent();

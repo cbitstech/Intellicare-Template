@@ -21,6 +21,7 @@ import org.jsoup.Connection.Response;
 import org.jsoup.HttpStatusException;
 
 import edu.northwestern.cbits.intellicare.mantra.ImageExtractor;
+import edu.northwestern.cbits.intellicare.mantra.R;
 import junit.framework.TestCase;
 
 /**

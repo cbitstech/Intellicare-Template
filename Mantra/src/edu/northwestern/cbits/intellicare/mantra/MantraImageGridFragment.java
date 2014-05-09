@@ -38,7 +38,7 @@ public class MantraImageGridFragment extends Fragment {
 	private View renderSetup(LayoutInflater inflater, ViewGroup container) {
 		View view = inflater.inflate(R.layout.focus_images_grid, container,false);
 		Intent intent = getActivity().getIntent();
-		long focusBoardId = intent.getLongExtra(NewMantraBoardActivity.FOCUS_BOARD_ID, -1);
+		long focusBoardId = intent.getLongExtra(NewMantraBoardActivity.MANTRA_BOARD_ID, -1);
 		mCursor = MantraBoardManager.get(getActivity()).queryFocusImages(focusBoardId);
 		Util.logCursor(mCursor);
 		MantraImageCursorAdapter adapter = new MantraImageCursorAdapter(getActivity(), mCursor);

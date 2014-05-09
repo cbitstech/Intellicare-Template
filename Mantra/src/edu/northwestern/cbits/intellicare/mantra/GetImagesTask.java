@@ -91,7 +91,7 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 	        
 			int imageSize = imagesToDownload.get(url);
 			totalSize += imageSize;
-			currentProgressActionTextValue = "(" + imageSize + " bytes) Downloading: " + url;
+			currentProgressActionTextValue = "(" + imageSize + " bytes) " + activity.getString(R.string._bytes_downloading_) +" " + url;
 	        activity.runOnUiThread(new Runnable() {
 				
 				@Override
