@@ -3,7 +3,7 @@ package edu.northwestern.cbits.intellicare.mantra;
 import java.io.File;
 
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.MantraImageCursor;
-import edu.northwestern.cbits.intellicare.mantra.activities.NewFocusBoardActivity;
+import edu.northwestern.cbits.intellicare.mantra.activities.NewMantraBoardActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -38,7 +38,7 @@ public class MantraImageGridFragment extends Fragment {
 	private View renderSetup(LayoutInflater inflater, ViewGroup container) {
 		View view = inflater.inflate(R.layout.focus_images_grid, container,false);
 		Intent intent = getActivity().getIntent();
-		long focusBoardId = intent.getLongExtra(NewFocusBoardActivity.FOCUS_BOARD_ID, -1);
+		long focusBoardId = intent.getLongExtra(NewMantraBoardActivity.FOCUS_BOARD_ID, -1);
 		mCursor = MantraBoardManager.get(getActivity()).queryFocusImages(focusBoardId);
 		Util.logCursor(mCursor);
 		MantraImageCursorAdapter adapter = new MantraImageCursorAdapter(getActivity(), mCursor);

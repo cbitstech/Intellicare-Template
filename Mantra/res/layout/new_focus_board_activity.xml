@@ -39,7 +39,7 @@
         android:orientation="horizontal">
     <Button
         android:id="@+id/new_focus_board_cancel"
-        android:text="@string/new_focus_board_cancel_label"
+        android:text="@string/new_mantra_board_cancel_label"
         android:layout_weight="1"
         android:gravity="center"
         android:layout_width="match_parent"
@@ -47,7 +47,7 @@
     
     <Button
         android:id="@+id/new_focus_board_submit"
-        android:text="@string/new_focus_board_submit_label"
+        android:text="@string/new_mantra_board_submit_label"
         android:layout_weight="1"
         android:gravity="center"
         android:layout_width="match_parent"

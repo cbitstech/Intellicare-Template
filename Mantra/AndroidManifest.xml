@@ -59,8 +59,8 @@
             android:theme="@style/Theme.AppCompat.Light" >
         </activity>
         <activity
-            android:name="edu.northwestern.cbits.intellicare.mantra.activities.NewFocusBoardActivity"
-            android:label="@string/new_focus_board_label" 
+            android:name="edu.northwestern.cbits.intellicare.mantra.activities.NewMantraBoardActivity"
+            android:label="@string/new_mantra_board_label" 
             android:theme="@style/Theme.AppCompat.Light" >
         </activity>
         <activity
@@ -71,7 +71,7 @@
  
         <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.SingleMantraBoardActivity"
-            android:label="@string/focus_board_label"
+            android:label="@string/mantra_board_label"
             android:parentActivityName=".activities.IndexActivity" 
             android:theme="@style/Theme.AppCompat.Light" >
             <meta-data

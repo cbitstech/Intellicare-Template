@@ -17,12 +17,12 @@ import android.widget.Spinner;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Toast;
 
-public class NewFocusBoardActivity extends Activity implements OnItemSelectedListener {
+public class NewMantraBoardActivity extends Activity implements OnItemSelectedListener {
 
-	public final static String CN = "NewFocusBoardActivity";
+	public final static String CN = "NewMantraBoardActivity";
 	public final static String FOCUS_BOARD_ID = "edu.northwestern.cbits.intellicare.mantra.FOCUS_BOARD_ID";
 	private MantraBoardManager mFocusBoardManager;
-	private static NewFocusBoardActivity self = null;
+	private static NewMantraBoardActivity self = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +86,7 @@ public class NewFocusBoardActivity extends Activity implements OnItemSelectedLis
 				String mantra = mMantraText.getText().toString().trim();
 
 				if (mantra.equals("")) {
-					Toast.makeText(NewFocusBoardActivity.this, R.string.empty_mantra_toast, Toast.LENGTH_SHORT) .show();
+					Toast.makeText(NewMantraBoardActivity.this, R.string.empty_mantra_toast, Toast.LENGTH_SHORT) .show();
 				} else {
 					MantraBoard mantraBoard = mFocusBoardManager.createFocusBoard(mantra);
 					intent.putExtra(FOCUS_BOARD_ID, mantraBoard.getId());

@@ -189,7 +189,7 @@ public class IndexActivity extends ConsentedActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				Intent intent = new Intent(self, SingleMantraBoardActivity.class);
-				intent.putExtra(NewFocusBoardActivity.FOCUS_BOARD_ID, id);
+				intent.putExtra(NewMantraBoardActivity.FOCUS_BOARD_ID, id);
 				
 				Uri uri = self.getIntent().getData();
 				if(uri != null) {
@@ -296,7 +296,7 @@ public class IndexActivity extends ConsentedActivity {
 	}
 	
 	private void openNewFocusBoardActivity() {
-		Intent intent = new Intent(this, NewFocusBoardActivity.class);
+		Intent intent = new Intent(this, NewMantraBoardActivity.class);
 		Intent intentFromSharedUrlActivity = getIntent();
 		if(intentFromSharedUrlActivity != null) {
 			Uri uriFromImageBrowser = intentFromSharedUrlActivity.getData();

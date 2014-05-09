@@ -3,7 +3,7 @@
 
     <string name="app_name">Mantra</string>
     <string name="action_new_focus_board">Create Board</string>
-    <string name="focus_boards_header">Focus Boards</string>
+    <string name="mantra_boards_header">Mantra Boards</string>
     <string name="new_mantra_input_label">add a new mantra</string>
     <string name="new_mantra_examples_label">or select a mantra</string>
     <string name="new_mantra_label">New Mantra</string>
@@ -33,12 +33,12 @@
     <string name="collect_camera_label">Collect</string>
     <string name="camera_capture_button_label">Capture</string>
     <string name="browse_photos_label">Mantra Photos</string>
-    <string name="new_focus_board_label">New Focus Board</string>
-    <string name="new_focus_board_cancel_label">Cancel</string>
-    <string name="new_focus_board_submit_label">Create</string>
+    <string name="new_mantra_board_label">New Mantra Board</string>
+    <string name="new_mantra_board_cancel_label">Cancel</string>
+    <string name="new_mantra_board_submit_label">Create</string>
     <string name="new_image_action">New Image</string>
-    <string name="focus_board_list_label">Focus Boards</string>
-    <string name="focus_board_label">Focus Board</string>
+    <string name="mantra_board_list_label">Mantra Boards</string>
+    <string name="mantra_board_label">Mantra Board</string>
     <string name="image_thumbnail_alt">Image Thumbnail</string>
     <string name="title_activity_browse_photos2">BrowsePhotos2Activity</string>
     <string name="action_settings">Settings</string>
