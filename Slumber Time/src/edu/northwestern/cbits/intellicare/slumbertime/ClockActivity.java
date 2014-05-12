@@ -1607,6 +1607,29 @@ public class ClockActivity extends Activity implements SensorEventListener
 		else
 			apptText.setText(R.string.label_no_appointments);
 		
+		
+		Date next = AlarmService.nextAlarm(this);
+		
+		ImageView alarmExists = (ImageView) this.findViewById(R.id.button_alarm_exists);
+		TextView alarmText = (TextView) this.findViewById(R.id.alarm_view);
+		
+		if (next != null)
+		{
+			alarmExists.setVisibility(View.VISIBLE);
+			alarmText.setVisibility(View.VISIBLE);
+			
+			DateFormat nativeFormat = android.text.format.DateFormat.getTimeFormat(this);
+			
+			SimpleDateFormat dayFormat = new SimpleDateFormat("E, ");
+			
+			alarmText.setText(dayFormat.format(next) + nativeFormat.format(next).toLowerCase().replace(" ", ""));
+		}
+		else
+		{
+			alarmExists.setVisibility(View.GONE);
+			alarmText.setVisibility(View.GONE);
+		}
+		
 		this.manageBrightness();
 	}
 	
