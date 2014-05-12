@@ -171,7 +171,7 @@
 	<string name="email_feedback_body" formatted="false">Have thoughts about %s? Let us know!</string>
 	<string name="email_toast_no_client">Unable to send message using standard client. Please send a note to c-karr@northwestern.edu and let us know what\'s going on.</string>
 
-	<string name="action_feedback">Feedback</string>
+	<string name="action_feedback">Send Feedback</string>
 	<string name="subtitle_consented_date" formatted="false">Consented: %s</string>
 	
 	<string name="message_research_disclosure">Thank you for your interest in Intellicare.\n\nThis application is part of a research study funded by the National Institute of Health and is intended for legal residents of the United States who are 19 years or older.\n\nPlease click OK to certify that you meet these requirements.</string>
