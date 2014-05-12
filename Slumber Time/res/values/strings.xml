@@ -339,5 +339,7 @@
 
 	<string name="title_why_sleep_log">Why should I use a Sleep Log?</string>
 	<string name="message_why_sleep_log">Slumber Time will give you feedback on your sleep data using graphs and charts (link here if necessary). We recommend that you also review each entry in your sleep log to see if you think there are any patterns or activities that help or worsen your sleep. The more you fill out your sleep log, the more information you’ll have on what helps or hurts your sleep!</string>
+
+    <string name="label_upcoming_alarm">Upcoming Alarm</string>
 </resources>
 

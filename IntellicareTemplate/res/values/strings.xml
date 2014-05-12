@@ -224,5 +224,4 @@
     <string name="action_done">Done</string>
     
    	<string name="subtitle_pages" formatted="false">Page %d of %d</string>
-    
 </resources>
