@@ -123,16 +123,24 @@ public class AlarmService extends IntentService
 				if (cursor.moveToNext())
 				{
 					String name = cursor.getString(cursor.getColumnIndex(SlumberContentProvider.ALARM_NAME));
-					Uri uri = Uri.parse(cursor.getString(cursor.getColumnIndex(SlumberContentProvider.ALARM_CONTENT_URI)));
-
-					Intent startIntent = new Intent(AlarmService.START_ALARM, null, this.getApplicationContext(), AlarmService.class);
-					startIntent.setData(uri);
-					startIntent.putExtra(SlumberContentProvider.ALARM_NAME, name);
 					
-					AlarmService._currentTrackName = name;
-					AlarmService._currentUri = uri;
+					try
+					{
+						Uri uri = Uri.parse(cursor.getString(cursor.getColumnIndex(SlumberContentProvider.ALARM_CONTENT_URI)));
+	
+						Intent startIntent = new Intent(AlarmService.START_ALARM, null, this.getApplicationContext(), AlarmService.class);
+						startIntent.setData(uri);
+						startIntent.putExtra(SlumberContentProvider.ALARM_NAME, name);
+						
+						AlarmService._currentTrackName = name;
+						AlarmService._currentUri = uri;
 
-					this.startService(startIntent);
+						this.startService(startIntent);
+					}
+					catch (NullPointerException e)
+					{
+						LogManager.getInstance(this).logException(e);
+					}
 				}
 				
 				cursor.close();
