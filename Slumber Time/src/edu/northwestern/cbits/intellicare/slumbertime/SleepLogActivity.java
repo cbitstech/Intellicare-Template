@@ -68,7 +68,6 @@ public class SleepLogActivity extends ConsentedActivity
 		
 		logList.setAdapter(adapter);
 		
-		
 		logList.setEmptyView(this.findViewById(R.id.empty_log_list));
 		
 		final SleepLogActivity me = this;

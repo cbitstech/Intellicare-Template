@@ -169,7 +169,7 @@ public class SleepDiaryActivity extends ConsentedActivity
 				
 				c.close();
 
-				return false;
+				return true;
 			}
 		});
 		

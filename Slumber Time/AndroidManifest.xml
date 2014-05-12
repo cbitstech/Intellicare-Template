@@ -20,6 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:theme="@style/Theme.AppCompat" android:name=".ClockActivity" android:label="@string/app_name" />
+		<activity android:screenOrientation="landscape" android:theme="@style/Theme.AppCompat" android:name=".YouTubeActivity" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".SleepLogActivity" android:label="@string/app_name">
    			<intent-filter>
 		        <action android:name="android.intent.action.VIEW" />

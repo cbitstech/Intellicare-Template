@@ -244,17 +244,14 @@ public class HomeActivity extends PortraitActivity
 		
 		long startTime = 0;
 		
-		int durationIndex = prefs.getInt(HomeActivity.SELECTED_TIME_RANGE, -1);
+		int durationIndex = prefs.getInt(HomeActivity.SELECTED_TIME_RANGE, 2);
 		
-		if (durationIndex != -1)
+		long duration = Long.parseLong(context.getResources().getStringArray(R.array.graph_time_values)[durationIndex]);
+		
+		if (duration > 0)
 		{
-			long duration = Long.parseLong(context.getResources().getStringArray(R.array.graph_time_values)[durationIndex]);
-			
-			if (duration > 0)
-			{
-				long now = System.currentTimeMillis();
-				startTime = now - duration;
-			}
+			long now = System.currentTimeMillis();
+			startTime = now - duration;
 		}
 
 		String[] sensors = { SlumberContentProvider.TEMPERATURE, SlumberContentProvider.LIGHT_LEVEL, SlumberContentProvider.AUDIO_MAGNITUDE, SlumberContentProvider.AUDIO_FREQUENCY };
