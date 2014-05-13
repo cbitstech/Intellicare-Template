@@ -32,6 +32,8 @@ public class HtmlActivity extends ConsentedActivity
 	private int _messageId = -1;
 	private long _length = 0;
 
+    private Thread _timerThread = null;
+
 	private String _filename = null;
 	
 	protected void onCreate(Bundle savedInstanceState) 
@@ -47,7 +49,7 @@ public class HtmlActivity extends ConsentedActivity
 			this._titleId  = R.string.title_pmr_exercise;
 			this._subtitleId = R.string.subtitle_pmr_exercise;
 			this._messageId = R.string.message_pmr_exercise;
-			this._length = 300000;
+			this._length = 600000;
 		}
 		else if (DOT_HTML.equals(this._filename))
 		{
@@ -71,8 +73,14 @@ public class HtmlActivity extends ConsentedActivity
 		super.onResume();
 		
 		final HtmlActivity me = this;
-		
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        AudioFileManager audio = AudioFileManager.getInstance(this);
+
+        if (audio.isPlaying() == true){
+                audio.pause();
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		
 		builder.setTitle(R.string.title_instructions);
 		
@@ -93,29 +101,39 @@ public class HtmlActivity extends ConsentedActivity
 						try 
 						{
 							Thread.sleep(me._length);
-						} 
+
+                            me.runOnUiThread(new Runnable()
+                            {
+                                public void run()
+                                {
+                                    me.fetchStress();
+                                }
+                            });
+						}
 						catch (InterruptedException e) 
 						{
 
 						}
-						
-						me.runOnUiThread(new Runnable()
-						{
-							public void run() 
-							{
-								me.fetchStress();
-							}
-						});
+
+                        me._timerThread = null;
 					}
 				};
 				
-				Thread t = new Thread(r);
-				t.start();
+				me._timerThread = new Thread(r);
+                me._timerThread.start();
 			}
 		});
 		
 		builder.create().show();
 	}
+
+    protected void onPause()
+    {
+        super.onPause();
+
+        if (this._timerThread != null)
+            this._timerThread.interrupt();
+    }
 
     public boolean onCreateOptionsMenu(Menu menu)
     {

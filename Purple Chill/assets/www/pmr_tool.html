@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<title>PMR</title>
+        <script src="js/jquery-1.11.1.js" ></script>
 		<style type="text/css">
 			#pmr
 			{
@@ -12,7 +13,7 @@
 			div#pmr
 			{ 
 	           	background-color:  LemonChiffon;
-           		background-image: url("../pmr_base.gif");
+           		background-image: url("../images/pmr_base.gif");
 				background-repeat: no-repeat;
                 background-attachment: fixed;
 				background-position: center center;			           
@@ -29,12 +30,12 @@
 
 			@-webkit-keyframes pmr 
 			{
-				0% 	{background-image: url("../pmr_base.gif");  background-color:  LemonChiffon;  }
-                1% 	{background-image: url("../images/pmr_left_arm.gif");  background-color:  LemonChiffon; }
-				6%  {background-image: url("../images/pmr_left_arm.gif"); background-color:  LemonChiffon; }
-				7%  {background-image: url("../images/pmr_left_arm.gif"); background-color: pink; }
-				13% {background-image: url("../images/pmr_left_arm.gif"); background-color: pink; }
-				14% {background-image: url("../images/pmr_right_arm.gif"); background-color:  LemonChiffon; }
+				0% 	{background-image: url("../images/pmr_base.gif");  background-color:  LemonChiffon;  }
+                1% 	{background-image: url("../images/pmr_left_arm.gif");  background-color:  LemonChiffon;  }
+				6%  {background-image: url("../images/pmr_left_arm.gif"); background-color:  LemonChiffon;  }
+				7%  {background-image: url("../images/pmr_left_arm.gif"); background-color: pink;  }
+				13% {background-image: url("../images/pmr_left_arm.gif"); background-color: pink;  }
+				14% {background-image: url("../images/pmr_right_arm.gif"); background-color:  LemonChiffon;  }
 				20% {background-image: url("../images/pmr_right_arm.gif"); background-color:  LemonChiffon; }
 				21% {background-image: url("../images/pmr_right_arm.gif"); background-color: pink; }
 				27% {background-image: url("../images/pmr_right_arm.gif"); background-color: pink; }
@@ -64,5 +65,30 @@
 	</head>
 	<body>
 		<div id="pmr"></div>
+        <script type="text/javascript">
+            $( document ).ready(function() {
+            var start = new Date();
+            var maxTime = 600000;
+            var timeoutVal = Math.floor(maxTime/100);
+            animateUpdate();
+
+            function updateProgress(percentage) {
+                $('#pbar_innerdiv').css("width", percentage + "%");
+            }
+
+            function animateUpdate() {
+                var now = new Date();
+                var timeDiff = now.getTime() - start.getTime();
+                var perc = Math.round((timeDiff/maxTime)*100);
+                console.log(perc);
+                  if (perc <= 100) {
+                   updateProgress(perc);
+                   setTimeout(animateUpdate, timeoutVal);
+              }
+            }
+        });</script>
+        <div id="pbar_outerdiv" style="width: 300px; height: 20px; border: 1px solid grey; z-index: 1; position: relative; border-radius: 5px; -moz-border-radius: 5px;">
+            <div id="pbar_innerdiv" style="background-color: lightblue; z-index: 2; height: 100%; width: 0%;"></div>
+        </div>
 	</body>
 </html>
