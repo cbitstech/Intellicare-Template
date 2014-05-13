@@ -79,7 +79,7 @@ public class CollectCameraActivity extends Activity {
 
 		Intent intent = getIntent();
 		mFocusBoardId = intent.getLongExtra(
-				NewMantraBoardActivity.MANTRA_BOARD_ID, -1);
+				SingleMantraBoardActivity.MANTRA_BOARD_ID, -1);
 
 		mFocusBoardManager = MantraBoardManager.get(this);
 	}
@@ -157,7 +157,7 @@ public class CollectCameraActivity extends Activity {
 	private void startMantraBoardActivity() {
 // CJK		Intent intent = new Intent(CollectCameraActivity.this,
 		Intent intent = new Intent(CollectCameraActivity.this, SingleMantraBoardActivity.class);
-		intent.putExtra(NewMantraBoardActivity.MANTRA_BOARD_ID, mFocusBoardId);
+		intent.putExtra(SingleMantraBoardActivity.MANTRA_BOARD_ID, mFocusBoardId);
 		startActivity(intent);
 	}
 }

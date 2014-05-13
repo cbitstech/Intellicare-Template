@@ -61,11 +61,6 @@
             android:theme="@style/Theme.AppCompat.Light" >
         </activity>
         <activity
-            android:name="edu.northwestern.cbits.intellicare.mantra.activities.NewMantraBoardActivity"
-            android:label="@string/new_mantra_board_label" 
-            android:theme="@style/Theme.AppCompat.Light" >
-        </activity>
-        <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.SharedUrlActivity"
             android:label="@string/title_activity_shared_url" 
             android:theme="@style/Theme.AppCompat.Light" >

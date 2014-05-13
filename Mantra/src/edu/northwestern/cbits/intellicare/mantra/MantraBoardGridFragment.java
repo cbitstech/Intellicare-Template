@@ -1,7 +1,6 @@
 package edu.northwestern.cbits.intellicare.mantra;
 
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.MantraBoardCursor;
-import edu.northwestern.cbits.intellicare.mantra.activities.NewMantraBoardActivity;
 import edu.northwestern.cbits.intellicare.mantra.activities.SingleMantraBoardActivity;
 import android.app.Activity;
 import android.content.Intent;
@@ -36,7 +35,7 @@ public class MantraBoardGridFragment extends Fragment {
 		gv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				Intent intent = new Intent(getActivity(), SingleMantraBoardActivity.class);
-				intent.putExtra(NewMantraBoardActivity.MANTRA_BOARD_ID, id);
+				intent.putExtra(SingleMantraBoardActivity.MANTRA_BOARD_ID, id);
 				
 				Uri uri = getActivity().getIntent().getData();
 				if(uri != null) {

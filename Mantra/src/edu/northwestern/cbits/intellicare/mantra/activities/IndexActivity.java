@@ -1,21 +1,7 @@
 package edu.northwestern.cbits.intellicare.mantra.activities;
 
-import java.util.Date;
-
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.CrashManagerListener;
-
-import edu.northwestern.cbits.intellicare.ConsentedActivity;
-import edu.northwestern.cbits.intellicare.mantra.NotificationAlarm;
-import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.MantraBoardCursor;
-import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.MantraImageCursor;
-import edu.northwestern.cbits.intellicare.mantra.MantraBoard;
-import edu.northwestern.cbits.intellicare.mantra.MantraBoardGridFragment;
-import edu.northwestern.cbits.intellicare.mantra.MantraBoardManager;
-import edu.northwestern.cbits.intellicare.mantra.MantraImage;
-import edu.northwestern.cbits.intellicare.mantra.PictureUtils;
-import edu.northwestern.cbits.intellicare.mantra.R;
-import edu.northwestern.cbits.intellicare.mantra.Util;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -24,35 +10,36 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.CursorAdapter;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.GridView;
+import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.MantraBoardCursor;
+import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.MantraImageCursor;
+import edu.northwestern.cbits.intellicare.mantra.MantraBoard;
+import edu.northwestern.cbits.intellicare.mantra.MantraBoardManager;
+import edu.northwestern.cbits.intellicare.mantra.MantraImage;
+import edu.northwestern.cbits.intellicare.mantra.NotificationAlarm;
+import edu.northwestern.cbits.intellicare.mantra.PictureUtils;
+import edu.northwestern.cbits.intellicare.mantra.R;
 
 /**
  * Home/Main activity. The entry-point from a user's perspective.
@@ -87,7 +74,7 @@ public class IndexActivity extends ConsentedActivity {
 			{
 				public void onClick(DialogInterface dialog, int which) 
 				{
-					me.openNewFocusBoardActivity();
+					IndexActivity.createNewMantra(me);
 				}
 			});
 			
@@ -189,7 +176,7 @@ public class IndexActivity extends ConsentedActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				Intent intent = new Intent(self, SingleMantraBoardActivity.class);
-				intent.putExtra(NewMantraBoardActivity.MANTRA_BOARD_ID, id);
+				intent.putExtra(SingleMantraBoardActivity.MANTRA_BOARD_ID, id);
 				
 				Uri uri = self.getIntent().getData();
 				if(uri != null) {
@@ -275,7 +262,9 @@ public class IndexActivity extends ConsentedActivity {
 	    // Handle presses on the action bar items
 	    switch (item.getItemId()) {
 	        case R.id.action_new_focus_board:
-	            openNewFocusBoardActivity();
+	        	IndexActivity.createNewMantra(this);
+	        	
+//	            openNewFocusBoardActivity();
 	            return true;
 	        
 	        case R.id.action_settings:
@@ -295,20 +284,67 @@ public class IndexActivity extends ConsentedActivity {
 	    return super.onOptionsItemSelected(item);
 	}
 	
-	private void openNewFocusBoardActivity() {
-		Intent intent = new Intent(this, NewMantraBoardActivity.class);
-		Intent intentFromSharedUrlActivity = getIntent();
-		if(intentFromSharedUrlActivity != null) {
-			Uri uriFromImageBrowser = intentFromSharedUrlActivity.getData();
-			if(uriFromImageBrowser != null) {
-				// get the URL returned by the image browser
-				Log.d(CN+".openNewFocusBoardActivity", "uriFromImageBrowser = " + uriFromImageBrowser.toString());
-				intent.setData(intentFromSharedUrlActivity.getData());
+	private static void createNewMantra(final Activity activity) 
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+		
+		builder.setTitle(R.string.action_new_focus_board);
+
+		LayoutInflater inflater = LayoutInflater.from(activity);
+		final AutoCompleteTextView addView = (AutoCompleteTextView) inflater.inflate(R.layout.view_add_mantra, null, false);
+		
+		String[] mantras = activity.getResources().getStringArray(R.array.sample_mantras);
+		
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(activity, android.R.layout.simple_dropdown_item_1line, mantras);
+		
+		addView.setAdapter(adapter);
+		
+		builder.setView(addView);
+
+		builder.setPositiveButton(R.string.action_new_focus_board, new DialogInterface.OnClickListener() 
+		{
+			public void onClick(DialogInterface dialog, int which) 
+			{
+				final Intent intent = new Intent(activity, SingleMantraBoardActivity.class);
+
+				String mantra = addView.getText().toString().trim();
+				
+				MantraBoardManager boards = MantraBoardManager.get(activity);
+
+
+				MantraBoard mantraBoard = boards.createFocusBoard(mantra);
+				intent.putExtra(SingleMantraBoardActivity.MANTRA_BOARD_ID, mantraBoard.getId());
+
+				// handle image-URI-passing intent from HomeActivity
+				Intent intentFromIndexActivity = activity.getIntent();
+
+				if(intentFromIndexActivity != null) 
+				{
+					Uri uriFromImageBrowser = intentFromIndexActivity.getData();
+
+					if(uriFromImageBrowser != null) 
+					{
+						// get the URL returned by the image browser
+						Log.d(CN+".addSubmitListener", "uriFromImageBrowser = " + uriFromImageBrowser.toString());
+						intent.setData(intentFromIndexActivity.getData());
+					}
+				}
+				
+				activity.startActivity(intent);
 			}
-		}
-		startActivity(intent);
+		});
+
+		builder.setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() 
+		{
+			public void onClick(DialogInterface dialog, int which) 
+			{
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		builder.create().show();
 	}
-	
 	
 	/**
 	 * @param id

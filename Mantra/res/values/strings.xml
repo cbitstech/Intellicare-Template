@@ -90,5 +90,7 @@
     <string name="summary_day_end">Sets the time at which you end your day.</string>
 
     <string name="note_add_images">Attach your new photos to a mantra!</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="mantra_prefix">I am </string>
     
 </resources>

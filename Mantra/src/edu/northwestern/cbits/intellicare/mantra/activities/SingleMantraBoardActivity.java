@@ -45,6 +45,8 @@ import edu.northwestern.cbits.intellicare.mantra.Util;
 
 public class SingleMantraBoardActivity extends ActionBarActivity {
 
+	public final static String MANTRA_BOARD_ID = "edu.northwestern.cbits.intellicare.mantra.FOCUS_BOARD_ID";
+
 	private static final String CN = "SingleMantraBoardActivity";
 	private final SingleMantraBoardActivity self = this;
 	
@@ -72,7 +74,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 
 		Intent intent = this.getIntent();
 
-		this.mFocusBoardId = intent.getLongExtra(NewMantraBoardActivity.MANTRA_BOARD_ID, -1);
+		this.mFocusBoardId = intent.getLongExtra(SingleMantraBoardActivity.MANTRA_BOARD_ID, -1);
 		mManager = MantraBoardManager.get(this);
 
 		MantraBoard mantraBoard = mManager.getFocusBoard(this.mFocusBoardId);
@@ -272,7 +274,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 			Uri selectedImage = intent.getData();
 			
 			if(selectedImage != null && selectedImage.toString().length() > 0) {
-				mFocusBoardId = intent.getLongExtra(NewMantraBoardActivity.MANTRA_BOARD_ID, -1);
+				mFocusBoardId = intent.getLongExtra(SingleMantraBoardActivity.MANTRA_BOARD_ID, -1);
 				mManager = MantraBoardManager.get(this);
 				MantraBoard mantraBoard = mManager.getFocusBoard(mFocusBoardId);
 
@@ -449,7 +451,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 	private void startCollectCameraActivity() {
 		Log.d(CN+".startCollectCameraActivity", "entered");
 		Intent intent = new Intent(this, CollectCameraActivity.class);
-		intent.putExtra(NewMantraBoardActivity.MANTRA_BOARD_ID, mFocusBoardId);
+		intent.putExtra(SingleMantraBoardActivity.MANTRA_BOARD_ID, mFocusBoardId);
 		startActivity(intent);
 	}
 }
