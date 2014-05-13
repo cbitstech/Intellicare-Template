@@ -176,9 +176,16 @@
 	<string name="prefs_github_login">Sign in to GitHub</string>
 	<string name="prefs_github_logout">Sign out of GitHub</string>
 
+
+	<string name="prefs_jawbone_feat">Jawbone UP</string>
+	<string name="prefs_enable_jawbone">Enable Jawbone UP</string>
+	<string name="prefs_jawbone_login">Sign in to Jawbone UP</string>
+	<string name="prefs_jawbone_logout">Sign out of Jawbone UP</string>
+	
 	<string name="feat_github_checkin">Contributed to a GitHub repository.</string>
 	<string name="feat_fitbit_minutes">Achieved Fitbit daily active time goal.</string>
 	<string name="feat_fitbit_distance">Achieved Fitbit daily distance goal.</string>
 	<string name="feat_fitbit_steps">Achieved Fitbit daily steps goal.</string>
-								
+	<string name="feat_jawbone_steps">Achieved Jawbone UP daily steps goal.</string>
+									
 </resources>

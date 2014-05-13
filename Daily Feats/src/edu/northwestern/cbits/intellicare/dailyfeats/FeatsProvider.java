@@ -44,13 +44,14 @@ public class FeatsProvider extends android.content.ContentProvider
     private UriMatcher mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     private SQLiteDatabase mDb = null;
 
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
 	private static final long DAY_LENGTH = 1000 * 3600 * 24;
 	protected static final String START_FEATS_DATE = "start_feats_date";
 	private static final long STREAK_LENGTH = 3;
 
 	private static final String MIN_FEAT_COUNT = "min_feat_count";
 	private static final int DEFAULT_MIN_FEAT_COUNT = 2;
+	public static final String LEVEL_CHANGE_DATE = "level_change_date";
     
     public FeatsProvider()
     {
@@ -290,6 +291,14 @@ public class FeatsProvider extends android.content.ContentProvider
 	    		        newFeat.put("feat_name", context.getString(R.string.feat_4_4));
 	    		        newFeat.put("feat_level", 4);
 	    		        db.insert(FEATS_TABLE, null, newFeat);
+
+                    case 5:
+	    		        autoFeat = new ContentValues();
+	    		        autoFeat.put("feat_name", context.getString(R.string.feat_jawbone_steps));
+	    		        autoFeat.put("feat_level", 99);
+	    		        autoFeat.put("enabled", false);
+	    		        db.insert(FEATS_TABLE, null, autoFeat);
+                    
                     default:
                     	break;
                 }
@@ -565,6 +574,10 @@ public class FeatsProvider extends android.content.ContentProvider
 		long end = c.getTimeInMillis() + FeatsProvider.DAY_LENGTH;
 		long start = end - FeatsProvider.DAY_LENGTH;
 		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		
+		long lastChange = prefs.getLong(FeatsProvider.LEVEL_CHANGE_DATE, 0);
+		
 		String where = "feat_level = ?";
 		String[] args = { "" + level };
 		
@@ -582,7 +595,7 @@ public class FeatsProvider extends android.content.ContentProvider
 		int streak = 0;
 		boolean continueStreak = true;
 		
-		while (continueStreak)
+		while (continueStreak && start > lastChange)
 		{
 			int dayFeats = 0;
 			
@@ -610,8 +623,6 @@ public class FeatsProvider extends android.content.ContentProvider
 		
 		if (streak == 0)
 		{
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-			
 			long startFeats = prefs.getLong(FeatsProvider.START_FEATS_DATE, 0);
 			
 			end = c.getTimeInMillis() + FeatsProvider.DAY_LENGTH;

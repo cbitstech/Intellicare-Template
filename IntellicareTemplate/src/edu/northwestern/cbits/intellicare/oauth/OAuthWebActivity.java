@@ -26,6 +26,8 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -43,6 +45,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 import edu.northwestern.cbits.ic_template.R;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class OAuthWebActivity extends ActionBarActivity
 {
@@ -64,7 +67,7 @@ public class OAuthWebActivity extends ActionBarActivity
         
         Uri uri = this.getIntent().getData();
         
-        if (uri != null && uri.getScheme() != null && uri.getScheme().toLowerCase(Locale.ENGLISH).startsWith("http"))
+        if (uri != null && uri.getScheme() != null && (uri.getScheme().toLowerCase(Locale.ENGLISH).startsWith("http") || uri.getScheme().toLowerCase(Locale.ENGLISH).startsWith("https")))
         {
         	final OAuthWebActivity me = this;
         	
@@ -103,6 +106,8 @@ public class OAuthWebActivity extends ActionBarActivity
         			boolean oauth = false;
         			
         			if (url.toLowerCase(Locale.getDefault()).startsWith("http://purple.robot.com/oauth"))
+        				oauth = true;
+        			else if (url.toLowerCase(Locale.getDefault()).startsWith("https://purple.robot.com/oauth"))
         				oauth = true;
         			else if (url.toLowerCase(Locale.getDefault()).startsWith("http://tech.cbits.northwestern.edu/oauth/github?code="))
         			{
@@ -173,7 +178,97 @@ public class OAuthWebActivity extends ActionBarActivity
 								{
 									e.printStackTrace();
 								}
+							}
+        				};
+        				
+        				Thread t = new Thread(r);
+        				t.start();
+        				
+        				return true;
+        			}
+        			else if (url.toLowerCase(Locale.getDefault()).startsWith("https://tech.cbits.northwestern.edu/oauth/jawbone?code="))
+        			{
+        				Runnable r = new Runnable()
+        				{
+							public void run() 
+							{
+		        				Uri u = Uri.parse(url);
+		        				
+		        				final String code = u.getQueryParameter("code");
+		        				
+		        				final String newUrl = "https://jawbone.com/auth/oauth2/token";
 
+								try 
+								{
+									AndroidHttpClient androidClient = AndroidHttpClient.newInstance("Intellicare", me);
+
+							        HostnameVerifier hostnameVerifier = org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
+
+									SchemeRegistry registry = new SchemeRegistry();
+									registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+
+									SSLSocketFactory socketFactory = SSLSocketFactory.getSocketFactory();
+									registry.register(new Scheme("https", socketFactory, 443));
+
+									HttpParams params = androidClient.getParams();
+									HttpConnectionParams.setConnectionTimeout(params, 180000);
+									HttpConnectionParams.setSoTimeout(params, 180000);
+
+									SingleClientConnManager mgr = new SingleClientConnManager(params, registry);
+									HttpClient httpClient = new DefaultHttpClient(mgr, params);
+
+									HttpsURLConnection.setDefaultHostnameVerifier(hostnameVerifier);
+									
+									HttpPost httpPost = new HttpPost(newUrl);
+
+									List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+									pairs.add(new BasicNameValuePair("client_id", JawboneApi.CONSUMER_KEY));
+									pairs.add(new BasicNameValuePair("client_secret", JawboneApi.CONSUMER_SECRET));
+									pairs.add(new BasicNameValuePair("grant_type", "authorization_code"));
+									pairs.add(new BasicNameValuePair("code", code));
+									HttpEntity entity = new UrlEncodedFormEntity(pairs, HTTP.US_ASCII);
+
+									httpPost.setEntity(entity);
+
+									HttpResponse response = httpClient.execute(httpPost);
+
+									HttpEntity httpEntity = response.getEntity();
+
+									String result = EntityUtils.toString(httpEntity);
+									
+									String accessToken = "";
+									
+									try 
+									{
+										JSONObject resultObj = new JSONObject(result);
+										
+										accessToken = resultObj.getString("access_token");
+									} 
+									catch (JSONException e) 
+									{
+										LogManager.getInstance(me).logException(e);
+									}
+									
+									androidClient.close();
+									
+									String redirectUri = "http://tech.cbits.northwestern.edu/oauth/jawbone?code=" + accessToken;
+									
+			        				Intent intent = new Intent(me, OAuthActivity.class);
+			        				intent.setData(Uri.parse(redirectUri));
+			        				intent.putExtras(new Bundle());
+			        				
+			        				me.startActivity(intent);
+			        				
+			        				me.finish();
+								} 
+								catch (ParseException e) 
+								{
+									e.printStackTrace();
+								}
+								catch (IOException e) 
+								{
+									e.printStackTrace();
+								}
 							}
         				};
         				
@@ -184,6 +279,8 @@ public class OAuthWebActivity extends ActionBarActivity
 						
         			}
         			else if (url.toLowerCase(Locale.getDefault()).startsWith("http://tech.cbits.northwestern.edu/oauth"))
+        				oauth = true;
+        			else if (url.toLowerCase(Locale.getDefault()).startsWith("https://tech.cbits.northwestern.edu/oauth"))
         				oauth = true;
         			else if (url.toLowerCase(Locale.getDefault()).startsWith("http://pr-oauth/oauth"))
         				oauth = true;

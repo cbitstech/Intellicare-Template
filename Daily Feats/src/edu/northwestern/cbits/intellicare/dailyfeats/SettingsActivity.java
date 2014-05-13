@@ -20,6 +20,7 @@ import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 import edu.northwestern.cbits.intellicare.oauth.FitbitApi;
 import edu.northwestern.cbits.intellicare.oauth.GitHubApi;
+import edu.northwestern.cbits.intellicare.oauth.JawboneApi;
 import edu.northwestern.cbits.intellicare.oauth.OAuthActivity;
 
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener 
@@ -69,6 +70,27 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			{
 				fitbit.setTitle(R.string.prefs_fitbit_login);
 				fitbit.setKey("settings_fitbit_login");
+			}
+		}
+
+		if (prefs.contains("oauth_jawbone_token"))
+		{
+			Preference fitbit = this.findPreference("settings_jawbone_login");
+			
+			if (fitbit != null)
+			{
+				fitbit.setTitle(R.string.prefs_jawbone_logout);
+				fitbit.setKey("settings_jawbone_logout");
+			}
+		}
+		else
+		{
+			Preference fitbit = this.findPreference("settings_jawbone_logout");
+			
+			if (fitbit != null)
+			{
+				fitbit.setTitle(R.string.prefs_jawbone_login);
+				fitbit.setKey("settings_jawbone_login");
 			}
 		}
 
@@ -139,9 +161,20 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			
 			this.refreshItems();
 		}
-		else if (key.equals("settings_fitbit_login"))
+		else if (key.equals("settings_jawbone_login"))
 		{
+			this.fetchJawboneAuth();
+		}
+		else if (key.equals("settings_jawbone_logout"))
+		{
+			Editor e = prefs.edit();
 			
+			e.remove("oauth_jawbone_token");
+			e.remove("oauth_jawbone_secret");
+			
+			e.commit();
+			
+			this.refreshItems();
 		}
 		else if (key.equals("settings_github_login"))
 		{
@@ -218,6 +251,19 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		this.startActivity(intent);
 	}
 
+	private void fetchJawboneAuth() 
+	{
+        Intent intent = new Intent(this, OAuthActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		
+		intent.putExtra(OAuthActivity.CONSUMER_KEY, JawboneApi.CONSUMER_KEY);
+		intent.putExtra(OAuthActivity.CONSUMER_SECRET, JawboneApi.CONSUMER_SECRET);
+		intent.putExtra(OAuthActivity.REQUESTER, "jawbone");
+		intent.putExtra(OAuthActivity.CALLBACK_URL, "https://tech.cbits.northwestern.edu/oauth/jawbone");
+		
+		this.startActivity(intent);
+	}
+	
 	public void onSharedPreferenceChanged(SharedPreferences preferences, String key) 
 	{
 		if ("settings_fitbit_enabled".equalsIgnoreCase(key))
@@ -227,6 +273,16 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			
 			ContentValues values = new ContentValues();
 			values.put("enabled", preferences.getBoolean("settings_fitbit_enabled", false));
+			
+			this.getContentResolver().update(FeatsProvider.FEATS_URI, values, where, args);
+		}
+		if ("settings_jawbone_enabled".equalsIgnoreCase(key))
+		{
+			String where = "(feat_name = ?) AND feat_level = 99";
+			String[] args = { this.getString(R.string.feat_jawbone_steps) };
+			
+			ContentValues values = new ContentValues();
+			values.put("enabled", preferences.getBoolean("settings_jawbone_enabled", false));
 			
 			this.getContentResolver().update(FeatsProvider.FEATS_URI, values, where, args);
 		}
