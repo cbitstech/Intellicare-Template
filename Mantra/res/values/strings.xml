@@ -81,4 +81,12 @@
     <string name="image_applied_">Image applied!</string>
     <string name="image_already_applied_consider_choosing_a_different_one_">Image already applied. Consider choosing a different one!</string>
     
+    <!-- CK added... -->
+    
+    <string name="title_note_preferences">Notification Preferences</string>
+    <string name="title_day_start">Start of Day</string>
+    <string name="summary_day_start">Sets the time at which you start your day.</string>
+    <string name="title_day_end">End of Day</string>
+    <string name="summary_day_end">Sets the time at which you end your day.</string>
+    
 </resources>

@@ -191,7 +191,8 @@
 	<string name="creator_mxb">Mark Begale</string>
 	<string name="creator_gas">Gwendolyn Smuda</string>
 	<string name="creator_kmp">Kristina M. Pecora</string>
-									
+	<string name="creator_exs">Evan Story</string>
+										
 	<string name="role_clinical_lead">Clincal Designer</string>
 	<string name="role_tech_lead">Technology Designer</string>
 	<string name="role_clinical_consultant">Clincal Consultant</string>
