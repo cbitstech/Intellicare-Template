@@ -7,11 +7,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -91,6 +93,9 @@ public class HtmlActivity extends ConsentedActivity
 			public void onClick(DialogInterface dialog, int which) 
 			{
 				WebView webView = (WebView) me.findViewById(R.id.web_view);
+
+                WebSettings webSettings = webView.getSettings();
+                webSettings.setJavaScriptEnabled(true);
 				
 				webView.loadUrl("file:///android_asset/www/" + me._filename);
 				

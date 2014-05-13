@@ -224,7 +224,7 @@
 	    <item>1247</item>
         <item>1265</item>
         <item>1197</item>
-        <item>300</item>
+        <item>600</item>
    	</string-array>
 
 	<string-array name="visualization_media_url_times">
@@ -416,7 +416,7 @@
     <string name="ok">OK</string>
   	
   	<string name="title_pmr_exercise">Muscle Group Visualization</string>
-  	<string name="subtitle_pmr_exercise">Duration: 5 minutes</string>
+  	<string name="subtitle_pmr_exercise">Duration: 10 minutes</string>
   	<string name="message_pmr_exercise">Use this tool as a prompt for your own progressive muscle relaxation (PMR). If you do not remember how to do PMR, listen to the audio guide again. When the background is grey, contract the muscle group highlighted on the figure. When the background changes to blue, relax. This tool will guide you through a five minute exercise.</string>
 
   	<string name="title_dot_exercise">Breathing Dot Visualization</string>
