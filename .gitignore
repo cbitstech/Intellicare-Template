@@ -25,3 +25,5 @@ proguard-project.txt
 project.properties
 .settings
 Thumbs.db
+
+lint.xml

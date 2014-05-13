@@ -1,5 +1,6 @@
 package edu.northwestern.cbits.intellicare.mantra.activities;
 
+import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.mantra.Constants;
 import edu.northwestern.cbits.intellicare.mantra.GetImageListAndSizesTask;
 import edu.northwestern.cbits.intellicare.mantra.GetImagesTask;
@@ -19,9 +20,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ProgressBar;
+
 
 /**
  * Handles the passing of a URL from another Android app (e.g. Google Chrome) to this one.
@@ -30,7 +33,7 @@ import android.widget.ProgressBar;
  * @author mohrlab
  *
  */
-public class ProgressActivity extends Activity {
+public class ProgressActivity extends ConsentedActivity {
 	private static final String CN = "ProgressActivity";
 	private Activity self;
 	
@@ -44,6 +47,8 @@ public class ProgressActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_progress);
 
+//		new ContextThemeWrapper(this, R.style.Theme_AppCompat_Light)
+		
 		self = this;
 
 		// set-up the image-scanner service + response.
@@ -169,7 +174,7 @@ public class ProgressActivity extends Activity {
 		}
 		else if(extras.getBoolean(MediaScannerService.INTENT_KEY_TO_RECEIVER_STRINGARRAY)) {
 			Log.d(CN+".handleExternalIntents", "intent from new-images notification alarm");
-			SoloFocusBoardActivity.startBrowsePhotosActivity(this);
+			SingleMantraBoardActivity.startBrowsePhotosActivity(this);
 		}
 	}
 
@@ -202,10 +207,11 @@ public class ProgressActivity extends Activity {
 		    }
 		};
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("Download and choose from the images at this URL?: \"" + url + "\"")
-			.setPositiveButton("Yes", dialogClickListener)
-		    .setNegativeButton("No", dialogClickListener)
+//		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Theme_AppCompat_Light));
+		builder.setMessage(self.getString(R.string.download_and_choose_from_the_images_at_this_url_) + ": \"" + url + "\"")
+			.setPositiveButton(self.getString(R.string.yes), dialogClickListener)
+		    .setNegativeButton(self.getString(R.string.no), dialogClickListener)
 		    .show();
 	}
 	
@@ -218,4 +224,8 @@ public class ProgressActivity extends Activity {
 		return imageByteSize >= 15000;		// if at least 15kBytes, then true. simplest heuristic ever. 
 	}
 
+	public static Uri activityUri(Context context) 
+	{
+		return Uri.parse("intellicare://mantra/add_photos");
+	}
 }

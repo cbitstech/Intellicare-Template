@@ -1,24 +1,28 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-	android:background="#e0e0e0"    
-    android:padding="4dp">
-    <TextView android:id="@+id/network_visualization"
-        android:text="VisUaLIZation HeRe..."
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="fill_parent"
+    android:background="#ff000000"
+    android:layout_height="fill_parent">
+    <WebView android:id="@+id/network_visualization"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center" />
-	<RadioGroup android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scrollbars="none" />
+	<RadioGroup android:id="@+id/radio_user_states" 
+	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
-	    android:orientation="vertical">
+	    android:orientation="vertical"
+	    android:layout_marginLeft="4dp"
+	    android:layout_marginRight="4dp"
+	    android:layout_marginTop="0dp"
+	    android:layout_marginBottom="4dp"
+	    android:layout_gravity="bottom">
 	    <RadioButton android:id="@+id/button_lonely"
 	        android:layout_height="48dp"
 	        android:layout_width="match_parent"
 	        android:textSize="18sp"
-	        android:layout_margin="2dp"
+	        android:layout_marginTop="0dp"
+	        android:layout_marginLeft="2dp"
+	        android:layout_marginRight="2dp"
+	        android:layout_marginBottom="2dp"
 	        android:background="@drawable/card_background"
 	        android:drawableRight="@drawable/ic_action_emo_cry"
 	        android:text="@string/button_lonely" />
@@ -55,4 +59,4 @@
 	        android:layout_width="match_parent"
 	        android:text="@string/button_happy" />
 	</RadioGroup>
-</LinearLayout>
+</FrameLayout>

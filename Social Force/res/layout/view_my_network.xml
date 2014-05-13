@@ -1,19 +1,17 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent" 
-	android:orientation="vertical"
-	android:background="#e0e0e0">
-	<TextView android:id="@+id/network"
-	    android:layout_width="match_parent"
-	    android:layout_height="0dp"
-	    android:layout_weight="1"
-	    android:gravity="center"
-	    android:text="NetWOrK gOeS hEre!!!" />
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="fill_parent"
+    android:background="#ff000000"
+    android:layout_height="fill_parent">
+    <WebView android:id="@+id/network_visualization"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:scrollbars="none" />
 	<LinearLayout android:layout_height="wrap_content"
 	    android:layout_width="match_parent"
 	    android:orientation="vertical"
 	    android:padding="8dp"
 	    android:layout_margin="8dp"
+	    android:layout_gravity="bottom"
 	    android:background="@drawable/card_background">
 		<TextView android:id="@+id/network"
 		    android:layout_width="match_parent"
@@ -22,7 +20,7 @@
 		    android:gravity="center"
 		    android:singleLine="false"
 		    android:textSize="18sp"
-		    android:text="aRe You SATISfiED wiTH YOur NeTwORK?" />
+		    android:text="@string/question_satisfied" />
 	    <LinearLayout android:orientation="horizontal"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content">
@@ -30,12 +28,12 @@
 	            android:layout_width="0dp"
 	            android:layout_height="48dp"
 	            android:layout_weight="1"
-	            android:text="nO!!" />
+	            android:text="@string/action_no" />
 	        <Button android:id="@+id/button_yes"
 	            android:layout_width="0dp"
 	            android:layout_height="48dp"
 	            android:layout_weight="1"
-	            android:text="yEs!!" />
+	            android:text="@string/action_yes" />
 	    </LinearLayout>
 	</LinearLayout>    
-</LinearLayout> 
+</FrameLayout>

@@ -2,10 +2,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="edu.northwestern.cbits.intellicare.moveme.MainActivity" >
-    <item android:id="@+id/action_pleasure"
-        android:title="pLeaSURaTor"
-        app:showAsAction="never"
-        android:showAsAction="never" />
     <item android:id="@+id/action_rating"
         android:title="@string/action_rating"
         app:showAsAction="never"

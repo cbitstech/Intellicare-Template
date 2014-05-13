@@ -124,8 +124,8 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 			@Override
 			public void run() {
 				AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(activity);
-				dlgAlert.setMessage("Network error. Are you connected to the Internet? Error message for URL (" + url + "): " + e.getMessage());
-				dlgAlert.setPositiveButton("OK",
+				dlgAlert.setMessage(activity.getString(R.string.network_error_are_you_connected_to_the_internet_error_message_for_url_) + " (" + url + "): " + e.getMessage());
+				dlgAlert.setPositiveButton(activity.getString(R.string.ok),
 					    new DialogInterface.OnClickListener() {
 					        public void onClick(DialogInterface dialog, int which) {
 					          activity.finish();

@@ -1,6 +1,8 @@
 package edu.northwestern.cbits.intellicare.socialforce;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -39,7 +41,7 @@ public class NetworkActivity extends ConsentedActivity
 		{
 			public int getCount() 
 			{
-				return 5;
+				return 2;
 			}
 
 			public boolean isViewFromObject(View view, Object content) 
@@ -86,7 +88,31 @@ public class NetworkActivity extends ConsentedActivity
 						{
 							public void onClick(View arg0) 
 							{
-								pager.setCurrentItem(2, true);
+								AlertDialog.Builder builder = new AlertDialog.Builder(me);
+								builder.setTitle(R.string.title_network_meet);
+								builder.setMessage(R.string.network_step_one_content);
+								
+								builder.setPositiveButton(R.string.action_next, new DialogInterface.OnClickListener()
+								{
+									public void onClick(DialogInterface dialog, int which) 
+									{
+										AlertDialog.Builder builder = new AlertDialog.Builder(me);
+										builder.setTitle(R.string.title_network_meet);
+										builder.setMessage(R.string.network_step_one_a_content);
+										
+										builder.setPositiveButton(R.string.action_close, new DialogInterface.OnClickListener()
+										{
+											public void onClick(DialogInterface dialog, int which) 
+											{
+
+											}
+										});
+										
+										builder.create().show();
+									}
+								});
+								
+								builder.create().show();
 							}
 						});
 
@@ -96,10 +122,21 @@ public class NetworkActivity extends ConsentedActivity
 						{
 							public void onClick(View arg0) 
 							{
-								pager.setCurrentItem(4, true);
+								AlertDialog.Builder builder = new AlertDialog.Builder(me);
+								builder.setTitle(R.string.title_be_friendly);
+								builder.setMessage(R.string.network_step_two_content);
+								
+								builder.setPositiveButton(R.string.action_close, new DialogInterface.OnClickListener()
+								{
+									public void onClick(DialogInterface dialog, int which) 
+									{
+
+									}
+								});
+								
+								builder.create().show();
 							}
 						});
-
 
 						Button three = (Button) view.findViewById(R.id.step_three);
 						
@@ -187,8 +224,8 @@ public class NetworkActivity extends ConsentedActivity
 							actionBar.setSubtitle(R.string.subtitle_network_tricks);
 
 							nextItem.setVisible(true);
-							backItem.setVisible(true);
-							doneItem.setVisible(false);
+							backItem.setVisible(false);
+							doneItem.setVisible(true);
 							break;
 						case 2:
 							actionBar.setTitle(R.string.title_network_meet);
@@ -219,13 +256,13 @@ public class NetworkActivity extends ConsentedActivity
 		
 		pager.setCurrentItem(0, false);
 		
-		actionBar.setTitle(R.string.title_people_rater);
+		actionBar.setTitle(R.string.title_network);
 		actionBar.setSubtitle(me.getString(R.string.subtitle_rating, 1));
     }
     
     public boolean onCreateOptionsMenu(Menu menu) 
     {
-        this.getMenuInflater().inflate(R.menu.menu_intro, menu);
+        this.getMenuInflater().inflate(R.menu.menu_rate, menu);
         
         this._menu = menu;
 
@@ -256,15 +293,9 @@ public class NetworkActivity extends ConsentedActivity
     	}
     	else if (item.getItemId() == R.id.action_done)
     	{
-/*			final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-			
-			Editor e = prefs.edit();
-			e.putBoolean(NetworkActivity.CONTACTS_RATED, true);
-			e.commit();
-			
 			this.finish();
-*/			
-    		return true;
+
+			return true;
     	}
 
         return super.onOptionsItemSelected(item);

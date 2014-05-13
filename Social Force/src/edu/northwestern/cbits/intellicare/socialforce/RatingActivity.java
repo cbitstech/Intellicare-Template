@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -34,8 +36,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.socialforce.MainActivity.UserState;
 
 public class RatingActivity extends ConsentedActivity 
 {
@@ -44,7 +47,8 @@ public class RatingActivity extends ConsentedActivity
 	private Menu _menu = null;
 	private List<ContactRecord> _contacts = null;
 	
-    protected void onCreate(Bundle savedInstanceState) 
+    @SuppressLint("SetJavaScriptEnabled")
+	protected void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_intro);
@@ -64,7 +68,7 @@ public class RatingActivity extends ConsentedActivity
 		{
 			public int getCount() 
 			{
-				return 6;
+				return 5;
 			}
 
 			public boolean isViewFromObject(View view, Object content) 
@@ -106,15 +110,6 @@ public class RatingActivity extends ConsentedActivity
 						view = webViewZero;
 						break;
 					case 1:
-						WebView webViewOne = new WebView(container.getContext());
-						
-						webViewOne.loadUrl("file:///android_asset/www/rating_1.html");
-						webViewOne.setTag("1");
-
-						view = webViewOne;
-
-						break;
-					case 2:
 						view = inflater.inflate(R.layout.view_contact_rater, null);
 						
 						if (view instanceof ListView)
@@ -142,17 +137,20 @@ public class RatingActivity extends ConsentedActivity
 			    	    			else
 			    	    				contactName.setText(contact.number);
 			    	    			
-			    	    			contactName.setText(contactName.getText() + " (" + contact.count + ")");
-
-			    					contactNumber.setText(contact.number);
+			    	    			if (contact.count != 1)
+			    	    				contactNumber.setText(me.getString(R.string.label_contact_count, contact.number, contact.count));
+			    	    			else
+			    	    				contactNumber.setText(me.getString(R.string.label_contact_count_single, contact.number));
 			    					
 			    					if (contact.level >= 0)
 			    					{
-			    						MenuItem nextItem = me._menu.findItem(R.id.action_next);
-			    						nextItem.setVisible(true);
-
+			    						if (me._menu != null)
+			    						{
+				    						MenuItem nextItem = me._menu.findItem(R.id.action_next);
+				    						nextItem.setVisible(true);
+			    						}
+			    						
 			    						contactType.setText(levels[contact.level]);
-				    					nextItem.setVisible(true);
 			    					}
 			    					else
 			    						contactType.setText(R.string.placeholder_rate);
@@ -198,7 +196,7 @@ public class RatingActivity extends ConsentedActivity
 						}
 
 						break;
-					case 3:
+					case 2:
 						WebView webViewThree = new WebView(container.getContext());
 						
 						webViewThree.loadUrl("file:///android_asset/www/rating_3.html");
@@ -206,218 +204,254 @@ public class RatingActivity extends ConsentedActivity
 						view = webViewThree;
 
 						break;
-					case 4:
+					case 3:
 						view = inflater.inflate(R.layout.view_contact_category, null);
 						
-						if (view instanceof ListView)
+						ListView list = (ListView) view.findViewById(R.id.rater_list);
+						
+						ArrayList<ContactRecord> contacts = new ArrayList<ContactRecord>();
+						
+						for (ContactRecord contact : me._contacts)
 						{
-							ListView list = (ListView) view;
-							
-							ArrayList<ContactRecord> contacts = new ArrayList<ContactRecord>();
-							
-							for (ContactRecord contact : me._contacts)
-							{
-								if (contact.level >= 0 && contact.level < 3)
-									contacts.add(contact);
-							}
-							
-							Collections.sort(contacts, new Comparator<ContactRecord>()
-							{
-								public int compare(ContactRecord one, ContactRecord two) 
-								{
-									if (one.level < two.level)
-										return -1;
-									else if (one.level > two.level)
-										return 1;
-									
-									return one.name.compareTo(two.name);
-								}
-							});
-							
-					    	list.setAdapter(new ArrayAdapter<ContactRecord>(me, R.layout.row_category, contacts)
-			    			{
-			    	    		@SuppressWarnings("deprecation")
-								public View getView (int position, View convertView, ViewGroup parent)
-			    	    		{
-			    	    			if (convertView == null)
-			    	    			{
-			    	    				LayoutInflater inflater = LayoutInflater.from(me);
-			    	    				convertView = inflater.inflate(R.layout.row_category, parent, false);
-			    	    			}
-			    	    			
-			    	    			TextView contactName = (TextView) convertView.findViewById(R.id.label_contact_name);
-			    	    			TextView contactNumber = (TextView) convertView.findViewById(R.id.label_contact_number);
-			    	    			
-			    	    			final ContactRecord contact = this.getItem(position);
-			    	    			
-			    	    			if ("".equals(contact.name) == false)
-			    	    				contactName.setText(contact.name);
-			    	    			else
-			    	    				contactName.setText(contact.number);
-			    	    			
-			    	    			contactName.setText(contactName.getText() + " (" + contact.count + ")");
-
-			    					contactNumber.setText(contact.number);
-
-			    					final ImageView practical = (ImageView) convertView.findViewById(R.id.practical_item);
-
-			    					OvalShape practicalOval = new OvalShape();
-
-			    					ShapeDrawable practicalCircle = new ShapeDrawable(practicalOval);
-			    					practicalCircle.setIntrinsicHeight(32);
-			    					practicalCircle.setIntrinsicWidth(32);
-			    					practicalCircle.setBounds(0, 0, 32, 32);
-			    					practicalCircle.getPaint().setColor(0xff669900);
-			    					
-			    					practical.setImageDrawable(practicalCircle);
-			    					
-			    					if (ContactCalibrationHelper.isPractical(me, contact))
-			    						practical.setAlpha(255);
-			    					else
-			    						practical.setAlpha(64);
-
-			    					practical.setOnClickListener(new View.OnClickListener()
-			    					{
-										public void onClick(View arg0) 
-										{
-					    					if (ContactCalibrationHelper.isPractical(me, contact))
-					    					{
-					    						Toast.makeText(me, me.getString(R.string.toast_no_practical, contact.name), Toast.LENGTH_SHORT).show();
-					    						
-					    						ContactCalibrationHelper.setPractical(me, contact, false);
-					    						practical.setAlpha(64);
-					    					}
-					    					else
-					    					{
-					    						Toast.makeText(me, me.getString(R.string.toast_practical, contact.name), Toast.LENGTH_SHORT).show();
-
-					    						ContactCalibrationHelper.setPractical(me, contact, true);
-					    						practical.setAlpha(255);
-					    					}
-										}
-			    					});
-
-			    					final ImageView advice = (ImageView) convertView.findViewById(R.id.advice_item);
-
-			    					OvalShape adviceOval = new OvalShape();
-
-			    					ShapeDrawable adviceCircle = new ShapeDrawable(adviceOval);
-			    					adviceCircle.setIntrinsicHeight(32);
-			    					adviceCircle.setIntrinsicWidth(32);
-			    					adviceCircle.setBounds(0, 0, 32, 32);
-			    					adviceCircle.getPaint().setColor(0xff0099CC);
-			    					
-			    					advice.setImageDrawable(adviceCircle);
-
-			    					if (ContactCalibrationHelper.isAdvice(me, contact))
-			    						advice.setAlpha(255);
-			    					else
-			    						advice.setAlpha(64);
-
-			    					advice.setOnClickListener(new View.OnClickListener()
-			    					{
-										public void onClick(View arg0) 
-										{
-					    					if (ContactCalibrationHelper.isAdvice(me, contact))
-					    					{
-					    						Toast.makeText(me, me.getString(R.string.toast_no_advice, contact.name), Toast.LENGTH_SHORT).show();
-
-					    						ContactCalibrationHelper.setAdvice(me, contact, false);
-					    						advice.setAlpha(64);
-					    					}
-					    					else
-					    					{
-					    						Toast.makeText(me, me.getString(R.string.toast_advice, contact.name), Toast.LENGTH_SHORT).show();
-					    						
-					    						ContactCalibrationHelper.setAdvice(me, contact, true);
-					    						advice.setAlpha(255);
-					    					}
-										}
-			    					});
-
-			    					final ImageView companion = (ImageView) convertView.findViewById(R.id.companion_item);
-			    					
-			    					OvalShape companionOval = new OvalShape();
-
-			    					ShapeDrawable companionCircle = new ShapeDrawable(companionOval);
-			    					companionCircle.setIntrinsicHeight(32);
-			    					companionCircle.setIntrinsicWidth(32);
-			    					companionCircle.setBounds(0, 0, 32, 32);
-			    					companionCircle.getPaint().setColor(0xff9933CC);
-			    					
-			    					companion.setImageDrawable(companionCircle);
-
-			    					if (ContactCalibrationHelper.isCompanion(me, contact))
-			    						companion.setAlpha(255);
-			    					else
-			    						companion.setAlpha(64);
-
-			    					companion.setOnClickListener(new View.OnClickListener()
-			    					{
-										public void onClick(View arg0) 
-										{
-					    					if (ContactCalibrationHelper.isCompanion(me, contact))
-					    					{
-					    						Toast.makeText(me, me.getString(R.string.toast_no_companionship, contact.name), Toast.LENGTH_SHORT).show();
-
-					    						ContactCalibrationHelper.setCompanion(me, contact, false);
-					    						companion.setAlpha(64);
-					    					}
-					    					else
-					    					{
-					    						Toast.makeText(me, me.getString(R.string.toast_companionship, contact.name), Toast.LENGTH_SHORT).show();
-
-					    						ContactCalibrationHelper.setCompanion(me, contact, true);
-					    						companion.setAlpha(255);
-					    					}
-										}
-			    					});
-
-			    					final ImageView emotional = (ImageView) convertView.findViewById(R.id.emotional_item);
-
-			    					OvalShape emotionalOval = new OvalShape();
-
-			    					ShapeDrawable emotionalCircle = new ShapeDrawable(emotionalOval);
-			    					emotionalCircle.setIntrinsicHeight(32);
-			    					emotionalCircle.setIntrinsicWidth(32);
-			    					emotionalCircle.setBounds(0, 0, 32, 32);
-			    					emotionalCircle.getPaint().setColor(0xffCC0000);
-			    					
-			    					emotional.setImageDrawable(emotionalCircle);
-
-			    					if (ContactCalibrationHelper.isEmotional(me, contact))
-			    						emotional.setAlpha(255);
-			    					else
-			    						emotional.setAlpha(64);
-
-			    					emotional.setOnClickListener(new View.OnClickListener()
-			    					{
-										public void onClick(View arg0) 
-										{
-					    					if (ContactCalibrationHelper.isEmotional(me, contact))
-					    					{
-					    						Toast.makeText(me, me.getString(R.string.toast_no_emotional, contact.name), Toast.LENGTH_SHORT).show();
-
-					    						ContactCalibrationHelper.setEmotional(me, contact, false);
-					    						emotional.setAlpha(64);
-					    					}
-					    					else
-					    					{
-					    						Toast.makeText(me, me.getString(R.string.toast_emotional, contact.name), Toast.LENGTH_SHORT).show();
-
-					    						ContactCalibrationHelper.setEmotional(me, contact, true);
-					    						emotional.setAlpha(255);
-					    					}
-										}
-			    					});
-
-			    	    			return convertView;
-			    	    		}
-			    	    	});
+							if (contact.level >= 0 && contact.level < 3)
+								contacts.add(contact);
 						}
+						
+						Collections.sort(contacts, new Comparator<ContactRecord>()
+						{
+							public int compare(ContactRecord one, ContactRecord two) 
+							{
+								if (one.level < two.level)
+									return -1;
+								else if (one.level > two.level)
+									return 1;
+								else if (one.count < two.count)
+									return -1;
+								else if (one.count > two.count)
+									return 1;
+								
+								return one.name.compareTo(two.name);
+							}
+						});
+						
+				    	list.setAdapter(new ArrayAdapter<ContactRecord>(me, R.layout.row_category, contacts)
+		    			{
+		    	    		@SuppressWarnings("deprecation")
+							public View getView (int position, View convertView, ViewGroup parent)
+		    	    		{
+		    	    			if (convertView == null)
+		    	    			{
+		    	    				LayoutInflater inflater = LayoutInflater.from(me);
+		    	    				convertView = inflater.inflate(R.layout.row_category, parent, false);
+		    	    			}
+		    	    			
+		    	    			TextView contactName = (TextView) convertView.findViewById(R.id.label_contact_name);
+		    	    			TextView contactNumber = (TextView) convertView.findViewById(R.id.label_contact_number);
+		    	    			
+		    	    			final ContactRecord contact = this.getItem(position);
+		    	    			
+		    	    			if ("".equals(contact.name) == false)
+		    	    				contactName.setText(contact.name);
+		    	    			else
+		    	    				contactName.setText(contact.number);
+		    	    			
+		    	    			if (contact.count != 1)
+		    	    				contactNumber.setText(me.getString(R.string.label_contact_count, contact.number, contact.count));
+		    	    			else
+		    	    				contactNumber.setText(me.getString(R.string.label_contact_count_single, contact.number));
+
+		    					final ImageView practical = (ImageView) convertView.findViewById(R.id.practical_item);
+
+		    					OvalShape practicalOval = new OvalShape();
+
+		    					ShapeDrawable practicalCircle = new ShapeDrawable(practicalOval);
+		    					practicalCircle.setIntrinsicHeight(32);
+		    					practicalCircle.setIntrinsicWidth(32);
+		    					practicalCircle.setBounds(0, 0, 32, 32);
+		    					practicalCircle.getPaint().setColor(0xff669900);
+		    					
+		    					practical.setImageDrawable(practicalCircle);
+		    					
+		    					if (ContactCalibrationHelper.isPractical(me, contact))
+		    						practical.setAlpha(255);
+		    					else
+		    						practical.setAlpha(64);
+
+		    					practical.setOnClickListener(new View.OnClickListener()
+		    					{
+									public void onClick(View arg0) 
+									{
+				    					if (ContactCalibrationHelper.isPractical(me, contact))
+				    					{
+				    						ContactCalibrationHelper.setPractical(me, contact, false);
+				    						practical.setAlpha(64);
+				    					}
+				    					else
+				    					{
+				    						ContactCalibrationHelper.setPractical(me, contact, true);
+				    						practical.setAlpha(255);
+				    					}
+									}
+		    					});
+
+		    					final ImageView advice = (ImageView) convertView.findViewById(R.id.advice_item);
+
+		    					OvalShape adviceOval = new OvalShape();
+
+		    					ShapeDrawable adviceCircle = new ShapeDrawable(adviceOval);
+		    					adviceCircle.setIntrinsicHeight(32);
+		    					adviceCircle.setIntrinsicWidth(32);
+		    					adviceCircle.setBounds(0, 0, 32, 32);
+		    					adviceCircle.getPaint().setColor(0xff0099CC);
+		    					
+		    					advice.setImageDrawable(adviceCircle);
+
+		    					if (ContactCalibrationHelper.isAdvice(me, contact))
+		    						advice.setAlpha(255);
+		    					else
+		    						advice.setAlpha(64);
+
+		    					advice.setOnClickListener(new View.OnClickListener()
+		    					{
+									public void onClick(View arg0) 
+									{
+				    					if (ContactCalibrationHelper.isAdvice(me, contact))
+				    					{
+				    						ContactCalibrationHelper.setAdvice(me, contact, false);
+				    						advice.setAlpha(64);
+				    					}
+				    					else
+				    					{
+				    						ContactCalibrationHelper.setAdvice(me, contact, true);
+				    						advice.setAlpha(255);
+				    					}
+									}
+		    					});
+
+		    					final ImageView companion = (ImageView) convertView.findViewById(R.id.companion_item);
+		    					
+		    					OvalShape companionOval = new OvalShape();
+
+		    					ShapeDrawable companionCircle = new ShapeDrawable(companionOval);
+		    					companionCircle.setIntrinsicHeight(32);
+		    					companionCircle.setIntrinsicWidth(32);
+		    					companionCircle.setBounds(0, 0, 32, 32);
+		    					companionCircle.getPaint().setColor(0xff9933CC);
+		    					
+		    					companion.setImageDrawable(companionCircle);
+
+		    					if (ContactCalibrationHelper.isCompanion(me, contact))
+		    						companion.setAlpha(255);
+		    					else
+		    						companion.setAlpha(64);
+
+		    					companion.setOnClickListener(new View.OnClickListener()
+		    					{
+									public void onClick(View arg0) 
+									{
+				    					if (ContactCalibrationHelper.isCompanion(me, contact))
+				    					{
+				    						ContactCalibrationHelper.setCompanion(me, contact, false);
+				    						companion.setAlpha(64);
+				    					}
+				    					else
+				    					{
+				    						ContactCalibrationHelper.setCompanion(me, contact, true);
+				    						companion.setAlpha(255);
+				    					}
+									}
+		    					});
+
+		    					final ImageView emotional = (ImageView) convertView.findViewById(R.id.emotional_item);
+
+		    					OvalShape emotionalOval = new OvalShape();
+
+		    					ShapeDrawable emotionalCircle = new ShapeDrawable(emotionalOval);
+		    					emotionalCircle.setIntrinsicHeight(32);
+		    					emotionalCircle.setIntrinsicWidth(32);
+		    					emotionalCircle.setBounds(0, 0, 32, 32);
+		    					emotionalCircle.getPaint().setColor(0xffCC0000);
+		    					
+		    					emotional.setImageDrawable(emotionalCircle);
+
+		    					if (ContactCalibrationHelper.isEmotional(me, contact))
+		    						emotional.setAlpha(255);
+		    					else
+		    						emotional.setAlpha(64);
+
+		    					emotional.setOnClickListener(new View.OnClickListener()
+		    					{
+									public void onClick(View arg0) 
+									{
+				    					if (ContactCalibrationHelper.isEmotional(me, contact))
+				    					{
+				    						ContactCalibrationHelper.setEmotional(me, contact, false);
+				    						emotional.setAlpha(64);
+				    					}
+				    					else
+				    					{
+				    						ContactCalibrationHelper.setEmotional(me, contact, true);
+				    						emotional.setAlpha(255);
+				    					}
+									}
+		    					});
+
+		    	    			return convertView;
+		    	    		}
+		    	    	});
+						
+    					final ImageView emotional = (ImageView) view.findViewById(R.id.legend_emotional_item);
+
+    					OvalShape emotionalOval = new OvalShape();
+
+    					ShapeDrawable emotionalCircle = new ShapeDrawable(emotionalOval);
+    					emotionalCircle.setIntrinsicHeight(32);
+    					emotionalCircle.setIntrinsicWidth(32);
+    					emotionalCircle.setBounds(0, 0, 32, 32);
+    					emotionalCircle.getPaint().setColor(0xffCC0000);
+    					
+    					emotional.setImageDrawable(emotionalCircle);
+    					
+    					final ImageView companion = (ImageView) view.findViewById(R.id.legend_companion_item);
+    					
+    					OvalShape companionOval = new OvalShape();
+
+    					ShapeDrawable companionCircle = new ShapeDrawable(companionOval);
+    					companionCircle.setIntrinsicHeight(32);
+    					companionCircle.setIntrinsicWidth(32);
+    					companionCircle.setBounds(0, 0, 32, 32);
+    					companionCircle.getPaint().setColor(0xff9933CC);
+    					
+    					companion.setImageDrawable(companionCircle);
+
+    					final ImageView practical = (ImageView) view.findViewById(R.id.legend_practical_item);
+    					
+    					OvalShape practicalOval = new OvalShape();
+
+    					ShapeDrawable practicalCircle = new ShapeDrawable(practicalOval);
+    					practicalCircle.setIntrinsicHeight(32);
+    					practicalCircle.setIntrinsicWidth(32);
+    					practicalCircle.setBounds(0, 0, 32, 32);
+    					practicalCircle.getPaint().setColor(0xff669900);
+    					
+    					practical.setImageDrawable(practicalCircle);
+
+    					final ImageView advice = (ImageView) view.findViewById(R.id.legend_advice_item);
+
+    					OvalShape adviceOval = new OvalShape();
+
+    					ShapeDrawable adviceCircle = new ShapeDrawable(adviceOval);
+    					adviceCircle.setIntrinsicHeight(32);
+    					adviceCircle.setIntrinsicWidth(32);
+    					adviceCircle.setBounds(0, 0, 32, 32);
+    					adviceCircle.getPaint().setColor(0xff0099CC);
+    					
+    					advice.setImageDrawable(adviceCircle);
+
+
 
 						break;
-					case 5:
+					case 4:
 						view = inflater.inflate(R.layout.view_my_network, null);
 						
 						SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
@@ -444,7 +478,8 @@ public class RatingActivity extends ConsentedActivity
 						{
 							public void onClick(View v) 
 							{
-								Toast.makeText(me, "ToDo: LaUNch MeeT actIviTy", Toast.LENGTH_LONG).show();
+								Intent intent = new Intent(me, NetworkActivity.class);
+								me.startActivity(intent);
 							}
 						});
 
@@ -497,34 +532,41 @@ public class RatingActivity extends ConsentedActivity
 							doneItem.setVisible(false);
 							break;
 						case 1:
-							actionBar.setTitle(R.string.title_people_rater);
-							nextItem.setVisible(true);
-							backItem.setVisible(true);
-							doneItem.setVisible(false);
-							break;
-						case 2:
 							actionBar.setTitle(R.string.title_people_rater_tool);
 							nextItem.setVisible(true);
 							backItem.setVisible(true);
 							doneItem.setVisible(false);
 							break;
-						case 3:
+						case 2:
 							actionBar.setTitle(R.string.title_people_rater);
 							nextItem.setVisible(true);
 							backItem.setVisible(true);
 							doneItem.setVisible(false);
 							break;
-						case 4:
+						case 3:
 							actionBar.setTitle(R.string.title_people_category_tool);
 							nextItem.setVisible(true);
 							backItem.setVisible(true);
 							doneItem.setVisible(false);
 							break;
-						case 5:
+						case 4:
 							actionBar.setTitle(R.string.title_my_network);
 							nextItem.setVisible(false);
 							backItem.setVisible(true);
 							doneItem.setVisible(false);
+
+							
+							WebView graphView = (WebView) me.findViewById(R.id.network_visualization);
+							graphView.getSettings().setJavaScriptEnabled(true);
+							graphView.getSettings().setBuiltInZoomControls(true);
+							graphView.getSettings().setDisplayZoomControls(false);
+							graphView.getSettings().setLoadWithOverviewMode(true);
+							graphView.getSettings().setUseWideViewPort(true);
+							graphView.setInitialScale(1);
+							
+							graphView.addJavascriptInterface(me, "android");
+							graphView.loadDataWithBaseURL("file:///android_asset/viz/", MainActivity.generateBubbles(me, UserState.HAPPY), "text/html", null, null);
+							
 							break;
 					}
 				}
@@ -539,7 +581,7 @@ public class RatingActivity extends ConsentedActivity
     
     public boolean onCreateOptionsMenu(Menu menu) 
     {
-        this.getMenuInflater().inflate(R.menu.menu_intro, menu);
+        this.getMenuInflater().inflate(R.menu.menu_rate, menu);
         
         this._menu = menu;
 
@@ -582,5 +624,11 @@ public class RatingActivity extends ConsentedActivity
     	}
 
         return super.onOptionsItemSelected(item);
+    }
+    
+    @JavascriptInterface
+    public void selectByName(String name)
+    {
+    	// Intentionally empty.
     }
 }

@@ -2,8 +2,8 @@
 <resources>
 
     <string name="app_name">Mantra</string>
-    <string name="action_new_focus_board">Create Board</string>
-    <string name="focus_boards_header">Focus Boards</string>
+    <string name="action_new_focus_board">Add Mantra</string>
+    <string name="mantra_boards_header">Mantras</string>
     <string name="new_mantra_input_label">add a new mantra</string>
     <string name="new_mantra_examples_label">or select a mantra</string>
     <string name="new_mantra_label">New Mantra</string>
@@ -33,12 +33,12 @@
     <string name="collect_camera_label">Collect</string>
     <string name="camera_capture_button_label">Capture</string>
     <string name="browse_photos_label">Mantra Photos</string>
-    <string name="new_focus_board_label">New Focus Board</string>
-    <string name="new_focus_board_cancel_label">Cancel</string>
-    <string name="new_focus_board_submit_label">Create</string>
+    <string name="new_mantra_board_label">New Mantra Board</string>
+    <string name="new_mantra_board_cancel_label">Cancel</string>
+    <string name="new_mantra_board_submit_label">Create</string>
     <string name="new_image_action">New Image</string>
-    <string name="focus_board_list_label">Focus Boards</string>
-    <string name="focus_board_label">Focus Board</string>
+    <string name="mantra_board_list_label">Mantra Boards</string>
+    <string name="mantra_board_label">Mantra Board</string>
     <string name="image_thumbnail_alt">Image Thumbnail</string>
     <string name="title_activity_browse_photos2">BrowsePhotos2Activity</string>
     <string name="action_settings">Settings</string>
@@ -56,9 +56,46 @@
     <string name="title_download_queue">Image Downloads</string>
     <string name="subtitle_download_queue" formatted="false">Remaining downloads: %d of %d</string>
     
-    <string name="title_create_board">Create New Board?</string>
-    <string name="message_create_board">You currently have no mantra boards. Would you like to create one in order to begin attaching images?</string>
-    <string name="action_yes">Yes, create board</string>
+    <string name="title_create_board">Add New Mantra?</string>
+    <string name="message_create_board">You currently have no mantras. Would you like to add one in order to begin attaching images?</string>
+    <string name="action_yes">Yes</string>
     <string name="action_no">No</string>
+    <string name="are_you_sure_you_want_to_delete_this_mantra_">Are you sure you want to delete this mantra?</string>
+    <string name="yes">Yes</string>
+    <string name="modify_mantra">Modify Mantra</string>
+    <string name="confirm_deletion">Confirm deletion</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="edit_the_text">Edit the text</string>
+    <string name="ok">OK</string>
+    <string name="now_tap_on_a_mantra_to_attach_your_selected_image_to_it_">Now tap on a mantra to attach your selected image to it!</string>
+    <string name="crash_manager_app_id">fcd8e6aab20e0e4ce94c0f86da7deb96</string>
+    <string name="download_and_choose_from_the_images_at_this_url_">Download and choose from the images at this URL?</string>
+    <string name="no">No</string>
+    <string name="the_image_and_caption_will_be_removed_from_this_mantra_but_will_not_be_permanently_deleted_from_your_device_proceed_">The image and caption will be removed from this mantra, but will not be permanently deleted from your device. Proceed?</string>
+    <string name="network_error_are_you_connected_to_the_internet_error_message_for_url_">Network error. Are you connected to the Internet? Error message for URL (</string>
+    <string name="_bytes_downloading_">" bytes) Downloading: "</string>
+    <string name="media_file_timestamp_format">yyyyMMdd_HHmmss</string>
+    <string name="some_image_caption">SOME IMAGE CAPTION</string>
+    <string name="remove">Remove</string>
+    <string name="image_applied_">Image applied!</string>
+    <string name="image_already_applied_consider_choosing_a_different_one_">Image already applied. Consider choosing a different one!</string>
+    
+    <!-- CK added... -->
+    
+    <string name="title_note_preferences">Notification Preferences</string>
+    <string name="title_day_start">Start of Day</string>
+    <string name="summary_day_start">Sets the time at which you start your day.</string>
+    <string name="title_day_end">End of Day</string>
+    <string name="summary_day_end">Sets the time at which you end your day.</string>
+
+    <string name="note_add_images">Attach your new photos to a mantra!</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="mantra_prefix">I am </string>
+    
+    <string name="title_add_photos">Add Photos</string>
+    <string name="message_add_photos">Your mantra is currently empty. Add some images from your photo galley or use the camera to add photos to this mantra.</string>
+    <string name="action_gallery">Visit Gallery</string>
+    <string name="action_camera">Use Camera</string>
     
 </resources>

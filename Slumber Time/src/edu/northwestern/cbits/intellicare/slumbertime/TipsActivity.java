@@ -67,9 +67,8 @@ public class TipsActivity extends ConsentedActivity
 		{
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) 
 			{
-				Uri u = Uri.parse("http://www.youtube.com/watch?v=" + ids[arg2]);
-				
-				Intent intent = new Intent(Intent.ACTION_VIEW, u);
+				Intent intent = new Intent(me, YouTubeActivity.class);
+				intent.putExtra(YouTubeActivity.VIDEO_ID, ids[arg2]);
 				
 				me.startActivity(intent);
 			}

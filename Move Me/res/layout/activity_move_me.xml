@@ -1,0 +1,182 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/background_move_me"
+        android:contentDescription="" />
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="vertical">
+	    <View 
+	        android:layout_width="match_parent"
+	        android:layout_height="16dp"
+	        android:background="#80000000" />
+	    <LinearLayout android:orientation="horizontal"
+	        android:layout_weight="1"
+	        android:layout_width="match_parent"
+	        android:layout_height="0dp">
+		    <View 
+		        android:layout_width="16dp"
+		        android:layout_height="match_parent"
+		        android:background="#80000000" />
+		    <TextView android:id="@+id/button_howtos"
+		        android:layout_width="0dp"
+		        android:layout_height="match_parent"
+		        android:layout_weight="1" 
+		        android:text="@string/action_how_tos"
+		        android:textSize="32sp"
+		        android:textStyle="bold"
+		        android:singleLine="false" 
+		        android:gravity="bottom|right"
+		        android:paddingLeft="8dp" 
+		        android:paddingRight="16dp" 
+		        android:paddingTop="8dp" 
+		        android:paddingBottom="8dp" 
+		        android:textColor="#ffffff"
+		        android:shadowColor="#000000"
+		        android:shadowRadius="10" />
+		    <View 
+		        android:layout_width="16dp"
+		        android:layout_height="match_parent"
+		        android:background="#80000000" />
+   	    </LinearLayout>
+  	    <View 
+	        android:layout_width="match_parent"
+	        android:layout_height="16dp"
+	        android:background="#80000000" />
+	    <LinearLayout android:orientation="horizontal"
+	        android:layout_weight="1"
+	        android:layout_width="match_parent"
+	        android:layout_height="0dp">
+		    <View 
+		        android:layout_width="16dp"
+		        android:layout_height="match_parent"
+		        android:background="#80000000" />
+		    <TextView android:id="@+id/button_activities"
+		        android:layout_width="0dp"
+		        android:layout_height="match_parent"
+		        android:layout_weight="1" 
+		        android:text="@string/action_activities"
+		        android:textSize="32sp"
+		        android:textStyle="bold"
+		        android:singleLine="false" 
+		        android:gravity="bottom|right"
+		        android:paddingLeft="8dp" 
+		        android:paddingRight="16dp" 
+		        android:paddingTop="8dp" 
+		        android:paddingBottom="8dp" 
+		        android:textColor="#ffffff"
+		        android:shadowColor="#000000"
+		        android:shadowRadius="10" />
+		    <View 
+		        android:layout_width="16dp"
+		        android:layout_height="match_parent"
+		        android:background="#80000000" />
+   	    </LinearLayout>
+   	    <View 
+	        android:layout_width="match_parent"
+	        android:layout_height="16dp"
+	        android:background="#80000000" />
+	    <LinearLayout android:orientation="horizontal"
+	        android:layout_weight="1"
+	        android:layout_width="match_parent"
+	        android:layout_height="0dp">
+		    <View 
+		        android:layout_width="16dp"
+		        android:layout_height="match_parent"
+		        android:background="#80000000" />
+		    <TextView android:id="@+id/button_motivators"
+		        android:layout_width="0dp"
+		        android:layout_height="match_parent"
+		        android:layout_weight="1" 
+		        android:text="@string/action_motivators"
+		        android:textSize="32sp"
+		        android:textStyle="bold"
+		        android:singleLine="false" 
+		        android:gravity="bottom|right"
+		        android:paddingLeft="8dp" 
+		        android:paddingRight="16dp" 
+		        android:paddingTop="8dp" 
+		        android:paddingBottom="8dp" 
+		        android:textColor="#ffffff"
+		        android:shadowColor="#000000"
+		        android:shadowRadius="10" />
+		    <View 
+		        android:layout_width="16dp"
+		        android:layout_height="match_parent"
+		        android:background="#80000000" />
+   	    </LinearLayout>
+   	    <View 
+	        android:layout_width="match_parent"
+	        android:layout_height="16dp"
+	        android:background="#80000000" />
+	    <LinearLayout android:orientation="horizontal"
+	        android:layout_weight="1"
+	        android:layout_width="match_parent"
+	        android:layout_height="0dp">
+		    <View 
+		        android:layout_width="16dp"
+		        android:layout_height="match_parent"
+		        android:background="#80000000" />
+		    <TextView android:id="@+id/button_doitnow"
+		        android:layout_width="0dp"
+		        android:layout_height="match_parent"
+		        android:layout_weight="1" 
+		        android:text="@string/action_do_it_now"
+		        android:textSize="32sp"
+		        android:textStyle="bold"
+		        android:singleLine="false" 
+		        android:gravity="bottom|right"
+		        android:paddingLeft="8dp" 
+		        android:paddingRight="16dp" 
+		        android:paddingTop="8dp" 
+		        android:paddingBottom="8dp" 
+		        android:textColor="#ffffff"
+		        android:shadowColor="#000000"
+		        android:shadowRadius="10" />
+		    <View 
+		        android:layout_width="16dp"
+		        android:layout_height="match_parent"
+		        android:background="#80000000" />
+   	    </LinearLayout>   	    <View 
+	        android:layout_width="match_parent"
+	        android:layout_height="16dp"
+	        android:background="#80000000" />
+	    <LinearLayout android:orientation="horizontal"
+	        android:layout_weight="1"
+	        android:layout_width="match_parent"
+	        android:layout_height="0dp">
+		    <View 
+		        android:layout_width="16dp"
+		        android:layout_height="match_parent"
+		        android:background="#80000000" />
+		    <TextView android:id="@+id/button_schedule"
+		        android:layout_width="0dp"
+		        android:layout_height="match_parent"
+		        android:layout_weight="1" 
+		        android:text="@string/action_schedule_now"
+		        android:textSize="32sp"
+		        android:textStyle="bold"
+		        android:singleLine="false" 
+		        android:gravity="bottom|right"
+		        android:paddingLeft="8dp" 
+		        android:paddingRight="16dp" 
+		        android:paddingTop="8dp" 
+		        android:paddingBottom="8dp" 
+		        android:textColor="#ffffff"
+		        android:shadowColor="#000000"
+		        android:shadowRadius="10" />
+		    <View 
+		        android:layout_width="16dp"
+		        android:layout_height="match_parent"
+		        android:background="#80000000" />
+   	    </LinearLayout>
+   	    <View 
+	        android:layout_width="match_parent"
+	        android:layout_height="16dp"
+	        android:background="#80000000" />
+	</LinearLayout>
+</FrameLayout>

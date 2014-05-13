@@ -1050,9 +1050,8 @@ public class ClockActivity extends Activity implements SensorEventListener
 				{
 					public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) 
 					{
-						Uri u = Uri.parse("http://www.youtube.com/watch?v=" + ids[arg2]);
-						
-						Intent intent = new Intent(Intent.ACTION_VIEW, u);
+						Intent intent = new Intent(me, YouTubeActivity.class);
+						intent.putExtra(YouTubeActivity.VIDEO_ID, ids[arg2]);
 						
 						me.startActivity(intent);
 						
@@ -1606,6 +1605,29 @@ public class ClockActivity extends Activity implements SensorEventListener
 		}
 		else
 			apptText.setText(R.string.label_no_appointments);
+		
+		
+		Date next = AlarmService.nextAlarm(this);
+		
+		ImageView alarmExists = (ImageView) this.findViewById(R.id.button_alarm_exists);
+		TextView alarmText = (TextView) this.findViewById(R.id.alarm_view);
+		
+		if (next != null)
+		{
+			alarmExists.setVisibility(View.VISIBLE);
+			alarmText.setVisibility(View.VISIBLE);
+			
+			DateFormat nativeFormat = android.text.format.DateFormat.getTimeFormat(this);
+			
+			SimpleDateFormat dayFormat = new SimpleDateFormat("E, ");
+			
+			alarmText.setText(dayFormat.format(next) + nativeFormat.format(next).toLowerCase().replace(" ", ""));
+		}
+		else
+		{
+			alarmExists.setVisibility(View.GONE);
+			alarmText.setVisibility(View.GONE);
+		}
 		
 		this.manageBrightness();
 	}

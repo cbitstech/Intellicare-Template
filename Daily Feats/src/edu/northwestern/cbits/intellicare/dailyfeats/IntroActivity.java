@@ -41,7 +41,7 @@ public class IntroActivity extends ConsentedActivity
         
     	final IntroActivity me = this;
 
-        this.setContentView(R.layout.activity_intro);
+        this.setContentView(R.layout.activity_sequential);
 
         final ViewPager pager = (ViewPager) this.findViewById(R.id.pager_content);
         pager.setOffscreenPageLimit(0);
@@ -339,7 +339,7 @@ public class IntroActivity extends ConsentedActivity
     
     public boolean onCreateOptionsMenu(Menu menu) 
     {
-        this.getMenuInflater().inflate(R.menu.menu_intro, menu);
+        this.getMenuInflater().inflate(R.menu.menu_sequential, menu);
         
         this._menu = menu;
 

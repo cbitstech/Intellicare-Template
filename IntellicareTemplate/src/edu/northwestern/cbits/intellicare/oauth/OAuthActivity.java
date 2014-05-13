@@ -23,6 +23,7 @@ import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+
 import edu.northwestern.cbits.ic_template.R;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 
@@ -57,6 +58,8 @@ public class OAuthActivity extends Activity
         		api = FitbitApi.class;
         	else if ("github".equals(requester))
         		api = GitHubApi.class;
+        	else if ("jawbone".equals(requester))
+        		api = JawboneApi.class;
         	
         	final Class apiClass = api;
 
@@ -145,7 +148,7 @@ public class OAuthActivity extends Activity
     	{
     		Uri incomingUri = this.getIntent().getData();
 
-        	if ("http".equals(incomingUri.getScheme()))
+        	if ("http".equals(incomingUri.getScheme()) || "https".equals(incomingUri.getScheme()))
         	{
         		List<String> segments = incomingUri.getPathSegments();
         		
@@ -156,6 +159,29 @@ public class OAuthActivity extends Activity
         			if ("github".equals(requester))
         			{
             			String access = incomingUri.getQueryParameter("access_token");
+            			
+            			if (access != null)
+            			{
+		                	Editor e = prefs.edit();
+		                	e.putString("oauth_" + requester + "_secret", "");
+		                	e.putString("oauth_" + requester + "_token", access);
+		                	
+		                	e.commit();
+		                	
+		                	me.runOnUiThread(new Runnable()
+		                	{
+								public void run() 
+								{
+				                	me.authSuccess();
+								}
+		                	});
+		                	
+		                	return;
+            			}
+        			}
+        			else if ("jawbone".equals(requester))
+        			{
+            			String access = incomingUri.getQueryParameter("code");
             			
             			if (access != null)
             			{

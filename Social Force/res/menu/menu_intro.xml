@@ -7,8 +7,8 @@
         android:title="@string/action_next"
         app:showAsAction="always"
         android:visible="true" />
-    <item android:id="@+id/action_done"
-        android:title="@string/action_done"
+    <item android:id="@+id/action_rate"
+        android:title="@string/action_rate"
         app:showAsAction="always"
         android:visible="false" />
 </menu>

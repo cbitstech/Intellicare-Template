@@ -3,10 +3,7 @@
     package="edu.northwestern.cbits.intellicare.mantra"
     android:versionCode="10000"
     android:versionName="1.0.0" >
-
-    <uses-sdk
-        android:minSdkVersion="16"
-        android:targetSdkVersion="19" />
+    <uses-sdk android:minSdkVersion="13" android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -40,72 +37,86 @@
 
         <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.IndexActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" 
+            android:theme="@style/Theme.AppCompat.Light" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+			<intent-filter>
+		        <action android:name="android.intent.action.VIEW" />
+        	    <category android:name="android.intent.category.DEFAULT" />
+            	<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="intellicare" android:host="mantra" android:pathPrefix="/home" />
+			</intent-filter>
         </activity>
         <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.CollectCameraActivity"
-            android:label="@string/collect_camera_label" >
+            android:label="@string/collect_camera_label" 
+            android:theme="@style/Theme.AppCompat.Light" >
         </activity>
         <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.NewMantraActivity"
-            android:label="@string/new_mantra_label" >
-        </activity>
-        <activity
-            android:name="edu.northwestern.cbits.intellicare.mantra.activities.BrowsePhotosActivity"
-            android:label="@string/browse_photos_label" >
-        </activity>
-        <activity
-            android:name="edu.northwestern.cbits.intellicare.mantra.activities.NewFocusBoardActivity"
-            android:label="@string/new_focus_board_label" >
+            android:label="@string/new_mantra_label" 
+            android:theme="@style/Theme.AppCompat.Light" >
         </activity>
         <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.SharedUrlActivity"
-            android:label="@string/title_activity_shared_url" >
+            android:label="@string/title_activity_shared_url" 
+            android:theme="@style/Theme.AppCompat.Light" >
         </activity>
  
         <activity
-            android:name="edu.northwestern.cbits.intellicare.mantra.activities.SoloFocusBoardActivity"
-            android:label="@string/focus_board_label"
-            android:parentActivityName=".activities.IndexActivity" >
+            android:name="edu.northwestern.cbits.intellicare.mantra.activities.SingleMantraBoardActivity"
+            android:label="@string/mantra_board_label"
+            android:parentActivityName=".activities.IndexActivity" 
+            android:theme="@style/Theme.AppCompat.Light" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.NoFragmentsHomeActivity" />
+                android:value=".activities.IndexActivity" />
 
         </activity>
         <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName="android.preference.PreferenceActivity" >
+            android:parentActivityName="android.preference.PreferenceActivity" 
+            android:theme="@style/Theme.AppCompat.Light" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="android.preference.PreferenceActivity" />
         </activity>
         <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.ReviewActivity"
-            android:label="@string/title_activity_review" >
+            android:label="@string/title_activity_review" 
+            android:theme="@style/Theme.AppCompat.Light" >
+			<intent-filter>
+		        <action android:name="android.intent.action.VIEW" />
+        	    <category android:name="android.intent.category.DEFAULT" />
+            	<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="intellicare" android:host="mantra" android:pathPrefix="/review" />
+			</intent-filter>
         </activity>
         <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.TransparentActivity"
-            android:label="@string/title_activity_transparent" >
+            android:label="@string/title_activity_transparent" 
+            android:theme="@style/Theme.Transparent" >
         </activity>
         <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.ProgressActivity"
-            android:label="@string/title_activity_progress" >
-            
+            android:label="@string/title_activity_progress" 
+            android:theme="@style/Theme.AppCompat.Light" >
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data android:mimeType="text/plain" />
             </intent-filter>
-            
+			<intent-filter>
+		        <action android:name="android.intent.action.VIEW" />
+        	    <category android:name="android.intent.category.DEFAULT" />
+            	<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="intellicare" android:host="mantra" android:pathPrefix="/add_photos" />
+			</intent-filter>
         </activity>
         
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".DownloadActivity" android:label="@string/app_name" />

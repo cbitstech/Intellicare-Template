@@ -8,8 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import edu.northwestern.cbits.intellicare.mantra.CameraPreview;
-import edu.northwestern.cbits.intellicare.mantra.FocusBoardManager;
-import edu.northwestern.cbits.intellicare.mantra.FocusImage;
+import edu.northwestern.cbits.intellicare.mantra.MantraBoardManager;
+import edu.northwestern.cbits.intellicare.mantra.MantraImage;
 import edu.northwestern.cbits.intellicare.mantra.R;
 
 import android.app.Activity;
@@ -43,8 +43,8 @@ public class CollectCameraActivity extends Activity {
 				FileOutputStream fos = new FileOutputStream(pictureFile);
 				fos.write(data);
 				fos.close();
-				createFocusImage(pictureFile);
-				startFocusBoardActivity();
+				createMantraImage(pictureFile);
+				startMantraBoardActivity();
 			} catch (FileNotFoundException e) {
 				Log.d(TAG, "File not found: " + e.getMessage());
 			} catch (IOException e) {
@@ -54,7 +54,7 @@ public class CollectCameraActivity extends Activity {
 	};
 	private static final String TAG = "CollectCamera";
 	private long mFocusBoardId;
-	private FocusBoardManager mFocusBoardManager;
+	private MantraBoardManager mFocusBoardManager;
 
 	/** A safe way to get an instance of the Camera object. */
 	public static Camera getCameraInstance() {
@@ -79,9 +79,9 @@ public class CollectCameraActivity extends Activity {
 
 		Intent intent = getIntent();
 		mFocusBoardId = intent.getLongExtra(
-				NewFocusBoardActivity.FOCUS_BOARD_ID, -1);
+				SingleMantraBoardActivity.MANTRA_BOARD_ID, -1);
 
-		mFocusBoardManager = FocusBoardManager.get(this);
+		mFocusBoardManager = MantraBoardManager.get(this);
 	}
 
 	@Override
@@ -113,7 +113,7 @@ public class CollectCameraActivity extends Activity {
 	}
 
 	/** Create a File for saving an image or video */
-	private static File getOutputMediaFile() {
+	private File getOutputMediaFile() {
 		// To be safe, you should check that the SDCard is mounted
 		// using Environment.getExternalStorageState() before doing this.
 
@@ -132,7 +132,7 @@ public class CollectCameraActivity extends Activity {
 		}
 
 		// Create a media file name
-		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
+		String timeStamp = new SimpleDateFormat(this.getString(R.string.media_file_timestamp_format))
 				.format(new Date());
 		File mediaFile;
 		mediaFile = new File(mediaStorageDir.getPath() + File.separator
@@ -148,17 +148,16 @@ public class CollectCameraActivity extends Activity {
 		}
 	}
 
-	private void createFocusImage(File pictureFile) {
-		FocusImage image = mFocusBoardManager.createFocusImage(
-				mFocusBoardId, pictureFile.getAbsolutePath(), "SOME IMAGE CAPTION"
+	private void createMantraImage(File pictureFile) {
+		MantraImage image = mFocusBoardManager.createFocusImage(
+				mFocusBoardId, pictureFile.getAbsolutePath(), getString(R.string.some_image_caption)
 			);
 	}
 
-	private void startFocusBoardActivity() {
+	private void startMantraBoardActivity() {
 // CJK		Intent intent = new Intent(CollectCameraActivity.this,
-//		FocusBoardActivity.class);
-		Intent intent = new Intent(CollectCameraActivity.this, SoloFocusBoardActivity.class);
-		intent.putExtra(NewFocusBoardActivity.FOCUS_BOARD_ID, mFocusBoardId);
+		Intent intent = new Intent(CollectCameraActivity.this, SingleMantraBoardActivity.class);
+		intent.putExtra(SingleMantraBoardActivity.MANTRA_BOARD_ID, mFocusBoardId);
 		startActivity(intent);
 	}
 }

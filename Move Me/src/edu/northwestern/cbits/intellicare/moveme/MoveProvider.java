@@ -1,5 +1,11 @@
 package edu.northwestern.cbits.intellicare.moveme;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,6 +14,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.provider.CalendarContract;
 import android.util.Log;
 
 public class MoveProvider extends ContentProvider 
@@ -30,6 +37,20 @@ public class MoveProvider extends ContentProvider
 	protected static final String PRE_MOOD = "premood";
 	protected static final String POST_MOOD = "postmood";
 
+	public static class CalendarEvent
+	{
+		public String title = null;
+		public long start = 0;
+		public long id = -1;
+
+		public CalendarEvent(String title, long start, long id) 
+		{
+			this.title = title;
+			this.start = start;
+			this.id = id;
+		}
+	}
+	
     public MoveProvider()
     {
     	super();
@@ -131,5 +152,56 @@ public class MoveProvider extends ContentProvider
         }
 
 		return 0;
+	}
+	
+	public static List<CalendarEvent> events(Context context)
+	{
+		ArrayList<CalendarEvent> events = new ArrayList<CalendarEvent>();
+		
+		long now = System.currentTimeMillis();
+
+		String selection = CalendarContract.Events.DESCRIPTION + " LIKE ? AND " + CalendarContract.Events.DTEND + " > ?";
+		String[] args = { "%" + context.getString(R.string.event_description) + "%", "" + now };
+
+		Cursor c = context.getContentResolver().query(CalendarContract.Events.CONTENT_URI, null, selection, args, CalendarContract.Events.DTSTART);
+		
+		while (c.moveToNext())
+		{
+			String eventTitle = c.getString(c.getColumnIndex(CalendarContract.Events.TITLE));
+			
+			long id = c.getLong(c.getColumnIndex(CalendarContract.Events._ID));
+			
+			long start = c.getLong(c.getColumnIndex(CalendarContract.Events.DTSTART));
+			
+			CalendarEvent event = new CalendarEvent(eventTitle, start, id);
+			
+			events.add(event);
+			
+		}
+		
+		c.close();
+		
+		return events;
+	}
+
+	public static String fetchNextEventTitle(Context context) 
+	{
+		List<CalendarEvent> events = MoveProvider.events(context);
+		
+		Log.e("MM", "EVENTS: " + events.size());
+		
+		if (events.size() > 0)
+		{
+			CalendarEvent event = events.get(0);
+			
+			Date date = new Date(event.start);
+			
+			DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(context);
+			DateFormat dateFormat = new SimpleDateFormat("E., ");
+			
+			return dateFormat.format(date) + timeFormat.format(date) + ": " + event.title;
+		}
+
+		return context.getString(R.string.label_no_upcoming_events);
 	}
 }

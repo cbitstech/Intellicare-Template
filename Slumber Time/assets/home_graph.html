@@ -51,6 +51,91 @@
 					return defaults;
 				}
 			});
+
+			Rickshaw.Graph.Renderer.ScatterPlotCustom = Rickshaw.Class.create(Rickshaw.Graph.Renderer, {
+				name: 'scatterplot-custom',
+				defaults: function($super) {
+					return Rickshaw.extend( $super(), {
+						unstack: true,
+						fill: true,
+						stroke: false,
+						padding:{ top: 0.01, right: 0.01, bottom: 0.01, left: 0.01 },
+						dotSize: 4
+					});
+				},
+				initialize: function($super, args) {
+					$super(args);
+				},
+				render: function(args) {
+					args = args || {};
+					var graph = this.graph;
+
+					var series = args.series || graph.series;
+					var vis = args.vis || graph.vis;
+
+					var dotSize = this.dotSize;
+
+					vis.selectAll('*').remove();
+
+					series.forEach(function(series) {
+						if (series.disabled) return;
+
+						var nodes = vis.selectAll("path")
+							.data(series.stack.filter( function(d) { return d.y !== null } ))
+							.enter().append("svg:circle")
+								.attr("cx", function(d) { return graph.x(d.x) })
+								.attr("cy", function(d) { return graph.y(d.y) })
+								.attr("r", function(d) { return ("r" in d) ? d.r : dotSize});
+						if (series.className) {
+							nodes.classed(series.className, true);
+						}
+			
+						Array.prototype.forEach.call(nodes[0], function(n) {
+							n.setAttribute('fill', series.color);
+						});
+
+						nodes = vis.selectAll("path")
+							.data(series.stack.filter( function(d) { return d.y !== null } ))
+							.enter().append("svg:rect")
+								.attr("y", function(d) { return graph.y(d.y) - 1 })
+								.attr("height", function(d) { return 2 })
+								.attr("x", function(d) {
+									for (var i = 0; i < series.values.length; i++)
+									{
+										var value = series.values[i];
+										
+										if (d.x === value.x / 1000)
+										{
+											return graph.x(value.sleep / 1000);
+										}
+									}
+									
+									return graph.x(d.x);
+								 })
+								.attr("width", function(d) { 
+									for (var i = 0; i < series.values.length; i++)
+									{
+										var value = series.values[i];
+										
+										if (d.x === value.x / 1000)
+										{
+											return graph.x(value.wake / 1000) - graph.x(value.sleep / 1000);
+										}
+									}
+									
+									return 8;
+								 });
+
+						if (series.className) {
+							nodes.classed(series.className, true);
+						}
+			
+						Array.prototype.forEach.call(nodes[0], function(n) {
+							n.setAttribute('fill', series.color);
+						});
+					}, this );
+				}
+			});
 			
 			$(document).ready(function()
 			{
@@ -116,19 +201,51 @@
 					element: document.getElementById("chart"),
 					height: $(window).height(),
 					width: $(window).width(),
-					dotSize: 7,
+					dotSize: 4,
 					series: values
 				});
 				
 				graph.render();
 
 				var time = new Rickshaw.Fixtures.Time();
-				var timeUnit = time.unit("week");
+				
+				var timeUnit = {
+					name: 'st_day',
+					seconds: 86400,
+					formatter: function(d) 
+					{ 
+						return d3.time.format('%b %e')(d); 
+					}
+				};
 				
 				var xAxis = new Rickshaw.Graph.Axis.Time({ 
 					graph: graph,
 					timeUnit: timeUnit
 				});
+
+				var offset = (new Date()).getTimezoneOffset() * 60;
+
+				xAxis.tickOffsets = function() {
+					var domain = this.graph.x.domain();
+
+					var unit = this.fixedTimeUnit || this.appropriateTimeUnit();
+					var count = Math.ceil((domain[1] - domain[0]) / unit.seconds);
+
+					var runningTick = domain[0];
+
+					var offsets = [];
+
+					for (var i = 0; i < count; i++) {
+
+						var tickValue = time.ceil(runningTick, unit);
+						runningTick = tickValue + unit.seconds / 2;
+
+						offsets.push( { value: tickValue + offset, unit: unit } );
+					}
+					
+					return offsets;
+				};
+				
 				xAxis.render();
 
 				var detail = new Rickshaw.Graph.HoverDetail({

@@ -3,6 +3,7 @@ package edu.northwestern.cbits.intellicare.dailyfeats;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -12,6 +13,23 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.SingleClientConnManager;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,8 +48,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.net.http.AndroidHttpClient;
 import android.preference.PreferenceManager;
-
+import android.util.Log;
 import edu.northwestern.cbits.intellicare.StatusNotificationManager;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 import edu.northwestern.cbits.intellicare.oauth.FitbitApi;
@@ -50,6 +69,7 @@ public class ScheduleManager
 	
 	private long _lastGitHubCheck = 0;
 	private long _lastFitbitCheck = 0;
+	private long _lastJawboneCheck = 0;
 
 	public ScheduleManager(Context context) 
 	{
@@ -111,20 +131,26 @@ public class ScheduleManager
 
 			if (oldLevel > newLevel)
 			{
+				e.putLong(FeatsProvider.LEVEL_CHANGE_DATE, System.currentTimeMillis());
+				e.commit();
+
 				HashMap<String, Object> payload = new HashMap<String, Object>();
 				payload.put("user_level", newLevel);
 				payload.put("full_mode", prefs.getBoolean("settings_full_mode", true));
-				
+
 				LogManager.getInstance(this._context).log("feats_demoted", payload);
 
 				message = this._context.getString(R.string.note_title_demoted, newLevel);
 			}
 			else if (newLevel > oldLevel)
 			{
+				e.putLong(FeatsProvider.LEVEL_CHANGE_DATE, System.currentTimeMillis());
+				e.commit();
 				HashMap<String, Object> payload = new HashMap<String, Object>();
+				
 				payload.put("user_level", newLevel);
 				payload.put("full_mode", prefs.getBoolean("settings_full_mode", true));
-				
+
 				LogManager.getInstance(this._context).log("feats_promoted", payload);
 				
 				message = this._context.getString(R.string.note_title_promoted, newLevel);
@@ -201,6 +227,32 @@ public class ScheduleManager
 			
 			this._lastFitbitCheck  = now;
 		}
+		
+		if (now - this._lastJawboneCheck > 1800000 && prefs.getBoolean("settings_jawbone_enabled", false))
+		{
+			Runnable r = new Runnable()
+			{
+				public void run() 
+				{
+					Set<String> goals = me.todayJawboneGoals();
+
+					int level = prefs.getInt(FeatsProvider.DEPRESSION_LEVEL, 2);
+
+					for (String feat : goals)
+					{
+						FeatsProvider.clearFeats(me._context, feat, new Date());
+						
+						FeatsProvider.createFeat(me._context, feat, level);
+					}
+				}
+			};
+			
+			Thread t = new Thread(r);
+			t.start();
+			
+			this._lastJawboneCheck  = now;
+		}
+		
 	}
 	
 	private Set<String> todayFitbitGoals()
@@ -238,13 +290,14 @@ public class ScheduleManager
 				Response response = request.send();
 
 				JSONObject body = new JSONObject(response.getBody());
+				
 				JSONObject summary = body.getJSONObject("summary");
 
 				long veryActive = summary.getLong("veryActiveMinutes");
-				long fairlyActive = summary.getLong("fairlyActiveMinutes");
-				long lightlyActive = summary.getLong("lightlyActiveMinutes");
+//				long fairlyActive = summary.getLong("fairlyActiveMinutes");
+//				long lightlyActive = summary.getLong("lightlyActiveMinutes");
 
-				long active = veryActive + fairlyActive + lightlyActive;
+//				long active = veryActive; //  + fairlyActive + lightlyActive;
 
 				long steps = summary.getLong("steps");
 
@@ -272,7 +325,7 @@ public class ScheduleManager
 				if (steps >= goalSteps)
 					metGoals.add(this._context.getString(R.string.feat_fitbit_steps));
 
-				if (active >= goalMinutes)
+				if (veryActive >= goalMinutes)
 					metGoals.add(this._context.getString(R.string.feat_fitbit_minutes));
 			} 
 			catch (JSONException e) 
@@ -291,7 +344,108 @@ public class ScheduleManager
 		
 		return metGoals;
 	}
+
+	private Set<String> todayJawboneGoals()
+	{
+		Set<String> metGoals = new HashSet<String>();
+		
+		final ScheduleManager me = this;
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this._context);
+
+		if (prefs.getBoolean("settings_jawbone_enabled", false))
+		{
+			try
+			{
+				String token = prefs.getString("oauth_jawbone_token", "");
 	
+				AndroidHttpClient androidClient = AndroidHttpClient.newInstance("Intellicare", this._context);
+	
+		        HostnameVerifier hostnameVerifier = org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
+	
+				SchemeRegistry registry = new SchemeRegistry();
+				registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+	
+				SSLSocketFactory socketFactory = SSLSocketFactory.getSocketFactory();
+				registry.register(new Scheme("https", socketFactory, 443));
+	
+				HttpParams params = androidClient.getParams();
+				HttpConnectionParams.setConnectionTimeout(params, 180000);
+				HttpConnectionParams.setSoTimeout(params, 180000);
+	
+				SingleClientConnManager mgr = new SingleClientConnManager(params, registry);
+				HttpClient httpClient = new DefaultHttpClient(mgr, params);
+	
+				HttpsURLConnection.setDefaultHostnameVerifier(hostnameVerifier);
+				
+				HttpGet httpGet = new HttpGet("https://jawbone.com/nudge/api/v.1.1/users/@me/goals");
+				httpGet.addHeader("Authorization", "Bearer " + token);
+				httpGet.addHeader("Accept", "application/json");
+				httpGet.addHeader("X-Target-URI", "https://jawbone.com");
+				httpGet.addHeader("X-HostCommonName", "jawbone.com");
+	
+				HttpResponse response = httpClient.execute(httpGet);
+
+				HttpEntity httpEntity = response.getEntity();
+
+				String result = EntityUtils.toString(httpEntity);
+				
+				JSONObject body = new JSONObject(result);
+				
+				int stepGoal = body.getJSONObject("data").getInt("move_steps");
+
+				httpGet = new HttpGet("https://jawbone.com/nudge/api/v.1.1/users/@me/moves");
+				httpGet.addHeader("Authorization", "Bearer " + token);
+				httpGet.addHeader("Accept", "application/json");
+				httpGet.addHeader("X-Target-URI", "https://jawbone.com");
+				httpGet.addHeader("X-HostCommonName", "jawbone.com");
+	
+				response = httpClient.execute(httpGet);
+
+				httpEntity = response.getEntity();
+
+				result = EntityUtils.toString(httpEntity);
+				
+				body = new JSONObject(result);
+				
+				int steps = body.getJSONObject("data").getJSONArray("items").getJSONObject(0).getJSONObject("details").getInt("steps");
+				
+				Log.e("DF", "JAWBONE: " + steps + " / " + stepGoal);
+				
+				if (steps >= stepGoal)
+					metGoals.add(this._context.getString(R.string.feat_jawbone_steps));
+				
+				androidClient.close();
+			} 
+			catch (JSONException e) 
+			{
+     			LogManager.getInstance(me._context).logException(e);
+			}
+			catch (OAuthException e)
+			{
+     			LogManager.getInstance(me._context).logException(e);
+			}
+			catch (IllegalArgumentException e)
+			{
+     			LogManager.getInstance(me._context).logException(e);
+			} 
+			catch (UnsupportedEncodingException e) 
+			{
+     			LogManager.getInstance(me._context).logException(e);
+			} 
+			catch (ClientProtocolException e) 
+			{
+     			LogManager.getInstance(me._context).logException(e);
+			} 
+			catch (IOException e) 
+			{
+     			LogManager.getInstance(me._context).logException(e);
+			}
+		}
+		
+		return metGoals;
+	}
+
 	private JSONArray todayCommits()
 	{
         JSONArray commits = new JSONArray();

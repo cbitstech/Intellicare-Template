@@ -4,6 +4,10 @@
         android:icon="@drawable/ic_action_line_chart"
         robot:showAsAction="always"
         android:title="@string/action_chart_fields"/>
+    <item android:id="@+id/action_faq"
+        android:title="@string/action_faq"
+        robot:showAsAction="never"
+        android:showAsAction="never" />
     <item
         android:id="@+id/action_settings"
         robot:showAsAction="never"

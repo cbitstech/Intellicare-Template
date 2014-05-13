@@ -8,11 +8,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.CallLog;
 import android.provider.CallLog.Calls;
 import android.telephony.PhoneNumberUtils;
-import android.util.Log;
 
 public class ContactCalibrationHelper 
 {
@@ -31,8 +31,6 @@ public class ContactCalibrationHelper
 
 	public static void setLevel(Context context, String key, int level)
 	{
-		Log.e("SF", "SETTING " + key + " LEVEL " + level);
-		
 		if (ContactCalibrationHelper._cachedPrefs == null)
 			ContactCalibrationHelper._cachedPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
 		
@@ -89,11 +87,113 @@ public class ContactCalibrationHelper
 				
 				contact.level = ContactCalibrationHelper.getLevel(context, contact.key);
 
-				Log.e("SF", "CONTACT " + contact.key + " LEVEL = " + contact.level);
+				contacts.add(contact);
+			}
+		}
+		
+		c.close();
+		
+		c = context.getContentResolver().query(Uri.parse("content://sms/inbox"), null, null, null, "date");
+
+		while (c.moveToNext())
+		{
+			String numberName = c.getString(c.getColumnIndex("person"));
+			String phoneNumber = PhoneNumberUtils.formatNumber(c.getString(c.getColumnIndex("address")));
+
+			if (numberName == null)
+				numberName = phoneNumber;
+
+			boolean found = false;
+
+			for (ContactRecord contact : contacts)
+			{
+				if (contact.number.endsWith(phoneNumber) || phoneNumber.endsWith(contact.number))
+				{
+					String largerNumber = contact.number;
+					
+					if (phoneNumber.length() > largerNumber.length())
+						largerNumber = phoneNumber;
+					
+					contact.number = largerNumber;
+					
+					found = true;
+					contact.count += 1;
+					
+					if ("".equals(numberName) == false && "".equals(contact.name))
+						contact.name = numberName;
+				}
+			}
+			
+			if (found == false)
+			{
+				ContactRecord contact = new ContactRecord();
+				contact.name = numberName;
+				contact.number = phoneNumber;
+				
+				contact.key = contact.name;
+				
+				if ("".equals(contact.key))
+					contact.key = contact.number;
+				
+				contact.level = ContactCalibrationHelper.getLevel(context, contact.key);
 
 				contacts.add(contact);
 			}
 		}
+
+		c.close();
+
+		c = context.getContentResolver().query(Uri.parse("content://sms/sent"), null, null, null, "date");
+
+		while (c.moveToNext())
+		{
+			String numberName = c.getString(c.getColumnIndex("person"));
+			String phoneNumber = PhoneNumberUtils.formatNumber(c.getString(c.getColumnIndex("address")));
+
+			if (numberName == null)
+				numberName = phoneNumber;
+
+			// TODO: Pull out of code (above as well) as function...
+			
+			boolean found = false;
+
+			for (ContactRecord contact : contacts)
+			{
+				if (contact.number.endsWith(phoneNumber) || phoneNumber.endsWith(contact.number))
+				{
+					String largerNumber = contact.number;
+					
+					if (phoneNumber.length() > largerNumber.length())
+						largerNumber = phoneNumber;
+					
+					contact.number = largerNumber;
+					
+					found = true;
+					contact.count += 1;
+					
+					if ("".equals(numberName) == false && "".equals(contact.name))
+						contact.name = numberName;
+				}
+			}
+			
+			if (found == false)
+			{
+				ContactRecord contact = new ContactRecord();
+				contact.name = numberName;
+				contact.number = phoneNumber;
+				
+				contact.key = contact.name;
+				
+				if ("".equals(contact.key))
+					contact.key = contact.number;
+				
+				contact.level = ContactCalibrationHelper.getLevel(context, contact.key);
+
+				contacts.add(contact);
+			}
+		}
+
+		c.close();
 		
 		Collections.sort(contacts);
 

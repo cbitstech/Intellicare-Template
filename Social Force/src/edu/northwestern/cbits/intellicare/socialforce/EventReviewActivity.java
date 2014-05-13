@@ -1,10 +1,15 @@
 package edu.northwestern.cbits.intellicare.socialforce;
 
+import java.util.List;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -12,7 +17,7 @@ import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 public class EventReviewActivity extends ConsentedActivity 
 {
-    private boolean _prompted = false;
+    public static final String EVENT_ID = "EVENT_ID";
 
 	protected void onCreate(Bundle savedInstanceState) 
     {
@@ -26,42 +31,75 @@ public class EventReviewActivity extends ConsentedActivity
     {
     	super.onResume();
     	
-    	final EventReviewActivity me = this;
+    	Intent intent = this.getIntent();
+
+    	long eventId = intent.getLongExtra(EventReviewActivity.EVENT_ID, -1);
+
+    	Uri u = intent.getData();
     	
-    	if (this._prompted  == false)
+    	if (u != null)
     	{
-    		this._prompted = true;
+    		List<String> segments = u.getPathSegments();
     		
+    		eventId = Long.parseLong(segments.get(segments.size() - 1));
+    	}
+    	
+		String selection = CalendarContract.Events._ID + " = ?";
+		String[] args = { "" + eventId };
+
+		Cursor c = this.getContentResolver().query(CalendarContract.Events.CONTENT_URI, null, selection, args, CalendarContract.Events._ID + " DESC");
+		
+		if (c.moveToNext())
+		{
+	    	final EventReviewActivity me = this;
+	    	
+	    	String title = c.getString(c.getColumnIndex(CalendarContract.Events.TITLE));
+	    	
+	    	String attSelection = CalendarContract.Attendees.EVENT_ID + " = ?";
+	    	String[] attArgs = { "" + eventId };
+	    	
+	    	Cursor attendees = this.getContentResolver().query(CalendarContract.Attendees.CONTENT_URI, null, attSelection, attArgs, null);
+	    	
+	    	StringBuffer sb = new StringBuffer();
+	    	
+	    	while (attendees.moveToNext())
+	    	{
+	    		if (sb.length() > 0)
+	    			sb.append(", ");
+	    		
+	    		sb.append(attendees.getString(attendees.getColumnIndex(CalendarContract.Attendees.ATTENDEE_NAME)));
+	    	}
+	    	
+	    	attendees.close();
+	    	
     		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    		builder.setTitle("hOw DID it Go?");
+    		builder.setTitle(title);
     		
-    		builder.setMessage("YOu scHeduleD \"EVENT NAME\" wiTh FrIend.\n\nWeRE you ABLe tO do IT?");
+    		builder.setMessage(this.getString(R.string.message_event_check, sb.toString()));
     		
-    		builder.setPositiveButton("yEs", new OnClickListener()
+    		builder.setPositiveButton(R.string.action_yes, new OnClickListener()
     		{
 				public void onClick(DialogInterface arg0, int arg1) 
 				{
-					// TODO Auto-generated method stub
-					
+
 				}
     		});
     		
-    		builder.setNegativeButton("nO", new OnClickListener()
+    		builder.setNegativeButton(R.string.action_no, new OnClickListener()
     		{
 				public void onClick(DialogInterface dialog, int which) 
 				{
 					AlertDialog.Builder builder = new AlertDialog.Builder(me);
-					builder.setTitle("Would YOU lIke To Try AGain?");
+					builder.setTitle(R.string.title_try_again);
 					
-					final String[] items = { "yEs, Try this Again.", "nO, Plan A new ACtIviTy.", 
-									   "nO, reTurN to Start." };
+					final String[] items = me.getResources().getStringArray(R.array.actions_event);
 					
 					builder.setItems(items, new OnClickListener()
 					{
 						public void onClick(DialogInterface dialog, int which) 
 						{
 							Toast.makeText(me, items[which], Toast.LENGTH_LONG).show();
-							
+
 							me.finish();
 						}
 					});
@@ -71,7 +109,14 @@ public class EventReviewActivity extends ConsentedActivity
     		});
     		
     		builder.create().show();
-    	}
+		}
+		else 
+		{
+			this.finish();
+		}
+		
+		c.close();
+
     }
     
     public boolean onCreateOptionsMenu(Menu menu) 
@@ -85,46 +130,35 @@ public class EventReviewActivity extends ConsentedActivity
     {
     	int itemId = item.getItemId();
     	
-    	final EventReviewActivity me = this;
-
 		if (itemId == R.id.action_continue)
 		{
+			final EventReviewActivity me = this;
+			
     		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    		builder.setTitle("thanKs fOR the ReVIEW!");
+    		builder.setTitle(R.string.title_thanks_review);
+    		builder.setMessage(R.string.message_thanks_review);
     		
-    		builder.setMessage("wOUld YoU do It aGAIN?");
-    		
-    		builder.setPositiveButton("yEs, sChedule AgaIN", new OnClickListener()
+    		builder.setPositiveButton(R.string.action_schedule_again, new OnClickListener()
     		{
 				public void onClick(DialogInterface arg0, int arg1) 
 				{
-					// TODO Auto-generated method stub
+					Intent intent = new Intent(me, ScheduleActivity.class);
 					
+					me.startActivity(intent);
+					
+					me.finish();
 				}
     		});
     		
-    		builder.setNegativeButton("nO, Plan New ActIvity", new OnClickListener()
+    		builder.setNegativeButton(R.string.action_plan_activity, new OnClickListener()
     		{
 				public void onClick(DialogInterface dialog, int which) 
 				{
-/*					AlertDialog.Builder builder = new AlertDialog.Builder(me);
-					builder.setTitle("Would YOU lIke To Try AGain?");
+					Intent intent = new Intent(me, ScheduleActivity.class);
 					
-					final String[] items = { "yEs, Try this Again.", "nO, Plan A new ACtIviTy.", 
-									   "nO, reTurN to Start." };
+					me.startActivity(intent);
 					
-					builder.setItems(items, new OnClickListener()
-					{
-						public void onClick(DialogInterface dialog, int which) 
-						{
-							Toast.makeText(me, items[which], Toast.LENGTH_LONG).show();
-							
-							me.finish();
-						}
-					});
-					
-					builder.create().show();
-*/
+					me.finish();
 				}
     		});
     		
@@ -134,4 +168,9 @@ public class EventReviewActivity extends ConsentedActivity
 		
 		return true;
     }
+
+	public static Uri uriForEvent(long id) 
+	{
+		return Uri.parse("intellicare://social-force/event/" + id);
+	}
 }

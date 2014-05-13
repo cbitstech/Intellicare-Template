@@ -8,7 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 public class MainActivity extends ConsentedActivity 
@@ -18,11 +18,11 @@ public class MainActivity extends ConsentedActivity
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_main);
         
-        this.getSupportActionBar().setSubtitle("lIst NExT ExeRCISe HeRE");
+        this.getSupportActionBar().setSubtitle(MoveProvider.fetchNextEventTitle(this));
 
         final MainActivity me = this;
         
-        Button dashboard = (Button) this.findViewById(R.id.button_dashboard);
+        TextView dashboard = (TextView) this.findViewById(R.id.button_dashboard);
         dashboard.setOnClickListener(new OnClickListener()
         {
 			public void onClick(View view) 
@@ -32,17 +32,17 @@ public class MainActivity extends ConsentedActivity
 			}
         });
 
-        Button inspire = (Button) this.findViewById(R.id.button_inspire);
+        TextView inspire = (TextView) this.findViewById(R.id.button_move_me);
         inspire.setOnClickListener(new OnClickListener()
         {
 			public void onClick(View view) 
 			{
-				Intent intent = new Intent(me, InspireActivity.class);
+				Intent intent = new Intent(me, MoveMeActivity.class);
 				me.startActivity(intent);
 			}
         });
 
-        Button boost = (Button) this.findViewById(R.id.button_boost);
+        TextView boost = (TextView) this.findViewById(R.id.button_timer);
         boost.setOnClickListener(new OnClickListener()
         {
 			public void onClick(View view) 
@@ -51,7 +51,7 @@ public class MainActivity extends ConsentedActivity
 				me.startActivity(intent);
 			}
         });
-        
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         
         if (prefs.getBoolean(IntroActivity.INTRO_SHOWN, false) == false)
@@ -81,7 +81,12 @@ public class MainActivity extends ConsentedActivity
 			this.sendFeedback(this.getString(R.string.app_name));
 		else if (item.getItemId() == R.id.action_faq)
 			this.showFaq(this.getString(R.string.app_name));
+		else if (item.getItemId() == R.id.action_calendar)
+		{
+			Intent settingsIntent = new Intent(this, CalendarActivity.class);
+			this.startActivity(settingsIntent);
+		}
 
-        return super.onOptionsItemSelected(item);
+		return super.onOptionsItemSelected(item);
     }
 }

@@ -2,7 +2,9 @@ package edu.northwestern.cbits.intellicare.slumbertime;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -121,16 +123,24 @@ public class AlarmService extends IntentService
 				if (cursor.moveToNext())
 				{
 					String name = cursor.getString(cursor.getColumnIndex(SlumberContentProvider.ALARM_NAME));
-					Uri uri = Uri.parse(cursor.getString(cursor.getColumnIndex(SlumberContentProvider.ALARM_CONTENT_URI)));
-
-					Intent startIntent = new Intent(AlarmService.START_ALARM, null, this.getApplicationContext(), AlarmService.class);
-					startIntent.setData(uri);
-					startIntent.putExtra(SlumberContentProvider.ALARM_NAME, name);
 					
-					AlarmService._currentTrackName = name;
-					AlarmService._currentUri = uri;
+					try
+					{
+						Uri uri = Uri.parse(cursor.getString(cursor.getColumnIndex(SlumberContentProvider.ALARM_CONTENT_URI)));
+	
+						Intent startIntent = new Intent(AlarmService.START_ALARM, null, this.getApplicationContext(), AlarmService.class);
+						startIntent.setData(uri);
+						startIntent.putExtra(SlumberContentProvider.ALARM_NAME, name);
+						
+						AlarmService._currentTrackName = name;
+						AlarmService._currentUri = uri;
 
-					this.startService(startIntent);
+						this.startService(startIntent);
+					}
+					catch (NullPointerException e)
+					{
+						LogManager.getInstance(this).logException(e);
+					}
 				}
 				
 				cursor.close();
@@ -290,5 +300,68 @@ public class AlarmService extends IntentService
 		{
 			Log.e("ST", "RECEIVED INTENT: " + action);
 		}
+	}
+	
+	public static Date nextAlarm(Context context)
+	{
+		ArrayList<Date> dates = new ArrayList<Date>();
+				
+		Cursor cursor = context.getContentResolver().query(SlumberContentProvider.ALARMS_URI, null, null, null, null);
+		
+		if (cursor.moveToNext())
+		{
+			Calendar alarmCalendar = Calendar.getInstance();
+			
+			alarmCalendar.set(Calendar.HOUR_OF_DAY, cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.ALARM_HOUR)));
+			alarmCalendar.set(Calendar.MINUTE, cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.ALARM_MINUTE)));
+			
+			for (int i = 0; i < 7; i++)
+			{
+				if (cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.ALARM_SUNDAY)) == 1 && alarmCalendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
+				{
+					dates.add(alarmCalendar.getTime());
+				}
+				else if (cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.ALARM_MONDAY)) == 1 && alarmCalendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY)
+				{
+					dates.add(alarmCalendar.getTime());
+				}
+				else if (cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.ALARM_TUESDAY)) == 1 && alarmCalendar.get(Calendar.DAY_OF_WEEK) == Calendar.TUESDAY)
+				{
+					dates.add(alarmCalendar.getTime());
+				}
+				else if (cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.ALARM_WEDNESDAY)) == 1 && alarmCalendar.get(Calendar.DAY_OF_WEEK) == Calendar.WEDNESDAY)
+				{
+					dates.add(alarmCalendar.getTime());
+				}
+				else if (cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.ALARM_THURSDAY)) == 1 && alarmCalendar.get(Calendar.DAY_OF_WEEK) == Calendar.THURSDAY)
+				{
+					dates.add(alarmCalendar.getTime());
+				}
+				else if (cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.ALARM_FRIDAY)) == 1 && alarmCalendar.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY)
+				{
+					dates.add(alarmCalendar.getTime());
+				}
+				else if (cursor.getInt(cursor.getColumnIndex(SlumberContentProvider.ALARM_SATURDAY)) == 1 && alarmCalendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)
+				{
+					dates.add(alarmCalendar.getTime());
+				}
+
+				alarmCalendar.add(Calendar.DATE, 1);
+			}
+		}
+		
+		cursor.close();
+
+		Date now = new Date();
+
+		Collections.sort(dates);
+		
+		for (Date d : dates)
+		{
+			if (d.after(now))
+				return d;
+		}
+		
+		return null;
 	}
 }

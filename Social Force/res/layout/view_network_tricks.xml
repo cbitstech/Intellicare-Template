@@ -12,21 +12,18 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
     <Button android:id="@+id/step_one"
-        android:text="SteP 1: MeeT nEW PEOPLE"
+        android:text="@string/network_step_one"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
     <Button android:id="@+id/step_two"
-        android:text="SteP 2: bE FrienDLY"
+        android:text="@string/network_step_two"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
     <Button android:id="@+id/step_three"
-        android:text="SteP 3: PLAn AcTiViTiEs"
+        android:text="@string/network_step_three"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-    <View android:layout_width="1dp"
         android:layout_height="0dp"
         android:layout_weight="1" />
 </LinearLayout> 

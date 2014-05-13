@@ -1,6 +1,7 @@
 package edu.northwestern.cbits.intellicare.slumbertime;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.CrashManagerListener;
 
+import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +30,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -64,6 +67,8 @@ public class HomeActivity extends PortraitActivity
 
 	private static final String APP_ID = "62e48583d6763b21b5ccf7186bd44089";
 	protected static final String SELECTED_TIME_RANGE = "setting_selected_time_range";
+
+	protected static final String SHOWED_CLOCK_TIP = "show_clock_tip";
 	
 	@SuppressLint("SetJavaScriptEnabled")
 	protected void onResume()
@@ -138,7 +143,7 @@ public class HomeActivity extends PortraitActivity
 		HashMap<String, Object> payload = new HashMap<String, Object>();
 		LogManager.getInstance(this).log("launched_home_activity", payload);
 		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		int durationIndex = prefs.getInt(HomeActivity.SELECTED_TIME_RANGE, -1);
 		
@@ -147,6 +152,24 @@ public class HomeActivity extends PortraitActivity
 			String duration = this.getResources().getStringArray(R.array.graph_time_intervals)[durationIndex];
 			
 			this.getSupportActionBar().setSubtitle(this.getString(R.string.home_subtitle, duration));
+		}
+		
+		if (prefs.getBoolean(HomeActivity.SHOWED_CLOCK_TIP, false) == false)
+		{
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(R.string.title_clock_tip);
+			builder.setMessage(R.string.message_clock_tip);
+			builder.setPositiveButton(R.string.action_close, new DialogInterface.OnClickListener() 
+			{
+				public void onClick(DialogInterface dialog, int which) 
+				{
+					Editor e = prefs.edit();
+					e.putBoolean(HomeActivity.SHOWED_CLOCK_TIP, true);
+					e.commit();
+				}
+			});
+			
+			builder.create().show();
 		}
 	}
 
@@ -199,7 +222,7 @@ public class HomeActivity extends PortraitActivity
 
 		graphString = graphString.replaceAll("VALUES_JSON", graphValues.toString());
 
-/*		try 
+		try 
 		{
 			graphString = graphString.replaceAll("VALUES_JSON", graphValues.toString());
 
@@ -209,11 +232,6 @@ public class HomeActivity extends PortraitActivity
 		{
 			LogManager.getInstance(context).logException(e);
 		} 
-		catch (JSONException e) 
-		{
-			LogManager.getInstance(context).logException(e);
-		}
-*/
 		
 		return graphString;
 	}
@@ -226,17 +244,14 @@ public class HomeActivity extends PortraitActivity
 		
 		long startTime = 0;
 		
-		int durationIndex = prefs.getInt(HomeActivity.SELECTED_TIME_RANGE, -1);
+		int durationIndex = prefs.getInt(HomeActivity.SELECTED_TIME_RANGE, 2);
 		
-		if (durationIndex != -1)
+		long duration = Long.parseLong(context.getResources().getStringArray(R.array.graph_time_values)[durationIndex]);
+		
+		if (duration > 0)
 		{
-			long duration = Long.parseLong(context.getResources().getStringArray(R.array.graph_time_values)[durationIndex]);
-			
-			if (duration > 0)
-			{
-				long now = System.currentTimeMillis();
-				startTime = now - duration;
-			}
+			long now = System.currentTimeMillis();
+			startTime = now - duration;
 		}
 
 		String[] sensors = { SlumberContentProvider.TEMPERATURE, SlumberContentProvider.LIGHT_LEVEL, SlumberContentProvider.AUDIO_MAGNITUDE, SlumberContentProvider.AUDIO_FREQUENCY };
@@ -293,7 +308,7 @@ public class HomeActivity extends PortraitActivity
 			JSONObject sleep = new JSONObject();
 			sleep.put("key", context.getString(R.string.label_sleep_efficiency));
 			sleep.put("color", HomeActivity.colorForKey(context, sleep.getString("key")));
-			sleep.put("renderer", "scatterplot");
+			sleep.put("renderer", "scatterplot-custom");
 			JSONArray sleepValues = new JSONArray();
 			
 			String where = SlumberContentProvider.DIARY_TIMESTAMP + " > ?";
@@ -409,6 +424,8 @@ public class HomeActivity extends PortraitActivity
 		}
 		else if (item.getItemId() == R.id.action_feedback)
 			this.sendFeedback(this.getString(R.string.app_name));
+		else if (item.getItemId() == R.id.action_faq)
+			this.showFaq(this.getString(R.string.app_name));
 		else if (item.getItemId() == R.id.action_chart)
 		{
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
