@@ -2,8 +2,8 @@
 <resources>
 
     <string name="app_name">Mantra</string>
-    <string name="action_new_focus_board">Create Board</string>
-    <string name="mantra_boards_header">Mantra Boards</string>
+    <string name="action_new_focus_board">Add Mantra</string>
+    <string name="mantra_boards_header">Mantras</string>
     <string name="new_mantra_input_label">add a new mantra</string>
     <string name="new_mantra_examples_label">or select a mantra</string>
     <string name="new_mantra_label">New Mantra</string>
@@ -56,9 +56,9 @@
     <string name="title_download_queue">Image Downloads</string>
     <string name="subtitle_download_queue" formatted="false">Remaining downloads: %d of %d</string>
     
-    <string name="title_create_board">Create New Board?</string>
-    <string name="message_create_board">You currently have no mantra boards. Would you like to create one in order to begin attaching images?</string>
-    <string name="action_yes">Yes, create board</string>
+    <string name="title_create_board">Add New Mantra?</string>
+    <string name="message_create_board">You currently have no mantras. Would you like to add one in order to begin attaching images?</string>
+    <string name="action_yes">Yes</string>
     <string name="action_no">No</string>
     <string name="are_you_sure_you_want_to_delete_this_mantra_">Are you sure you want to delete this mantra?</string>
     <string name="yes">Yes</string>
