@@ -66,7 +66,6 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 		actionBar.setDisplayHomeAsUpEnabled(true);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -89,6 +88,38 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		final SingleMantraBoardActivity me = this;
+		
+		final MantraImageCursor cursor = MantraBoardManager.get(this).queryFocusImages(this.mFocusBoardId);
+		
+		if (cursor.getCount() == 0)
+		{
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			
+			builder.setTitle(R.string.title_add_photos);
+			builder.setMessage(R.string.message_add_photos);
+			
+			builder.setPositiveButton(R.string.action_gallery, new DialogInterface.OnClickListener() 
+			{
+				public void onClick(DialogInterface dialog, int which) 
+				{
+					SingleMantraBoardActivity.startBrowsePhotosActivity(me);
+				}
+			});
+
+			builder.setNegativeButton(R.string.action_camera, new DialogInterface.OnClickListener() 
+			{
+				public void onClick(DialogInterface dialog, int which) 
+				{
+					me.startCollectCameraActivity();
+				}
+			});
+			
+			builder.create().show();
+		}
+		
+		cursor.close();
 
 		attachGridView();
 	}

@@ -93,4 +93,9 @@
     <string name="action_cancel">Cancel</string>
     <string name="mantra_prefix">I am </string>
     
+    <string name="title_add_photos">Add Photos</string>
+    <string name="message_add_photos">Your mantra is currently empty. Add some images from your photo galley or use the camera to add photos to this mantra.</string>
+    <string name="action_gallery">Visit Gallery</string>
+    <string name="action_camera">Use Camera</string>
+    
 </resources>
