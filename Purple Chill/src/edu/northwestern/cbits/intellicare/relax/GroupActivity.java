@@ -122,7 +122,7 @@ public class GroupActivity extends ConsentedActivity
                 TextView time = (TextView) convertView.findViewById(R.id.recording_time);
                 time.setText(times.get(position));
 
-                Drawable d = me.getResources().getDrawable(R.drawable.ic_action_music_2);
+                Drawable d = me.getResources().getDrawable(R.drawable.ic_action_playback_play);
                 
                 String url = recordings.get(position);
 

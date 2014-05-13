@@ -6,8 +6,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.SeekBar;
@@ -113,6 +116,37 @@ public class HtmlActivity extends ConsentedActivity
 		
 		builder.create().show();
 	}
+
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        this.getMenuInflater().inflate(R.menu.menu_player, menu);
+
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if (item.getItemId() == R.id.action_track_info)
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder = builder.setTitle(R.string.title_instructions);
+            builder = builder.setMessage(this._messageId);
+
+            builder.create().show();
+        }
+        else if (item.getItemId() == android.R.id.home)
+        {
+            if (this.isTaskRoot())
+            {
+                Intent intent = new Intent(this, IndexActivity.class);
+                this.startActivity(intent);
+            }
+
+            this.finish();
+        }
+
+        return true;
+    }
 	
 	private void fetchStress()
 	{
