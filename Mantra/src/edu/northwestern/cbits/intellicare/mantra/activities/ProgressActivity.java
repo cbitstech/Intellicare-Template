@@ -224,4 +224,8 @@ public class ProgressActivity extends ConsentedActivity {
 		return imageByteSize >= 15000;		// if at least 15kBytes, then true. simplest heuristic ever. 
 	}
 
+	public static Uri activityUri(Context context) 
+	{
+		return Uri.parse("intellicare://mantra/add_photos");
+	}
 }

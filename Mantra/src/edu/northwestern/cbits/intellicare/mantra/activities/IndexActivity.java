@@ -343,4 +343,9 @@ public class IndexActivity extends ConsentedActivity {
 		Log.d(CN+".editSelectedMantraCaption", "showing dialog");
 		dlg.show();
 	}
+
+	public static Uri activityUri(Context context) 
+	{
+		return Uri.parse("intellicare://mantra/home");
+	}
 }

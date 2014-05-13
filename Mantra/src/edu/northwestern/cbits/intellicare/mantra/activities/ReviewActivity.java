@@ -8,8 +8,10 @@ import edu.northwestern.cbits.intellicare.mantra.NotificationAlarm;
 import edu.northwestern.cbits.intellicare.mantra.R;
 import edu.northwestern.cbits.intellicare.mantra.R.layout;
 import edu.northwestern.cbits.intellicare.mantra.R.menu;
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
@@ -83,4 +85,8 @@ public class ReviewActivity extends Activity {
 		return true;
 	}
 
+	public static Uri activityUri(Context context) 
+	{
+		return Uri.parse("intellicare://mantra/review");
+	}
 }

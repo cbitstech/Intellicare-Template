@@ -88,5 +88,7 @@
     <string name="summary_day_start">Sets the time at which you start your day.</string>
     <string name="title_day_end">End of Day</string>
     <string name="summary_day_end">Sets the time at which you end your day.</string>
+
+    <string name="note_add_images">Attach your new photos to a mantra!</string>
     
 </resources>

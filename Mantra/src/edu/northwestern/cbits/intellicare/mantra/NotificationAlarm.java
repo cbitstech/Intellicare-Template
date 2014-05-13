@@ -1,26 +1,16 @@
     package edu.northwestern.cbits.intellicare.mantra;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.MantraBoardCursor;
-import edu.northwestern.cbits.intellicare.mantra.activities.ProgressActivity;
-import edu.northwestern.cbits.intellicare.mantra.activities.ReviewActivity;
-//import edu.northwestern.cbits.intellicare.mantra.activities.TransparentActivity;
 import android.app.AlarmManager;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.net.Uri;
@@ -28,10 +18,13 @@ import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.NotificationCompat;
-import android.text.format.DateUtils;
-import android.text.format.Time;
 import android.util.Log;
-import android.widget.Toast;
+import edu.northwestern.cbits.intellicare.StatusNotificationManager;
+import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.MantraBoardCursor;
+import edu.northwestern.cbits.intellicare.mantra.activities.IndexActivity;
+import edu.northwestern.cbits.intellicare.mantra.activities.ProgressActivity;
+import edu.northwestern.cbits.intellicare.mantra.activities.ReviewActivity;
+//import edu.northwestern.cbits.intellicare.mantra.activities.TransparentActivity;
 
 /**
  * Sets an alarm to handle a wakelock, then run some code.
@@ -41,12 +34,15 @@ import android.widget.Toast;
  */
 public class NotificationAlarm extends BroadcastReceiver 
 {	
+	private static final int NOTE_ID = 8753;
+
 	public static final String _12H_RENOTIFICATION = "12hRenotification";
 	private static final String CN = "NotificationAlarm";
 	public final static int IMAGE_SCAN_RATE_MINUTES = 5;
-	private final static int ALARM_POLLING_RATE_MILLIS = 1000 * 60 * IMAGE_SCAN_RATE_MINUTES; 				// Millisec * Second * Minute
+	private final static int ALARM_POLLING_RATE_MILLIS = 1000 * 60; //  * IMAGE_SCAN_RATE_MINUTES; 				// Millisec * Second * Minute
+
+	
 	private static boolean isAlreadyCalled = false;
-	private Context self = null;
 	
      @Override
      public void onReceive(Context context, Intent intent) 
@@ -58,7 +54,6 @@ public class NotificationAlarm extends BroadcastReceiver
          wl.acquire();
 
          // Put here YOUR code.ll,
-         self = context;
          Log.d(CN+".onReceive","alarm firing!");
 
          // get time bounds for notification
@@ -79,38 +74,43 @@ public class NotificationAlarm extends BroadcastReceiver
          if		 (currHour == startHour && currMin == startMinute) {
         	 Log.d(CN+".onReceive", "at h = " + currHour + ", m = " + currMin + ", MAKE STARTING NOTIFICATION");
         	 
+        	 String message = context.getString(R.string.notification_start_day);
+
         	 // put the user's list of mantra boards in the notification
         	 MantraBoardCursor mantraItemCursor = MantraBoardManager.get(context).queryFocusBoards();
         	 ArrayList<String> al = new ArrayList<String>();
         	 while(mantraItemCursor.moveToNext()) {
-        		 al.add(
-        				 MantraBoardManager.get(context).getFocusBoard(
-        						 mantraItemCursor.getLong(
-        								 mantraItemCursor.getColumnIndex("_id")
-								 )
-						 ).getMantra()
-				 );
+        		 MantraBoard mantra = MantraBoardManager.get(context).getFocusBoard(mantraItemCursor.getLong(mantraItemCursor.getColumnIndex("_id")));
+        		 
+        		 message += "\n" + mantra.getMantra();
         	 }
         	 // destinationless notification
-        	 makeNotification(
-        			 context, 
-        			 context.getString(R.string.notification_start_day), 
-        			 R.drawable.abc_ic_go, 
-        			 al.toArray(new String[al.size()]), 
-        			 null,
-        			 0);
+//        	 makeNotification(
+//        			 context, 
+//        			 context.getString(R.string.notification_start_day), 
+//        			 R.drawable.abc_ic_go, 
+//        			 al.toArray(new String[al.size()]), 
+//        			 null,
+//        			 0);
+        	 
+        	 NotificationAlarm.makeNotification(context, message, R.drawable.abc_ic_go, null, NotificationAlarm.NOTE_ID, null);
          }
          // end-of-day notification
          else if (currHour == endHour && currMin == endMinute) {
         	 Log.d(CN+".onReceive", "at h = " + currHour + ", m = " + currMin + ", MAKE ENDING NOTIFICATION");
         	 // notification destination: Review activity
-        	 makeNotification(
-        			 context, 
-        			 context.getString(R.string.notification_end_day), 
-        			 R.drawable.abc_ic_go, 
-        			 null,
-        			 new Intent(context, ReviewActivity.class),
-        			 1);
+//        	 makeNotification(
+//        			 context, 
+//        			 context.getString(R.string.notification_end_day), 
+//        			 R.drawable.abc_ic_go, 
+//        			 null,
+//        			 new Intent(context, ReviewActivity.class),
+//        			 1);
+        	 
+        	 PendingIntent pi = PendingIntent.getActivity(context, 0, new Intent(context, ReviewActivity.class), 0);
+        	 Uri u = ReviewActivity.activityUri(context);
+
+        	 NotificationAlarm.makeNotification(context, context.getString(R.string.notification_end_day), R.drawable.abc_ic_go, pi, NotificationAlarm.NOTE_ID, u);
          }
          
          boolean intentHasDelayedAlarmDate = intent.getExtras().containsKey(DELAYED_ALARM_DATE_KEY);
@@ -130,14 +130,19 @@ public class NotificationAlarm extends BroadcastReceiver
             		 // from TransparentActivity...
             		 Intent progressActivityIntent = new Intent(context, ProgressActivity.class);
             		 progressActivityIntent.putExtra(MediaScannerService.INTENT_KEY_TO_RECEIVER_STRINGARRAY, true);
-            		 
+
+                	 PendingIntent pi = PendingIntent.getActivity(context, 0, progressActivityIntent, 0);
+                	 Uri u = ProgressActivity.activityUri(context);
+
+                	 NotificationAlarm.makeNotification(context, context.getString(R.string.note_add_images), R.drawable.abc_ic_go, pi, NotificationAlarm.NOTE_ID, u);
+
             		 Log.d(CN+".onReceive", "1 New photo found; making notification...");
-            		 makeNotification(context,
-            				 "1 Tap to attach your new photos to a mantra!", 
-            				 R.drawable.abc_ic_go, 
-            				 null, 
-            				 progressActivityIntent, 
-            				 2);
+//            		 makeNotification(context,
+//            				 "1 Tap to attach your new photos to a mantra!", 
+//            				 R.drawable.abc_ic_go, 
+//            				 null, 
+//            				 progressActivityIntent, 
+//            				 2);
             		 
         			 // set an alarm 12h in the future that displays a reminder notification
             		 Calendar c = Calendar.getInstance();
@@ -166,14 +171,19 @@ public class NotificationAlarm extends BroadcastReceiver
     		 // from TransparentActivity...
     		 Intent progressActivityIntent = new Intent(context, ProgressActivity.class);
     		 progressActivityIntent.putExtra(MediaScannerService.INTENT_KEY_TO_RECEIVER_STRINGARRAY, true);
-    		 
+
+        	 PendingIntent pi = PendingIntent.getActivity(context, 0, progressActivityIntent, 0);
+        	 Uri u = ProgressActivity.activityUri(context);
+
     		 Log.d(CN+".onReceive", "2 New photo found; making notification...");
-    		 makeNotification(context,
-    				 "2 Tap to attach your new photos to a mantra!", 
-    				 R.drawable.abc_ic_go, 
-    				 null, 
-    				 progressActivityIntent, 
-    				 2);
+//    		 makeNotification(context,
+//    				 "2 Tap to attach your new photos to a mantra!", 
+//    				 R.drawable.abc_ic_go, 
+//    				 null, 
+//    				 progressActivityIntent, 
+//    				 2);
+    		 
+        	 NotificationAlarm.makeNotification(context, context.getString(R.string.note_add_images), R.drawable.abc_ic_go, pi, NotificationAlarm.NOTE_ID, u);
          }
          
          wl.release();
@@ -272,7 +282,7 @@ public class NotificationAlarm extends BroadcastReceiver
      * @param iconId
      * @param messageList If null, then default-sized notification, else, large notification (like GMail's).
      */
-	public static void makeNotification(Context context, String message, int iconId, String[] messageList, Intent onClickIntent, int notificationId) {
+	public static void makeLegacyNotification(Context context, String message, int iconId, String[] messageList, Intent onClickIntent, int notificationId) {
 		// setup the notification intent
 		 Intent intent1 = new Intent(context, NotificationAlarm.class);
 		 PendingIntent pi = PendingIntent.getActivity(context, 0, intent1, 0);
@@ -313,7 +323,20 @@ public class NotificationAlarm extends BroadcastReceiver
 		 NotificationManager nm = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
 		 nm.notify(appName, notificationId, n.build());
 	}
-
+	
+	public static void makeNotification(Context context, String message, int iconId, PendingIntent intent, int notificationId, Uri uri) 
+	{
+		if (intent == null)
+			intent = PendingIntent.getActivity(context, 0, new Intent(context, IndexActivity.class), 0);
+		
+		if (uri == null)
+			uri = IndexActivity.activityUri(context);
+		
+		String title = context.getString(R.string.app_name);
+		
+		StatusNotificationManager.getInstance(context).notifyBigText(notificationId, iconId, title, message, intent, uri);
+	}
+	
 	 public void SetAlarm(Context context)
 	 {
 		 if(!isAlreadyCalled) {
