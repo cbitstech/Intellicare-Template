@@ -27,11 +27,7 @@ public class ScheduleManager {
     public static final int DEFAULT_HOUR = 9;
     public static final int DEFAULT_MINUTE = 00;
 
-//    private static final String LAST_PROFILE_NOTIFICATION = "last_notification";
-//    private static final String LAST_PROFILE_NOTIFICATION = "last_notification";
-
     private static final int HELPER_NOTIFICATION_ID = 1234567;
-//    private static final int PROFILE_NOTIFICATION_ID = 1234568;
 
     private static ScheduleManager _instance = null;
 
@@ -89,7 +85,7 @@ public class ScheduleManager {
         // Helper notification...
         if (timeToFire)
         {
-            Intent intent = new Intent(this._context, ToolChooserActivity.class);
+            Intent intent = new Intent(this._context, MainActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
             String title = this._context.getString(R.string.help_note_title);
@@ -108,7 +104,7 @@ public class ScheduleManager {
             NotificationManager noteManager = (NotificationManager) this._context.getSystemService(android.content.Context.NOTIFICATION_SERVICE);
             noteManager.notify(ScheduleManager.HELPER_NOTIFICATION_ID, note);
 
-            Uri u = Uri.parse("intellicare://ruminants/tool-chooser");
+            Uri u = Uri.parse("intellicare://ruminants/main");
 
             StatusNotificationManager.getInstance(this._context).notifyBigText(ScheduleManager.HELPER_NOTIFICATION_ID, R.drawable.ic_action_process_start, title, message, pendingIntent, u);
         }

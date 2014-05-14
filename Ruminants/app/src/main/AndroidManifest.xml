@@ -40,17 +40,17 @@
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.northwestern.cbits.intellicare.ruminants.ToolChooserActivity" />
+                android:value="edu.northwestern.cbits.intellicare.ruminants.MainActivity" />
 
         </activity>
 
-        <activity android:theme="@style/Theme.AppCompat.Light"
+     <activity android:theme="@style/Theme.AppCompat.Light"
             android:name=".WorryPracticeActivity"
             android:label="@string/tool_worry_practice"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.northwestern.cbits.intellicare.ruminants.ToolChooserActivity" />
+                android:value="edu.northwestern.cbits.intellicare.ruminants.MainActivity" />
 
         </activity>
 
@@ -76,10 +76,10 @@
             android:label="@string/survey_wizard_title" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.northwestern.cbits.intellicare.ruminants.ToolChooserActivity" />
+                android:value="edu.northwestern.cbits.intellicare.ruminants.MainActivity" />
         </activity>
 
-        <activity android:theme="@style/Theme.AppCompat.Light"
+      <activity android:theme="@style/Theme.AppCompat.Light"
             android:name=".ToolChooserActivity"
             android:label="@string/tool_chooser_name"
             android:screenOrientation="portrait">
@@ -101,6 +101,9 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+                category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="intellicare" android:host="ruminants" android:pathPrefix="/main" />
             </intent-filter>
         </activity>
     <provider android:name=".RuminantsContentProvider" android:authorities="edu.northwestern.cbits.intellicare.ruminants" android:exported="false" />

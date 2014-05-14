@@ -118,13 +118,14 @@ public class MainActivity extends ConsentedActivity
 
        ArrayList<Tool> tools = new ArrayList<Tool>();
 
-       tools.add(new Tool(this.getResources().getString(R.string.tool_chooser_name), this.getString(R.string.desc_tool_chooser), R.drawable.ic_action_star, new Intent(this, ToolChooserActivity.class)));
        tools.add(new Tool(this.getString(R.string.tool_use_log), this.getString(R.string.desc_tool_chooser_log), R.drawable.ic_action_view_as_list, new Intent(this, ToolTrackerActivity.class)));
-    //   tools.add(new Tool(this.getString(R.string.profile_wizard), this.getString(R.string.desc_profile_wizard), R.drawable.ic_action_profile, new Intent(this, ProfileActivity.class)));
+       tools.add(new Tool(this.getString(R.string.tool_worry_practice), this.getString(R.string.desc_worry_practice), R.drawable.ic_action_alarms, new Intent(this, WorryPracticeActivity.class)));
+       tools.add(new Tool(this.getString(R.string.survey_wizard_title), this.getString(R.string.desc_survey_wizard), R.drawable.ic_action_keyboard, new Intent(this, WizardOneActivity.class)));
+       tools.add(new Tool(this.getResources().getString(R.string.tool_didactic_content), this.getString(R.string.desc_didactic_content), R.drawable.ic_action_slideshow, new Intent(this, PagedDidacticActivity.class)));
 
-        ListView toolsList = (ListView) this.findViewById(R.id.list_tools);
+       ListView toolsList = (ListView) this.findViewById(R.id.list_tools);
 
-        final ArrayAdapter<Tool> adapter = new ArrayAdapter<Tool>(this, R.layout.row_home_tool, tools)
+       final ArrayAdapter<Tool> adapter = new ArrayAdapter<Tool>(this, R.layout.row_home_tool, tools)
         {
             public View getView (int position, View convertView, ViewGroup parent)
             {

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 public class ToolChooserActivity extends Activity {
 
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tool_chooser);
@@ -53,9 +54,7 @@ public class ToolChooserActivity extends Activity {
 
     ArrayList<Tool> tools = new ArrayList<Tool>();
 
-    tools.add(new Tool(this.getString(R.string.tool_worry_practice), this.getString(R.string.desc_worry_practice), R.drawable.ic_action_alarms, new Intent(this, WorryPracticeActivity.class)));
-    tools.add(new Tool(this.getString(R.string.survey_wizard_title), this.getString(R.string.desc_survey_wizard), R.drawable.ic_action_keyboard, new Intent(this, WizardOneActivity.class)));
-    tools.add(new Tool(this.getResources().getString(R.string.tool_didactic_content), this.getString(R.string.desc_didactic_content), R.drawable.ic_action_slideshow, new Intent(this, PagedDidacticActivity.class)));
+
 
     ListView toolsList = (ListView) this.findViewById(R.id.rum_tools);
 

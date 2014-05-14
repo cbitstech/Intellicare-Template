@@ -14,6 +14,12 @@
         robot:showAsAction="never"
         android:title="@string/action_settings"/>
     <item
+        android:id="@+id/action_notifications_prefs"
+        ic:showAsAction="always"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_action_alarm"
+        android:title="@string/action_set_notification_preferences"/>
+    <item
         android:id="@+id/action_feedback"
         robot:showAsAction="never"
         android:title="@string/action_feedback"/>
