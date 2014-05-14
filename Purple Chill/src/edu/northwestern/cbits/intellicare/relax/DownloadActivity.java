@@ -62,6 +62,9 @@ public class DownloadActivity extends ConsentedActivity
         final DownloadActivity me = this;
         final ListView list = (ListView) this.findViewById(R.id.list_view);
 
+        final String[] titles = this.getResources().getStringArray(R.array.remote_media_titles);
+        final String[] urls = this.getResources().getStringArray(R.array.remote_media_urls);
+
         LocalBroadcastManager broadcasts = LocalBroadcastManager.getInstance(this);
 
         IntentFilter filter = new IntentFilter(DownloadManager.DOWNLOAD_UPDATE);
@@ -70,10 +73,8 @@ public class DownloadActivity extends ConsentedActivity
         {
             public void onReceive(final Context context, Intent intent)
             {
-                Log.e("PC", "INTENT: " + intent);
-
                 List<DownloadManager.DownloadItem> items = DownloadManager.getInstance(me).getCurrentDownloads();
-
+                
                 ArrayAdapter<DownloadManager.DownloadItem> adapter = new ArrayAdapter<DownloadManager.DownloadItem>(me, R.layout.row_download, items)
                 {
                     public View getView(int position, View convertView, ViewGroup parent)
@@ -86,10 +87,13 @@ public class DownloadActivity extends ConsentedActivity
 
                         DownloadManager.DownloadItem item = this.getItem(position);
 
-                        String[] titles = context.getResources().getStringArray(R.array.remote_media_titles);
-
                         TextView url = (TextView) convertView.findViewById(R.id.label_url);
-                        url.setText(titles[position]);
+                        
+                        for (int i = 0; i < urls.length && i < titles.length; i++)
+                        {
+                        	if (urls[i].equals(item.url))
+                            	url.setText(titles[i]);
+                        }
 
                         ProgressBar progress = (ProgressBar) convertView.findViewById(R.id.progress);
 
