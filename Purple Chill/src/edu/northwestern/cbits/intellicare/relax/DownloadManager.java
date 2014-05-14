@@ -243,16 +243,19 @@ public class DownloadManager
 				long twoDiff = two.size - two.downloaded;
 				
 				if (oneDiff == 0 && twoDiff != 0)
-					return -1;
+					return 1;
 				else if (oneDiff != 0 && twoDiff == 0)
-					return -2;
-				else if (oneDiff == 0 && twoDiff == 0)
-					return Long.valueOf(two.size).compareTo(Long.valueOf(one.size));
-				
-				double oneRatio = (double) one.size / (double)one.downloaded;
-				double twoRatio = (double) two.size / (double)two.downloaded;
+					return -1;
+				else 
+				{
+					double oneRatio = (double) one.size / (double)one.downloaded;
+					double twoRatio = (double) two.size / (double)two.downloaded;
 					
-				return Double.valueOf(twoRatio).compareTo(Double.valueOf(oneRatio));
+					if (Math.abs(oneRatio - twoRatio) > 0.01)
+						return Double.valueOf(twoRatio).compareTo(Double.valueOf(oneRatio));
+				}
+
+				return Long.valueOf(two.size).compareTo(Long.valueOf(one.size));
 			}
 		});
 		
