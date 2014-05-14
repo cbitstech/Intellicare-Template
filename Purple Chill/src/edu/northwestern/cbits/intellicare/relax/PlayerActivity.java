@@ -239,28 +239,31 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
 				image.setImageResource(imageId);
 				image.setTag(Integer.valueOf(imageId));
 
-                image.setOnClickListener(new View.OnClickListener()
-                {
-                    public void onClick(View view)
-                    {
-                        Log.e("PC", "DRAG!");
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me);
 
-                        int dragLength = 16;
-                        view.performHapticFeedback(1);
-                        pager.beginFakeDrag();
+                if (!prefs.contains("cover_art_" + me._trackUri)) {
 
 
-                        if (position != pager.getAdapter().getCount() - 1) {
-                            pager.fakeDragBy(0 - dragLength);
+                    image.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View view) {
+                            Log.e("PC", "DRAG!");
+
+                            int dragLength = 16;
+                            view.performHapticFeedback(1);
+                            pager.beginFakeDrag();
+
+
+                            if (position != pager.getAdapter().getCount() - 1) {
+                                pager.fakeDragBy(0 - dragLength);
+                            } else {
+                                pager.fakeDragBy(dragLength);
+                            }
+
+                            pager.endFakeDrag();
                         }
-                        else
-                        {
-                            pager.fakeDragBy(dragLength);
-                        }
+                    });
 
-                        pager.endFakeDrag();
-                    }
-                });
+                }
 				
 				container.addView(image);
 
