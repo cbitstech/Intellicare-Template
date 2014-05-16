@@ -62,7 +62,7 @@ public class IndexActivity extends ConsentedActivity {
 		
 		final IndexActivity me = this;
 		
-		MantraBoardCursor mantraItemCursor = MantraBoardManager.get(self).queryFocusBoards();
+		MantraBoardCursor mantraItemCursor = MantraBoardManager.get(self).queryMantraBoards();
 		
 		if (mantraItemCursor.getCount() == 0)
 		{
@@ -131,7 +131,7 @@ public class IndexActivity extends ConsentedActivity {
 		self.setContentView(R.layout.no_fragments_home_activity);
 		final GridView gv = (GridView) self.findViewById(R.id.gridview);
 
-		MantraBoardCursor mantraItemCursor = MantraBoardManager.get(self).queryFocusBoards();
+		MantraBoardCursor mantraItemCursor = MantraBoardManager.get(self).queryMantraBoards();
 //		Util.logCursor(mantraItemCursor);
 		
 		@SuppressWarnings("deprecation")
@@ -142,7 +142,7 @@ public class IndexActivity extends ConsentedActivity {
 				// set the image
 				final int imageId = focusBoardCursor.getInt(focusBoardCursor.getColumnIndex("_id")); 
 				Log.d(CN+".CursorAdapter.bindView", "imageId = " + imageId);
-				final MantraImageCursor imageCursor = MantraBoardManager.get(homeActivity).queryFocusImages(imageId);
+				final MantraImageCursor imageCursor = MantraBoardManager.get(homeActivity).queryMantraImages(imageId);
 //				Util.logCursor(imageCursor);
 				// if the mantra item has an image, then display the first one
 				if(imageCursor.getCount() > 0) {
@@ -225,7 +225,7 @@ public class IndexActivity extends ConsentedActivity {
 									
 									@Override
 									public void onClick(DialogInterface dialog, int which) {
-										int rowsDeleted = MantraBoardManager.get(self).deleteFocusBoard(id);
+										int rowsDeleted = MantraBoardManager.get(self).deleteMantraBoard(id);
 										((IndexActivity) self).attachGridView(self);
 										Log.d(CN+".onItemLongClick....onClick", "deleted row = " + id + "; deleted row count = " + rowsDeleted);
 									}
@@ -288,7 +288,7 @@ public class IndexActivity extends ConsentedActivity {
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		
-		builder.setTitle(R.string.action_new_focus_board);
+		builder.setTitle(R.string.action_new_mantra_board);
 
 		LayoutInflater inflater = LayoutInflater.from(activity);
 		final AutoCompleteTextView addView = (AutoCompleteTextView) inflater.inflate(R.layout.view_add_mantra, null, false);
@@ -301,7 +301,7 @@ public class IndexActivity extends ConsentedActivity {
 		
 		builder.setView(addView);
 
-		builder.setPositiveButton(R.string.action_new_focus_board, new DialogInterface.OnClickListener() 
+		builder.setPositiveButton(R.string.action_new_mantra_board, new DialogInterface.OnClickListener() 
 		{
 			public void onClick(DialogInterface dialog, int which) 
 			{
@@ -312,7 +312,7 @@ public class IndexActivity extends ConsentedActivity {
 				MantraBoardManager boards = MantraBoardManager.get(activity);
 
 
-				MantraBoard mantraBoard = boards.createFocusBoard(mantra);
+				MantraBoard mantraBoard = boards.createMantraBoard(mantra);
 				intent.putExtra(SingleMantraBoardActivity.MANTRA_BOARD_ID, mantraBoard.getId());
 
 				// handle image-URI-passing intent from HomeActivity
@@ -354,7 +354,7 @@ public class IndexActivity extends ConsentedActivity {
 		// get the current caption
 		// v2: via database
 		final View v = self.getLayoutInflater().inflate(R.layout.edit_text_field, null);
-		MantraBoard fb = MantraBoardManager.get(self).getFocusBoard(id);
+		MantraBoard fb = MantraBoardManager.get(self).getMantraBoard(id);
 		((EditText) v.findViewById(R.id.text_dialog)).setText(fb.getMantra());
 
 		AlertDialog.Builder editTextDlg = new AlertDialog.Builder(self);
@@ -366,9 +366,9 @@ public class IndexActivity extends ConsentedActivity {
 				// update the selected mantra's text
 //				Toast.makeText(self, "Mantra text should change.", Toast.LENGTH_SHORT).show();
 				String newMantra = ((EditText) v.findViewById(R.id.text_dialog)).getText().toString();
-				MantraBoard fb = MantraBoardManager.get(self).getFocusBoard(id);
+				MantraBoard fb = MantraBoardManager.get(self).getMantraBoard(id);
 				fb.setMantra(newMantra);
-				long updateRet = MantraBoardManager.get(self).setFocusBoard(fb);
+				long updateRet = MantraBoardManager.get(self).setMantraBoard(fb);
 				Log.d(CN+".onItemLongClick....onClick", "updateRet = " + updateRet);
 				attachGridView(self);
 			}

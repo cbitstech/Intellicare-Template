@@ -149,7 +149,7 @@ public class CollectCameraActivity extends Activity {
 	}
 
 	private void createMantraImage(File pictureFile) {
-		MantraImage image = mFocusBoardManager.createFocusImage(
+		MantraImage image = mFocusBoardManager.createMantraImage(
 				mFocusBoardId, pictureFile.getAbsolutePath(), getString(R.string.some_image_caption)
 			);
 	}

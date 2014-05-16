@@ -8,7 +8,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".ReviewActivity" >
 
-    <Button
+<!--      <Button
         android:id="@+id/btnGoHome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
         android:numStars="5"
         android:rating="3"
         android:stepSize="1" />
-
+-->
     <TextView
         android:id="@+id/txtPhotosCount"
         android:layout_width="wrap_content"

@@ -76,7 +76,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 		this.mFocusBoardId = intent.getLongExtra(SingleMantraBoardActivity.MANTRA_BOARD_ID, -1);
 		mManager = MantraBoardManager.get(this);
 
-		MantraBoard mantraBoard = mManager.getFocusBoard(this.mFocusBoardId);
+		MantraBoard mantraBoard = mManager.getMantraBoard(this.mFocusBoardId);
 
 		this.getSupportActionBar().setTitle(mantraBoard.getMantra());
 
@@ -91,7 +91,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 		
 		final SingleMantraBoardActivity me = this;
 		
-		final MantraImageCursor cursor = MantraBoardManager.get(this).queryFocusImages(this.mFocusBoardId);
+		final MantraImageCursor cursor = MantraBoardManager.get(this).queryMantraImages(this.mFocusBoardId);
 		
 		if (cursor.getCount() == 0)
 		{
@@ -131,7 +131,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 		setContentView(R.layout.no_fragments_home_activity);
 		final GridView gv = (GridView) this.findViewById(R.id.gridview);
 
-		final MantraImageCursor cursor = MantraBoardManager.get(this).queryFocusImages(this.mFocusBoardId);
+		final MantraImageCursor cursor = MantraBoardManager.get(this).queryMantraImages(this.mFocusBoardId);
 		Util.logCursor(cursor);
 		
 		@SuppressWarnings("deprecation")
@@ -209,7 +209,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 								// get the current caption
 								// v2: via database
 								final View v = self.getLayoutInflater().inflate(R.layout.edit_text_field, null);
-								MantraImage fi = MantraBoardManager.get(self).getFocusImage(id);
+								MantraImage fi = MantraBoardManager.get(self).getMantraImage(id);
 								((EditText) v.findViewById(R.id.text_dialog)).setText(fi.getCaption());
 
 								AlertDialog.Builder editTextDlg = new AlertDialog.Builder(self);
@@ -221,9 +221,9 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 										// update the selected mantra's text
 //										Toast.makeText(self, "Mantra text should change.", Toast.LENGTH_SHORT).show();
 										String newCaption = ((EditText) v.findViewById(R.id.text_dialog)).getText().toString();
-										MantraImage fi = MantraBoardManager.get(self).getFocusImage(id);
+										MantraImage fi = MantraBoardManager.get(self).getMantraImage(id);
 										fi.setCaption(newCaption);
-										long updateRet = MantraBoardManager.get(self).setFocusImage(fi);
+										long updateRet = MantraBoardManager.get(self).setMantraImage(fi);
 										Log.d(CN+".onItemLongClick....onClick", "updateRet = " + updateRet);
 										attachGridView();
 									}
@@ -244,7 +244,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 									
 									@Override
 									public void onClick(DialogInterface dialog, int which) {
-										int rowsDeleted = MantraBoardManager.get(self).deleteFocusImage(id);
+										int rowsDeleted = MantraBoardManager.get(self).deleteMantraImage(id);
 										attachGridView();
 										Log.d(CN+".onItemLongClick....onClick", "deleted row = " + id + "; deleted row count = " + rowsDeleted);
 									}
@@ -307,7 +307,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 			if(selectedImage != null && selectedImage.toString().length() > 0) {
 				mFocusBoardId = intent.getLongExtra(SingleMantraBoardActivity.MANTRA_BOARD_ID, -1);
 				mManager = MantraBoardManager.get(this);
-				MantraBoard mantraBoard = mManager.getFocusBoard(mFocusBoardId);
+				MantraBoard mantraBoard = mManager.getMantraBoard(mFocusBoardId);
 
 				Log.d(CN+".handleSelectedImageIntent", "selectedImage = " + selectedImage.toString());
 				String filePathToImageInTmpFolder = Paths.getRealPathFromURI(this, selectedImage).trim();
@@ -346,7 +346,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 		Log.d(CN+".applyNewImageToMantra", "entered");
 		// search the image set for a particular image path, and if the image isn't already associated with the board,
 		// then associate it. 
-		MantraImageCursor fic = mManager.queryFocusImages(mFocusBoardId );
+		MantraImageCursor fic = mManager.queryMantraImages(mFocusBoardId );
 		boolean imageAlreadyAssociated = false;
 		Util.logCursor(fic);
 		while(fic.moveToNext()) {
@@ -361,7 +361,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 		if(!imageAlreadyAssociated) {
 			Log.d(CN+".applyNewImageToMantra","for board " + mFocusBoardId + ", associating image = " + imageFile.getAbsolutePath());
 			Toast.makeText(this, self.getString(R.string.image_applied_), Toast.LENGTH_SHORT).show();
-			mManager.createFocusImage(mFocusBoardId, imageFile.getAbsolutePath(), getString(R.string.some_image_caption));
+			mManager.createMantraImage(mFocusBoardId, imageFile.getAbsolutePath(), getString(R.string.some_image_caption));
 		}
 		
 		fic.close();

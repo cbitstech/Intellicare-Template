@@ -26,7 +26,7 @@ public class MantraBoardGridFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.d(CN+".onCreateView", "entered");
 		View view = inflater.inflate(R.layout.focus_boards_grid, container,false);
-		mCursor = MantraBoardManager.get(getActivity()).queryFocusBoards();
+		mCursor = MantraBoardManager.get(getActivity()).queryMantraBoards();
 		Util.logCursor(mCursor);
 		MantraBoardCursorAdapter adapter = new MantraBoardCursorAdapter(getActivity(), mCursor);
 		GridView gv = (GridView) view.findViewById(R.id.gridview);
