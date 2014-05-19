@@ -46,6 +46,8 @@ public class MainActivity extends ConsentedActivity
 {
 	protected static final int RESULT_FETCH_IMAGE = 123;
 
+	public static final Uri URI = Uri.parse("intellicare://aspire/main");
+
 	private int _index = -1;
 	private int _count = 0;
 
@@ -53,6 +55,8 @@ public class MainActivity extends ConsentedActivity
 	{
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_main);
+		
+		ScheduleManager.getInstance(this);
 		
         final MainActivity me = this;
         

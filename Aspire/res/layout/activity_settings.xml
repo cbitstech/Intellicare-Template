@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/settings_notifications">
+	 	<Preference android:title="@string/reminder_schedule" android:key="reminder_schedule" />
+	 	<Preference android:title="@string/graph_schedule" android:key="graph_schedule" />
+	</PreferenceCategory>
     <PreferenceCategory android:title="@string/settings_group_credits">
 	 	<Preference android:title="@string/creator_sms" android:summary="@string/role_clinical_lead" />
 		<Preference android:title="@string/creator_cjk" android:summary="@string/role_tech_lead" />
