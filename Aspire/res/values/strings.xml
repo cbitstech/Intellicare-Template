@@ -7,9 +7,12 @@
     <string name="subtitle_editor">Path Editor</string>
     <string name="description_path" formatted="false">&#8230; %s &#8230;</string>
     
-    <string name="title_first_path">Add First Path</string>
+    <string name="title_first_path">Add New Path</string>
     <string name="instructions_new_path">Now that you\'ve selected this card, what will you do to fulfill it?</string>
-    <string name="placeholder_add_path">Enter your first task here.</string>
+    <string name="placeholder_add_path">Enter your new path here.</string>
+    
+    <string name="title_rename_task">Rename Path</string>
+    <string name="instructions_rename_path">Please enter a new name for this path.</string>
 
     <string name="title_new_task">Add First Path</string>
     <string name="instructions_new_task">Please enter a new task for your path.</string>
@@ -39,6 +42,11 @@
     <string name="action_add_path">Add Path</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_delete">Delete</string>
+    <string name="action_rename">Rename</string>
+    <string name="action_checkin">Check In</string>
+    <string name="action_edit">Edit Paths</string>
+    
+    <string name="label_swap_image">(Tap here to select a new image.)</string>
     
     <string name="text_live_value">Live your value today!</string>
     <string name="text_value_placeholder"></string>
@@ -46,6 +54,7 @@
     <string name="title_delete_task">Delete Task?</string>
     <string name="message_delete_task">Are you sure that you wish to remove this task from this value?</string>
 
+    <string name="label_empty_paths">Please add a path to continue&#8230;</string>
     <string name="day_sun">Sun.</string>
     <string name="day_mon">Mon.</string>
     <string name="day_tue">Tue.</string>
