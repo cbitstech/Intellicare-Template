@@ -77,10 +77,10 @@ public class NotificationAlarm extends BroadcastReceiver
         	 String message = context.getString(R.string.notification_start_day);
 
         	 // put the user's list of mantra boards in the notification
-        	 MantraBoardCursor mantraItemCursor = MantraBoardManager.get(context).queryFocusBoards();
+        	 MantraBoardCursor mantraItemCursor = MantraBoardManager.get(context).queryMantraBoards();
         	 ArrayList<String> al = new ArrayList<String>();
         	 while(mantraItemCursor.moveToNext()) {
-        		 MantraBoard mantra = MantraBoardManager.get(context).getFocusBoard(mantraItemCursor.getLong(mantraItemCursor.getColumnIndex("_id")));
+        		 MantraBoard mantra = MantraBoardManager.get(context).getMantraBoard(mantraItemCursor.getLong(mantraItemCursor.getColumnIndex("_id")));
         		 
         		 message += "\n" + mantra.getMantra();
         	 }
@@ -107,8 +107,12 @@ public class NotificationAlarm extends BroadcastReceiver
 //        			 new Intent(context, ReviewActivity.class),
 //        			 1);
         	 
+        	 // v1: display ReviewActivity as a whole activity unto itself
         	 PendingIntent pi = PendingIntent.getActivity(context, 0, new Intent(context, ReviewActivity.class), 0);
         	 Uri u = ReviewActivity.activityUri(context);
+
+        	 // v2: display review as a dialog
+//        	 ReviewActivity.reviewDialog(context);
 
         	 NotificationAlarm.makeNotification(context, context.getString(R.string.notification_end_day), R.drawable.abc_ic_go, pi, NotificationAlarm.NOTE_ID, u);
          }

@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -90,11 +91,59 @@ public class EditActivity extends ConsentedActivity
 		
 		Cursor c = this.getContentResolver().query(AspireContentProvider.ASPIRE_PATH_URI, null, where, args, null);
 		
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, c, from, to, 0);	
+		final SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, c, from, to, 0);	
 
 		ListView list = (ListView) this.findViewById(R.id.list_view);
 		
+		list.setEmptyView(this.findViewById(R.id.label_empty_paths));
+		
 		list.setAdapter(adapter);
+		
+		list.setOnItemClickListener(new OnItemClickListener()
+		{
+			public void onItemClick(AdapterView<?> parent, View view, int position, final long id) 
+			{
+				AlertDialog.Builder builder = new AlertDialog.Builder(me);
+				builder.setTitle(R.string.title_rename_task);
+
+				LayoutInflater inflater = LayoutInflater.from(me);
+				View contentView = inflater.inflate(R.layout.view_rename_path, null, false);
+				
+				builder.setView(contentView);
+				
+				final TextView rename = (TextView) contentView.findViewById(R.id.field_new_path);
+				rename.setText(((TextView) view.findViewById(android.R.id.text1)).getText().toString());
+				
+				builder.setPositiveButton(R.string.action_rename, new OnClickListener()
+				{
+					public void onClick(DialogInterface arg0, int arg1) 
+					{
+						String where = AspireContentProvider.ID + " = ?";
+						String[] args = { "" + id };
+						
+						ContentValues values = new ContentValues();
+						values.put(AspireContentProvider.PATH_PATH, rename.getText().toString());
+						
+						me.getContentResolver().update(AspireContentProvider.ASPIRE_PATH_URI, values, where, args);
+								
+						HashMap<String, Object> payload = new HashMap<String, Object>();
+						LogManager.getInstance(me).log("renamed_path", payload);
+
+						me.refreshList();
+					}
+				});
+				
+				builder.setNegativeButton(R.string.action_cancel, new OnClickListener()
+				{
+					public void onClick(DialogInterface dialog, int which) 
+					{
+
+					}
+				});
+				
+				builder.create().show();
+			}
+		});
 		
 		list.setOnItemLongClickListener(new OnItemLongClickListener()
 		{
@@ -159,7 +208,6 @@ public class EditActivity extends ConsentedActivity
 				View view = inflater.inflate(R.layout.view_add_task, null, false);
 				
 				builder.setView(view);
-				builder.setCancelable(false);
 				
 				final EditActivity me = this;
 				

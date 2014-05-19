@@ -88,7 +88,7 @@
         <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.ReviewActivity"
             android:label="@string/title_activity_review" 
-            android:theme="@style/Theme.AppCompat.Light" >
+            android:theme="@style/Theme.Transparent" >
 			<intent-filter>
 		        <action android:name="android.intent.action.VIEW" />
         	    <category android:name="android.intent.category.DEFAULT" />

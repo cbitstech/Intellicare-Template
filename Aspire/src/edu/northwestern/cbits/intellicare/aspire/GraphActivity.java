@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
@@ -24,6 +25,8 @@ import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class GraphActivity extends ConsentedActivity 
 {
+	public static final Uri URI = Uri.parse("intellicare://aspire/graph");
+
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);

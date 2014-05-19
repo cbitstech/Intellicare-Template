@@ -18,4 +18,18 @@
 	     android:shadowDx="0"
 	     android:shadowDy="0"
 	     android:gravity="center" />
+	 <TextView android:id="@+id/swap_image"
+	     android:text="@string/label_swap_image"
+	     android:layout_gravity="bottom|right"
+	     android:layout_width="wrap_content"
+	     android:layout_height="40dp"
+	     android:padding="4dp"
+	     android:textStyle="italic"
+	     android:textColor="#ffffff"
+	     android:textSize="12sp" 
+	     android:shadowColor="#000000"
+	     android:shadowRadius="8.0"
+	     android:shadowDx="0"
+	     android:shadowDy="0"
+	     android:gravity="center" />
 </FrameLayout>

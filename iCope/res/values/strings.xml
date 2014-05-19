@@ -51,7 +51,7 @@
    	    <item>Edit Card</item>
         <item>Remove Card</item>
  	</string-array>
-
+   	
     <string name="title_card_actions">Actions</string>
 	<string name="type_unknown">Unknown Event Type</string>   	
 

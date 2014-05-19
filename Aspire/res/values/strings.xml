@@ -7,9 +7,12 @@
     <string name="subtitle_editor">Path Editor</string>
     <string name="description_path" formatted="false">&#8230; %s &#8230;</string>
     
-    <string name="title_first_path">Add First Path</string>
+    <string name="title_first_path">Add New Path</string>
     <string name="instructions_new_path">Now that you\'ve selected this card, what will you do to fulfill it?</string>
-    <string name="placeholder_add_path">Enter your first task here.</string>
+    <string name="placeholder_add_path">Enter your new path here.</string>
+    
+    <string name="title_rename_task">Rename Path</string>
+    <string name="instructions_rename_path">Please enter a new name for this path.</string>
 
     <string name="title_new_task">Add First Path</string>
     <string name="instructions_new_task">Please enter a new task for your path.</string>
@@ -32,20 +35,45 @@
     <string name="title_graph">This Week in Virtue</string>
     <string name="subtitle_graph" formatted="false">%d virtues exercised</string>
     <string name="subtitle_graph_single">1 virtue exercised</string>
+
+    <string name="label_sun">Sun.</string>
+    <string name="label_mon">Mon.</string>
+    <string name="label_tue">Tue.</string>
+    <string name="label_wed">Wed.</string>
+    <string name="label_thu">Thu.</string>
+    <string name="label_fri">Fri.</string>
+    <string name="label_sat">Sat.</string>
     
     <string name="action_graph">Graph Progress</string>
-    <string name="action_add_value">Add Value</string>
+    <string name="action_add_value">Values</string>
     <string name="action_use_card">Use Card</string>
     <string name="action_add_path">Add Path</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_delete">Delete</string>
+    <string name="action_rename">Rename</string>
+    <string name="action_checkin">Check In</string>
+    <string name="action_edit">Edit Paths</string>
+    <string name="action_schedule">Schedule</string>
+    <string name="action_not_now">Not Now</string>
+    <string name="action_add_card">Add Card</string>
+    <string name="action_list_view">List View</string>
+    <string name="action_cards_view">Cards View</string>
+
+    <string name="title_add_card">Add New Virtue</string>
+    <string name="instructions_new_card">Enter the name of the virtue and its description below.</string>
+    <string name="placeholder_add_card">New virtue name</string>
+    <string name="placeholder_add_description">New virtue description</string>
     
+    <string name="label_swap_image">(Tap here to select a new image.)</string>
+    
+    <string name="card_instruction">(Tap to use this card.)</string>
     <string name="text_live_value">Live your value today!</string>
     <string name="text_value_placeholder"></string>
 
     <string name="title_delete_task">Delete Task?</string>
     <string name="message_delete_task">Are you sure that you wish to remove this task from this value?</string>
 
+    <string name="label_empty_paths">Please add a path to continue&#8230;</string>
     <string name="day_sun">Sun.</string>
     <string name="day_mon">Mon.</string>
     <string name="day_tue">Tue.</string>
@@ -53,6 +81,20 @@
     <string name="day_thu">Thu.</string>
     <string name="day_fri">Fri.</string>
     <string name="day_sat">Sat.</string>
+
+   	<string name="settings_notifications">Notifications &amp; Reminders</string>
+ 	
+   	<string name="reminder_schedule">Daily Reminder Schedule</string>
+   	<string name="graph_schedule">Daily Review Schedule</string>
+    
+    <string name="title_schedule_reminder">Path Reminder Schedule</string>
+
+    <string name="title_reminder_note">Aspire</string>
+    <string name="message_reminder_note">Review your values for the day!</string>
+
+    <string name="title_graph_note">Aspire</string>
+    <string name="message_graph_note" formatted="false">You finished %d paths. Let\'s look at today\'s virtues.</string>
+    <string name="message_graph_note_single">You finished one path. Let\'s look at today\'s virtues.</string>
     
     <!-- Database -->
     

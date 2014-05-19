@@ -26,14 +26,14 @@ public class MantraBoardManager {
 		return sFocusBoardManager;
 	}
 
-	public MantraBoard createFocusBoard(String mantra) {
+	public MantraBoard createMantraBoard(String mantra) {
 		MantraBoard mantraBoard = new MantraBoard();
 		mantraBoard.setMantra(mantra);
 		mantraBoard.setId(mDatabaseHelper.insertFocusBoard(mantraBoard));
 		return mantraBoard;
 	}
 	
-	public MantraImage createFocusImage(long focusBoardId, String imagePath, String imageCaption) {
+	public MantraImage createMantraImage(long focusBoardId, String imagePath, String imageCaption) {
 		MantraImage mantraImage = new MantraImage();
 		mantraImage.setFocusBoardId(focusBoardId);
 		mantraImage.setPath(imagePath);
@@ -42,11 +42,11 @@ public class MantraBoardManager {
 		return mantraImage;
 	}
 	
-	public MantraBoardCursor queryFocusBoards() {
+	public MantraBoardCursor queryMantraBoards() {
 		return mDatabaseHelper.queryFocusBoards();
 	}
 	
-	public MantraBoard getFocusBoard(long id) {
+	public MantraBoard getMantraBoard(long id) {
 		MantraBoard mantraBoard = null;
 		MantraBoardCursor cursor = mDatabaseHelper.queryFocusBoard(id);
 		cursor.moveToFirst();
@@ -57,7 +57,7 @@ public class MantraBoardManager {
 		return mantraBoard;
 	}
 	
-	public long setFocusBoard(MantraBoard mantraBoard) {
+	public long setMantraBoard(MantraBoard mantraBoard) {
 		MantraBoardCursor cursor = mDatabaseHelper.queryFocusBoard(mantraBoard.getId());
 		cursor.moveToFirst();
 		long ret = -1;
@@ -68,7 +68,7 @@ public class MantraBoardManager {
 		return ret;
 	}
 	
-	public int deleteFocusBoard(long id) {
+	public int deleteMantraBoard(long id) {
 		MantraBoardCursor cursor = mDatabaseHelper.queryFocusBoard(id);
 		cursor.moveToFirst();
 		int ret = -1;
@@ -80,11 +80,11 @@ public class MantraBoardManager {
 	}
 	
 	
-	public MantraImageCursor queryFocusImages(long focusBoardId) {
+	public MantraImageCursor queryMantraImages(long focusBoardId) {
 		return mDatabaseHelper.queryFocusImages(focusBoardId);
 	}
 	
-	public MantraImage getFocusImage(long id) {
+	public MantraImage getMantraImage(long id) {
 		MantraImage mantraImage = null;
 		MantraImageCursor cursor = mDatabaseHelper.queryFocusImage(id);
 		cursor.moveToFirst();
@@ -95,7 +95,7 @@ public class MantraBoardManager {
 		return mantraImage;
 	}
 	
-	public long setFocusImage(MantraImage mantraImage) {
+	public long setMantraImage(MantraImage mantraImage) {
 		MantraImageCursor cursor = mDatabaseHelper.queryFocusImage(mantraImage.getId());
 		cursor.moveToFirst();
 		long ret = -1;
@@ -106,7 +106,7 @@ public class MantraBoardManager {
 		return ret;
 	}
 	
-	public int deleteFocusImage(long id) {
+	public int deleteMantraImage(long id) {
 		MantraImageCursor cursor = mDatabaseHelper.queryFocusImage(id);
 		cursor.moveToFirst();
 		int ret = -1;

@@ -17,16 +17,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp">
-            <ImageView android:id="@+id/button_photo"
-                android:layout_width="48dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_action_picture"
-                android:scaleType="centerInside" />
+            <LinearLayout android:orientation="vertical"
+                android:layout_width="64dp"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+	            <ImageView android:id="@+id/button_paths"
+	                android:layout_width="48dp"
+	                android:layout_height="32dp"
+	                android:src="@drawable/ic_action_tick"
+	                android:scaleType="centerInside" />
+	            <TextView android:layout_width="match_parent"
+	                android:layout_height="wrap_content"
+	                android:text="@string/action_checkin"
+	                android:textSize="12sp"
+	                android:gravity="center" />
+            </LinearLayout>
             <LinearLayout android:orientation="vertical"
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="3"
                 android:layout_height="wrap_content"
-                android:id="@+id/layout_card_info">
+                android:id="@+id/layout_card_info"
+                android:layout_gravity="center"
+                android:gravity="center">
                 <TextView android:text="@string/text_live_value"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -42,11 +54,21 @@
                     android:textStyle="bold"
                     android:textColor="#669900" />
             </LinearLayout>
-            <ImageView android:id="@+id/button_map"
-                android:layout_width="48dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_action_map"
-                android:scaleType="centerInside" />
+            <LinearLayout android:orientation="vertical"
+                android:layout_width="64dp"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+	            <ImageView android:id="@+id/button_edit"
+	                android:layout_width="48dp"
+	                android:layout_height="32dp"
+	                android:src="@drawable/ic_action_edit"
+	                android:scaleType="centerInside" />
+	            <TextView android:layout_width="match_parent"
+	                android:layout_height="wrap_content"
+	                android:text="@string/action_edit"
+	                android:textSize="12sp"
+	                android:gravity="center" />
+            </LinearLayout>
         </LinearLayout>
 	    <View android:layout_height="1dp"
 	        android:layout_width="match_parent"

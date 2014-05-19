@@ -46,6 +46,8 @@ public class MainActivity extends ConsentedActivity
 {
 	protected static final int RESULT_FETCH_IMAGE = 123;
 
+	public static final Uri URI = Uri.parse("intellicare://aspire/main");
+
 	private int _index = -1;
 	private int _count = 0;
 
@@ -54,9 +56,11 @@ public class MainActivity extends ConsentedActivity
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_main);
 		
+		ScheduleManager.getInstance(this);
+		
         final MainActivity me = this;
         
-		ImageView path = (ImageView) this.findViewById(R.id.button_map);
+		ImageView path = (ImageView) this.findViewById(R.id.button_edit);
 		
 		path.setOnClickListener(new OnClickListener()
 		{
@@ -69,18 +73,110 @@ public class MainActivity extends ConsentedActivity
 			}
 		});
 		
-		ImageView photo = (ImageView) this.findViewById(R.id.button_photo);
-		
-		photo.setOnClickListener(new OnClickListener()
+        final ViewPager pager = (ViewPager) this.findViewById(R.id.pager_content);
+
+		ImageView paths = (ImageView) this.findViewById(R.id.button_paths);
+
+		paths.setOnClickListener(new OnClickListener()
 		{
 			public void onClick(View arg0) 
 			{
-				HashMap<String, Object> payload = new HashMap<String, Object>();
-				LogManager.getInstance(me).log("fetching_photo", payload);
-
-				Intent in = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-				me.startActivityForResult(in, MainActivity.RESULT_FETCH_IMAGE);
+				View view = pager.findViewWithTag("" + pager.getCurrentItem());
+				
+				if (view != null)
+				{
+					final TextView name = (TextView) view.findViewById(R.id.card_name);
+					final long cardId = me.currentCardId();
+	
+					AlertDialog.Builder builder = new AlertDialog.Builder(me);
+					
+					builder.setTitle(name.getText().toString());
+					
+					String where = AspireContentProvider.PATH_CARD_ID + " = ?";
+					String[] args = { "" + cardId };
+					
+					Cursor c = me.getContentResolver().query(AspireContentProvider.ASPIRE_PATH_URI, null, where, args, AspireContentProvider.PATH_PATH);
+					
+					ArrayList<String> paths = new ArrayList<String>();
+					final ArrayList<Long> pathIds = new ArrayList<Long>();
+					
+					while (c.moveToNext())
+					{
+						paths.add(c.getString(c.getColumnIndex(AspireContentProvider.PATH_PATH)));
+						pathIds.add(c.getLong(c.getColumnIndex(AspireContentProvider.ID)));
+					}
+					
+					final String[] pathArray = new String[paths.size()];
+					boolean[] selected = new boolean[paths.size()];
+	
+					Calendar cal = Calendar.getInstance();
+	
+					for (int i = 0; i < pathArray.length; i++)
+					{
+						pathArray[i] = paths.get(i);
+						
+						String select = AspireContentProvider.TASK_PATH_ID + " = ?";
+						select += " AND " + AspireContentProvider.TASK_YEAR + " =?";
+						select += " AND " + AspireContentProvider.TASK_MONTH + " =?";
+						select += " AND " + AspireContentProvider.TASK_DAY + " =?";
+						
+						String[] selectArgs = { "" + pathIds.get(i), "" + cal.get(Calendar.YEAR), "" + cal.get(Calendar.MONTH), "" + cal.get(Calendar.DAY_OF_MONTH) };
+						
+						Cursor cursor = me.getContentResolver().query(AspireContentProvider.ASPIRE_TASK_URI, null, select, selectArgs, null);
+						
+						selected[i] = (cursor.getCount() > 0);
+						
+						cursor.close();
+					}
+					
+					builder.setMultiChoiceItems(pathArray, selected, new OnMultiChoiceClickListener()
+					{
+						public void onClick(DialogInterface arg0, int which, boolean checked) 
+						{
+							final Calendar cal = Calendar.getInstance();
+	
+							String where = AspireContentProvider.TASK_PATH_ID + " = ?";
+							where += " AND " + AspireContentProvider.TASK_YEAR + " =?";
+							where += " AND " + AspireContentProvider.TASK_MONTH + " =?";
+							where += " AND " + AspireContentProvider.TASK_DAY + " =?";
+							
+							String[] args = { "" + pathIds.get(which), "" + cal.get(Calendar.YEAR), "" + cal.get(Calendar.MONTH), "" + cal.get(Calendar.DAY_OF_MONTH) };
+							
+							me.getContentResolver().delete(AspireContentProvider.ASPIRE_TASK_URI, where, args);
+	
+							HashMap<String, Object> payload = new HashMap<String, Object>();
+							payload.put("virtue", name.getText().toString());
+							payload.put("path", pathArray[which]);
+	
+							if (checked)
+							{
+								ContentValues values = new ContentValues();
+								values.put(AspireContentProvider.TASK_PATH_ID, pathIds.get(which));
+								values.put(AspireContentProvider.TASK_YEAR, cal.get(Calendar.YEAR));
+								values.put(AspireContentProvider.TASK_MONTH, cal.get(Calendar.MONTH));
+								values.put(AspireContentProvider.TASK_DAY, cal.get(Calendar.DAY_OF_MONTH));
+								
+								me.getContentResolver().insert(AspireContentProvider.ASPIRE_TASK_URI, values);
+	
+								LogManager.getInstance(me).log("selected_path", payload);
+							}
+							else
+								LogManager.getInstance(me).log("deselected_path", payload);
+						}
+					});
+					
+					c.close();
+					
+					builder.setPositiveButton(R.string.action_close, new DialogInterface.OnClickListener() 
+					{
+						public void onClick(DialogInterface dialog, int which) 
+						{
+							me.updateWeek();
+						}
+					});
+					
+					builder.create().show();
+				}
 			}
 		});
 	}
@@ -203,7 +299,12 @@ public class MainActivity extends ConsentedActivity
 			}
 			
 			c.close();
+			
+			this._count = cardIds.size();
 
+			if (this._index >= this._count)
+				this._index = 0;
+			
 	        final ViewPager pager = (ViewPager) this.findViewById(R.id.pager_content);
 	        	        
 			PagerAdapter adapter = new PagerAdapter()
@@ -277,7 +378,7 @@ public class MainActivity extends ConsentedActivity
 						{
 							try 
 							{
-							    InputStream ims = me.getAssets().open("placeholder.jpg");
+							    InputStream ims = me.getAssets().open("default_background.jpg");
 				
 					            Bitmap bitmap = BitmapFactory.decodeStream(ims);
 				
@@ -292,6 +393,20 @@ public class MainActivity extends ConsentedActivity
 								LogManager.getInstance(me).logException(e);
 							}
 						}
+						
+						TextView swap = (TextView) view.findViewById(R.id.swap_image);
+						swap.setOnClickListener(new View.OnClickListener() 
+						{
+							public void onClick(View v) 
+							{
+								HashMap<String, Object> payload = new HashMap<String, Object>();
+								LogManager.getInstance(me).log("fetching_photo", payload);
+
+								Intent in = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+								me.startActivityForResult(in, MainActivity.RESULT_FETCH_IMAGE);
+							}
+						});
 					}
 
 					c.close();
@@ -327,121 +442,27 @@ public class MainActivity extends ConsentedActivity
 				public void onPageSelected(int position) 
 				{
 					me._index = position;
-					
-					View view = pager.findViewWithTag("" + position);
-					
+
+					TextView description = (TextView) me.findViewById(R.id.card_description);
 					final long cardId = cardIds.get(position).longValue();
 					
 					int count = cardCount.get(Long.valueOf(cardId)).intValue();
-			
-					TextView description = (TextView) me.findViewById(R.id.card_description);
-					final TextView name = (TextView) view.findViewById(R.id.card_name);
+
+					View view = pager.findViewWithTag("" + position);
 					
-					HashMap<String, Object> payload = new HashMap<String, Object>();
-					payload.put("virtue", name.getText().toString());
-					LogManager.getInstance(me).log("showed_virtue", payload);
+					if (view != null)
+					{
+						final TextView name = (TextView) view.findViewById(R.id.card_name);
+						
+						HashMap<String, Object> payload = new HashMap<String, Object>();
+						payload.put("virtue", name.getText().toString());
+						LogManager.getInstance(me).log("showed_virtue", payload);
+					}
 
 					if (count == 1)
 						description.setText(R.string.desc_single_path);
 					else
 						description.setText(me.getString(R.string.desc_paths, count));
-
-					LinearLayout userInfo = (LinearLayout) me.findViewById(R.id.layout_card_info);
-					
-					userInfo.setOnClickListener(new OnClickListener()
-					{
-						public void onClick(View arg0) 
-						{
-							AlertDialog.Builder builder = new AlertDialog.Builder(me);
-							
-							builder.setTitle(name.getText().toString());
-							
-							String where = AspireContentProvider.PATH_CARD_ID + " = ?";
-							String[] args = { "" + cardId };
-							
-							Cursor c = me.getContentResolver().query(AspireContentProvider.ASPIRE_PATH_URI, null, where, args, AspireContentProvider.PATH_PATH);
-							
-							ArrayList<String> paths = new ArrayList<String>();
-							final ArrayList<Long> pathIds = new ArrayList<Long>();
-							
-							while (c.moveToNext())
-							{
-								paths.add(c.getString(c.getColumnIndex(AspireContentProvider.PATH_PATH)));
-								pathIds.add(c.getLong(c.getColumnIndex(AspireContentProvider.ID)));
-							}
-							
-							final String[] pathArray = new String[paths.size()];
-							boolean[] selected = new boolean[paths.size()];
-
-							Calendar cal = Calendar.getInstance();
-
-							for (int i = 0; i < pathArray.length; i++)
-							{
-								pathArray[i] = paths.get(i);
-								
-								String select = AspireContentProvider.TASK_PATH_ID + " = ?";
-								select += " AND " + AspireContentProvider.TASK_YEAR + " =?";
-								select += " AND " + AspireContentProvider.TASK_MONTH + " =?";
-								select += " AND " + AspireContentProvider.TASK_DAY + " =?";
-								
-								String[] selectArgs = { "" + pathIds.get(i), "" + cal.get(Calendar.YEAR), "" + cal.get(Calendar.MONTH), "" + cal.get(Calendar.DAY_OF_MONTH) };
-								
-								Cursor cursor = me.getContentResolver().query(AspireContentProvider.ASPIRE_TASK_URI, null, select, selectArgs, null);
-								
-								selected[i] = (cursor.getCount() > 0);
-								
-								cursor.close();
-							}
-							
-							builder.setMultiChoiceItems(pathArray, selected, new OnMultiChoiceClickListener()
-							{
-								public void onClick(DialogInterface arg0, int which, boolean checked) 
-								{
-									final Calendar cal = Calendar.getInstance();
-
-									String where = AspireContentProvider.TASK_PATH_ID + " = ?";
-									where += " AND " + AspireContentProvider.TASK_YEAR + " =?";
-									where += " AND " + AspireContentProvider.TASK_MONTH + " =?";
-									where += " AND " + AspireContentProvider.TASK_DAY + " =?";
-									
-									String[] args = { "" + pathIds.get(which), "" + cal.get(Calendar.YEAR), "" + cal.get(Calendar.MONTH), "" + cal.get(Calendar.DAY_OF_MONTH) };
-									
-									me.getContentResolver().delete(AspireContentProvider.ASPIRE_TASK_URI, where, args);
-
-									HashMap<String, Object> payload = new HashMap<String, Object>();
-									payload.put("virtue", name.getText().toString());
-									payload.put("path", pathArray[which]);
-
-									if (checked)
-									{
-										ContentValues values = new ContentValues();
-										values.put(AspireContentProvider.TASK_PATH_ID, pathIds.get(which));
-										values.put(AspireContentProvider.TASK_YEAR, cal.get(Calendar.YEAR));
-										values.put(AspireContentProvider.TASK_MONTH, cal.get(Calendar.MONTH));
-										values.put(AspireContentProvider.TASK_DAY, cal.get(Calendar.DAY_OF_MONTH));
-										
-										me.getContentResolver().insert(AspireContentProvider.ASPIRE_TASK_URI, values);
-
-										LogManager.getInstance(me).log("selected_path", payload);
-									}
-									else
-										LogManager.getInstance(me).log("deselected_path", payload);
-								}
-							});
-							
-							c.close();
-							
-							builder.setPositiveButton(R.string.action_close, new DialogInterface.OnClickListener() 
-							{
-								public void onClick(DialogInterface dialog, int which) 
-								{
-									me.updateWeek();
-								}
-							});
-							
-							builder.create().show();
-						}
-					});
 				}
 			};
 
@@ -471,6 +492,8 @@ public class MainActivity extends ConsentedActivity
 			});
 			
 			t.start();
+			
+            pager.setCurrentItem(this._index);
 		}		
 
 		HashMap<String, Object> payload = new HashMap<String, Object>();
