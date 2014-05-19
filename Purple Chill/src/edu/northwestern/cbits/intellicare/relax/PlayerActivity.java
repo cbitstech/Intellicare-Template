@@ -179,7 +179,7 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
 		{
 			public int getCount() 
 			{
-				return 7;
+				return 9;
 			}
 
 			public boolean isViewFromObject(View view, Object content) 
@@ -234,6 +234,12 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
 					case 6:
 						imageId = R.drawable.tree;
 						break;
+                    case 7:
+                        imageId = R.drawable.fountain;
+                        break;
+                    case 8:
+                        imageId = R.drawable.forest;
+                        break;
 				}
 				
 				image.setImageResource(imageId);
