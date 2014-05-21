@@ -1,3 +1,5 @@
 include ':IntellicareTemplate'
 include ':Ruminants:app'
 include ':Purple Chill'
+include ':Aspire:app'
+include ':iCope:app'
