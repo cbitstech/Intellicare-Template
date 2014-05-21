@@ -89,7 +89,7 @@ public class MantraBoardManager {
 		MantraImageCursor cursor = mDatabaseHelper.queryFocusImage(id);
 		cursor.moveToFirst();
 		if (!cursor.isAfterLast()) {
-			mantraImage = cursor.getFocusImage();
+			mantraImage = cursor.getMantraImage();
 		}
 		cursor.close();
 		return mantraImage;

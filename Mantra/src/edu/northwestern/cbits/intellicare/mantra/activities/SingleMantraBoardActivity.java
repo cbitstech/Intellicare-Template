@@ -142,7 +142,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 				if (c instanceof MantraImageCursor)
 				{
 					MantraImageCursor mFocusImageCursor = (MantraImageCursor) c;
-					MantraImage mantraImage = mFocusImageCursor.getFocusImage();
+					MantraImage mantraImage = mFocusImageCursor.getMantraImage();
 					ImageView imageView = (ImageView) view.findViewById(R.id.imageThumb);
 					Drawable d = PictureUtils.getScaledDrawable(self, mantraImage.getPath());
 					imageView.setImageDrawable(d);

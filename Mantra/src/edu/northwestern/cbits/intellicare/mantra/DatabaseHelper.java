@@ -163,7 +163,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			super(c);
 		}
 
-		public MantraImage getFocusImage() {
+		public MantraImage getMantraImage() {
 			if (isBeforeFirst() || isAfterLast()) {
 				return null;
 			}

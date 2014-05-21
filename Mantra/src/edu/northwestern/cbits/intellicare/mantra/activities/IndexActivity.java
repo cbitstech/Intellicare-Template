@@ -138,16 +138,16 @@ public class IndexActivity extends ConsentedActivity {
 		CursorAdapter adapter = new CursorAdapter(self, mantraItemCursor) {
 
 			@Override
-			public void bindView(View mantraItemView, Context homeActivity, Cursor focusBoardCursor) {
+			public void bindView(View mantraItemView, Context homeActivity, Cursor mantraBoardCursor) {
 				// set the image
-				final int imageId = focusBoardCursor.getInt(focusBoardCursor.getColumnIndex("_id")); 
+				final int imageId = mantraBoardCursor.getInt(mantraBoardCursor.getColumnIndex("_id")); 
 				Log.d(CN+".CursorAdapter.bindView", "imageId = " + imageId);
 				final MantraImageCursor imageCursor = MantraBoardManager.get(homeActivity).queryMantraImages(imageId);
 //				Util.logCursor(imageCursor);
 				// if the mantra item has an image, then display the first one
 				if(imageCursor.getCount() > 0) {
 					imageCursor.moveToFirst();
-					MantraImage image = imageCursor.getFocusImage();
+					MantraImage image = imageCursor.getMantraImage();
 					Log.d(CN+".CursorAdapter.bindView", "image == null = " + (image == null));
 					ImageView iv = (ImageView) mantraItemView.findViewById(R.id.imageThumb);
 					Log.d(CN+".CursorAdapter.bindView", "image.getPath() = " + image.getPath());
@@ -157,7 +157,7 @@ public class IndexActivity extends ConsentedActivity {
 				
 				// set the mantra
 				TextView tv = (TextView) mantraItemView.findViewById(R.id.imageCaption);
-				String mantraItemText = focusBoardCursor.getString(focusBoardCursor.getColumnIndex("mantra"));
+				String mantraItemText = mantraBoardCursor.getString(mantraBoardCursor.getColumnIndex("mantra"));
 				tv.setText(mantraItemText);
 			}
 

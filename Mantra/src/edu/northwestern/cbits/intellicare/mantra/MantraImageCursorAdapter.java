@@ -29,7 +29,7 @@ public class MantraImageCursorAdapter extends CursorAdapter {
 	
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-		MantraImage mantraImage = mFocusImageCursor.getFocusImage();
+		MantraImage mantraImage = mFocusImageCursor.getMantraImage();
 		ImageView imageView = (ImageView)view;
 		imageView.setImageDrawable(drawablePhoto(mantraImage.getPath(), context));
 	}
