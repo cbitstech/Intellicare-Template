@@ -53,7 +53,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	/*** image CRUD ***/ 
 	
-	public MantraImageCursor queryFocusImages(long focusBoardId) {
+	public MantraImageCursor queryMantraImages(long focusBoardId) {
 		String selection = COLUMN_MANTRA_IMAGE_MANTRA_BOARD_ID + " = ?";
 		String[] selectionArgs = new String[] { String.valueOf(focusBoardId) };
 		Cursor wrapped = getReadableDatabase().query(TABLE_MANTRA_IMAGES, null,
@@ -61,7 +61,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return new MantraImageCursor(wrapped);
 	}
 
-	public MantraImageCursor queryFocusImage(long id) {
+	public MantraImageCursor queryMantraImage(long id) {
 		String selection = COLUMN_MANTRA_IMAGE_ID + " = ?";
 		String[] selectionArgs = new String[] { String.valueOf(id) };
 		String limit = "1";
@@ -70,7 +70,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return new MantraImageCursor(wrapped);
 	}
 
-	public long insertFocusImage(MantraImage mantraImage) {
+	public long insertMantraImage(MantraImage mantraImage) {
 		ContentValues cv = new ContentValues();
 		cv.put(COLUMN_MANTRA_IMAGE_MANTRA_BOARD_ID, mantraImage.getFocusBoardId());
 		cv.put(COLUMN_MANTRA_IMAGE_PATH, mantraImage.getPath());
@@ -78,7 +78,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return getWritableDatabase().insert(TABLE_MANTRA_IMAGES, null, cv);
 	}
 
-	public long updateFocusImage(MantraImage mantraImage) {
+	public long updateMantraImage(MantraImage mantraImage) {
 		ContentValues cv = new ContentValues();
 		cv.put(COLUMN_MANTRA_IMAGE_MANTRA_BOARD_ID, mantraImage.getFocusBoardId());
 		cv.put(COLUMN_MANTRA_IMAGE_PATH, mantraImage.getPath());
@@ -89,7 +89,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			);
 	}
 	
-	public int deleteFocusImage(Long id) {
+	public int deleteMantraImage(Long id) {
 		return getWritableDatabase().delete(
 				TABLE_MANTRA_IMAGES, "_id=?",
 				new String[] { id.toString() }
@@ -99,13 +99,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		
 	/*** mantra board CRUD ***/ 
 	
-	public MantraBoardCursor queryFocusBoards() {
+	public MantraBoardCursor queryMantraBoards() {
 		Cursor wrapped = getReadableDatabase().query(TABLE_MANTRA_BOARDS, null,
 				null, null, null, null, COLUMN_MANTRA_BOARD_MANTRA);
 		return new MantraBoardCursor(wrapped);
 	}
 
-	public MantraBoardCursor queryFocusBoard(long id) {
+	public MantraBoardCursor queryMantraBoard(long id) {
 		String selection = COLUMN_MANTRA_BOARD_ID + " = ?";
 		String[] selectionArgs = new String[] { String.valueOf(id) };
 		String limit = "1";
@@ -114,13 +114,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return new MantraBoardCursor(wrapped);
 	}
 
-	public long insertFocusBoard(MantraBoard mantraBoard) {
+	public long insertMantraBoard(MantraBoard mantraBoard) {
 		ContentValues cv = new ContentValues();
 		cv.put(COLUMN_MANTRA_BOARD_MANTRA, mantraBoard.getMantra());
 		return getWritableDatabase().insert(TABLE_MANTRA_BOARDS, null, cv);
 	}
 	
-	public long updateFocusBoard(MantraBoard mantraBoard) {
+	public long updateMantraBoard(MantraBoard mantraBoard) {
 		ContentValues cv = new ContentValues();
 		cv.put(COLUMN_MANTRA_BOARD_MANTRA, mantraBoard.getMantra());
 		return getWritableDatabase()
@@ -130,7 +130,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			);
 	}
 
-	public int deleteFocusBoard(Long id) {
+	public int deleteMantraBoard(Long id) {
 		return getWritableDatabase().delete(
 				TABLE_MANTRA_BOARDS, "_id=?", 
 				new String[] { id.toString() }
@@ -145,7 +145,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			super(c);
 		}
 
-		public MantraBoard getFocusBoard() {
+		public MantraBoard getMantraBoard() {
 			if (isBeforeFirst() || isAfterLast()) {
 				return null;
 			}

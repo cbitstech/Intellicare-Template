@@ -27,7 +27,7 @@ public class MantraBoardCursorAdapter extends CursorAdapter {
 	
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-		MantraBoard mantraBoard = mFocusBoardCursor.getFocusBoard();
+		MantraBoard mantraBoard = mFocusBoardCursor.getMantraBoard();
 		TextView mantraTextView = (TextView)view;
 		mantraTextView.setText(mantraBoard.getMantra());
 	}

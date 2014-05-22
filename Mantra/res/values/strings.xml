@@ -99,4 +99,7 @@
     <string name="action_camera">Use Camera</string>
     <string name="activity_review_dialog_title">Today\'s Mantra Usage</string>
     
+    <string name="shared_prefs_name">edu.northwestern.cbits.intellicare.Mantra</string>
+    <string name="shared_prefs_key_lastMantraBoardId">lastMantraBoardId</string>
+    
 </resources>

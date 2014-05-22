@@ -9,6 +9,7 @@ import java.util.Date;
 import java.io.InputStream;
 
 import edu.northwestern.cbits.intellicare.mantra.CameraPreview;
+import edu.northwestern.cbits.intellicare.mantra.GetImagesTask;
 import edu.northwestern.cbits.intellicare.mantra.MantraBoardManager;
 import edu.northwestern.cbits.intellicare.mantra.MantraImage;
 import edu.northwestern.cbits.intellicare.mantra.Paths;
@@ -60,8 +61,8 @@ public class CollectCameraActivity extends Activity {
 //		}
 //	};
 //	private static final String TAG = "CollectCamera";
-//	private long mFocusBoardId;
-//	private MantraBoardManager mFocusBoardManager;
+	private long mFocusBoardId;
+	private MantraBoardManager mFocusBoardManager;
 //
 //	/** A safe way to get an instance of the Camera object. */
 //	public static Camera getCameraInstance() {
@@ -161,27 +162,35 @@ public class CollectCameraActivity extends Activity {
 //			);
 //	}
 //
-//	private void startMantraBoardActivity() {
-//// CJK		Intent intent = new Intent(CollectCameraActivity.this,
-//		Intent intent = new Intent(CollectCameraActivity.this, SingleMantraBoardActivity.class);
-//		intent.putExtra(SingleMantraBoardActivity.MANTRA_BOARD_ID, mFocusBoardId);
-//		startActivity(intent);
-//	}
-	
+
 	
 	// src: http://www.vogella.com/tutorials/AndroidCamera/article.html
 	  private static final int REQUEST_CODE = 1;
 	  private Bitmap bitmap;
 	  private ImageView imageView;
 
+	  
 	  @Override
 	  public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.collect_from_camera_activity);
 	    imageView = (ImageView) findViewById(R.id.result);
+	    
+		mFocusBoardId = (getIntent()).getLongExtra(SingleMantraBoardActivity.MANTRA_BOARD_ID, -1);
+	    mFocusBoardManager = MantraBoardManager.get(this);
+
 	    startCameraApp();
 	  }
 
+
+	  private void startMantraBoardActivity() {
+// CJK		Intent intent = new Intent(CollectCameraActivity.this,
+		Intent intent = new Intent(CollectCameraActivity.this, SingleMantraBoardActivity.class);
+		intent.putExtra(SingleMantraBoardActivity.MANTRA_BOARD_ID, mFocusBoardId);
+		startActivity(intent);
+	}
+	
+	
 	  public void onClick(View View) {
 	    startCameraApp();
 	  }
@@ -192,7 +201,7 @@ public class CollectCameraActivity extends Activity {
 
 	  public static final int MEDIA_TYPE_IMAGE = 1;
 	  public static final int MEDIA_TYPE_VIDEO = 2;
-	private static final String CN = "CollectCameraActivity";
+	  private static final String CN = "CollectCameraActivity";
 
 	  /** Create a file Uri for saving an image or video */
 	  private static Uri getOutputMediaFileUri(int type){
@@ -231,6 +240,9 @@ public class CollectCameraActivity extends Activity {
 	      return mediaFile;
 	  }
 
+	  
+	  Intent intent =null;
+	  
 	  /**
 	 * 
 	 */
@@ -243,42 +255,56 @@ public class CollectCameraActivity extends Activity {
 		
 		// src: http://developer.android.com/guide/topics/media/camera.html
 	    // create Intent to take a picture and return control to the calling application
-	    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+	    intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
 	    fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE); // create a file to save the image
 	    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file name
+	    intent.putExtra(SingleMantraBoardActivity.MANTRA_BOARD_ID, mFocusBoardId);
 
 	    // start the image capture Intent
+	    Log.d(CN+".startCameraApp", "fileUri = " + fileUri);
+	    Log.d(CN+".startCameraApp", "intent = " + intent);
 	    startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 	}
 
-	  @Override
+//	  @Override
 	  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    Log.d(CN+".onActivityResult", "entered; requestCode = " + requestCode + "; resultCode = " + resultCode + "; data = " + data);
-	    InputStream stream = null;
+//	    InputStream stream = null;
+//	    
+//	    if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK)
+//	      try {
+//	        // recyle unused bitmaps
+//	        if (bitmap != null) {
+//	          bitmap.recycle();
+//	        }
+//	        stream = getContentResolver().openInputStream(data.getData());
+//	        bitmap = BitmapFactory.decodeStream(stream);
+//
+//	        imageView.setImageBitmap(bitmap);
+//	        Log.d(CN+".onActivityResult", "finished loading bitmap");
+//	      } catch (FileNotFoundException e) {
+//	        e.printStackTrace();
+//	      }
+//	    finally{
+//	        if (stream != null)
+//	          try {
+//	            stream.close();
+//	          } catch (IOException e) {
+//	            e.printStackTrace();
+//	          }
+//	  }
 	    
-	    if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK)
-	      try {
-	        // recyle unused bitmaps
-	        if (bitmap != null) {
-	          bitmap.recycle();
-	        }
-	        stream = getContentResolver().openInputStream(data.getData());
-	        bitmap = BitmapFactory.decodeStream(stream);
+	    String[] fullFilePathsToScan = new String[] { fileUri.getPath() };
+	    
+	    GetImagesTask.scanFilePathsForImages(this, fullFilePathsToScan);
 
-	        imageView.setImageBitmap(bitmap);
-	        Log.d(CN+".onActivityResult", "finished loading bitmap");
-	      } catch (FileNotFoundException e) {
-	        e.printStackTrace();
-	      }
-	    finally{
-	        if (stream != null)
-	          try {
-	            stream.close();
-	          } catch (IOException e) {
-	            e.printStackTrace();
-	          }
-	  }
+		MantraImage image = mFocusBoardManager.createMantraImage(
+				mFocusBoardId, fileUri.getPath(), getString(R.string.some_image_caption)
+			);
+	    startMantraBoardActivity();
+		
+		this.finish();
 	}
 	
 }
