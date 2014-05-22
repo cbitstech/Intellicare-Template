@@ -7,12 +7,14 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,6 +40,7 @@ import edu.northwestern.cbits.intellicare.mantra.MantraBoard;
 import edu.northwestern.cbits.intellicare.mantra.MantraBoardManager;
 import edu.northwestern.cbits.intellicare.mantra.MantraImage;
 import edu.northwestern.cbits.intellicare.mantra.NotificationAlarm;
+import edu.northwestern.cbits.intellicare.mantra.OnboardingActivity;
 import edu.northwestern.cbits.intellicare.mantra.PictureUtils;
 import edu.northwestern.cbits.intellicare.mantra.R;
 
@@ -60,7 +63,7 @@ public class IndexActivity extends ConsentedActivity {
 		setContentView(R.layout.no_fragments_home_activity);
 		Log.d(CN+".onCreate", "entered");
 		
-		final IndexActivity me = this;
+//		final IndexActivity me = this;
 		
 		MantraBoardCursor mantraItemCursor = MantraBoardManager.get(self).queryMantraBoards();
 		
@@ -74,7 +77,7 @@ public class IndexActivity extends ConsentedActivity {
 			{
 				public void onClick(DialogInterface dialog, int which) 
 				{
-					IndexActivity.createNewMantra(me);
+					IndexActivity.createNewMantra(self);
 				}
 			});
 			
@@ -104,6 +107,13 @@ public class IndexActivity extends ConsentedActivity {
 
 		Log.d(CN+".onResume", "entered");
 		
+		// do onboarding, if it's the first time running this app
+		SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(this);
+		boolean onboardingRunPreviously = p.getBoolean(OnboardingActivity.ONBOARDING_COMPLETED, false);
+		if(!onboardingRunPreviously) {
+			startOnboardingActivity();
+		}
+		
 		// create, bind, and fill the main view for this activity
 		attachGridView(self);
 
@@ -122,6 +132,13 @@ public class IndexActivity extends ConsentedActivity {
 			Toast.makeText(this, self.getString(R.string.now_tap_on_a_mantra_to_attach_your_selected_image_to_it_), Toast.LENGTH_LONG).show();
 			displayedMantraAttachToast = true;
 		}
+	}
+
+	/**
+	 * 
+	 */
+	public void startOnboardingActivity() {
+		startActivity(new Intent(self, OnboardingActivity.class));
 	}
 
 	/**
@@ -277,7 +294,9 @@ public class IndexActivity extends ConsentedActivity {
 				return true;
 			case R.id.action_faq:
 				this.showFaq(this.getString(R.string.app_name));
-					
+				
+			case R.id.action_help:
+				startOnboardingActivity();
 	            return true;
 	    }
 
