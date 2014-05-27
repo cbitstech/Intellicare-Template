@@ -113,9 +113,7 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 		}
 		
 		// ATTEMPT 3: run the image-scanning in a service called via an intent.
-		Intent mediaScannerIntent = new Intent(activity, MediaScannerService.class);
-		mediaScannerIntent.putExtra(MediaScannerService.INTENT_KEY_FILE_PATHS_TO_SCAN, fullFilePathsToScan);
-		activity.startService(mediaScannerIntent);
+		scanFilePathsForImages(activity, fullFilePathsToScan);
 		
 //		activity.finish();
 		
@@ -123,6 +121,17 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 		Log.d(CN+".GetImagesTask.doInBackground", "exiting; ELAPSED TIME (ms) = " + ((double)endTime - startTime));
 
 		return null;
+	}
+
+
+	/**
+	 * @param activity
+	 * @param fullFilePathsToScan
+	 */
+	public static void scanFilePathsForImages(final Activity activity, String[] fullFilePathsToScan) {
+		Intent mediaScannerIntent = new Intent(activity, MediaScannerService.class);
+		mediaScannerIntent.putExtra(MediaScannerService.INTENT_KEY_FILE_PATHS_TO_SCAN, fullFilePathsToScan);
+		activity.startService(mediaScannerIntent);
 	}
 	
 	@Override

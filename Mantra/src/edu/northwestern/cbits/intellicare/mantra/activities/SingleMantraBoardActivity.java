@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
@@ -51,9 +52,10 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 	private final SingleMantraBoardActivity self = this;
 	
 	private MantraBoardManager mManager;
-	private long mFocusBoardId = -1;
+	private long mMantraBoardId = -1;
 
 	private static int RESULT_LOAD_IMAGE = 1;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,15 +75,15 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 
 		Intent intent = this.getIntent();
 
-		this.mFocusBoardId = intent.getLongExtra(SingleMantraBoardActivity.MANTRA_BOARD_ID, -1);
+		this.mMantraBoardId = intent.getLongExtra(SingleMantraBoardActivity.MANTRA_BOARD_ID, -1);
 		mManager = MantraBoardManager.get(this);
 
-		MantraBoard mantraBoard = mManager.getMantraBoard(this.mFocusBoardId);
+		MantraBoard mantraBoard = mManager.getMantraBoard(this.mMantraBoardId);
 
+		Log.d(CN+".onResume", "mMantraBoardId = " +  mMantraBoardId +"; mantraBoard == null = " + (mantraBoard == null) + "; intent.getExtras() = " + intent.getExtras().toString());
 		this.getSupportActionBar().setTitle(mantraBoard.getMantra());
 
-		try 
-		{
+		try {
 			handleSelectedImageIntent();
 		} 
 		catch (Exception e) {
@@ -91,7 +93,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 		
 		final SingleMantraBoardActivity me = this;
 		
-		final MantraImageCursor cursor = MantraBoardManager.get(this).queryMantraImages(this.mFocusBoardId);
+		final MantraImageCursor cursor = MantraBoardManager.get(this).queryMantraImages(this.mMantraBoardId);
 		
 		if (cursor.getCount() == 0)
 		{
@@ -131,7 +133,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 		setContentView(R.layout.no_fragments_home_activity);
 		final GridView gv = (GridView) this.findViewById(R.id.gridview);
 
-		final MantraImageCursor cursor = MantraBoardManager.get(this).queryMantraImages(this.mFocusBoardId);
+		final MantraImageCursor cursor = MantraBoardManager.get(this).queryMantraImages(this.mMantraBoardId);
 		Util.logCursor(cursor);
 		
 		@SuppressWarnings("deprecation")
@@ -305,9 +307,9 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 			Uri selectedImage = intent.getData();
 			
 			if(selectedImage != null && selectedImage.toString().length() > 0) {
-				mFocusBoardId = intent.getLongExtra(SingleMantraBoardActivity.MANTRA_BOARD_ID, -1);
+				mMantraBoardId = intent.getLongExtra(SingleMantraBoardActivity.MANTRA_BOARD_ID, -1);
 				mManager = MantraBoardManager.get(this);
-				MantraBoard mantraBoard = mManager.getMantraBoard(mFocusBoardId);
+				MantraBoard mantraBoard = mManager.getMantraBoard(mMantraBoardId);
 
 				Log.d(CN+".handleSelectedImageIntent", "selectedImage = " + selectedImage.toString());
 				String filePathToImageInTmpFolder = Paths.getRealPathFromURI(this, selectedImage).trim();
@@ -346,7 +348,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 		Log.d(CN+".applyNewImageToMantra", "entered");
 		// search the image set for a particular image path, and if the image isn't already associated with the board,
 		// then associate it. 
-		MantraImageCursor fic = mManager.queryMantraImages(mFocusBoardId );
+		MantraImageCursor fic = mManager.queryMantraImages(mMantraBoardId );
 		boolean imageAlreadyAssociated = false;
 		Util.logCursor(fic);
 		while(fic.moveToNext()) {
@@ -359,9 +361,9 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 			}
 		}
 		if(!imageAlreadyAssociated) {
-			Log.d(CN+".applyNewImageToMantra","for board " + mFocusBoardId + ", associating image = " + imageFile.getAbsolutePath());
+			Log.d(CN+".applyNewImageToMantra","for board " + mMantraBoardId + ", associating image = " + imageFile.getAbsolutePath());
 			Toast.makeText(this, self.getString(R.string.image_applied_), Toast.LENGTH_SHORT).show();
-			mManager.createMantraImage(mFocusBoardId, imageFile.getAbsolutePath(), getString(R.string.some_image_caption));
+			mManager.createMantraImage(mMantraBoardId, imageFile.getAbsolutePath(), getString(R.string.some_image_caption));
 		}
 		
 		fic.close();
@@ -482,7 +484,8 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 	private void startCollectCameraActivity() {
 		Log.d(CN+".startCollectCameraActivity", "entered");
 		Intent intent = new Intent(this, CollectCameraActivity.class);
-		intent.putExtra(SingleMantraBoardActivity.MANTRA_BOARD_ID, mFocusBoardId);
+		intent.putExtra(SingleMantraBoardActivity.MANTRA_BOARD_ID, mMantraBoardId);
 		startActivity(intent);
+		this.finish();
 	}
 }

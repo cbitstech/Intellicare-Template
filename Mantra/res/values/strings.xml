@@ -42,6 +42,7 @@
     <string name="image_thumbnail_alt">Image Thumbnail</string>
     <string name="title_activity_browse_photos2">BrowsePhotos2Activity</string>
     <string name="action_settings">Settings</string>
+    <string name="action_help">Help</string>
     <string name="hello_world">Hello world!</string>
     <string name="existing_image_action">Existing Image</string>
     <string name="title_activity_shared_url">Mantra </string>
@@ -52,10 +53,8 @@
     <string name="title_activity_transparent">TransparentActivity</string>
     <string name="title_activity_progress">Mantra</string>
     <string name="default_image_caption">SOME IMAGE CAPTION</string>
-    
     <string name="title_download_queue">Image Downloads</string>
     <string name="subtitle_download_queue" formatted="false">Remaining downloads: %d of %d</string>
-    
     <string name="title_create_board">Add New Mantra?</string>
     <string name="message_create_board">You currently have no mantras. Would you like to add one in order to begin attaching images?</string>
     <string name="action_yes">Yes</string>
@@ -80,23 +79,35 @@
     <string name="remove">Remove</string>
     <string name="image_applied_">Image applied!</string>
     <string name="image_already_applied_consider_choosing_a_different_one_">Image already applied. Consider choosing a different one!</string>
-    
+
     <!-- CK added... -->
-    
+
     <string name="title_note_preferences">Notification Preferences</string>
     <string name="title_day_start">Start of Day</string>
     <string name="summary_day_start">Sets the time at which you start your day.</string>
     <string name="title_day_end">End of Day</string>
     <string name="summary_day_end">Sets the time at which you end your day.</string>
-
     <string name="note_add_images">Attach your new photos to a mantra!</string>
     <string name="action_cancel">Cancel</string>
     <string name="mantra_prefix">I am </string>
-    
     <string name="title_add_photos">Add Photos</string>
     <string name="message_add_photos">Your mantra is currently empty. Add some images from your photo galley or use the camera to add photos to this mantra.</string>
     <string name="action_gallery">Visit Gallery</string>
     <string name="action_camera">Use Camera</string>
     <string name="activity_review_dialog_title">Today\'s Mantra Usage</string>
+    <string name="shared_prefs_name">edu.northwestern.cbits.intellicare.Mantra</string>
+    <string name="shared_prefs_key_lastMantraBoardId">lastMantraBoardId</string>
+    <string name="title_activity_onboarding">OnboardingActivity</string>
+
+    <string-array name="onboarding_slide_titles">
+        <item>Slide 1</item>
+        <item>Slide 2</item>
+        <item>Slide 3</item>
+    </string-array>
+    <string-array name="onboarding_slide_texts">
+        <item>file:///android_asset/www/onboarding_0.html</item>
+        <item>file:///android_asset/www/onboarding_1.html</item>
+        <item>file:///android_asset/www/onboarding_2.html</item>
+    </string-array>
     
 </resources>
