@@ -184,4 +184,173 @@
 	<string name="subtitle_calendar" formatted="false">%d upcoming exercises</string>
 	<string name="subtitle_calendar_single" formatted="false">1 upcoming exercise</string>
 	<string name="message_nothing_scheduled">No exercised scheduled.\n\nTap here to schedule an exercise.</string>
+	
+	<string name="title_motivators">Motivators</string>
+	<string name="subtitle_motivators">Lessons, Tips &amp; Videos</string>
+		
+    <string-array name="array_motivator_titles">
+        <item>nEEd TiTle FOr SeCTIon</item>
+        <item>Get Motivated</item>
+        <item>Feeling Low? MOTIVATE!</item>
+        <item>What Gets YOU Going?</item>
+        <item>Motivators</item>
+        <item>nEEd TiTle FOr SeCTIon</item>
+        <item>Enjoying Your Exercise</item>
+        <item>Healthy Habits</item>
+        <item>Staying Successful</item>
+        <item>How\'s Your Mood?</item>
+        <item>mOtiVatIOnaL vIdeO secTION TITLE</item>
+   	</string-array>
+
+    <string-array name="array_motivator_urls">
+        <item></item>
+        <item>pages/get_motivated.pages</item>
+        <item>content/get_motivated_3.html</item>
+        <item>dialogs/going.dialog</item>
+        <item>pages/motivators.pages</item>
+        <item></item>
+        <item>content/enjoy_exercise.html</item>
+        <item>content/healthy_habits.html</item>
+        <item>content/staying_successful.html</item>
+        <item>content/hows_your_mood.html</item>
+        <item></item>
+   	</string-array>
+
+    <string name="title_howto">How to</string>
+	<string name="subtitle_howto">Lessons &amp; Tips</string>
+    
+    <string-array name="array_howto_titles">
+        <item>How much should I exercise?</item>
+        <item>What kind of exercise should I do?</item>
+        <item>When should I be active?</item>
+   	</string-array>
+
+    <string-array name="array_howto_urls">
+        <item>dialogs/how_much.dialog</item>
+        <item>dialogs/what_kind_exercise.dialog</item>
+        <item>dialogs/when_active.dialog</item>
+   	</string-array>
+   	
+    <!-- 
+        <item>What kind of activity should I do?</item>
+        <item>dialogs/what_kind_activity.dialog</item>
+     -->
+     
+    <string name="title_activity_dialog">What kind of activity should I do?</string>
+    <string name="message_activity_dialog">All physical activities can boost your mood, so the real questions are\n\nWhat activities do you enjoy?\n\nOR\n\nWhat activities are you willing to try?\n\nWe want you to select activities that would be both relatively fun and relatively easy to complete.</string>
+    
+    <string name="actions_activities_enjoy">I enjoy&#8230;</string>
+    <string name="actions_activities_try">I would try&#8230;</string>
+    	
+    <string name="title_how_much_1">How much should I exercise?</string>
+    <string name="message_how_much_1">When starting a new exercise program, it is important to remember to BUILD UP OVER TIME.</string>
+    
+    <string name="prompt_active_minutes">How many minutes are you active in a week?</string>
+    <string name="prompt_future_minutes">How many minutes would you like to exercise in a typical week?</string>
+    
+    <string name="format_picker_minute">1 minute</string>
+    <string name="format_picker_minutes" formatted="false">%d minutes</string>
+    <string name="format_picker_hour_minutes" formatted="false">1 hour, %d minutes</string>
+    <string name="format_picker_hours_minutes" formatted="false">%d hours, %d minutes</string>
+    
+    <string name="message_exercise_more">If you haven\'t been active for a while, start out slowly - you can do three 10-minute sessions in one day, instead of all 30 minutes at once, for example!  MoveME can help you gradually add more time and days. Here is what we suggest:\n\nWeek 1: 50 minutes total\nWeek 2: 100 minutes total\nWeek 3: 150 minutes total\n</string>
+    <string name="message_exercise_okay">All adults should exercise 30&#8211;45 minutes 5 days per week, or 2 hours and 30 minutes of physical activity total. In addition, adults can engage in strengthening activities (weights, yoga, pilates, etc.) 2 times per week.\n\nIf you\'re already exercising but want to move more, start out by adding 5 minutes of activity to your routine per day. MoveME will help you increase from there.</string>
+
+    <string name="title_what_kind_exercise_1">What kind of exercise should I do?</string>
+    <string name="message_what_kind_exercise_1">GREAT news: You can boost your mood AND your health through regular MODERATE physical activity! For most people, a brisk walk is enough to reach moderate intensity.</string>
+    <string name="message_what_kind_exercise_2">A few things to keep in mind:\n\nModerate exercise for you is the level where you can have a conversation while you are active.\n\nComfort with an exercise routine increases the chances of sticking to that routine\n\nIncreasing the intensity of your activity for short periods can help you build endurance in a comfortable way.</string>
+    
+    <string name="prompt_physical_activity">What kind of physical activity are you looking for?</string>
+
+    <string-array name="array_physical_endurance">
+	    <item>Low Endurance</item>
+	    <item>Medium Endurance</item>
+	    <item>High Endurance</item>
+	</string-array>
+	
+    <string name="title_when_active_1">When are you most likely to be physically active?</string>
+
+    <string name="title_activity_enjoy">What activities do you already do?</string>
+    <string name="title_activity_try">What would you like to try?</string>
+    
+    <string-array name="array_when_active">
+	    <item>Morning</item>
+	    <item>Afternoon</item>
+	    <item>Evening</item>
+	    <item>Late Night</item>
+ 	</string-array>
+ 	
+    <string-array name="array_activities">
+        <item>Walking briskly</item>
+		<item>Biking slowly</item>
+		<item>Jogging</item>
+		<item>Soccer</item>
+		<item>Tennis</item>
+		<item>Biking</item>
+		<item>Hiking</item>
+		<item>Jumping rope</item>
+		<item>Aerobics class</item>
+		<item>Kickboxing</item>
+		<item>Rollerblading</item>
+		<item>Swimming</item>
+		<item>Going to the gym</item>
+		<item>Weight machines/free weights</item>
+		<item>Stair climbing</item>
+		<item>Shooting baskets</item>
+		<item>Push-ups</item>
+		<item>Sit-ups</item>
+		<item>Working with resistance bands</item>
+		<item>Yoga/Pilates</item>
+		<item>Gardening</item>
+    </string-array>
+    
+    <string-array name="array_get_motivated_titles">
+        <item>Understanding Motivation</item>
+        <item>Outside Motivators</item>
+   	</string-array>
+
+    <string-array name="array_get_motivated_urls">
+        <item>file:///android_asset/www/content/get_motivated_1.html</item>
+        <item>file:///android_asset/www/content/get_motivated_2.html</item>
+   	</string-array>
+   	
+    <string name="title_past_motivators">What motivators have worked for YOU in the past?</string>
+
+    <string-array name="array_past_motivations">
+        <item>Scheduling my activity like an appointment</item>
+        <item>Bringing a friend along</item>
+		<item>Telling a friend what I was doing</item>
+        <item>Getting help (personal trainer)</item>
+		<item>Leaving myself reminders: clothes, a note</item>
+        <item>Checking off my workout on my calendar or to do list</item>
+		<item>Giving myself something positive after my workout</item>
+        <item>Avoiding my couch</item>
+		<item>Going straight to my class or the gym</item>
+        <item>Something else?</item>
+   	</string-array>
+
+    <string-array name="array_motivators_titles">
+        <item>Motivators</item>
+        <item>Motivators</item>
+        <item>Motivators</item>
+        <item>Motivators</item>
+        <item>Motivators</item>
+        <item>Motivators</item>
+        <item>Motivators</item>
+        <item>Motivators</item>
+        <item>Motivators</item>
+    </string-array>
+
+    <string-array name="array_motivators_urls">
+        <item>file:///android_asset/www/content/motivator_1.html</item>
+        <item>file:///android_asset/www/content/motivator_2.html</item>
+        <item>file:///android_asset/www/content/motivator_3.html</item>
+        <item>file:///android_asset/www/content/motivator_4.html</item>
+        <item>file:///android_asset/www/content/motivator_5.html</item>
+        <item>file:///android_asset/www/content/motivator_6.html</item>
+        <item>file:///android_asset/www/content/motivator_7.html</item>
+        <item>file:///android_asset/www/content/motivator_8.html</item>
+        <item>file:///android_asset/www/content/motivator_9.html</item>
+   	</string-array>
+    
 </resources>

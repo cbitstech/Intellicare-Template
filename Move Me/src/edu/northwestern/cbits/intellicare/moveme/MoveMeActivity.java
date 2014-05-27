@@ -1,6 +1,7 @@
 package edu.northwestern.cbits.intellicare.moveme;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -20,8 +21,6 @@ import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 public class MoveMeActivity extends ConsentedActivity 
 {
-    protected String _selectedExercise = null;
-
 	protected void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
@@ -44,16 +43,109 @@ public class MoveMeActivity extends ConsentedActivity
         {
 			public void onClick(View v) 
 			{
-				me.launchSchedule();
+				MoveMeActivity.launchSchedule(me);
 			}
         });
+        
+        motivators.setOnClickListener(new View.OnClickListener() 
+        {
+			public void onClick(View v) 
+			{
+				Intent intent = new Intent(me, MotivatorsActivity.class);
+				me.startActivity(intent);
+			}
+		});
+
+        howtos.setOnClickListener(new View.OnClickListener() 
+        {
+			public void onClick(View v) 
+			{
+				Intent intent = new Intent(me, HowToActivity.class);
+				me.startActivity(intent);
+			}
+		});
+
+        activities.setOnClickListener(new View.OnClickListener() 
+        {
+			public void onClick(View v) 
+			{
+				me.showActivitiesDialog();
+			}
+		});
     }
     
-	@SuppressLint({ "InlinedApi", "NewApi" }) private void launchSchedule() 
+	protected void showActivitiesDialog() 
+	{
+		final MoveMeActivity me = this;
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		
+		builder.setTitle(R.string.title_activity_dialog);
+		builder.setMessage(R.string.message_activity_dialog);
+		
+		builder.setNegativeButton(R.string.actions_activities_enjoy, new DialogInterface.OnClickListener()
+		{
+			public void onClick(DialogInterface dialog, int which) 
+			{
+				AlertDialog.Builder builder = new AlertDialog.Builder(me);
+				
+				builder.setTitle(R.string.title_activity_enjoy);
+				builder.setMultiChoiceItems(R.array.array_activities, null, new DialogInterface.OnMultiChoiceClickListener()
+				{
+					public void onClick(DialogInterface dialog, int which, boolean checked) 
+					{
+
+					}
+				});
+				
+				builder.setPositiveButton(R.string.action_continue, new DialogInterface.OnClickListener() 
+				{
+					public void onClick(DialogInterface dialog, int which) 
+					{
+
+					}
+				});
+				
+				builder.create().show();
+			}
+		});
+
+		builder.setPositiveButton(R.string.actions_activities_try, new DialogInterface.OnClickListener()
+		{
+			public void onClick(DialogInterface dialog, int which) 
+			{
+				AlertDialog.Builder builder = new AlertDialog.Builder(me);
+				
+				builder.setTitle(R.string.title_activity_enjoy);
+				builder.setMultiChoiceItems(R.array.array_activities, null, new DialogInterface.OnMultiChoiceClickListener()
+				{
+					public void onClick(DialogInterface dialog, int which, boolean checked) 
+					{
+
+					}
+				});
+				
+				builder.setPositiveButton(R.string.action_continue, new DialogInterface.OnClickListener() 
+				{
+					public void onClick(DialogInterface dialog, int which) 
+					{
+
+					}
+				});
+				
+				builder.create().show();
+			}
+		});
+
+		builder.create().show();
+	}
+
+	@SuppressLint({ "InlinedApi", "NewApi" }) 
+	protected static void launchSchedule(final Activity activity) 
 	{
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 		{
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 			builder.setTitle(R.string.title_calendar_error);
 			builder.setMessage(R.string.message_calendar_error);
 			
@@ -69,19 +161,19 @@ public class MoveMeActivity extends ConsentedActivity
 			
 			return;
 		}
+		
+		final StringBuffer selected = new StringBuffer();
 
-		final MoveMeActivity me = this;
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		builder.setTitle(R.string.title_schedule);
 		
-		final String[] items = { this.getString(R.string.item_aerobic_moderate), this.getString(R.string.item_aerobic_vigorous), this.getString(R.string.item_strengthening) };
+		final String[] items = { activity.getString(R.string.item_aerobic_moderate), activity.getString(R.string.item_aerobic_vigorous), activity.getString(R.string.item_strengthening) };
 		
 		builder.setItems(items, new OnClickListener()
 		{
 			public void onClick(DialogInterface arg0, int which) 
 			{
-				AlertDialog.Builder builder = new AlertDialog.Builder(me);
+				AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
 				builder.setTitle(items[which]);
 
@@ -92,9 +184,10 @@ public class MoveMeActivity extends ConsentedActivity
 						{
 							public void onClick(DialogInterface arg0, int which) 
 							{
-								String[] exercises = me.getResources().getStringArray(R.array.array_moderate_aerobic);
+								String[] exercises = activity.getResources().getStringArray(R.array.array_moderate_aerobic);
 
-								me._selectedExercise  = exercises[which];
+								selected.delete(0, selected.length() - 1);
+								selected.append(exercises[which]);
 							}
 						});
 
@@ -104,9 +197,10 @@ public class MoveMeActivity extends ConsentedActivity
 						{
 							public void onClick(DialogInterface arg0, int which) 
 							{
-								String[] exercises = me.getResources().getStringArray(R.array.array_vigorous_aerobic);
+								String[] exercises = activity.getResources().getStringArray(R.array.array_vigorous_aerobic);
 
-								me._selectedExercise  = exercises[which];
+								selected.delete(0, selected.length() - 1);
+								selected.append(exercises[which]);
 							}
 						});
 
@@ -116,9 +210,10 @@ public class MoveMeActivity extends ConsentedActivity
 						{
 							public void onClick(DialogInterface arg0, int which) 
 							{
-								String[] exercises = me.getResources().getStringArray(R.array.array_strengthening);
+								String[] exercises = activity.getResources().getStringArray(R.array.array_strengthening);
 
-								me._selectedExercise  = exercises[which];
+								selected.delete(0, selected.length() - 1);
+								selected.append(exercises[which]);
 							}
 						});
 
@@ -132,13 +227,10 @@ public class MoveMeActivity extends ConsentedActivity
 						Intent intent = new Intent(Intent.ACTION_INSERT);
 						intent.setData(Events.CONTENT_URI);
 						
-						if (me._selectedExercise == null)
-							me._selectedExercise = me.getString(R.string.exercise_unknown);
+						intent.putExtra(Events.TITLE, selected.toString());
+						intent.putExtra(Events.DESCRIPTION, activity.getString(R.string.event_description));
 						
-						intent.putExtra(Events.TITLE, me._selectedExercise);
-						intent.putExtra(Events.DESCRIPTION, me.getString(R.string.event_description));
-						
-						me.startActivity(intent);
+						activity.startActivity(intent);
 					}
 				});
 
