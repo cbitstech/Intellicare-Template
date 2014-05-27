@@ -76,7 +76,7 @@ public class IntroActivity extends ConsentedActivity
 			
 			public Object instantiateItem (ViewGroup container, int position)
 			{
-		        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me.getApplicationContext());
+		   //     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(me.getApplicationContext());
 
 		        View view = null;
 				
@@ -116,7 +116,8 @@ public class IntroActivity extends ConsentedActivity
 				
 				view.setLayoutParams(layout);
 
-				return view.getTag();
+
+			return view.getTag();
 			}
 		};
 		

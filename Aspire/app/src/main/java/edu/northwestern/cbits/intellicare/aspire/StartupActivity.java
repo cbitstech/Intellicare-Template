@@ -9,7 +9,7 @@ import android.preference.PreferenceManager;
 
 public class StartupActivity extends Activity 
 {
-    public static final Uri URI = Uri.parse("intellicare://daily-feats/home");
+    // public static final Uri URI = Uri.parse("intellicare://aspire/home");
 
 	protected void onCreate(Bundle savedInstanceState) 
     {
