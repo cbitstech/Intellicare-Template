@@ -1,0 +1,46 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="vertical">
+	<LinearLayout android:layout_height="wrap_content"
+	    android:layout_width="match_parent"
+	    android:orientation="vertical"
+	    android:padding="8dp"
+	    android:layout_marginLeft="8dp"
+	    android:layout_marginRight="8dp"
+	    android:layout_marginTop="8dp"
+        android:id="@+id/card_background"
+	    android:background="@drawable/card_background">
+	    <TextView android:id="@+id/label_reminder_event"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content" 
+	        android:textSize="18sp"
+	        android:textStyle="italic" />
+	    <TextView android:id="@+id/label_reminder_reminder"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content" 
+	        android:textSize="18sp"
+	        android:layout_marginTop="16dp" />
+	    <LinearLayout android:orientation="horizontal"
+	        android:layout_marginTop="16dp"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content">
+		    <TextView android:id="@+id/label_reminder_type"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content" 
+		        android:gravity="left"
+		        android:textStyle="bold"
+		        android:textSize="14sp"
+		        android:layout_weight="1" />
+		    <TextView android:id="@+id/link_schedule" 
+		        android:text="@string/action_schedule"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content" 
+		        android:gravity="right"
+		        android:textStyle="bold"
+				android:layout_weight="1"
+		        android:textSize="14sp" 
+		        android:textColor="#0099CC" />
+	    </LinearLayout>
+   	</LinearLayout>
+</LinearLayout>

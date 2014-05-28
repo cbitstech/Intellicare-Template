@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.ImageView;
 import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
@@ -75,8 +76,16 @@ public class PagedDidacticActivity extends ConsentedActivity
 				View view = inflater.inflate(R.layout.view_paged_content, null);
 		        
 		        TextView content = (TextView) view.findViewById(R.id.content_text);
+                ImageView background = (ImageView) view.findViewById(R.id.background_image);
 
 		        content.setText(me._content[position]);
+
+                int chickens[] = new int[] {R.drawable.rumination_7, R.drawable.specific_1, R.drawable.specific_4, R.drawable.specific_11};
+
+                int rand = (int) Math.floor(Math.random()*5);
+                int randomChicken = chickens[rand];
+
+                background.setBackgroundResource(randomChicken);
 				
 				view.setTag("" + position);
 

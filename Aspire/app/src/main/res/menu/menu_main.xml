@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:robot="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_graph"
+        robot:showAsAction="always"
+        android:title="@string/action_graph"
+        android:icon="@drawable/ic_action_bargraph" />
+    <item
+        android:id="@+id/action_add_value"
+        robot:showAsAction="always"
+        android:title="@string/action_add_value"/>
+    <item
+        android:id="@+id/action_settings"
+        robot:showAsAction="never"
+        android:title="@string/action_settings"/>
+    <item android:id="@+id/action_feedback"
+        android:title="@string/action_feedback"
+        robot:showAsAction="never"
+        android:showAsAction="never" />
+    <item android:id="@+id/action_intro"
+        android:title="@string/view_intro"
+        robot:showAsAction="never"
+        android:showAsAction="never" />
+</menu>

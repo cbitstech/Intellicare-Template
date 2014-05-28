@@ -28,7 +28,7 @@ import edu.northwestern.cbits.intellicare.ConsentedActivity;
  * Created by Gwen on 2/26/14.
  */
 public class DidacticActivity extends ConsentedActivity {
-
+/*
     private String[] mContentSet = null;
 
     public DidacticActivity()
@@ -163,5 +163,5 @@ public class DidacticActivity extends ConsentedActivity {
     {
         return chooseContentSet(didacticContentSets(context));
     }
-
+*/
 }

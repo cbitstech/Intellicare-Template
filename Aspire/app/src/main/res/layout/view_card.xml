@@ -1,0 +1,42 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical">
+	<LinearLayout android:id="@+id/view_card" 
+	    android:orientation="vertical"
+	    android:layout_height="0dp"
+	    android:layout_weight="2"
+	    android:layout_width="match_parent"
+	    android:background="@drawable/card_background"
+	    android:layout_margin="24dp"
+	    android:padding="16dp">
+        <TextView android:id="@+id/card_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:gravity="center"
+            android:textStyle="bold" 
+            android:layout_marginBottom="24dp" />
+        <TextView android:id="@+id/card_description"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:lines="5"
+            android:textSize="18sp"
+            android:gravity="center" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/card_instruction"
+            android:textSize="12sp"
+            android:gravity="right" />
+        </LinearLayout>
+    <TextView android:text="@string/hint_swipe_card"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:textSize="14sp" 
+        android:gravity="center"
+        android:layout_margin="16dp"/>
+</LinearLayout>

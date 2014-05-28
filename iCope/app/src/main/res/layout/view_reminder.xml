@@ -1,0 +1,35 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:padding="8dp"
+    android:orientation="vertical">
+    <LinearLayout android:orientation="horizontal"
+        android:layout_marginBottom="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+	    <TextView android:id="@+id/label_reminder_type"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content" 
+	        android:gravity="left"
+	        android:textStyle="bold"
+	        android:textSize="14sp"
+	        android:layout_weight="1" />
+	    <TextView android:id="@+id/label_reminder_time"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content" 
+	        android:gravity="right"
+	        android:textStyle="bold"
+			android:layout_weight="1"
+	        android:textSize="14sp" />
+    </LinearLayout>
+    <TextView android:id="@+id/label_reminder_event"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:textSize="18sp"
+        android:textStyle="italic" />
+    <TextView android:id="@+id/label_reminder_reminder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:textSize="18sp"
+        android:layout_marginTop="16dp" />
+</LinearLayout>

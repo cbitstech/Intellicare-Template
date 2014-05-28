@@ -39,15 +39,16 @@
     </LinearLayout>
     <FrameLayout
 	    android:layout_width="fill_parent"
-	    android:background="#ff000000"
+	    android:background="#fff"
         android:layout_height="0dp"
         android:layout_weight="1">
         <ImageView
 	        android:layout_width="match_parent"
-	        android:layout_height="match_parent"
+	        android:layout_height="wrap_content"
 	        android:id="@+id/imageView"
-	        android:src="@drawable/cow_treadmill"
-	        android:scaleType="centerCrop" />
+	        android:src="@drawable/specific_5"
+	        android:scaleType="centerCrop"
+            android:alpha="0.5" />
 	    <TextView
 	        android:layout_width="match_parent"
 	        android:layout_height="match_parent"
