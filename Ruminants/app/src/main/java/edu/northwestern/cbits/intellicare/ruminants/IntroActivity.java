@@ -18,7 +18,7 @@ import edu.northwestern.cbits.intellicare.ConsentedActivity;
  * Created by Gwen on 2/26/14.
  */
 public class IntroActivity extends ConsentedActivity {
-
+/*
     // public static final int DISPLAY_SHOW_TITLE = 0;
     public static final String RUNBEFORE = "runBefore";
 
@@ -133,7 +133,7 @@ public class IntroActivity extends ConsentedActivity {
                     invalidateOptionsMenu();
                     item.setVisible(false);
                     item.setTitle("why");
-                } */
+                }
                 this.goTo(this.mCurrentPage - 1);
                 return true;
 
@@ -149,5 +149,5 @@ public class IntroActivity extends ConsentedActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
+*/
 }

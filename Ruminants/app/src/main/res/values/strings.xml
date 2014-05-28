@@ -72,7 +72,7 @@
     </string-array>
 
 
-    <!-- Wizard One / Logging Values -->
+    <!-- Wizard One / logging Values -->
     <string name="label_no">No</string>
     <string name="label_yes">Yes</string>
     <string name="action_save_wizard_one">Done</string>
@@ -92,30 +92,6 @@
     <string name="message_complete_helpful">Respond if the rumination was helpful.</string>
     <string name="message_complete_better">Identify if the rumination made you feel better.</string>
     <string name="toast_survey_wizard_recorded">Successfully submitted.</string>
-
-    <!-- Wizard One emotions list -->
-    <string-array name="emotions">
-        <item>Joy</item>
-        <item>Contentment</item>
-        <item>Pride</item>
-        <item>Optimism</item>
-        <item>Enthrallment</item>
-        <item>Relief</item>
-        <item>Surprise</item>
-        <item>Anger</item>
-        <item>Exasperation</item>
-        <item>Rage</item>
-        <item>Disgust</item>
-        <item>Envy</item>
-        <item>Torment</item>
-        <item>Sadness</item>
-        <item>Disappointment</item>
-        <item>Shame</item>
-        <item>Neglect</item>
-        <item>Sympathy</item>
-        <item>Fear</item>
-        <item>Nervousness</item>
-    </string-array>
 
     <string-array name="durations">
         <item>A Few Minutes</item>
@@ -146,16 +122,33 @@
     </string-array>
 
     <string-array name="intro_content">
-        <item>Welcome to \"Cows Are Ruminants\". If you look down--you will see Bessie, your guide to rumination.</item>
-        <item>Rumination is a way of thinking that may cause you to worry--but it\'s important to remember that not all thinking is bad.</item>
-        <item>Rumination is what happens when you start thinking about something…</item>
-        <item>Then you think about it again… And again… And after all that thinking you start to feel worried… Or stressed…</item>
-        <item>\"Cows Are Ruminants\" is designed to do a few things.</item>
-        <item>First, you\'ll be asked to set some preferences about when and how we can interrupt you to ask how you\'re doing.</item>
-        <item>Second, Bessie is going to ask you to check in every now and then and tell us if you have been ruminating--and what you\'ve been ruminating about.</item>
-        <item>Third, when you check in, we\'re going to give you a few basic strategies on how to help with rumination.</item>
-        <item>You can ALWAYS go to the app if you don\'t want to wait for Bessie to bother you.</item>
-        <item>Now… let’s MOOve!.</item>
+        <item>HAY there friend ... and Doctor Chicken!</item>
+        <item>How now, Bessie the cow?</item>
+        <item>I feel more blue than a blueberry.</item>
+        <item>Uh oh... worrying again?</item>
+        <item>\I can\'t help it!</item>
+        <item>We\'ve talked about this -- I have a few thoughts.</item>
+        <item>I made this app for you.</item>
+        <item>An appetizer? I\'m not very hungry.</item>
+        <item>No, no, a phone app, to help you with your rumination.</item>
+        <item>I ruminate? Do you mean when I worry all the time?</item>
+        <item>Sometimes I hardly notice it.</item>
+        <item>I can\'t seem to stop.</item>
+        <item>Sometimes cows do that Bessie. It\'s ok to do it sometimes.</item>
+        <item>When it is all the time -- that is a problem.</item>
+        <item>I\'m just worried there is something wrong with me.</item>
+        <item>Worries are something we ALL have to chew on. Even the people on the other side of the screen!</item>
+        <item>This app is for you.</item>
+        <item>First, we\'ll have you identify a worry you may be thinking about too often.</item>
+        <item>Then we will ask you about them every now and then.</item>
+        <item>There are a few ways for you to respond.</item>
+        <item>If you have some extended time, we\'re going to ask you to practice your worries using the \"WORRY PRACTICE TOOL\"</item>
+        <item>If you have a few minutes, we want you to log how you\'re feeling about your rumination.</item>
+        <item> If you only have a seconds, that\'s OK--just take a look at some of our rumination quick tips.</item>
+        <item>The important thing is to learn as much as possible about this-- you can even check the app without being reminded.</item>
+        <item>How often?</item>
+        <item>Maybe a few times a day.</item>
+        <item>Let\'s get started!</item>
     </string-array>
 
     <!-- Prompt to finish intro -->

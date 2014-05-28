@@ -49,12 +49,9 @@ public class WizardOneActivity extends Activity
             outState.putInt(WizardOneActivity.SELECTED_RUM_DURATION, this._rumDuration);
 
         EditText trigger = (EditText) this.findViewById(R.id.field_trigger);
-        EditText attemptedStopMethods = (EditText) this.findViewById(R.id.field_attempted_stop_methods);
-        EditText terminationCause = (EditText) this.findViewById(R.id.field_termination_cause);
 
         outState.putString(WizardOneActivity.SELECTED_RUM_TRIGGER, trigger.getEditableText().toString());
-        outState.putString(WizardOneActivity.SELECTED_RUM_ATTEMPTED_STOP_METHODS, attemptedStopMethods.getEditableText().toString());
-        outState.putString(WizardOneActivity.SELECTED_TERMINATION_CAUSE, terminationCause.getEditableText().toString());
+
     }
 
     protected void onCreate(Bundle savedInstanceState)
@@ -72,14 +69,6 @@ public class WizardOneActivity extends Activity
 
         final WizardOneActivity me = this;
 
-        Spinner spinner = (Spinner) findViewById(R.id.emotion_spinner);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.emotions, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
 
         final TextView duration = (TextView) this.findViewById(R.id.label_rumination_duration);
 
@@ -88,7 +77,7 @@ public class WizardOneActivity extends Activity
         ArrayAdapter<CharSequence> durationAdapter = ArrayAdapter.createFromResource(this,
                 R.array.durations, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        durationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         durationSpinner.setAdapter(durationAdapter);
         /*if (savedInstanceState.containsKey(WizardOneActivity.SELECTED_RUM_DURATION))
@@ -102,13 +91,6 @@ public class WizardOneActivity extends Activity
         if (savedInstanceState.containsKey(WizardOneActivity.SELECTED_RUM_TRIGGER))
            trigger.setText(savedInstanceState.getString(WizardOneActivity.SELECTED_RUM_TRIGGER));
 
-        EditText stopMethods = (EditText) this.findViewById(R.id.field_attempted_stop_methods);
-        if (savedInstanceState.containsKey(WizardOneActivity.SELECTED_RUM_ATTEMPTED_STOP_METHODS))
-            stopMethods.setText(savedInstanceState.getString(WizardOneActivity.SELECTED_RUM_ATTEMPTED_STOP_METHODS));
-
-        EditText terminationCause = (EditText) this.findViewById(R.id.field_termination_cause);
-        if (savedInstanceState.containsKey(WizardOneActivity.SELECTED_TERMINATION_CAUSE))
-            terminationCause.setText(savedInstanceState.getString(WizardOneActivity.SELECTED_TERMINATION_CAUSE));
     }
 
     public boolean onCreateOptionsMenu(Menu menu)
@@ -188,14 +170,6 @@ public class WizardOneActivity extends Activity
             EditText trigger = (EditText) this.findViewById(R.id.field_trigger);
             values.put(RuminantsContentProvider.WIZARD_ONE_TRIGGER, trigger.getEditableText().toString());
             payload.put("trigger", trigger);
-
-            EditText attemptedStopMethods = (EditText) this.findViewById(R.id.field_attempted_stop_methods);
-            values.put(RuminantsContentProvider.WIZARD_ONE_ATTEMPTED_STOP_METHOD, attemptedStopMethods.getEditableText().toString());
-            payload.put("attempted_stop_methods", attemptedStopMethods);
-
-            EditText terminationCause = (EditText) this.findViewById(R.id.field_termination_cause);
-            values.put(RuminantsContentProvider.WIZARD_ONE_RUMINATION_TERMINATION_CAUSE, terminationCause.getEditableText().toString());
-            payload.put("termination_cause", terminationCause);
 
             values.put(RuminantsContentProvider.WIZARD_ONE_TIMESTAMP, System.currentTimeMillis());
 

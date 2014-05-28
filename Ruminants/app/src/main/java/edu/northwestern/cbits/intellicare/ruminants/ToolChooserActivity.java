@@ -22,7 +22,7 @@ import java.util.ArrayList;
  */
 
 public class ToolChooserActivity extends Activity {
-
+/*
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,5 +134,5 @@ public class ToolChooserActivity extends Activity {
     {
         super.onPause();
     }
-
+*/
 }
