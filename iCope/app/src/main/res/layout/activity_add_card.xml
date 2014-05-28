@@ -1,0 +1,96 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="#e0e0e0">
+	<LinearLayout android:layout_height="wrap_content"
+	    android:layout_width="match_parent"
+	    android:orientation="vertical"
+	    android:padding="8dp"
+	    android:layout_margin="8dp"
+	    android:background="@drawable/card_background">
+	    <TextView android:text="@string/question_event_type"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content" 
+	        android:textSize="18sp" />
+	    <AutoCompleteTextView android:id="@+id/card_event_type"
+	        android:hint="@string/hint_event_type"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:inputType="textCapSentences"
+			android:completionThreshold="1"	        
+	        android:singleLine="true"/>
+  	    <TextView android:text="@string/question_event"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content" 
+	        android:textSize="18sp" />
+	    <EditText android:id="@+id/card_event"
+	        android:hint="@string/hint_event"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:inputType="textCapSentences|textMultiLine"
+	        android:singleLine="false"
+	        android:maxLines="2" 
+	        android:minLines="2" />
+	    <TextView android:text="@string/question_reminder"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content" 
+	        android:textSize="18sp"  
+	        android:layout_marginTop="16dp"/>
+
+        <EditText android:id="@+id/card_reminder"
+	        android:hint="@string/hint_reminder"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:inputType="textCapSentences|textMultiLine" 
+	        android:singleLine="false"
+	        android:maxLines="2"
+	        android:minLines="2" />
+
+        <View android:layout_width="match_parent"
+	        android:layout_height="0dp"
+	        android:layout_weight="4" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="How important is this reminder?"
+            android:id="@+id/textView"
+            android:layout_marginTop="16dp"
+            android:textSize="18sp" />
+
+        <RadioGroup
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/card_importance">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mild"
+                    android:id="@+id/one"
+                    android:checked="false"
+                    android:layout_marginRight="8dp"
+                    android:layout_gravity="left" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Moderate"
+                    android:id="@+id/two"
+                    android:checked="false"
+                    android:layout_marginRight="8dp"
+                    android:layout_gravity="center_horizontal" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Very"
+                    android:id="@+id/three"
+                    android:layout_gravity="right"
+                    android:checked="false"
+                    android:layout_marginRight="8dp" />
+        </RadioGroup>
+
+    </LinearLayout>
+</ScrollView>
