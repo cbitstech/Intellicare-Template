@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
@@ -20,22 +21,29 @@ import android.util.Log;
 public class MoveProvider extends ContentProvider 
 {
     private static final int EXERCISES = 1;
+    private static final int FITBIT = 2;
 
     private static final String EXERCISES_TABLE = "exercises";
+    private static final String FITBIT_TABLE = "fitbit";
     
     private static final String AUTHORITY = "edu.northwestern.cbits.intellicare.moveme";
 
     public static final Uri EXERCISES_URI = Uri.parse("content://" + AUTHORITY + "/" + EXERCISES_TABLE);
+	public static final Uri FITBIT_URI = Uri.parse("content://" + AUTHORITY + "/" + FITBIT_TABLE);;
 
     private UriMatcher _uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     private SQLiteDatabase _db = null;
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
 	protected static final String RECORDED = "recorded";
 	protected static final String DURATION = "duration";
 	protected static final String PRE_MOOD = "premood";
 	protected static final String POST_MOOD = "postmood";
+
+	public static final String FITBIT_TIMESTAMP = "timestamp";
+	public static final String FITBIT_LOGGED = "logged";
+	public static final String FITBIT_GOAL = "goal";
 
 	public static class CalendarEvent
 	{
@@ -56,6 +64,7 @@ public class MoveProvider extends ContentProvider
     	super();
     	
     	this._uriMatcher.addURI(AUTHORITY, EXERCISES_TABLE, EXERCISES);
+    	this._uriMatcher.addURI(AUTHORITY, FITBIT_TABLE, FITBIT);
     }
 
 	public int delete(Uri uri, String selection, String[] selectionArgs) 
@@ -64,6 +73,8 @@ public class MoveProvider extends ContentProvider
         {
 	        case MoveProvider.EXERCISES:
 	            return this._db.delete(MoveProvider.EXERCISES_TABLE, selection, selectionArgs);
+	        case MoveProvider.FITBIT:
+	            return this._db.delete(MoveProvider.FITBIT_TABLE, selection, selectionArgs);
         }
 
 		return 0;
@@ -73,17 +84,17 @@ public class MoveProvider extends ContentProvider
 	{
         switch(this._uriMatcher.match(uri))
         {
-            case MoveProvider.EXERCISES:
-                return "vnd.android.cursor.dir/" + AUTHORITY + ".exercises";
+	        case MoveProvider.EXERCISES:
+	            return "vnd.android.cursor.dir/" + AUTHORITY + ".exercises";
+	        case MoveProvider.FITBIT:
+	            return "vnd.android.cursor.dir/" + AUTHORITY + ".fitbit";
         }
-
+        
         return null;
 	}
 
 	public Uri insert(Uri uri, ContentValues values) 
 	{
-		Log.e("MM", "START INSERT");
-		
         long insertedId = -1;
 
         Uri inserted = Uri.EMPTY;
@@ -92,10 +103,10 @@ public class MoveProvider extends ContentProvider
         {
             case MoveProvider.EXERCISES:
                 insertedId = this._db.insert(EXERCISES_TABLE, null, values);
-                
-                Log.e("MM", "INSERTED " + insertedId);
-                
                 return Uri.withAppendedPath(EXERCISES_URI, "" + insertedId);
+            case MoveProvider.FITBIT:
+                insertedId = this._db.insert(FITBIT_TABLE, null, values);
+                return Uri.withAppendedPath(FITBIT_URI, "" + insertedId);
         }
 
         return inserted;
@@ -120,6 +131,8 @@ public class MoveProvider extends ContentProvider
                 {
                     case 0:
                     	
+                    case 1:
+        		        db.execSQL(context.getString(R.string.db_create_fitbit_table));
                     default:
                     	break;
                 }
@@ -138,6 +151,8 @@ public class MoveProvider extends ContentProvider
         {
             case MoveProvider.EXERCISES:
                 return this._db.query(MoveProvider.EXERCISES_TABLE, projection, selection, selectionArgs, null, null, sortOrder);
+            case MoveProvider.FITBIT:
+                return this._db.query(MoveProvider.FITBIT_TABLE, projection, selection, selectionArgs, null, null, sortOrder);
          }
 
         return null;
@@ -149,6 +164,8 @@ public class MoveProvider extends ContentProvider
         {
 	        case MoveProvider.EXERCISES:
 	            return this._db.update(MoveProvider.EXERCISES_TABLE, values, selection, selectionArgs);
+            case MoveProvider.FITBIT:
+                return this._db.update(MoveProvider.FITBIT_TABLE, values, selection, selectionArgs);
         }
 
 		return 0;
@@ -184,11 +201,10 @@ public class MoveProvider extends ContentProvider
 		return events;
 	}
 
+	@SuppressLint("SimpleDateFormat")
 	public static String fetchNextEventTitle(Context context) 
 	{
 		List<CalendarEvent> events = MoveProvider.events(context);
-		
-		Log.e("MM", "EVENTS: " + events.size());
 		
 		if (events.size() > 0)
 		{
@@ -203,5 +219,43 @@ public class MoveProvider extends ContentProvider
 		}
 
 		return context.getString(R.string.label_no_upcoming_events);
+	}
+
+	public static int goal(Context context, long timestamp) 
+	{
+		String where = MoveProvider.FITBIT_TIMESTAMP + " >= ? AND " + MoveProvider.FITBIT_TIMESTAMP + " <= ?";
+		String[] args = { "" + (timestamp - (12 * 60 * 60 * 1000)), "" + (timestamp + (12 * 60 * 60 * 1000)) }; 
+		
+		Cursor c = context.getContentResolver().query(MoveProvider.FITBIT_URI, null, where, args, null);
+		
+		int count = 0;
+		
+		Log.e("MM", "LOG COUNT: " + c.getCount());
+
+		if (c.moveToNext())
+			count = c.getInt(c.getColumnIndex(MoveProvider.FITBIT_GOAL));
+		
+		c.close();
+		
+		return count;
+	}
+
+	public static int progress(Context context, long timestamp) 
+	{
+		String where = MoveProvider.FITBIT_TIMESTAMP + " >= ? AND " + MoveProvider.FITBIT_TIMESTAMP + " <= ?";
+		String[] args = { "" + (timestamp - (12 * 60 * 60 * 1000)), "" + (timestamp + (12 * 60 * 60 * 1000)) }; 
+		
+		Cursor c = context.getContentResolver().query(MoveProvider.FITBIT_URI, null, where, args, null);
+		
+		int count = 0;
+
+		Log.e("MM", "GOL COUNT: " + c.getCount());
+
+		if (c.moveToNext())
+			count = c.getInt(c.getColumnIndex(MoveProvider.FITBIT_LOGGED));
+		
+		c.close();
+		
+		return count;
 	}
 }

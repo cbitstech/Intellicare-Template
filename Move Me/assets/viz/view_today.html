@@ -8,8 +8,9 @@
     	body
     	{
     		margin: 0;
-    		padding: 0;
-    		background-color: #e0e0e0;
+    		padding: 8;
+    		background-color: #ffffff;
+			overflow: hidden;
     	}
 
 		svg {
@@ -28,15 +29,15 @@
   <body>
     <script type="text/javascript">
 
-	var width = $(window).width();
-	var height = $(window).height();
+	var width = $(window).width() - 8;
+	var height = $(window).height() - 8;
 	
 	var radius = height / 2;
  
     color = d3.scale.category20c();  //builtin range of colors
  
-    data = [{"label":"Completed", "value":66}, 
-            {"label":"Remaining", "value":34}];
+    data = VALUES_JSON; // [{"label":"Completed", "value":66}, 
+            			// {"label":"Remaining", "value":34}];
     
     var vis = d3.select("body")
         .append("svg:svg")              //create the SVG element inside the <body>

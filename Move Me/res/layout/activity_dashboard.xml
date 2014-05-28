@@ -4,19 +4,32 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#e0e0e0">
-    <WebView android:id="@+id/view_today"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_margin="16dp"
-        android:scrollbars="none" />
-    <WebView android:id="@+id/view_week"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="0dp"
-        android:scrollbars="none" />
+    <LinearLayout android:orientation="vertical"
+	    android:layout_height="0dp"
+	    android:layout_weight="1"
+	    android:layout_width="match_parent"
+	    android:background="@drawable/card_background"
+	    android:layout_margin="8dp"
+	    android:padding="8dp">
+	    <WebView android:id="@+id/view_today"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:scrollbars="none" />
+  	</LinearLayout>
+    <LinearLayout android:orientation="vertical"
+	    android:layout_height="0dp"
+	    android:layout_weight="1"
+	    android:layout_width="match_parent"
+	    android:background="@drawable/card_background"
+	    android:layout_marginLeft="8dp"
+	    android:layout_marginRight="8dp"
+	    android:layout_marginBottom="8dp"
+	    android:layout_marginTop="0dp"
+	    android:padding="8dp">
+	    <WebView android:id="@+id/view_week"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:scrollbars="none" 
+	        android:background="@drawable/card_background" />
+  	</LinearLayout>
 </LinearLayout>

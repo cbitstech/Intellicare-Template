@@ -166,7 +166,8 @@
     <string name="title_log">Exercise Log</string>
     
 	<string name="db_create_exercises_table">CREATE TABLE IF NOT EXISTS exercises (_id INTEGER PRIMARY KEY NOT NULL, duration INTEGER NOT NULL, recorded INTEGER NOT NULL, premood INTEGER NOT NULL, postmood INTEGER NOT NULL);</string>
-	
+	<string name="db_create_fitbit_table">CREATE TABLE IF NOT EXISTS fitbit (_id INTEGER PRIMARY KEY NOT NULL, timestamp INTEGER NOT NULL, logged INTEGER NOT NULL, goal INTEGER NOT NULL);</string>
+		
 	<string name="mood_range" formatted="false">From %d to %d</string>
 	<string name="duration_label" formatted="false">Time Spent: %ss</string>
 	
@@ -183,7 +184,7 @@
 	<string name="title_calendar">Exercise Calendar</string>
 	<string name="subtitle_calendar" formatted="false">%d upcoming exercises</string>
 	<string name="subtitle_calendar_single" formatted="false">1 upcoming exercise</string>
-	<string name="message_nothing_scheduled">No exercised scheduled.\n\nTap here to schedule an exercise.</string>
+	<string name="message_nothing_scheduled">No exercises scheduled.\n\nTap here to schedule an exercise.</string>
 	
 	<string name="title_motivators">Motivators</string>
 	<string name="subtitle_motivators">Lessons, Tips &amp; Videos</string>
@@ -352,5 +353,46 @@
         <item>file:///android_asset/www/content/motivator_8.html</item>
         <item>file:///android_asset/www/content/motivator_9.html</item>
    	</string-array>
+   	
+    <string name="settings_media_player">Media Options</string>
+    <string name="settings_notifications">Notifications</string>
+    
+    <string name="action_schedule_reminder">Schedule</string>
+    
+    <string name="pref_morning_enable">Enable Morning Notification</string>
+    <string name="pref_morning_time">Morning Notification Time</string>
+    <string name="pref_afternoon_enable">Enable Afternoon Notification</string>
+    <string name="pref_afternoon_time">Afternoon Notification Time</string>
+    <string name="pref_evening_enable">Enable Evening Notification</string>
+    <string name="pref_evening_time">Evening Notification Time</string>
+    
+    <string name="title_reminder_note">MoveME Tip</string>
+    <string-array name="array_morning_messages">
+        <item>Exercise is an excellent way to start the day.</item>
+        <item>Early morning time is excellent "me" time.</item>
+        <item>All day you get to enjoy the sense of accomplishment of having already exercised.</item>
+        <item>Remember that you made your decision to exercise when you had an AWAKE MIND the previous evening!</item>
+ 	</string-array>
+    
+    <string-array name="array_afternoon_messages">
+        <item>Looking forward to your break from work or housework to get your workout in?</item>
+        <item>Some experts say the best time to workout is a couple hours after lunch - good luck with your afternoon workout!</item>
+        <item>Activity in the middle of your day can help you be more productive and focused!</item>
+ 	</string-array>
+
+    <string-array name="array_evening_messages">
+        <item>After work is the best time to move and shake out the day’s tension!</item>
+        <item>Exercise is an excellent way to end your day.</item>
+        <item>Evening is exceptional "me" time.</item>
+ 	</string-array>
+
+    <string name="label_minutes_complete" formatted="false">%d min. (Done)</string>
+    <string name="label_minutes_remaining" formatted="false">%d min. (To Do)</string>
+    
+    <string name="settings_fitness_trackers">Fitness Trackers &amp; Services</string>
+    <string name="settings_fitbit">FitBit</string>
+    <string name="prefs_enable_fitbit">Enable FitBit</string>
+    <string name="prefs_fitbit_login">Login to FitBit</string>
+    <string name="prefs_fitbit_logout">Log out of FitBit</string>
     
 </resources>

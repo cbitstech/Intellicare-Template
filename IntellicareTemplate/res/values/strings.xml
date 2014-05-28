@@ -225,4 +225,15 @@
     <string name="action_done">Done</string>
     
    	<string name="subtitle_pages" formatted="false">Page %d of %d</string>
+   	
+   	<string name="label_sun">Sun.</string>
+    <string name="label_mon">Mon.</string>
+    <string name="label_tue">Tue.</string>
+    <string name="label_wed">Wed.</string>
+    <string name="label_thu">Thu.</string>
+    <string name="label_fri">Fri.</string>
+    <string name="label_sat">Sat.</string>
+   	
+    <string name="action_not_now">Not Now</string>
+    
 </resources>
