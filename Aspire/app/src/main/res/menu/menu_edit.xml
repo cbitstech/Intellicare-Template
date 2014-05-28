@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:robot="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_add_path"
+        robot:showAsAction="always"
+        android:title="@string/action_add_path"/>
+    <item
+        android:id="@+id/action_close"
+        robot:showAsAction="always"
+        android:icon="@drawable/ic_action_cancel"
+        android:title="@string/action_close"/>
+</menu>

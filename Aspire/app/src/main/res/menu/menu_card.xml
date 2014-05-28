@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:robot="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_add_card"
+        robot:showAsAction="always"
+        android:title="@string/action_add_card"
+        android:icon="@drawable/ic_action_add" />
+    <item
+        android:id="@+id/action_list_view"
+        robot:showAsAction="always"
+        android:title="@string/action_list_view"
+        android:icon="@drawable/ic_action_list" />
+    <item
+        android:id="@+id/action_cards_view"
+        robot:showAsAction="always"
+        android:title="@string/action_cards_view"
+        android:icon="@drawable/ic_cards" />
+</menu>
