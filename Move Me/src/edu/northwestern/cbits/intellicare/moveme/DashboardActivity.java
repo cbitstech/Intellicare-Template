@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Calendar;
+import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
@@ -22,6 +23,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
+import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 
@@ -77,6 +79,15 @@ public class DashboardActivity extends ConsentedActivity
 		graphView.addJavascriptInterface(this, "android");
 		// graphView.loadUrl("file:///android_asset/viz/view_today.html");
 		graphView.loadDataWithBaseURL("file:///android_asset/viz/", DashboardActivity.generateGraph(this), "text/html", null, null);
+		
+		TextView label = (TextView) this.findViewById(R.id.label_today_progress);
+		
+		long now = System.currentTimeMillis();
+		
+		int total = MoveProvider.goal(this, now);
+		int today = MoveProvider.progress(this, now);
+		
+		label.setText(this.getString(R.string.label_today, today, total));
 	}
 
     @SuppressLint({ "SetJavaScriptEnabled", "JavascriptInterface" })
@@ -93,7 +104,37 @@ public class DashboardActivity extends ConsentedActivity
 		graphView.addJavascriptInterface(this, "android");
 		// graphView.loadUrl("file:///android_asset/viz/view_today.html");
 		graphView.loadDataWithBaseURL("file:///android_asset/viz/", DashboardActivity.generateWeekGraph(this), "text/html", null, null);
-	}
+
+		int total = 0;
+		int week = 0;
+
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY, 12);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		
+		int offset = cal.get(Calendar.ZONE_OFFSET) + cal.get(Calendar.DST_OFFSET);
+		
+		cal.add(Calendar.DATE, -7);
+
+		for (int i = 0; i < 7; i++)
+		{
+			long time = cal.getTimeInMillis() + offset;
+				
+			int complete = MoveProvider.progress(this, time);
+			int goal = MoveProvider.goal(this, time);
+			
+			total += goal;
+			week += complete;
+				
+			cal.add(Calendar.DATE, 1);
+		}
+		
+		TextView label = (TextView) this.findViewById(R.id.label_week_progress);
+
+		label.setText(this.getString(R.string.label_week, week, total));
+    }
     
 	private static String generateGraph(Context context) 
 	{
@@ -158,23 +199,7 @@ public class DashboardActivity extends ConsentedActivity
 		
 		JSONArray graphValues = DashboardActivity.weekGraphValues(context);
 		
-		try {
-			Log.e("MM", "WEEK JSON: " + graphValues.toString(2));
-		} catch (JSONException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		try 
-		{
-			graphString = graphString.replaceAll("VALUES_JSON", graphValues.toString());
-
-			FileUtils.writeStringToFile(new File(Environment.getExternalStorageDirectory(), "graph.html"), graphString);
-		} 
-		catch (IOException e) 
-		{
-			LogManager.getInstance(context).logException(e);
-		} 
+		graphString = graphString.replaceAll("VALUES_JSON", graphValues.toString());
 		
 		return graphString;
 	}
@@ -185,7 +210,7 @@ public class DashboardActivity extends ConsentedActivity
 		
 		long now = System.currentTimeMillis();
 
-		int total = MoveProvider.goal(context, now) * 2;
+		int total = MoveProvider.goal(context, now);
 		int today = MoveProvider.progress(context, now);
 		
 		try 
@@ -231,8 +256,6 @@ public class DashboardActivity extends ConsentedActivity
 		
 		int offset = cal.get(Calendar.ZONE_OFFSET) + cal.get(Calendar.DST_OFFSET);
 		
-		Log.e("MM", "OFFSET: " + offset);
-		
 		try 
 		{
 			JSONObject completed = new JSONObject();
@@ -244,28 +267,30 @@ public class DashboardActivity extends ConsentedActivity
 			remaining.put("data", new JSONArray());
 			
 			cal.add(Calendar.DATE, -7);
+			
+			long day = (24 * 60 * 60 * 1000);
 
 			for (int i = 0; i < 7; i++)
 			{
-				long time = cal.getTimeInMillis();
+				long time = cal.getTimeInMillis() + offset;
 				
-				int complete = MoveProvider.progress(context, time);
+				int complete = MoveProvider.progress(context, time + day);
 
 				JSONObject completePoint = new JSONObject();
-				completePoint.put("x", (time + offset) / 1000);
+				completePoint.put("x", time / 1000);
 				completePoint.put("y", complete);
-				
+
 				completed.getJSONArray("data").put(completePoint);
 				
-				int goal = MoveProvider.goal(context, time);
-				
+				int goal = MoveProvider.goal(context, time  + day);
+
 				int left = goal - complete;
 				
 				if (left < 0)
 					left = 0;
 				
 				JSONObject leftPoint = new JSONObject();
-				leftPoint.put("x", (time + offset) / 1000);
+				leftPoint.put("x", time / 1000);
 				leftPoint.put("y", left);
 				
 				remaining.getJSONArray("data").put(leftPoint);

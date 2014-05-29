@@ -8,14 +8,14 @@
     	body
     	{
     		margin: 0;
-    		padding: 8;
+    		padding: 0;
     		background-color: #ffffff;
 			overflow: hidden;
     	}
 
 		svg {
-			margin-top: 0;
-			margin-bottom: 0;
+			margin-top: 8;
+			margin-bottom: 8;
 			margin-left: auto;
 			margin-right: auto;
 			display: block;
@@ -29,12 +29,15 @@
   <body>
     <script type="text/javascript">
 
-	var width = $(window).width() - 8;
-	var height = $(window).height() - 8;
+	var width = $(window).width();
+	var height = $(window).height() - 16;
 	
 	var radius = height / 2;
  
-    color = d3.scale.category20c();  //builtin range of colors
+ 	var color = d3.scale.ordinal()
+    	.range(["#CC0000", "#669900"]);
+ 
+    // color = d3.scale.category20c();  //builtin range of colors
  
     data = VALUES_JSON; // [{"label":"Completed", "value":66}, 
             			// {"label":"Remaining", "value":34}];
@@ -42,10 +45,10 @@
     var vis = d3.select("body")
         .append("svg:svg")              //create the SVG element inside the <body>
         .data([data])                   //associate our data with the document
-            .attr("width", height)           //set the width and height of our visualization (these will be attributes of the <svg> tag
-            .attr("height", height)
+//            .attr("width", width)           //set the width and height of our visualization (these will be attributes of the <svg> tag
+//            .attr("height", height)
         .append("svg:g")                //make a group to hold our pie chart
-            .attr("transform", "translate(" + radius + "," + radius + ")")    //move the center of the pie chart from 0, 0 to radius, radius
+            .attr("transform", "translate(" + (width / 2) + "," + radius + ")")    //move the center of the pie chart from 0, 0 to radius, radius
  
     var arc = d3.svg.arc()              //this will create <path> elements for us using arc data
         .outerRadius(radius);

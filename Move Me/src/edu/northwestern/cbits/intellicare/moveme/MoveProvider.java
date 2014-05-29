@@ -3,6 +3,7 @@ package edu.northwestern.cbits.intellicare.moveme;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -16,7 +17,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.provider.CalendarContract;
-import android.util.Log;
 
 public class MoveProvider extends ContentProvider 
 {
@@ -223,14 +223,25 @@ public class MoveProvider extends ContentProvider
 
 	public static int goal(Context context, long timestamp) 
 	{
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(timestamp);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		
+		long startTime = cal.getTimeInMillis();
+		
+		cal.add(Calendar.DATE, 1);
+		
+		long endTime = cal.getTimeInMillis() - 1;
+		
 		String where = MoveProvider.FITBIT_TIMESTAMP + " >= ? AND " + MoveProvider.FITBIT_TIMESTAMP + " <= ?";
-		String[] args = { "" + (timestamp - (12 * 60 * 60 * 1000)), "" + (timestamp + (12 * 60 * 60 * 1000)) }; 
+		String[] args = { "" + startTime, "" + endTime }; 
 		
 		Cursor c = context.getContentResolver().query(MoveProvider.FITBIT_URI, null, where, args, null);
 		
 		int count = 0;
-		
-		Log.e("MM", "LOG COUNT: " + c.getCount());
 
 		if (c.moveToNext())
 			count = c.getInt(c.getColumnIndex(MoveProvider.FITBIT_GOAL));
@@ -242,14 +253,25 @@ public class MoveProvider extends ContentProvider
 
 	public static int progress(Context context, long timestamp) 
 	{
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(timestamp);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		
+		long startTime = cal.getTimeInMillis();
+		
+		cal.add(Calendar.DATE, 1);
+		
+		long endTime = cal.getTimeInMillis() - 1;
+		
 		String where = MoveProvider.FITBIT_TIMESTAMP + " >= ? AND " + MoveProvider.FITBIT_TIMESTAMP + " <= ?";
-		String[] args = { "" + (timestamp - (12 * 60 * 60 * 1000)), "" + (timestamp + (12 * 60 * 60 * 1000)) }; 
+		String[] args = { "" + startTime, "" + endTime }; 
 		
 		Cursor c = context.getContentResolver().query(MoveProvider.FITBIT_URI, null, where, args, null);
 		
 		int count = 0;
-
-		Log.e("MM", "GOL COUNT: " + c.getCount());
 
 		if (c.moveToNext())
 			count = c.getInt(c.getColumnIndex(MoveProvider.FITBIT_LOGGED));

@@ -395,4 +395,6 @@
     <string name="prefs_fitbit_login">Login to FitBit</string>
     <string name="prefs_fitbit_logout">Log out of FitBit</string>
     
+    <string name="label_today" formatted="false">Today: %d of %d minutes</string>
+    <string name="label_week" formatted="false">This Week: %d of %d minutes</string>
 </resources>
