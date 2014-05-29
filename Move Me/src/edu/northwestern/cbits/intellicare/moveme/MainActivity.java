@@ -91,6 +91,13 @@ public class MainActivity extends ConsentedActivity
 			Intent settingsIntent = new Intent(this, CalendarActivity.class);
 			this.startActivity(settingsIntent);
 		}
+		else if (item.getItemId() == R.id.action_help)
+		{
+			// TODO: Rename to IntroActivity
+			
+	        Intent introIntent = new Intent(this, ReminderActivity.class);
+	        this.startActivity(introIntent);
+		}
 
 		return super.onOptionsItemSelected(item);
     }
