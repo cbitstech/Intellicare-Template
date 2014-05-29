@@ -2,6 +2,7 @@ package edu.northwestern.cbits.intellicare.moveme;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
@@ -13,7 +14,9 @@ import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 public class MainActivity extends ConsentedActivity 
 {
-    protected void onCreate(Bundle savedInstanceState) 
+    public static final Uri URI = Uri.parse("http://www.yahoo.com");
+
+	protected void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_main);
@@ -59,6 +62,8 @@ public class MainActivity extends ConsentedActivity
 	        Intent introIntent = new Intent(this, IntroActivity.class);
 	        this.startActivity(introIntent);
         }
+        
+        NotificationHelper.init(this, NotificationHelper.class);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) 

@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-	<ListPreference android:title="@string/pref_music_player" 
-	    android:summary="@string/summary_music_player"
-	    android:key="settings_music_player"
-	    android:entries="@array/empty_array"
-	    android:entryValues="@array/empty_array" 
-	    android:defaultValue="@string/pref_default" />
+	<PreferenceCategory android:title="@string/settings_notifications">
+	    <CheckBoxPreference android:title="@string/pref_morning_enable"
+	        android:key="settings_enable_morning_note"
+	        android:defaultValue="true" />
+	    <Preference android:title="@string/pref_morning_time"
+	        android:key="settings_time_morning_note" />
+	    <CheckBoxPreference android:title="@string/pref_afternoon_enable"
+	        android:key="settings_enable_afternoon_note"
+	        android:defaultValue="true" />
+	    <Preference android:title="@string/pref_afternoon_time"
+	        android:key="settings_time_afternoon_note" />
+	    <CheckBoxPreference android:title="@string/pref_evening_enable"
+	        android:key="settings_enable_evening_note"
+	        android:defaultValue="true" />
+	    <Preference android:title="@string/pref_evening_time"
+	        android:key="settings_time_evening_note" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/settings_fitness_trackers">
+		<PreferenceScreen android:title="@string/settings_fitbit">
+			<CheckBoxPreference android:title="@string/prefs_enable_fitbit" android:key="settings_fitbit_enabled" />
+			<Preference android:title="@string/prefs_fitbit_login" android:key="settings_fitbit_login" />
+	    </PreferenceScreen>
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/settings_media_player">
+		<ListPreference android:title="@string/pref_music_player" 
+		    android:summary="@string/summary_music_player"
+		    android:key="settings_music_player"
+		    android:entries="@array/empty_array"
+		    android:entryValues="@array/empty_array" 
+		    android:defaultValue="@string/pref_default" />
+    </PreferenceCategory>
 	<PreferenceCategory android:title="@string/settings_group_credits">
 	 	<Preference android:title="@string/creator_smk" android:summary="@string/role_clinical_lead" />
    		<Preference android:title="@string/creator_sms" android:summary="@string/role_clinical_lead" />
