@@ -1,6 +1,7 @@
 package edu.northwestern.cbits.intellicare.ruminants;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -40,7 +41,7 @@ public class PagedIntroActivity extends ConsentedActivity
 
     	pager.setAdapter(new PagerAdapter()
     	{
-			public int getCount() 
+			public int getCount()
 			{
 				return 27;
 			}
@@ -74,23 +75,21 @@ public class PagedIntroActivity extends ConsentedActivity
 
 		        String[] contentValues = me.getResources().getStringArray(R.array.intro_content);
 
-                int[] introImages = {R.drawable.greet_1, R.drawable.greet_2, R.drawable.greet_3,
+                int[] introImages = {R.drawable.greet_1, R.drawable.greet_1, R.drawable.greet_2, R.drawable.greet_3,
                         R.drawable.intent_1, R.drawable.intent_2, R.drawable.intent_3,
                         R.drawable.intent_4, R.drawable.intent_5, R.drawable.intent_6,
                         R.drawable.rumination_1, R.drawable.rumination_2, R.drawable.rumination_3,
                         R.drawable.rumination_4, R.drawable.rumination_5, R.drawable.rumination_6,
                         R.drawable.rumination_7, R.drawable.specific_1, R.drawable.specific_2,
-                        R.drawable.specific_2, R.drawable.specific_4,
-                        R.drawable.specific_5, R.drawable.specific_7,
+                        R.drawable.specific_4, R.drawable.specific_5, R.drawable.specific_7,
                         R.drawable.specific_9, R.drawable.specific_11,
                         R.drawable.conclusion_1, R.drawable.conclusion_2, R.drawable.conclusion_3};
 
 
                 TextView content = (TextView) view.findViewById(R.id.content_text);
 
-
 		        content.setText(contentValues[position]);
-				background.setBackgroundResource(introImages[position]);
+				background.setImageResource(introImages[position]);
 
 				view.setTag("" + position);
 

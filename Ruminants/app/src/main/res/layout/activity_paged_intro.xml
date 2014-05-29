@@ -5,9 +5,9 @@
     <ImageView android:id="@+id/background_image"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:scaleType="centerCrop"
+	    android:scaleType="fitEnd"
         android:longClickable="false"
-        android:adjustViewBounds="true"
+        android:adjustViewBounds="false"
         android:layout_gravity="bottom" />
 	<android.support.v4.view.ViewPager 
     	android:id="@+id/pager_content"
