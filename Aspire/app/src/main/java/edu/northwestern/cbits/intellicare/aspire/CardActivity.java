@@ -300,7 +300,7 @@ public class CardActivity extends ConsentedActivity
                         Tool t = adapter.getItem(which);
 
                         // on selection add path to card
-                        public void onSelected(//checkbox, int which)
+                        public void onSelected(cardId, int which)
                         {
                             ContentValues preValues = new ContentValues();
                             preValues.put(AspireContentProvider.PATH_CARD_ID, cardId);

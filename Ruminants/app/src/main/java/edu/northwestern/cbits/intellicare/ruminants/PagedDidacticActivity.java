@@ -1,6 +1,7 @@
 package edu.northwestern.cbits.intellicare.ruminants;
 
 import java.security.SecureRandom;
+import java.util.Random;
 
 import android.content.Context;
 import android.content.Intent;
@@ -41,6 +42,8 @@ public class PagedDidacticActivity extends ConsentedActivity
     	
     	final ViewPager pager = (ViewPager) this.findViewById(R.id.pager_content);
 
+        final ImageView background = (ImageView) this.findViewById(R.id.background_image);
+
     	pager.setAdapter(new PagerAdapter()
     	{
 			public int getCount() 
@@ -76,16 +79,15 @@ public class PagedDidacticActivity extends ConsentedActivity
 				View view = inflater.inflate(R.layout.view_paged_content, null);
 		        
 		        TextView content = (TextView) view.findViewById(R.id.content_text);
-                ImageView background = (ImageView) view.findViewById(R.id.background_image);
 
 		        content.setText(me._content[position]);
 
-                int chickens[] = new int[] {R.drawable.rumination_7, R.drawable.specific_1, R.drawable.specific_4, R.drawable.specific_11};
+                int[] chickens = {R.drawable.rumination_7, R.drawable.specific_1, R.drawable.specific_4, R.drawable.specific_11};
 
-                int rand = (int) Math.floor(Math.random()*5);
-                int randomChicken = chickens[rand];
+                Random rand = new Random();
+                int chicken = rand.nextInt(4);
 
-                background.setBackgroundResource(randomChicken);
+                background.setImageResource(chickens[chicken]);
 				
 				view.setTag("" + position);
 

@@ -97,12 +97,16 @@ public class MainActivity extends ConsentedActivity
 
                     TextView reminderTime = (TextView) convertView.findViewById(R.id.label_reminder_time);
 
+                    Log.e("IC", "TIME: " + r.date + " -- " + position + " -- " + r.cardId);
+
                     reminderTime.setText(dateFormat.format(r.date) + " @ " + timeFormat.format(r.date));
 
                     String selection = CopeContentProvider.CARD_ID + " = ?";
                     String selectionArgs[] = {"" + r.cardId};
 
                     Cursor cardCursor = me.getContentResolver().query(CopeContentProvider.CARD_URI, null, selection, selectionArgs, null);
+
+                    Log.e("IC", "CURSOR COUNT: " + cardCursor.getCount() + " " + selection + " -- " + selectionArgs[0]);
 
                     if (cardCursor.moveToNext()) {
                         TextView event = (TextView) convertView.findViewById(R.id.label_reminder_event);
