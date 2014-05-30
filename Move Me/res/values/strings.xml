@@ -82,7 +82,7 @@
         <item>Other</item>
  	</string-array>
 
-    <string name="event_name" formatted="false">Move Me: %s</string>
+    <string name="event_name" formatted="false">MoveME: %s</string>
     <string name="event_description">(Created by MoveME)</string>
     <string name="exercise_unknown">Unknown Exercise</string>
 

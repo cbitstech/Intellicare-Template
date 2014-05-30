@@ -1,5 +1,7 @@
 package edu.northwestern.cbits.intellicare.moveme;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.CrashManagerListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -15,12 +17,21 @@ import edu.northwestern.cbits.intellicare.ConsentedActivity;
 public class MainActivity extends ConsentedActivity 
 {
     public static final Uri URI = Uri.parse("intellicare://moveme/main");
+	private static final String APP_ID = "15c7aeb62de3c28288469537564afce4";
 
 	protected void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_main);
         
+		CrashManager.register(this, APP_ID, new CrashManagerListener() 
+		{
+			public boolean shouldAutoUploadCrashes() 
+			{
+				    return true;
+			}
+		});
+
         this.getSupportActionBar().setSubtitle(MoveProvider.fetchNextEventTitle(this));
 
         final MainActivity me = this;
