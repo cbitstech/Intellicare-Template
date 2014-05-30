@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-	<PreferenceCategory android:title="@string/settings_notifications">
+	<PreferenceCategory android:title="@string/settings_goals">
+		<Preference android:title="@string/prefs_daily_goal" android:key="settings_daily_goal" />
+	</PreferenceCategory>
+   	<PreferenceCategory android:title="@string/settings_notifications">
 	    <CheckBoxPreference android:title="@string/pref_morning_enable"
 	        android:key="settings_enable_morning_note"
 	        android:defaultValue="true" />

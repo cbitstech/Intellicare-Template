@@ -16,7 +16,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 public class MoveMeActivity extends ConsentedActivity 
@@ -61,6 +61,15 @@ public class MoveMeActivity extends ConsentedActivity
 			public void onClick(View v) 
 			{
 				Intent intent = new Intent(me, HowToActivity.class);
+				me.startActivity(intent);
+			}
+		});
+
+        doitnow.setOnClickListener(new View.OnClickListener() 
+        {
+			public void onClick(View v) 
+			{
+				Intent intent = new Intent(me, DoItNowActivity.class);
 				me.startActivity(intent);
 			}
 		});
@@ -235,37 +244,6 @@ public class MoveMeActivity extends ConsentedActivity
 				});
 
 				builder.create().show();
-			}
-		});
-		
-		builder.create().show();
-	}
-
-	private void launchLessons() 
-	{
-		final MoveMeActivity me = this;
-		
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(R.string.title_learn_more);
-		
-		String[] items = { this.getString(R.string.item_lessons), this.getString(R.string.item_videos) };
-		
-		builder.setItems(items, new OnClickListener()
-		{
-			public void onClick(DialogInterface arg0, int which) 
-			{
-				switch(which)
-				{
-					case 0:
-						Intent lessonsIntent = new Intent(me, LessonsActivity.class);
-						
-						me.startActivity(lessonsIntent);
-
-						break;
-					case 1:
-						Toast.makeText(me, "ToDO: List ViDeOS", Toast.LENGTH_LONG).show();
-						break;
-				}
 			}
 		});
 		

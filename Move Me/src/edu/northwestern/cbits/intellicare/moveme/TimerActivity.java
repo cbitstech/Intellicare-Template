@@ -45,6 +45,13 @@ public class TimerActivity extends ConsentedActivity
         
         actionBar.setTitle(R.string.title_exercise_timer);
         
+        int remaining = MoveProvider.remainingTime(this) / (60 * 1000);
+        
+        if (remaining != 1)
+        	actionBar.setSubtitle(this.getString(R.string.subtitle_remaining_minutes, remaining));
+        else
+        	actionBar.setSubtitle(R.string.subtitle_remaining_minute);
+        
         final TimerActivity me = this;
         
         Button finish = (Button) this.findViewById(R.id.action_finish_exercise);
@@ -61,7 +68,7 @@ public class TimerActivity extends ConsentedActivity
 				{
 					public void onClick(DialogInterface arg0, int which) 
 					{
-						TimerActivity._postMood  = which - 3;
+						TimerActivity._postMood  = 3 - which;
 					}
 				});
 				
@@ -96,7 +103,7 @@ public class TimerActivity extends ConsentedActivity
 			{
 				public void onClick(DialogInterface arg0, int which) 
 				{
-					TimerActivity._preMood = which - 3;
+					TimerActivity._preMood = 3 - which;
 				}
 			});
 			

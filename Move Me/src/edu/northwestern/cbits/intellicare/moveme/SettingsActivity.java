@@ -3,6 +3,7 @@ package edu.northwestern.cbits.intellicare.moveme;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
@@ -22,6 +23,7 @@ import android.preference.PreferenceScreen;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.NumberPicker;
 import android.widget.TimePicker;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
@@ -99,6 +101,17 @@ public class SettingsActivity extends PreferenceActivity
 	public static final String OAUTH_FITBIT_SECRET = "oauth_fitbit_secret";
 
 	public static final boolean SETTING_FITBIT_ENABLED_DEFAULT = false;
+
+	public static final boolean SUNDAY_ENABLED_DEFAULT = false;
+	public static final boolean MONDAY_ENABLED_DEFAULT = true;
+	public static final boolean TUESDAY_ENABLED_DEFAULT = true;
+	public static final boolean WEDNESDAY_ENABLED_DEFAULT = true;
+	public static final boolean THURSDAY_ENABLED_DEFAULT = true;
+	public static final boolean FRIDAY_ENABLED_DEFAULT = true;
+	public static final boolean SATURDAY_ENABLED_DEFAULT = false;
+	
+	public static final String SETTING_DAILY_GOAL = "settings_daily_goal";
+	public static final int SETTING_DAILY_GOAL_DEFAULT = 30;
 	
 	@SuppressWarnings("deprecation")
 	public void onCreate(Bundle savedInstanceState)
@@ -312,6 +325,18 @@ public class SettingsActivity extends PreferenceActivity
 			}
 		});
 
+		final Preference dailyGoal = this.findPreference(SettingsActivity.SETTING_DAILY_GOAL);
+		
+		dailyGoal.setOnPreferenceClickListener(new OnPreferenceClickListener()
+		{
+			public boolean onPreferenceClick(Preference arg0) 
+			{
+				me.setGoal();
+				
+				return true;
+			}
+		});
+
 		this.updateEnabled();
 	}
 	
@@ -410,13 +435,13 @@ public class SettingsActivity extends PreferenceActivity
 			timePicker.setCurrentMinute(prefs.getInt(minuteKey.toString(), SettingsActivity.SETTING_EVENING_MINUTE_DEFAULT));
 		}
 
-		sunday.setChecked(prefs.getBoolean(sundayKey.toString(), false));
-		monday.setChecked(prefs.getBoolean(mondayKey.toString(), true));
-		tuesday.setChecked(prefs.getBoolean(tuesdayKey.toString(), true));
-		wednesday.setChecked(prefs.getBoolean(wednesdayKey.toString(), true));
-		thursday.setChecked(prefs.getBoolean(thursdayKey.toString(), true));
-		friday.setChecked(prefs.getBoolean(fridayKey.toString(), true));
-		saturday.setChecked(prefs.getBoolean(saturdayKey.toString(), false));
+		sunday.setChecked(prefs.getBoolean(sundayKey.toString(), SettingsActivity.SUNDAY_ENABLED_DEFAULT));
+		monday.setChecked(prefs.getBoolean(mondayKey.toString(), SettingsActivity.MONDAY_ENABLED_DEFAULT));
+		tuesday.setChecked(prefs.getBoolean(tuesdayKey.toString(), SettingsActivity.TUESDAY_ENABLED_DEFAULT));
+		wednesday.setChecked(prefs.getBoolean(wednesdayKey.toString(), SettingsActivity.WEDNESDAY_ENABLED_DEFAULT));
+		thursday.setChecked(prefs.getBoolean(thursdayKey.toString(), SettingsActivity.THURSDAY_ENABLED_DEFAULT));
+		friday.setChecked(prefs.getBoolean(fridayKey.toString(), SettingsActivity.FRIDAY_ENABLED_DEFAULT));
+		saturday.setChecked(prefs.getBoolean(saturdayKey.toString(), SettingsActivity.SATURDAY_ENABLED_DEFAULT));
 
 		builder.setPositiveButton(R.string.action_schedule_reminder, new OnClickListener()
 		{
@@ -467,6 +492,55 @@ public class SettingsActivity extends PreferenceActivity
 
 		builder.create().show();
 
+	}
+	
+	private void setGoal()
+	{
+		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		int goal = prefs.getInt(SettingsActivity.SETTING_DAILY_GOAL, SettingsActivity.SETTING_DAILY_GOAL_DEFAULT);
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		
+		builder.setTitle(R.string.prompt_daily_goal);
+		
+		LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+	    View view = inflater.inflate(R.layout.view_daily_goal, null);
+
+	    final SettingsActivity me = this;
+	    
+		final NumberPicker activeMinutes = (NumberPicker) view.findViewById(R.id.picker_goal_minutes); 
+		
+		final NumberPicker.Formatter formatter = new NumberPicker.Formatter()
+		{
+			public String format(int value) 
+			{
+				if (value == 1)
+					return me.getString(R.string.format_picker_minute);
+
+				return me.getString(R.string.format_picker_minutes, value);
+			}
+		};
+		
+		activeMinutes.setMinValue(0);
+		activeMinutes.setMaxValue(120);
+		activeMinutes.setFormatter(formatter);
+		activeMinutes.setValue(goal);
+
+		builder.setView(view);
+
+		builder.setPositiveButton(R.string.action_close, new DialogInterface.OnClickListener() 
+		{
+			public void onClick(DialogInterface arg0, int arg1) 
+			{
+				Editor e = prefs.edit();
+				e.putInt(SettingsActivity.SETTING_DAILY_GOAL, activeMinutes.getValue());
+				e.commit();
+			}
+		});
+		
+		builder.create().show();
 	}
 
 	@SuppressWarnings("deprecation")

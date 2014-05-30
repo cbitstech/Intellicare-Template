@@ -14,7 +14,7 @@ import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 public class MainActivity extends ConsentedActivity 
 {
-    public static final Uri URI = Uri.parse("http://www.yahoo.com");
+    public static final Uri URI = Uri.parse("intellicare://moveme/main");
 
 	protected void onCreate(Bundle savedInstanceState) 
     {

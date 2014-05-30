@@ -11,11 +11,13 @@ import android.annotation.SuppressLint;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 
 public class MoveProvider extends ContentProvider 
@@ -223,6 +225,14 @@ public class MoveProvider extends ContentProvider
 
 	public static int goal(Context context, long timestamp) 
 	{
+		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		
+		int goal = prefs.getInt(SettingsActivity.SETTING_DAILY_GOAL, SettingsActivity.SETTING_DAILY_GOAL_DEFAULT);
+		
+		return goal * (1000 * 60);
+		
+		/*
+
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(timestamp);
 		cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -235,20 +245,32 @@ public class MoveProvider extends ContentProvider
 		cal.add(Calendar.DATE, 1);
 		
 		long endTime = cal.getTimeInMillis() - 1;
-		
-		String where = MoveProvider.FITBIT_TIMESTAMP + " >= ? AND " + MoveProvider.FITBIT_TIMESTAMP + " <= ?";
+
+		int count = 30 * (60 * 1000);
+
+		String where = MoveProvider.RECORDED + " >= ? AND " + MoveProvider.RECORDED + " <= ?";
 		String[] args = { "" + startTime, "" + endTime }; 
 		
-		Cursor c = context.getContentResolver().query(MoveProvider.FITBIT_URI, null, where, args, null);
-		
-		int count = 0;
+//		Cursor c = context.getContentResolver().query(MoveProvider.EXERCISES_URI, null, where, args, null);
+//
+//		if (c.moveToNext())
+//			count = c.getInt(c.getColumnIndex(MoveProvider.DURATION));
+//		
+//		c.close();
 
-		if (c.moveToNext())
-			count = c.getInt(c.getColumnIndex(MoveProvider.FITBIT_GOAL));
+		if (count == 0)
+		{
+			where = MoveProvider.FITBIT_TIMESTAMP + " >= ? AND " + MoveProvider.FITBIT_TIMESTAMP + " <= ?";
+			
+			Cursor c = context.getContentResolver().query(MoveProvider.FITBIT_URI, null, where, args, null);
+	
+			if (c.moveToNext())
+				count = c.getInt(c.getColumnIndex(MoveProvider.FITBIT_GOAL)) * (60 * 1000);
+			
+			c.close();
+		}
 		
-		c.close();
-		
-		return count;
+		return count; */
 	}
 
 	public static int progress(Context context, long timestamp) 
@@ -265,19 +287,69 @@ public class MoveProvider extends ContentProvider
 		cal.add(Calendar.DATE, 1);
 		
 		long endTime = cal.getTimeInMillis() - 1;
-		
-		String where = MoveProvider.FITBIT_TIMESTAMP + " >= ? AND " + MoveProvider.FITBIT_TIMESTAMP + " <= ?";
-		String[] args = { "" + startTime, "" + endTime }; 
-		
-		Cursor c = context.getContentResolver().query(MoveProvider.FITBIT_URI, null, where, args, null);
-		
+
 		int count = 0;
 
-		if (c.moveToNext())
-			count = c.getInt(c.getColumnIndex(MoveProvider.FITBIT_LOGGED));
+		String where = MoveProvider.RECORDED + " >= ? AND " + MoveProvider.RECORDED + " <= ?";
+		String[] args = { "" + startTime, "" + endTime }; 
+		
+		Cursor c = context.getContentResolver().query(MoveProvider.EXERCISES_URI, null, where, args, null);
+
+		while (c.moveToNext())
+			count += c.getInt(c.getColumnIndex(MoveProvider.DURATION));
 		
 		c.close();
 		
+		if (count == 0)
+		{
+			where = MoveProvider.FITBIT_TIMESTAMP + " >= ? AND " + MoveProvider.FITBIT_TIMESTAMP + " <= ?";
+			
+			c = context.getContentResolver().query(MoveProvider.FITBIT_URI, null, where, args, null);
+	
+			if (c.moveToNext())
+				count = c.getInt(c.getColumnIndex(MoveProvider.FITBIT_LOGGED)) * (60 * 1000);
+			
+			c.close();
+		}
+		
 		return count;
 	}
+	
+	public static int remainingTime(Context context)
+	{
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY, 12);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		
+		int offset = cal.get(Calendar.ZONE_OFFSET) + cal.get(Calendar.DST_OFFSET);
+		
+		cal.add(Calendar.DATE, -7);
+		
+		int total = 0;
+		int week = 0;
+
+		for (int i = 0; i < 7; i++)
+		{
+			long time = cal.getTimeInMillis() + offset;
+				
+			int complete = MoveProvider.progress(context, time);
+			int goal = MoveProvider.goal(context, time);
+			
+			total += goal;
+			week += complete;
+				
+			cal.add(Calendar.DATE, 1);
+		}
+		
+		int remaining = total - week;
+		
+		if (remaining < 0)
+			remaining = 0;
+		
+		return remaining;
+	}
+	
+	
 }

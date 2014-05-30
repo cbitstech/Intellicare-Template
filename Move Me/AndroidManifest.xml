@@ -20,17 +20,32 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+            <intent-filter>
+		        <action android:name="android.intent.action.VIEW" />
+        	    <category android:name="android.intent.category.DEFAULT" />
+	           	<category android:name="android.intent.category.BROWSABLE" />
+   				<data android:scheme="intellicare" android:host="moveme" android:pathPrefix="/main" />
+			</intent-filter>
+            </activity>
         <activity android:name=".CalendarActivity" android:label="@string/app_name" />
         <activity android:name=".DashboardActivity" android:label="@string/app_name" />
-        <!--  <activity android:name=".LessonsActivity" android:label="@string/app_name" /> -->
+        <activity android:name=".DoItNowActivity" android:label="@string/app_name" />
         <activity android:name=".MotivatorsActivity" android:label="@string/app_name" />
         <activity android:name=".MotivatorListActivity" android:label="@string/app_name" />
         <activity android:name=".GetMotivatedActivity" android:label="@string/app_name" />
         <activity android:name=".HowToActivity" android:label="@string/app_name" />
         <activity android:name=".LogActivity" android:label="@string/app_name" />
         <activity android:name=".LessonActivity" android:label="@string/app_name" />
-        <activity android:name=".ReminderActivity" android:label="@string/app_name" />
+        <activity android:name=".ReminderActivity" android:label="@string/app_name">
+            <intent-filter>
+		        <action android:name="android.intent.action.VIEW" />
+        	    <category android:name="android.intent.category.DEFAULT" />
+	           	<category android:name="android.intent.category.BROWSABLE" />
+   				<data android:scheme="intellicare" android:host="moveme" android:pathPrefix="/morning_reminder" />
+   				<data android:scheme="intellicare" android:host="moveme" android:pathPrefix="/afternoon_reminder" />
+  				<data android:scheme="intellicare" android:host="moveme" android:pathPrefix="/evening_reminder" />
+			</intent-filter>
+        </activity>
         <activity android:name=".IntroActivity" android:label="@string/app_name" />
         <activity android:name=".TimerActivity" android:label="@string/app_name" />
         <activity android:name=".MoveMeActivity" android:label="@string/app_name" />
