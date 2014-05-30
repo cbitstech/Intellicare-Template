@@ -95,7 +95,19 @@
     <string name="title_graph_note">Aspire</string>
     <string name="message_graph_note" formatted="false">You finished %d paths. Let\'s look at today\'s virtues.</string>
     <string name="message_graph_note_single">You finished one path. Let\'s look at today\'s virtues.</string>
-    
+
+    <string-array name="intro_content_titles">
+        <item>Page 1</item>
+        <item>Page 2</item>
+        <item>Page 3</item>
+    </string-array>
+
+    <string-array name="intro_content_urls">
+        <item>file:///android_asset/www/help_0.html</item>
+        <item>file:///android_asset/www/help_1.html</item>
+        <item>file:///android_asset/www/help_2.html</item>
+    </string-array>
+
     <!-- Database -->
     
    	<string name="db_create_cards_table">CREATE TABLE IF NOT EXISTS cards(_id INTEGER PRIMARY KEY, name TEXT, description TEXT);</string>

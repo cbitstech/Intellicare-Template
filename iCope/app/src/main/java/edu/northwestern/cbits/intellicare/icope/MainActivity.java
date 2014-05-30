@@ -74,13 +74,7 @@ public class MainActivity extends ConsentedActivity
 		final List<Reminder> reminders = CopeContentProvider.listUpcomingReminders(this);
 		
 		final MainActivity me = this;
-		
-	  //  String[] items = new String[8];
-		
-	/*	if (reminders.size() == 1)
-			items = new String[1];
-		else if (reminders.size() == 0)
-			items = new String[0]; */
+
 		
 		ArrayAdapter<Reminder> adapter = new ArrayAdapter<Reminder>(this, R.layout.row_reminder, reminders)
 		{
@@ -137,71 +131,51 @@ public class MainActivity extends ConsentedActivity
                     cardCursor.close();
 
                     return convertView;
-
-	/*			else if(reminders.size() > 1)
-				{
-					if (convertView == null)
-					{
-	    				LayoutInflater inflater = LayoutInflater.from(me);
-	    				convertView = inflater.inflate(R.layout.row_reminder_rest, parent, false);
-					}
-	
-					TextView remainder = (TextView) convertView.findViewById(R.id.label_remainder);
-					
-					if (reminders.size() == 2)
-						remainder.setText(R.string.message_single_remainder);
-					else
-						remainder.setText(me.getString(R.string.message_remainders, reminders.size() - 1));
-					
-					return convertView;
-				} */
             }
 		};
 
 		ActionBar actionBar = this.getSupportActionBar();
 		actionBar.setTitle(R.string.app_name);
-		
+
 		list.setAdapter(adapter);
-		
+
 		list.setOnItemClickListener(new OnItemClickListener()
 		{
-			public void onItemClick(AdapterView<?> parent, View row, int position, long id) 
+			public void onItemClick(AdapterView<?> parent, View row, int position, long id)
 			{
 				if (position == 0)
 				{
 					Reminder r = reminders.get(0);
-					
+
 					Intent intent = new Intent(me, ViewCardActivity.class);
 					intent.putExtra(ViewCardActivity.REMINDER_ID, r.reminderId);
-					
+
 					HashMap<String, Object> payload = new HashMap<String, Object>();
 					payload.put("reminder_id", r.reminderId);
 					LogManager.getInstance(me).log("viewed_reminder", payload);
-					
+
 					me.startActivity(intent);
 				}
 			}
 		});
-		
+
 		list.setOnItemLongClickListener(new OnItemLongClickListener()
 		{
-			public boolean onItemLongClick(AdapterView<?> arg0, View view, final int position, long id)
+			public boolean onItemLongClick(AdapterView<?> arg0, View row, final int position, long id)
 			{
-				if (position == 0)
-				{
 					AlertDialog.Builder builder = new AlertDialog.Builder(me);
 					builder.setTitle(R.string.title_delete_reminder);
 					builder.setMessage(R.string.message_delete_reminder);
-					
+
 					builder.setPositiveButton(R.string.action_yes, new OnClickListener()
 					{
-						public void onClick(DialogInterface arg0, int arg1) 
+						public void onClick(DialogInterface arg0, int arg1)
 						{
 							Reminder r = reminders.get(position);
-							
+
 							String where = CopeContentProvider.ID + " = ?";
 							String[] args = { "" + r.reminderId };
-							
+
 							me.getContentResolver().delete(CopeContentProvider.REMINDER_URI, where, args);
 
 							HashMap<String, Object> payload = new HashMap<String, Object>();
@@ -211,22 +185,21 @@ public class MainActivity extends ConsentedActivity
 							me.refresh();
 						}
 					});
-					
+
 					builder.setNegativeButton(R.string.action_no, new OnClickListener()
 					{
-						public void onClick(DialogInterface arg0, int arg1) 
+						public void onClick(DialogInterface arg0, int arg1)
 						{
 
 						}
 					});
-					
+
 					builder.create().show();
-				}
-				
+
 				return true;
 			}
 		});
-		
+
 		list.setEmptyView(this.findViewById(R.id.view_empty));
 	}
 	
