@@ -2,7 +2,6 @@ package edu.northwestern.cbits.intellicare.moveme;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,8 +20,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.database.Cursor;
+import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.util.Log;
+
 import edu.northwestern.cbits.intellicare.ScheduleHelper;
 import edu.northwestern.cbits.intellicare.StatusNotificationManager;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
@@ -45,7 +46,7 @@ public class NotificationHelper extends ScheduleHelper
 		return "edu.northwestern.cbits.intellicare.moveme.ACTION_TIMED_JOB";
 	}
 
-	public void runScheduledTask(Context context) 
+	public void runScheduledTask(final Context context) 
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		
@@ -60,7 +61,7 @@ public class NotificationHelper extends ScheduleHelper
 
 		int messagesResource = -1;
 		
-		// TODO: Replace verbatim true/false below with references to SettingsActivity constants...
+		int timeOfDay = -1;
 		
 		if (prefs.getBoolean(SettingsActivity.SETTING_MORNING_ENABLED, SettingsActivity.SETTING_MORNING_ENABLED_DEFAULT))
 		{
@@ -69,25 +70,25 @@ public class NotificationHelper extends ScheduleHelper
 			switch (c.get(Calendar.DAY_OF_WEEK))
 			{
 				case Calendar.SUNDAY:
-					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_MORNING_SUNDAY, false);
+					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_MORNING_SUNDAY, SettingsActivity.SUNDAY_ENABLED_DEFAULT);
 					break;
 				case Calendar.MONDAY:
-					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_MORNING_MONDAY, true);
+					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_MORNING_MONDAY, SettingsActivity.MONDAY_ENABLED_DEFAULT);
 					break;
 				case Calendar.TUESDAY:
-					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_MORNING_TUESDAY, true);
+					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_MORNING_TUESDAY, SettingsActivity.TUESDAY_ENABLED_DEFAULT);
 					break;
 				case Calendar.WEDNESDAY:
-					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_MORNING_WEDNESDAY, true);
+					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_MORNING_WEDNESDAY, SettingsActivity.WEDNESDAY_ENABLED_DEFAULT);
 					break;
 				case Calendar.THURSDAY:
-					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_MORNING_THURSDAY, true);
+					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_MORNING_THURSDAY, SettingsActivity.THURSDAY_ENABLED_DEFAULT);
 					break;
 				case Calendar.FRIDAY:
-					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_MORNING_FRIDAY, true);
+					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_MORNING_FRIDAY, SettingsActivity.FRIDAY_ENABLED_DEFAULT);
 					break;
 				case Calendar.SATURDAY:
-					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_MORNING_SATURDAY, false);
+					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_MORNING_SATURDAY, SettingsActivity.SATURDAY_ENABLED_DEFAULT);
 					break;
 			}
 
@@ -95,7 +96,11 @@ public class NotificationHelper extends ScheduleHelper
 			int reminderMinute = prefs.getInt(SettingsActivity.REMINDER_MORNING_MINUTE, SettingsActivity.SETTING_MORNING_MINUTE_DEFAULT);
 
 			if (remindNow && reminderHour == c.get(Calendar.HOUR_OF_DAY) && reminderMinute == c.get(Calendar.MINUTE))
+			{
 				messagesResource = R.array.array_morning_messages;
+				
+				timeOfDay = ReminderActivity.MORNING;
+			}
 		}
 
 		if (prefs.getBoolean(SettingsActivity.SETTING_AFTERNOON_ENABLED, SettingsActivity.SETTING_AFTERNOON_ENABLED_DEFAULT))
@@ -105,25 +110,25 @@ public class NotificationHelper extends ScheduleHelper
 			switch (c.get(Calendar.DAY_OF_WEEK))
 			{
 				case Calendar.SUNDAY:
-					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_AFTERNOON_SUNDAY, false);
+					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_AFTERNOON_SUNDAY, SettingsActivity.SUNDAY_ENABLED_DEFAULT);
 					break;
 				case Calendar.MONDAY:
-					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_AFTERNOON_MONDAY, true);
+					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_AFTERNOON_MONDAY, SettingsActivity.MONDAY_ENABLED_DEFAULT);
 					break;
 				case Calendar.TUESDAY:
-					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_AFTERNOON_TUESDAY, true);
+					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_AFTERNOON_TUESDAY, SettingsActivity.TUESDAY_ENABLED_DEFAULT);
 					break;
 				case Calendar.WEDNESDAY:
-					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_AFTERNOON_WEDNESDAY, true);
+					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_AFTERNOON_WEDNESDAY, SettingsActivity.WEDNESDAY_ENABLED_DEFAULT);
 					break;
 				case Calendar.THURSDAY:
-					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_AFTERNOON_THURSDAY, true);
+					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_AFTERNOON_THURSDAY, SettingsActivity.THURSDAY_ENABLED_DEFAULT);
 					break;
 				case Calendar.FRIDAY:
-					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_AFTERNOON_FRIDAY, true);
+					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_AFTERNOON_FRIDAY, SettingsActivity.FRIDAY_ENABLED_DEFAULT);
 					break;
 				case Calendar.SATURDAY:
-					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_AFTERNOON_SATURDAY, false);
+					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_AFTERNOON_SATURDAY, SettingsActivity.SATURDAY_ENABLED_DEFAULT);
 					break;
 			}
 
@@ -131,7 +136,11 @@ public class NotificationHelper extends ScheduleHelper
 			int reminderMinute = prefs.getInt(SettingsActivity.REMINDER_AFTERNOON_MINUTE, SettingsActivity.SETTING_AFTERNOON_MINUTE_DEFAULT);
 			
 			if (remindNow && reminderHour == c.get(Calendar.HOUR_OF_DAY) && reminderMinute == c.get(Calendar.MINUTE))
+			{
 				messagesResource = R.array.array_afternoon_messages;
+				
+				timeOfDay = ReminderActivity.AFTERNOON;
+			}
 		}
 
 		if (prefs.getBoolean(SettingsActivity.SETTING_EVENING_ENABLED, SettingsActivity.SETTING_EVENING_ENABLED_DEFAULT))
@@ -141,25 +150,25 @@ public class NotificationHelper extends ScheduleHelper
 			switch (c.get(Calendar.DAY_OF_WEEK))
 			{
 				case Calendar.SUNDAY:
-					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_EVENING_SUNDAY, false);
+					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_EVENING_SUNDAY, SettingsActivity.SUNDAY_ENABLED_DEFAULT);
 					break;
 				case Calendar.MONDAY:
-					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_EVENING_MONDAY, true);
+					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_EVENING_MONDAY, SettingsActivity.MONDAY_ENABLED_DEFAULT);
 					break;
 				case Calendar.TUESDAY:
-					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_EVENING_TUESDAY, true);
+					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_EVENING_TUESDAY, SettingsActivity.TUESDAY_ENABLED_DEFAULT);
 					break;
 				case Calendar.WEDNESDAY:
-					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_EVENING_WEDNESDAY, true);
+					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_EVENING_WEDNESDAY, SettingsActivity.WEDNESDAY_ENABLED_DEFAULT);
 					break;
 				case Calendar.THURSDAY:
-					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_EVENING_THURSDAY, true);
+					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_EVENING_THURSDAY, SettingsActivity.THURSDAY_ENABLED_DEFAULT);
 					break;
 				case Calendar.FRIDAY:
-					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_EVENING_FRIDAY, true);
+					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_EVENING_FRIDAY, SettingsActivity.FRIDAY_ENABLED_DEFAULT);
 					break;
 				case Calendar.SATURDAY:
-					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_EVENING_SATURDAY, false);
+					remindNow = prefs.getBoolean(SettingsActivity.REMINDER_EVENING_SATURDAY, SettingsActivity.SATURDAY_ENABLED_DEFAULT);
 					break;
 			}
 
@@ -167,12 +176,19 @@ public class NotificationHelper extends ScheduleHelper
 			int reminderMinute = prefs.getInt(SettingsActivity.REMINDER_EVENING_MINUTE, SettingsActivity.SETTING_EVENING_MINUTE_DEFAULT);
 			
 			if (remindNow && reminderHour == c.get(Calendar.HOUR_OF_DAY) && reminderMinute == c.get(Calendar.MINUTE))
+			{
 				messagesResource = R.array.array_evening_messages;
+				
+				timeOfDay = ReminderActivity.EVENING;
+			}
 		}
 		
 		if (messagesResource != -1)
 		{
-			long today = System.currentTimeMillis() / (24 * 60 * 60 * 1000);
+			now = System.currentTimeMillis();
+			long day = (24 * 60 * 60 * 1000);
+			
+			long today = now / day;
 			
 			String[] messages = context.getResources().getStringArray(messagesResource);
 			
@@ -188,6 +204,38 @@ public class NotificationHelper extends ScheduleHelper
 			Editor e = prefs.edit();
 			e.putLong(NotificationHelper.LAST_NOTE, now);
 			e.commit();
+			
+			String where = MoveProvider.RECORDED + " > ?";
+			String[] args = { "" + (now - (day * 2)) };
+			
+			Cursor cursor = context.getContentResolver().query(MoveProvider.EXERCISES_URI, null, where, args, null);
+			
+			if (cursor.getCount() == 0)
+			{
+				intent = new Intent(context, ReminderActivity.class);
+				intent.putExtra(ReminderActivity.TIME_OF_DAY, timeOfDay);
+				pi = PendingIntent.getActivity(context, 0, intent, 0);
+				
+				Uri u = ReminderActivity.MORNING_REMINDER_URI;
+				title = context.getString(R.string.title_morning_reminder);
+				
+				if (timeOfDay == ReminderActivity.AFTERNOON)
+				{
+					u = ReminderActivity.AFTERNOON_REMINDER_URI;
+					title = context.getString(R.string.title_afternoon_reminder);
+				}
+				else if (timeOfDay == ReminderActivity.EVENING)
+				{
+					u = ReminderActivity.EVENING_REMINDER_URI;
+					title = context.getString(R.string.title_evening_reminder);
+				}
+
+				message = context.getString(R.string.message_exercise_reminder);
+				
+				StatusNotificationManager.getInstance(context).notifyBigText(97534, R.drawable.ic_notification, title, message, pi, u);
+			}
+			
+			cursor.close();
 		}
 		
 		this.updateFitbitGoals(context);
@@ -259,8 +307,6 @@ public class NotificationHelper extends ScheduleHelper
 							
 							String where = MoveProvider.FITBIT_TIMESTAMP + " >= ? AND " + MoveProvider.FITBIT_TIMESTAMP + " <= ?";
 							String[] args = { "" + (timestamp - (12 * 60 * 60 * 1000)), "" + (timestamp + (12 * 60 * 60 * 1000)) }; 
-							
-							Log.e("MM", "LOGGING " + logged + " /  " + goal + " FOR " + (new Date(timestamp)));
 							
 							context.getContentResolver().delete(MoveProvider.FITBIT_URI, where, args);
 							

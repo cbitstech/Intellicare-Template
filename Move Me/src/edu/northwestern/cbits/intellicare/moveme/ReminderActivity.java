@@ -1,5 +1,6 @@
 package edu.northwestern.cbits.intellicare.moveme;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -16,11 +17,15 @@ import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 public class ReminderActivity extends ConsentedActivity 
 {
-	private static final String TIME_OF_DAY = "time_of_day";
+	public static final String TIME_OF_DAY = "time_of_day";
 
-	private static final int MORNING = 0;
-	protected static final int AFTERNOON = 1;
-	protected static final int EVENING = 2;
+	public static final int MORNING = 0;
+	public static final int AFTERNOON = 1;
+	public static final int EVENING = 2;
+
+	public static final Uri MORNING_REMINDER_URI = Uri.parse("intellicare://moveme/morning_reminder");
+	public static final Uri AFTERNOON_REMINDER_URI = Uri.parse("intellicare://moveme/afternoon_reminder");
+	public static final Uri EVENING_REMINDER_URI = Uri.parse("intellicare://moveme/evening_reminder");
 
 	private Menu _menu;
 
@@ -32,9 +37,9 @@ public class ReminderActivity extends ConsentedActivity
 		
 		final int timeOfDay = this.getIntent().getIntExtra(ReminderActivity.TIME_OF_DAY, ReminderActivity.MORNING);
 
-		if (timeOfDay == ReminderActivity.AFTERNOON)
+		if (timeOfDay == ReminderActivity.AFTERNOON || ReminderActivity.AFTERNOON_REMINDER_URI.equals(this.getIntent().getData()))
 			this.getSupportActionBar().setTitle(R.string.title_afternoon_reminder);
-		else if (timeOfDay == ReminderActivity.EVENING)
+		else if (timeOfDay == ReminderActivity.EVENING || ReminderActivity.EVENING_REMINDER_URI.equals(this.getIntent().getData()))
 			this.getSupportActionBar().setTitle(R.string.title_evening_reminder);
 		else
 			this.getSupportActionBar().setTitle(R.string.title_morning_reminder);
@@ -176,13 +181,6 @@ public class ReminderActivity extends ConsentedActivity
 				}
 			} 
 		});
-		
-//		this.getActionBar().setTitle(this._titles[0]);
-//		
-//		if (this._subtitles != null)
-//			this.getActionBar().setSubtitle(this._subtitles[0]);
-//		else
-//			this.getActionBar().setSubtitle(this.getString(R.string.subtitle_pages, 1, this._titles.length));
 	}
 
     public boolean onCreateOptionsMenu(Menu menu) 

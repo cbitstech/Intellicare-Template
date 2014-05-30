@@ -79,8 +79,8 @@ public class DashboardActivity extends ConsentedActivity
 		
 		long now = System.currentTimeMillis();
 		
-		int total = MoveProvider.goal(this, now);
-		int today = MoveProvider.progress(this, now);
+		int total = MoveProvider.goal(this, now) / (60 * 1000);
+		int today = MoveProvider.progress(this, now) / (60 * 1000);
 		
 		label.setText(this.getString(R.string.label_today, today, total));
 	}
@@ -128,7 +128,7 @@ public class DashboardActivity extends ConsentedActivity
 		
 		TextView label = (TextView) this.findViewById(R.id.label_week_progress);
 
-		label.setText(this.getString(R.string.label_week, week, total));
+		label.setText(this.getString(R.string.label_week, week / (60 * 1000), total / (60 * 1000)));
     }
     
 	private static String generateGraph(Context context) 
@@ -210,14 +210,6 @@ public class DashboardActivity extends ConsentedActivity
 		
 		try 
 		{
-			if (today > 0)
-			{
-				JSONObject todayObj = new JSONObject();
-				todayObj.put("value", today);
-				
-				values.put(todayObj);
-			}
-			
 			int remaining = total - today;
 			
 			if (remaining < 0)
@@ -229,6 +221,14 @@ public class DashboardActivity extends ConsentedActivity
 				totalObj.put("value", remaining);
 				
 				values.put(totalObj);
+			}
+
+			if (today > 0)
+			{
+				JSONObject todayObj = new JSONObject();
+				todayObj.put("value", today);
+				
+				values.put(todayObj);
 			}
 		} 
 		catch (JSONException e) 

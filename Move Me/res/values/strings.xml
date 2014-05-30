@@ -82,7 +82,7 @@
         <item>Other</item>
  	</string-array>
 
-    <string name="event_name" formatted="false">Move Me: %s</string>
+    <string name="event_name" formatted="false">MoveME: %s</string>
     <string name="event_description">(Created by MoveME)</string>
     <string name="exercise_unknown">Unknown Exercise</string>
 
@@ -90,7 +90,7 @@
     <string name="message_calendar_error">Calendar scheduling is only available on Android 4.0 and newer devices.</string>
     
     <string name="action_toggle">Toggle Timer</string>
-    <string name="title_exercise_timer">Timer</string>
+    <string name="title_exercise_timer">Exercise Timer</string>
 
     <string name="title_pre_mood">Select Pre-Exercise Mood</string>
     <string name="title_post_mood">Select Post-Exercise Mood</string>
@@ -447,6 +447,7 @@
         <item>I need to get to sleep early</item>
         <item>I can just put it off until morning</item>
     </string-array>
+    
     <string-array name="evening_two">
         <item>Consider going straight to the gym from work/school.</item>
         <item>If you go home, avoid your low motivation zones (i.e., couch, bed).</item>
@@ -456,4 +457,86 @@
     <string name="title_morning_reminder">Morning Reminder</string>
     <string name="title_afternoon_reminder">Afternoon Reminder</string>
     <string name="title_evening_reminder">Evening Reminder</string>
+    
+    <string name="message_exercise_reminder">It\'s been more than two days since your last logged exercise session. Tap here for some help&#8230;</string>
+
+    <string-array name="external_resource_titles">
+        <item>Challenges*</item> 
+        <item>30 Day Abs Challenge</item> 
+        <item>30 Day Legs Challenge</item> 
+        <item>30 Day Arms Challenge</item> 
+        <item>30 Day Squat Challenge</item> 
+        <item>How To*</item> 
+        <item>The perfect plank</item> 
+        <item>A good squat</item> 
+        <item>A proper lunge</item> 
+        <item>Three good crunches</item> 
+        <item>12 Minute Seated Core Workout</item> 
+        <item>14 Minute Basic Yoga</item> 
+        <item>10 Minute Cardio Kickboxing Workout</item> 
+        <item>2 Moves for a Better Butt</item> 
+        <item>9 Minute Arms and Shoulders</item> 
+        <item>Depression Resources*</item>
+        <item>Short film on depression</item> 
+        <item>The Road Back - depression and teens</item> 
+        <item>Six minutes on CBT for depression</item> 
+        <item>Automatic Thoughts - Wellcast</item> 
+        <item>How to Stop Procrastinating - Wellcast</item>
+        <item>How to Break Bad Habits - Wellcast</item>
+        <item>5 Good Reasons to Go for a Less Intense Workout</item>
+        <item>Nike Training Club Videos</item>
+        <item>Lateral shuffle into split jumps</item>
+        <item>Sculpting workout</item>
+        <item>Suitcases</item>
+        <item>Pike Butt Pushups</item>
+        <item>Side V-Ups with Leg Kicks</item>
+        <item>Supermans</item>
+        <item>Fun Videos*</item>
+        <item>Ew! with Michelle Obama</item>
+    </string-array>
+
+    <string-array name="external_resource_urls">
+        <item></item>
+        <item>https://www.youtube.com/watch?v=Tufb3aLdt8M</item> 
+        <item>https://www.youtube.com/watch?v=VTTKxJdEuOM</item> 
+        <item>https://www.youtube.com/watch?v=ygr9PrBireU</item> 
+        <item>https://www.youtube.com/watch?v=PMcj3CCIDYc</item> 
+        <item></item>
+        <item>http://greatist.com/fitness/perfect-plank</item> 
+        <item>http://www.youtube.com/watch?v=aPYCiuiB4PA</item> 
+        <item>http://www.youtube.com/watch?v=m_RYVmpWDq4</item> 
+        <item>http://www.wikihow.com/Do-Crunches</item> 
+        <item>http://www.sparkpeople.com/resource/videos-detail.asp?video=42</item> 
+        <item>http://www.sparkpeople.com/resource/videos-detail.asp?video=27</item> 
+        <item>http://www.sparkpeople.com/resource/videos-detail.asp?video=61</item> 
+        <item>http://www.sparkpeople.com/resource/videos-detail.asp?video=23</item> 
+        <item>http://www.sparkpeople.com/resource/videos-detail.asp?video=39</item> 
+        <item></item>
+        <item>http://www.youtube.com/playlist?list=PL06049559DF3C9488</item>
+        <item>http://www.youtube.com/watch?v=Zn_5V8zfUT0</item>
+        <item>http://www.youtube.com/watch?v=hlmUlCDbTgA</item>
+        <item>http://www.youtube.com/watch?v=tqvIl-5rqhE</item>
+        <item>http://www.youtube.com/watch?v=HXFVrB98yKQ</item>
+        <item>http://www.youtube.com/watch?v=kVIxpugcgwk</item>
+        <item>http://www.youtube.com/watch?v=pb59vFaGCcQ</item>
+        <item>https://www.youtube.com/watch?v=4mwCxAilEAs</item> 
+        <item>https://www.youtube.com/watch?v=HRjSVNYlwBE</item> 
+        <item>https://www.youtube.com/watch?v=ds3wHkwiuCo</item> 
+        <item>https://www.youtube.com/watch?v=m2zRA5zCA6M</item> 
+        <item>https://www.youtube.com/watch?v=Qvcx7Y4caQE</item>
+        <item>https://www.youtube.com/watch?v=OnFVFfAImEg</item>
+        <item>http://www.huffingtonpost.com/2014/02/24/moderate-low-intensity-workout-exercise_n_4818063.html</item>
+        <item></item>
+        <item>https://www.youtube.com/watch?v=HOK4aBYNh3s</item>
+    </string-array>
+    
+    <string name="title_do_it_now">Do It Now</string>
+    <string name="subtitle_do_it_now">Videos &amp; web pages to help you out</string>
+    
+    <string name="subtitle_remaining_minutes" formatted="false">%d minutes left (weekly goal)</string>
+    <string name="subtitle_remaining_minute">1 minute left (weekly goal)</string>
+    
+    <string name="prefs_daily_goal">Daily Goal</string>
+    <string name="prompt_daily_goal">Daily Goal</string>
+    <string name="settings_goals">Goals</string>
 </resources>
