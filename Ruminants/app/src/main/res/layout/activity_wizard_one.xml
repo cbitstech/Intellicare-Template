@@ -10,7 +10,7 @@
             android:layout_width="match_parent"
             android:layout_height="188dp"
             android:id="@+id/imageView"
-            android:src="@drawable/logging"
+            android:src="@drawable/writing"
             android:longClickable="false" />
 
         <TextView android:layout_weight="1"
