@@ -397,4 +397,63 @@
     
     <string name="label_today" formatted="false">Today: %d of %d minutes</string>
     <string name="label_week" formatted="false">This Week: %d of %d minutes</string>
+
+    <string name="action_help">Help</string>
+    
+    <string name="reminder_morning_one">Here are some common motivation-sapping thoughts for morning exercise. Have you had any of these thoughts before?</string>
+    <string name="reminder_morning_two">Remind yourself of these advantages of early morning exercise:</string>
+    <string name="reminder_afternoon_one">Here are some common motivation-sapping thoughts for afternoon exercise. Have you had any of these thoughts before?</string>
+    <string name="reminder_afternoon_two">Remember that afternoon exercise may enhance your problem-solving levels while reducing your stress. \n\nHere are some more positive self-talk suggestions instead:</string>
+    <string name="reminder_evening_one">Here are some common motivation-sapping thoughts for evening exercise. Have you had any of these thoughts today?</string>
+    <string name="reminder_evening_two">Here are some tips and tricks to help you manage these thoughts:</string>
+    
+    <string-array name="morning_one">
+        <item>I\'ll skip my workout just this one time</item> 
+        <item>It is too cold to get out of bed</item>
+        <item>Sleep will be better for my mood</item>
+        <item>Missing my workout once won\'t matter</item>
+        <item>I\'ll just turn over in bed once more</item>
+        <item>10 more minutes in bed won\'t matter</item>
+        <item>I am too tired to exercise well</item>
+        <item>I can always exercise this evening</item>
+    </string-array>
+    
+    <string-array name="morning_two">
+        <item>Exercise is an excellent way to start the day</item>
+      	<item>Early morning time is excellent "me" time</item>
+		<item>All day you get to enjoy the sense of accomplishment of having already exercised</item>
+    </string-array>
+    
+    <string-array name="afternoon_one">
+        <item>I am working well, I shouldn\'t stop</item>
+        <item>I am too busy now</item>
+        <item>I have to finish this now</item>
+        <item>I will get just one more thing done</item>
+        <item>I better not take a break till later</item> 
+        <item>I need to digest lunch first</item>
+        <item>I don\'t have time right now</item>
+    </string-array>
+    <string-array name="afternoon_two">
+        <item>I am taking a break for some activity to have a fresh mind for my afternoon job demands.</item>
+        <item>I know that I feel different after exercise; let me see what work feels like under those conditions.</item>
+        <item>Activity helps me manage stress and boost my mood - and is one way I am helping myself be more productive.</item>
+    </string-array>
+
+    <string-array name="evening_one">
+        <item>I am too tired</item> 
+        <item>It is about to get dark</item>
+        <item>It will be too cold</item>
+        <item>I just ate dinner and need to digest</item> 
+        <item>I need to get to sleep early</item>
+        <item>I can just put it off until morning</item>
+    </string-array>
+    <string-array name="evening_two">
+        <item>Consider going straight to the gym from work/school.</item>
+        <item>If you go home, avoid your low motivation zones (i.e., couch, bed).</item>
+        <item>Put your workout clothes on as soon as you get home. Don’t sit - just get out the door!</item>
+    </string-array>
+    
+    <string name="title_morning_reminder">Morning Reminder</string>
+    <string name="title_afternoon_reminder">Afternoon Reminder</string>
+    <string name="title_evening_reminder">Evening Reminder</string>
 </resources>
