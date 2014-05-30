@@ -1,7 +1,0 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:robot="http://schemas.android.com/apk/res-auto"  xmlns:ic="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/action_profile_save"
-        android:showAsAction="always"
-        android:title="@string/action_save_profile"
-        ic:title="@string/action_save_profile"/>
-</menu>

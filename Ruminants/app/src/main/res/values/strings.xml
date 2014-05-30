@@ -19,11 +19,8 @@
     <string name="title_settings">Settings</string>
 
     <!-- Notification text -->
-    <string name="profile_note_title">Update your profile</string>
-    <string name="profile_note_message">If you\'ve been ruminating, let us know.</string>
-
-    <string name="help_note_title">ru-MOO-nating?</string>
-    <string name="help_note_message">Try a rumination tool.</string>
+    <string name="help_note_title">MOO! Check in with Cows are Ruminants?</string>
+    <string name="help_note_message">Tap to go to your log, or swipe to dismiss.</string>
 
     <!-- Main menu -->
     <string name="tool_didactic_content">View random strategy</string>
@@ -126,7 +123,7 @@
         <item>How now, Bessie the cow?</item>
         <item>I feel more blue than a blueberry.</item>
         <item>Uh oh... worrying again?</item>
-        <item>\I can\'t help it!</item>
+        <item>I can\'t help it!</item>
         <item>We\'ve talked about this -- I have a few thoughts.</item>
         <item>I made this app for you.</item>
         <item>An appetizer? I\'m not very hungry.</item>

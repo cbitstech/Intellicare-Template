@@ -3,6 +3,7 @@ package edu.northwestern.cbits.intellicare.ruminants;
 import java.security.SecureRandom;
 import java.util.Random;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,7 +33,7 @@ public class PagedDidacticActivity extends ConsentedActivity
     {
     	super.onCreate(savedInstanceState);
 
-    	this.setContentView(R.layout.activity_paged_intro);
+    	this.setContentView(R.layout.activity_paged_content);
     	
     	this.getSupportActionBar().setSubtitle(R.string.app_name);
     	
@@ -74,13 +75,13 @@ public class PagedDidacticActivity extends ConsentedActivity
 			
 			public Object instantiateItem (ViewGroup container, int position)
 			{
-				LayoutInflater inflater = (LayoutInflater) me.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                LayoutInflater inflater = (LayoutInflater) me.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-				View view = inflater.inflate(R.layout.view_paged_content, null);
-		        
-		        TextView content = (TextView) view.findViewById(R.id.content_text);
+                View view = inflater.inflate(R.layout.view_paged_content, null);
 
-		        content.setText(me._content[position]);
+                TextView content = (TextView) view.findViewById(R.id.content_text);
+
+                content.setText(me._content[position]);
 
                 int[] chickens = {R.drawable.rumination_7, R.drawable.specific_1, R.drawable.specific_4, R.drawable.specific_11};
 
@@ -132,6 +133,7 @@ public class PagedDidacticActivity extends ConsentedActivity
 				{
 					next.setVisible(false);
 					done.setVisible(true);
+
 				}
 				
 		        // TODO: Pull out into strings file...
@@ -179,6 +181,12 @@ public class PagedDidacticActivity extends ConsentedActivity
             	return true;
 
             case R.id.action_done:
+
+                ContentValues values = new ContentValues();
+
+                values.put(RuminantsContentProvider.DIDACTIC_TIMESTAMP, System.currentTimeMillis());
+                this.getContentResolver().insert(RuminantsContentProvider.DIDACTIC_USE_URI, values);
+
                 Intent mainIntent = new Intent(this, MainActivity.class);
                 this.startActivity(mainIntent);
 

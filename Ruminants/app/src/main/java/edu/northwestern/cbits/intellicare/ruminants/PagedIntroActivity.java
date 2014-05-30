@@ -29,7 +29,7 @@ public class PagedIntroActivity extends ConsentedActivity
     {
     	super.onCreate(savedInstanceState);
 
-    	this.setContentView(R.layout.activity_paged_intro);
+    	this.setContentView(R.layout.activity_paged_content);
     	
     	this.getSupportActionBar().setSubtitle(R.string.app_name);
     	
@@ -80,9 +80,9 @@ public class PagedIntroActivity extends ConsentedActivity
                         R.drawable.intent_4, R.drawable.intent_5, R.drawable.intent_6,
                         R.drawable.rumination_1, R.drawable.rumination_2, R.drawable.rumination_3,
                         R.drawable.rumination_4, R.drawable.rumination_5, R.drawable.rumination_6,
-                        R.drawable.rumination_7, R.drawable.specific_1, R.drawable.specific_2,
+                        R.drawable.rumination_7, R.drawable.specific_1, R.drawable.specific_2, R.drawable.specific_2,
                         R.drawable.specific_4, R.drawable.specific_5, R.drawable.specific_7,
-                        R.drawable.specific_9, R.drawable.specific_11,
+                        R.drawable.specific_9,  R.drawable.specific_11,
                         R.drawable.conclusion_1, R.drawable.conclusion_2, R.drawable.conclusion_3};
 
 
