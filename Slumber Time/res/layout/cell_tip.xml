@@ -6,7 +6,7 @@
     android:padding="8dp"
     android:baselineAligned="false"
     android:layout_gravity="top">
-    <edu.northwestern.cbits.intellicare.slumbertime.UriImageView android:id="@+id/icon_tip"
+    <edu.northwestern.cbits.intellicare.views.UriImageView android:id="@+id/icon_tip"
         android:layout_width="match_parent"
         android:background="#101010"
         android:scaleType="centerCrop"

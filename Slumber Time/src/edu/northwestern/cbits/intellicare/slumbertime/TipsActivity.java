@@ -15,6 +15,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
+import edu.northwestern.cbits.intellicare.views.UriImageView;
 
 public class TipsActivity extends ConsentedActivity 
 {

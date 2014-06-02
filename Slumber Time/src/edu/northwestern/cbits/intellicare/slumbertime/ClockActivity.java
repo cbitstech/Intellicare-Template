@@ -13,6 +13,7 @@ import org.apache.commons.math3.transform.FastFourierTransformer;
 import org.apache.commons.math3.transform.TransformType;
 
 import edu.northwestern.cbits.intellicare.logging.LogManager;
+import edu.northwestern.cbits.intellicare.views.UriImageView;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
