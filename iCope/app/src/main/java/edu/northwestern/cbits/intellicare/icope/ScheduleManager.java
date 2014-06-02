@@ -160,7 +160,7 @@ public class ScheduleManager
                     builder = builder.setContentTitle(event);
                     builder = builder.setContentText(reminder);
                     builder = builder.setTicker(reminder);
-                    builder =  builder.setSmallIcon(R.drawable.ic_cope_cloud);
+                    builder =  builder.setSmallIcon(R.drawable.ic_notify);
 
                     Notification note = builder.build();
                     note.flags = note.flags | Notification.FLAG_AUTO_CANCEL;

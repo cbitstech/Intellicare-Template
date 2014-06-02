@@ -124,18 +124,18 @@ public class AddCardActivity extends ConsentedActivity
 		values.put(CopeContentProvider.CARD_REMINDER, reminderField.getText().toString());
 		values.put(CopeContentProvider.CARD_TYPE, cardType.getText().toString());
 
-        if (importanceChecked == R.id.one)
+        if (importanceChecked == R.id.three)
         {
-            values.put(CopeContentProvider.CARD_IMPORTANCE, "one".toString());
+            values.put(CopeContentProvider.CARD_IMPORTANCE, "three".toString());
         }
         else if (importanceChecked == R.id.two)
         {
             values.put(CopeContentProvider.CARD_IMPORTANCE, "two".toString());
         }
 
-        else if (importanceChecked == R.id.three)
+        else
         {
-            values.put(CopeContentProvider.CARD_IMPORTANCE, "three".toString());
+            values.put(CopeContentProvider.CARD_IMPORTANCE, "one".toString());
         }
 
         Intent intent = this.getIntent();
