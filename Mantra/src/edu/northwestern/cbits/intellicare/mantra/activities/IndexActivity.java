@@ -141,6 +141,7 @@ public class IndexActivity extends ConsentedActivity {
 		startActivity(new Intent(self, OnboardingActivity.class));
 	}
 
+		
 	/**
 	 * Creates, binds to data, and fills the main view for this activity.
 	 */
