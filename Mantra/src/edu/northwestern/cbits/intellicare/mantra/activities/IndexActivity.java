@@ -1,5 +1,7 @@
 package edu.northwestern.cbits.intellicare.mantra.activities;
 
+import java.io.File;
+
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.CrashManagerListener;
 import android.app.Activity;
@@ -34,6 +36,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.MantraBoardCursor;
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.MantraImageCursor;
 import edu.northwestern.cbits.intellicare.mantra.MantraBoard;
@@ -44,6 +47,7 @@ import edu.northwestern.cbits.intellicare.mantra.OnboardingActivity;
 import edu.northwestern.cbits.intellicare.mantra.PictureUtils;
 import edu.northwestern.cbits.intellicare.mantra.R;
 import edu.northwestern.cbits.intellicare.mantra.Util;
+import edu.northwestern.cbits.intellicare.views.UriImageView;
 
 /**
  * Home/Main activity. The entry-point from a user's perspective.
@@ -133,6 +137,10 @@ public class IndexActivity extends ConsentedActivity {
 			Toast.makeText(this, self.getString(R.string.now_tap_on_a_mantra_to_attach_your_selected_image_to_it_), Toast.LENGTH_LONG).show();
 			displayedMantraAttachToast = true;
 		}
+		
+		// EVAN - USE ME AS A TEMPLATE!!! PARKOUR!
+		
+		LogManager.getInstance(this).log("entered_main", null);
 	}
 
 	/**
@@ -168,10 +176,14 @@ public class IndexActivity extends ConsentedActivity {
 					imageCursor.moveToFirst();
 					MantraImage image = imageCursor.getMantraImage();
 					Log.d(CN+".CursorAdapter.bindView", "image == null = " + (image == null));
-					ImageView iv = (ImageView) mantraItemView.findViewById(R.id.imageThumb);
+					UriImageView iv = (UriImageView) mantraItemView.findViewById(R.id.imageThumb);
 					Log.d(CN+".CursorAdapter.bindView", "image.getPath() = " + image.getPath());
-					Drawable d = PictureUtils.getScaledDrawable(self, image.getPath());
-					iv.setImageDrawable(d);
+
+//					Drawable d = PictureUtils.getScaledDrawable(self, image.getPath());
+//					iv.setImageDrawable(d);
+					
+					Uri imageUri = Uri.fromFile(new File(image.getPath()));
+					iv.setCachedImageUri(imageUri, -1, true);
 				}
 				
 				// set the mantra
