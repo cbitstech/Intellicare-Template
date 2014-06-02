@@ -74,7 +74,6 @@ public class MainActivity extends ConsentedActivity
 		final List<Reminder> reminders = CopeContentProvider.listUpcomingReminders(this);
 		
 		final MainActivity me = this;
-
 		
 		ArrayAdapter<Reminder> adapter = new ArrayAdapter<Reminder>(this, R.layout.row_reminder, reminders)
 		{
@@ -143,9 +142,7 @@ public class MainActivity extends ConsentedActivity
 		{
 			public void onItemClick(AdapterView<?> parent, View row, int position, long id)
 			{
-				if (position == 0)
-				{
-					Reminder r = reminders.get(0);
+	                Reminder r = reminders.get(0);
 
 					Intent intent = new Intent(me, ViewCardActivity.class);
 					intent.putExtra(ViewCardActivity.REMINDER_ID, r.reminderId);
@@ -156,7 +153,7 @@ public class MainActivity extends ConsentedActivity
 
 					me.startActivity(intent);
 				}
-			}
+
 		});
 
 		list.setOnItemLongClickListener(new OnItemLongClickListener()
@@ -235,6 +232,11 @@ public class MainActivity extends ConsentedActivity
 				this.sendFeedback(this.getString(R.string.app_name));
 					
 				break;
+
+            case R.id.action_help:
+                Intent introIntent = new Intent(this, IntroActivity.class);
+                this.startActivity(introIntent);
+
 			case R.id.action_faq:
 				this.showFaq(this.getString(R.string.app_name));
 					

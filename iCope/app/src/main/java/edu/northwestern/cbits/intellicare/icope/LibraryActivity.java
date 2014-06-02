@@ -207,6 +207,8 @@ public class LibraryActivity extends ConsentedActivity
 				return true;
 			}
 		});
+
+        list.setEmptyView(this.findViewById(R.id.view_empty));
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) 
@@ -230,42 +232,47 @@ public class LibraryActivity extends ConsentedActivity
 				
 				break;
 			case R.id.action_filter:
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				
-				builder.setTitle(R.string.title_filter);
-				
-				final String[] categories = CopeContentProvider.getCategories(this);
-				boolean[] selected = new boolean[categories.length];
-				
-				for (int i = 0; i < categories.length; i++)
-				{
-					selected[i] = this._selectedCategories.contains(categories[i]);
-				}
-				
-				builder.setMultiChoiceItems(categories, selected, new OnMultiChoiceClickListener()
-				{
-					public void onClick(DialogInterface arg0, int position, boolean clicked) 
-					{
-						if (clicked)
-							me._selectedCategories.add(categories[position]);
-						else
-							me._selectedCategories.remove(categories[position]);
-						
-						me.refreshList();
-					}
-				});
-				
-				builder.setPositiveButton(R.string.action_close, new OnClickListener()
-				{
-					public void onClick(DialogInterface arg0, int arg1) 
-					{
 
-					}
-				});
-				
-				builder.create().show();
+                final String[] categories = CopeContentProvider.getCategories(this);
+                boolean[] selected = new boolean[categories.length];
 
-				break;
+                if (categories.length == 0) {
+                    item.setVisible(false);
+                }
+
+                else {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                    builder.setTitle(R.string.title_filter);
+
+                    for (int i = 0; i < categories.length; i++) {
+                        selected[i] = this._selectedCategories.contains(categories[i]);
+                    }
+
+                    builder.setMultiChoiceItems(categories, selected, new OnMultiChoiceClickListener() {
+                        public void onClick(DialogInterface arg0, int position, boolean clicked) {
+                            if (clicked)
+                                me._selectedCategories.add(categories[position]);
+                            else
+                                me._selectedCategories.remove(categories[position]);
+
+                            me.refreshList();
+                        }
+                    });
+
+                    builder.setPositiveButton(R.string.action_close, new OnClickListener() {
+                        public void onClick(DialogInterface arg0, int arg1) {
+
+                        }
+                    });
+
+                    builder.create().show();
+
+                    break;
+
+                }
+
 			default:
 				break;
 		}
