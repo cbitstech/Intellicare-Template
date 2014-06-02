@@ -1,5 +1,7 @@
 package edu.northwestern.cbits.intellicare.mantra.activities;
 
+import java.io.File;
+
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.CrashManagerListener;
 import android.app.Activity;
@@ -44,6 +46,7 @@ import edu.northwestern.cbits.intellicare.mantra.OnboardingActivity;
 import edu.northwestern.cbits.intellicare.mantra.PictureUtils;
 import edu.northwestern.cbits.intellicare.mantra.R;
 import edu.northwestern.cbits.intellicare.mantra.Util;
+import edu.northwestern.cbits.intellicare.views.UriImageView;
 
 /**
  * Home/Main activity. The entry-point from a user's perspective.
@@ -168,10 +171,14 @@ public class IndexActivity extends ConsentedActivity {
 					imageCursor.moveToFirst();
 					MantraImage image = imageCursor.getMantraImage();
 					Log.d(CN+".CursorAdapter.bindView", "image == null = " + (image == null));
-					ImageView iv = (ImageView) mantraItemView.findViewById(R.id.imageThumb);
+					UriImageView iv = (UriImageView) mantraItemView.findViewById(R.id.imageThumb);
 					Log.d(CN+".CursorAdapter.bindView", "image.getPath() = " + image.getPath());
-					Drawable d = PictureUtils.getScaledDrawable(self, image.getPath());
-					iv.setImageDrawable(d);
+
+//					Drawable d = PictureUtils.getScaledDrawable(self, image.getPath());
+//					iv.setImageDrawable(d);
+					
+					Uri imageUri = Uri.fromFile(new File(image.getPath()));
+					iv.setCachedImageUri(imageUri, -1, true);
 				}
 				
 				// set the mantra

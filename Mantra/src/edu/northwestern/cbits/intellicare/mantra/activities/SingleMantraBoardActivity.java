@@ -43,6 +43,7 @@ import edu.northwestern.cbits.intellicare.mantra.Paths;
 import edu.northwestern.cbits.intellicare.mantra.PictureUtils;
 import edu.northwestern.cbits.intellicare.mantra.R;
 import edu.northwestern.cbits.intellicare.mantra.Util;
+import edu.northwestern.cbits.intellicare.views.UriImageView;
 
 public class SingleMantraBoardActivity extends ActionBarActivity {
 
@@ -145,9 +146,12 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 				{
 					MantraImageCursor mFocusImageCursor = (MantraImageCursor) c;
 					MantraImage mantraImage = mFocusImageCursor.getMantraImage();
-					ImageView imageView = (ImageView) view.findViewById(R.id.imageThumb);
-					Drawable d = PictureUtils.getScaledDrawable(self, mantraImage.getPath());
-					imageView.setImageDrawable(d);
+					UriImageView imageView = (UriImageView) view.findViewById(R.id.imageThumb);
+					// Drawable d = PictureUtils.getScaledDrawable(self, mantraImage.getPath());
+					// imageView.setImageDrawable(d);
+					
+					Uri imageUri = Uri.fromFile(new File(mantraImage.getPath()));
+					imageView.setCachedImageUri(imageUri, -1, true);
 
 					// view.setBackgroundColor(0x80ff0000);
 
@@ -474,6 +478,9 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 	         Uri selectedImage = data.getData();
 
 	         String picturePath = Util.getImageFilePathViaContentUri(this, selectedImage);
+	         
+	         if (picturePath == null)
+	        	 picturePath = UriImageView.fetchCachedUri(this, selectedImage, false).getPath();
 	                      
 	         Log.d(CN+"onActivityResult", "picturePath = " + picturePath);
 	         applyNewImageToMantra(new File(picturePath));
