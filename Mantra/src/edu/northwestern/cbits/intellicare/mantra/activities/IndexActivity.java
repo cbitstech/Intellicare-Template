@@ -36,6 +36,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
+import edu.northwestern.cbits.intellicare.logging.LogManager;
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.MantraBoardCursor;
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.MantraImageCursor;
 import edu.northwestern.cbits.intellicare.mantra.MantraBoard;
@@ -136,6 +137,10 @@ public class IndexActivity extends ConsentedActivity {
 			Toast.makeText(this, self.getString(R.string.now_tap_on_a_mantra_to_attach_your_selected_image_to_it_), Toast.LENGTH_LONG).show();
 			displayedMantraAttachToast = true;
 		}
+		
+		// EVAN - USE ME AS A TEMPLATE!!! PARKOUR!
+		
+		LogManager.getInstance(this).log("entered_main", null);
 	}
 
 	/**
