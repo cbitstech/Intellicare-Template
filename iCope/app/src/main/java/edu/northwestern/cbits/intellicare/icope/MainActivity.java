@@ -237,6 +237,8 @@ public class MainActivity extends ConsentedActivity
                 Intent introIntent = new Intent(this, IntroActivity.class);
                 this.startActivity(introIntent);
 
+                break;
+
 			case R.id.action_faq:
 				this.showFaq(this.getString(R.string.app_name));
 					

@@ -28,6 +28,7 @@ import edu.northwestern.cbits.intellicare.logging.LogManager;
 public class LibraryActivity extends ConsentedActivity 
 {
 	private HashSet<String> _selectedCategories = new HashSet<String>();
+    private Menu _menu = null;
 
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -131,11 +132,25 @@ public class LibraryActivity extends ConsentedActivity
 
 		ActionBar actionBar = this.getSupportActionBar();
 
-		if (c.getCount() == 1)
-			actionBar.setSubtitle(R.string.subtitle_library_single);
-		else
-			actionBar.setSubtitle(this.getString(R.string.subtitle_library, c.getCount()));
-		
+        MenuItem filter = null;
+
+        if (this._menu != null) {
+            filter = this._menu.findItem(R.id.action_filter);
+        }
+
+		if (c.getCount() == 1) {
+            actionBar.setSubtitle(R.string.subtitle_library_single);
+
+            if (filter != null)
+                filter.setVisible(true);
+        }
+		else {
+            actionBar.setSubtitle(this.getString(R.string.subtitle_library, c.getCount()));
+
+            if (filter != null)
+                filter.setVisible(c.getCount() != 0);
+        }
+
 		list.setAdapter(adapter);
 		
 		list.setOnItemLongClickListener(new OnItemLongClickListener()
@@ -214,6 +229,11 @@ public class LibraryActivity extends ConsentedActivity
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
 		this.getMenuInflater().inflate(R.menu.menu_library, menu);
+        this._menu = menu;
+        Cursor c = this.getContentResolver().query(CopeContentProvider.CARD_URI, null, null, null, null);
+
+        MenuItem filter = this._menu.findItem(R.id.action_filter);
+        filter.setVisible(c.getCount() > 0);
 
 		return true;
 	}
