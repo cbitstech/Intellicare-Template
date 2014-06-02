@@ -40,7 +40,6 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 	public static final String CN = "GetImagesTask";
 	
 	public static final int RESULT_LOAD_IMAGE = 1;
-//	public static final String INTENT_KEY_ORIGINATING_ACTIVITY = "originatingActivity";
 	private ProgressBar progress;
 	private String currentProgressActionTextValue;
 	private TextView currentProgressActionText = null;
@@ -115,8 +114,6 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 		// ATTEMPT 3: run the image-scanning in a service called via an intent.
 		scanFilePathsForImages(activity, fullFilePathsToScan);
 		
-//		activity.finish();
-		
 		long endTime = System.currentTimeMillis();
 		Log.d(CN+".GetImagesTask.doInBackground", "exiting; ELAPSED TIME (ms) = " + ((double)endTime - startTime));
 
@@ -142,8 +139,6 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 		progress.incrementProgressBy(1);
 		Log.d(CN+".onProgressUpdate", "Should set progress bar text to: " + currentProgressActionTextValue);
 		currentProgressActionText.setText(currentProgressActionTextValue);
-//		currentProgressActionText.endBatchEdit();
-//		currentProgressActionText.invalidate();
 	}
 
 }

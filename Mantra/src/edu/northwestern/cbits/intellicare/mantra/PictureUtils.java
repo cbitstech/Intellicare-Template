@@ -36,7 +36,6 @@ public class PictureUtils {
 			}
 		}
 
-//		options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = false;
 		options.inSampleSize = inSampleSize;
 		options.inPurgeable = true;

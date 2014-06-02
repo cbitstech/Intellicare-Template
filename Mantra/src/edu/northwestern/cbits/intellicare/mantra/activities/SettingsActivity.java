@@ -17,6 +17,7 @@ import android.widget.TimePicker;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 import edu.northwestern.cbits.intellicare.mantra.Constants;
+import edu.northwestern.cbits.intellicare.mantra.EventLogging;
 import edu.northwestern.cbits.intellicare.mantra.R;
 
 public class SettingsActivity extends PreferenceActivity 
@@ -42,14 +43,14 @@ public class SettingsActivity extends PreferenceActivity
 	{
 		super.onResume();
 		
-		// LogManager.getInstance(this).log("opened_settings", null);
 		Log.d(CN+".onResume", "opened_settings");
+		EventLogging.log(this, "Opened settings.", "onResume", CN);
 	}
 	
 	public void onPause()
 	{
-		// LogManager.getInstance(this).log("closed_settings", null);
 		Log.d(CN+".onResume", "closed_settings");
+		EventLogging.log(this, "Closed settings.", "onResume", CN);
 		
 		super.onPause();
 	}
