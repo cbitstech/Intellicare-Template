@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 public class Paths {
 
 	public static final String MANTRA_IMAGES_TMP = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/Mantra Downloads";
+	public static final String MANTRA_IMAGES_TMP_THUMBNAILS = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/Mantra Downloads/.thumbnails";
 	public static final String MANTRA_IMAGES = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/Mantra";
 	public static final String CAMERA_IMAGES = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/Camera";
 	public static final String IMAGE_NOT_FOUND = "image not found";
