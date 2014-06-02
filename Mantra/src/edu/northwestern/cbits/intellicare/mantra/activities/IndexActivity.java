@@ -43,6 +43,7 @@ import edu.northwestern.cbits.intellicare.mantra.NotificationAlarm;
 import edu.northwestern.cbits.intellicare.mantra.OnboardingActivity;
 import edu.northwestern.cbits.intellicare.mantra.PictureUtils;
 import edu.northwestern.cbits.intellicare.mantra.R;
+import edu.northwestern.cbits.intellicare.mantra.Util;
 
 /**
  * Home/Main activity. The entry-point from a user's perspective.
@@ -150,7 +151,7 @@ public class IndexActivity extends ConsentedActivity {
 		final GridView gv = (GridView) self.findViewById(R.id.gridview);
 
 		MantraBoardCursor mantraItemCursor = MantraBoardManager.get(self).queryMantraBoards();
-//		Util.logCursor(mantraItemCursor);
+		Util.logCursor(mantraItemCursor);
 		
 		@SuppressWarnings("deprecation")
 		CursorAdapter adapter = new CursorAdapter(self, mantraItemCursor) {
