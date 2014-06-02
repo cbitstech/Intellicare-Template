@@ -27,7 +27,7 @@ import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.SingleClientConnManager;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
@@ -257,7 +257,7 @@ public class LogManager
 
 				registry.register(new Scheme("https", socketFactory, 443));
 				
-				SingleClientConnManager mgr = new SingleClientConnManager(androidClient.getParams(), registry);
+				ThreadSafeClientConnManager mgr = new ThreadSafeClientConnManager(androidClient.getParams(), registry);
 				HttpClient httpClient = new DefaultHttpClient(mgr, androidClient.getParams());
 
 				androidClient.close();

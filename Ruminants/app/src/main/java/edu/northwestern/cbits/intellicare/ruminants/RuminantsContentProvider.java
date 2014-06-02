@@ -25,13 +25,12 @@ import android.net.Uri;
 
     private static final String AUTHORITY = "edu.northwestern.cbits.intellicare.ruminants";
 
-    //private static final String PROFILE_TABLE = "profile";
+
     private static final String WIZARD_ONE_TABLE = "wizard_one";
     private static final String WPT_USE_TABLE = "wpt_use";
     private static final String LOG_USE_TABLE = "log_use";
     private static final String DIDACTIC_USE_TABLE = "didactic_use";
 
-   // public static final Uri PROFILE_URI = Uri.parse("content://" + AUTHORITY + "/" + PROFILE_TABLE);
     public static final Uri WIZARD_ONE_URI = Uri.parse("content://" + AUTHORITY + "/" + WIZARD_ONE_TABLE);
     public static final Uri WPT_USE_URI = Uri.parse("content://" + AUTHORITY + "/" + WPT_USE_TABLE);
     public static final Uri LOG_USE_URI = Uri.parse("content://" + AUTHORITY + "/" + LOG_USE_TABLE);
@@ -49,14 +48,6 @@ import android.net.Uri;
     public static final String WIZARD_ONE_TRIGGER = "trigger";
 
     public static final String WIZARD_ONE_TIMESTAMP= "wizard_one_timestamp";
-
-   /* public static final String PROFILE_ID = "_id";
-    public static final String PROFILE_RUMINATION_CONCERNS = "concerns";
-    public static final String PROFILE_HELP_FREQUENCY = "help_frequency";
-    public static final String PROFILE_RUMINATING_LATELY = "ruminating_lately";
-
-    public static final String PROFILE_TIMESTAMP= "profile_timestamp"; */
-
 
     public static final String WPT_USE_ID = "_id";
     public static final String WPT_USE_TIMESTAMP= "wpt_timestamp";
@@ -77,7 +68,6 @@ import android.net.Uri;
     {
         super();
 
-       // this._matcher.addURI(AUTHORITY, PROFILE_TABLE, PROFILE);
         this._matcher.addURI(AUTHORITY, WIZARD_ONE_TABLE, WIZARD_ONE);
         this._matcher.addURI(AUTHORITY, WPT_USE_TABLE, WPT_USE);
         this._matcher.addURI(AUTHORITY, LOG_USE_TABLE, LOG_USE);
@@ -130,8 +120,7 @@ import android.net.Uri;
     {
         switch(this._matcher.match(uri))
         {
-       /*     case RuminantsContentProvider.PROFILE:
-                return this._db.delete(RuminantsContentProvider.PROFILE_TABLE, where, whereArgs); */
+
             case RuminantsContentProvider.WIZARD_ONE:
                 return this._db.delete(RuminantsContentProvider.WIZARD_ONE_TABLE, where, whereArgs);
             case RuminantsContentProvider.WPT_USE:

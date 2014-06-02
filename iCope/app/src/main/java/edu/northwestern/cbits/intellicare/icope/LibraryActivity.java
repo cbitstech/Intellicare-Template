@@ -184,7 +184,7 @@ public class LibraryActivity extends ConsentedActivity
 										
 										me.getContentResolver().delete(CopeContentProvider.CARD_URI, where, args);
 
-										where = CopeContentProvider.CARD_ID + " = ?";
+										where = CopeContentProvider.REMINDER_CARD_ID + " = ?";
 										me.getContentResolver().delete(CopeContentProvider.REMINDER_URI, where, args);
 										
 										HashMap<String, Object> payload = new HashMap<String, Object>();

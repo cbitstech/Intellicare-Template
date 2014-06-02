@@ -29,7 +29,9 @@ public class ScheduleManager
 	private Context _context = null;
 
     private static final int TRAY_NOTIFICATION_ID = 1234567;
-	
+
+    private long _lastNote = 0;
+
 	private HashMap<String, Long> _lastFires = new HashMap<String, Long>();
 
 	public ScheduleManager(Context context) 
@@ -57,6 +59,13 @@ public class ScheduleManager
 	
 	public void updateSchedule()
 	{
+        long now = System.currentTimeMillis();
+
+        if (now - this._lastNote < 60000)
+            return;
+
+        this._lastNote = now;
+
 		Calendar c = Calendar.getInstance();
 
         int hour = c.get(Calendar.HOUR_OF_DAY);
@@ -70,8 +79,6 @@ public class ScheduleManager
 		Cursor cursor = this._context.getContentResolver().query(CopeContentProvider.REMINDER_URI, null, where, args, null);
 		
 		String title = this._context.getString(R.string.title_card_reminder);
-		
-		long now = System.currentTimeMillis();
 
 		while (cursor.moveToNext())
 		{
@@ -132,7 +139,7 @@ public class ScheduleManager
             };
 
             if (timeToFire) {
-                Intent intent = new Intent(this._context, ViewCardActivity.class);
+                Intent intent = new Intent(this._context, MainActivity.class);
                 intent.putExtra(ViewCardActivity.REMINDER_ID, reminderId);
                 PendingIntent pendingIntent = PendingIntent.getActivity(this._context, 0, intent, 0);
 
@@ -147,18 +154,18 @@ public class ScheduleManager
                     String reminder = (noteCursor.getString(noteCursor.getColumnIndex(CopeContentProvider.CARD_REMINDER)));
 
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(this._context);
-                    builder.setContentIntent(pendingIntent);
-                    builder.setAutoCancel(true);
-                    builder.setContentTitle(event);
-                    builder.setContentText(reminder);
-                    builder.setTicker(reminder);
-                    builder.setSmallIcon(R.drawable.ic_cope_cloud);
-                    builder.setStyle(new NotificationCompat.BigTextStyle()
-                            .bigText(reminder));
+                    builder =  builder.setStyle(new NotificationCompat.BigTextStyle()
+                               .bigText(reminder));
+                    builder = builder.setContentIntent(pendingIntent);
+                    builder = builder.setContentTitle(event);
+                    builder = builder.setContentText(reminder);
+                    builder = builder.setTicker(reminder);
+                    builder =  builder.setSmallIcon(R.drawable.ic_cope_cloud);
 
                     Notification note = builder.build();
+                    note.flags = note.flags | Notification.FLAG_AUTO_CANCEL;
 
-                    note.flags = Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE | Notification.PRIORITY_HIGH;
+                    // note.flags = Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE | Notification.PRIORITY_HIGH;
 
                     NotificationManager noteManager = (NotificationManager) this._context.getSystemService(android.content.Context.NOTIFICATION_SERVICE);
                     noteManager.notify(ScheduleManager.TRAY_NOTIFICATION_ID, note);

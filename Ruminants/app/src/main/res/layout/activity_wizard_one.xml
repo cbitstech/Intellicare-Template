@@ -3,8 +3,17 @@
     android:layout_height="match_parent">
     <LinearLayout android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-            <TextView android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="#fff">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="188dp"
+            android:id="@+id/imageView"
+            android:src="@drawable/writing"
+            android:longClickable="false" />
+
+        <TextView android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/question_rumination_bool"
@@ -60,25 +69,6 @@
             android:inputType="text"
             android:singleLine="false"
             android:hint="@string/hint_comments"/>
-            <TextView android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/question_pre_rumination_feeling"
-                android:textColor="#000"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginBottom="16dp"
-                android:focusable="true" />
-
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/emotion_spinner"
-            android:layout_weight="1"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
-            android:layout_marginBottom="16dp" />
 
         <TextView android:layout_weight="1"
                 android:layout_width="wrap_content"
@@ -115,48 +105,5 @@
         </LinearLayout>
 
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/question_rumination_strategy"
-            android:textColor="#000"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginRight="8dp"
-            android:focusable="true" />
-        <EditText android:id="@+id/field_attempted_stop_methods"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="24dp"
-            android:layout_marginBottom="16dp"
-            android:inputType="text"
-            android:singleLine="false"
-            android:hint="@string/hint_comments"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/question_strategy_success"
-            android:textColor="#000"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="16dp"
-            android:focusable="true" />
-        <EditText android:id="@+id/field_termination_cause"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="24dp"
-            android:layout_marginBottom="16dp"
-            android:inputType="text"
-            android:singleLine="false"
-            android:hint="@string/hint_comments"/>
     </LinearLayout>
 </ScrollView>

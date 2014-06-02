@@ -1,16 +1,19 @@
 package edu.northwestern.cbits.intellicare.ruminants;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.ImageView;
 import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
@@ -26,7 +29,7 @@ public class PagedIntroActivity extends ConsentedActivity
     {
     	super.onCreate(savedInstanceState);
 
-    	this.setContentView(R.layout.activity_paged_intro);
+    	this.setContentView(R.layout.activity_paged_content);
     	
     	this.getSupportActionBar().setSubtitle(R.string.app_name);
     	
@@ -34,11 +37,13 @@ public class PagedIntroActivity extends ConsentedActivity
     	
     	final ViewPager pager = (ViewPager) this.findViewById(R.id.pager_content);
 
+       final ImageView background = (ImageView) this.findViewById(R.id.background_image);
+
     	pager.setAdapter(new PagerAdapter()
     	{
-			public int getCount() 
+			public int getCount()
 			{
-				return 10;
+				return 27;
 			}
 
 			public boolean isViewFromObject(View view, Object content) 
@@ -69,11 +74,23 @@ public class PagedIntroActivity extends ConsentedActivity
 				View view = inflater.inflate(R.layout.view_paged_content, null);
 
 		        String[] contentValues = me.getResources().getStringArray(R.array.intro_content);
-		        
-		        TextView content = (TextView) view.findViewById(R.id.content_text);
+
+                int[] introImages = {R.drawable.greet_1, R.drawable.greet_1, R.drawable.greet_2, R.drawable.greet_3,
+                        R.drawable.intent_1, R.drawable.intent_2, R.drawable.intent_3,
+                        R.drawable.intent_4, R.drawable.intent_5, R.drawable.intent_6,
+                        R.drawable.rumination_1, R.drawable.rumination_2, R.drawable.rumination_3,
+                        R.drawable.rumination_4, R.drawable.rumination_5, R.drawable.rumination_6,
+                        R.drawable.rumination_7, R.drawable.specific_1, R.drawable.specific_2, R.drawable.specific_2,
+                        R.drawable.specific_4, R.drawable.specific_5, R.drawable.specific_7,
+                        R.drawable.specific_9,  R.drawable.specific_11,
+                        R.drawable.conclusion_1, R.drawable.conclusion_2, R.drawable.conclusion_3};
+
+
+                TextView content = (TextView) view.findViewById(R.id.content_text);
 
 		        content.setText(contentValues[position]);
-				
+				background.setImageResource(introImages[position]);
+
 				view.setTag("" + position);
 
 				container.addView(view);

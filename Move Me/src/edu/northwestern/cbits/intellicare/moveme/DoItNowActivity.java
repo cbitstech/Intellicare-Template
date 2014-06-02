@@ -1,6 +1,7 @@
 package edu.northwestern.cbits.intellicare.moveme;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
@@ -9,11 +10,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
-public class LessonsActivity extends ConsentedActivity 
+public class DoItNowActivity extends ConsentedActivity 
 {
 	protected void onCreate(Bundle savedInstanceState) 
     {
@@ -21,12 +23,14 @@ public class LessonsActivity extends ConsentedActivity
         this.setContentView(R.layout.activity_lessons);
         
         ActionBar actionBar = this.getSupportActionBar();
-        actionBar.setTitle(R.string.title_lessons);
+
+        actionBar.setTitle(R.string.title_do_it_now);
+        actionBar.setSubtitle(R.string.subtitle_do_it_now);
         
-        final LessonsActivity me = this;
+        final DoItNowActivity me = this;
         
-        final String[] titles = this.getResources().getStringArray(R.array.array_lessons);
-        final String[] urls = this.getResources().getStringArray(R.array.array_lesson_urls);
+        final String[] titles = this.getResources().getStringArray(R.array.external_resource_titles);
+        final String[] urls = this.getResources().getStringArray(R.array.external_resource_urls);
         
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row_lesson, titles)
         {
@@ -38,6 +42,8 @@ public class LessonsActivity extends ConsentedActivity
     				convertView = inflater.inflate(R.layout.row_lesson, parent, false);
         		}
         		
+        		View lessonContent = convertView.findViewById(R.id.lesson_content);
+        		
         		TextView lessonName = (TextView) convertView.findViewById(R.id.lesson_name);
         		TextView lessonCategory = (TextView) convertView.findViewById(R.id.lesson_category);
         		
@@ -45,7 +51,7 @@ public class LessonsActivity extends ConsentedActivity
         		
         		if (title.endsWith("*"))
         		{
-        			lessonName.setVisibility(View.GONE);
+        			lessonContent.setVisibility(View.GONE);
         			lessonCategory.setText(title.replace("*", "").trim());
         			lessonCategory.setVisibility(View.VISIBLE);
         		}
@@ -53,9 +59,18 @@ public class LessonsActivity extends ConsentedActivity
         		{
         			lessonCategory.setVisibility(View.GONE);
         			lessonName.setText(title);
-        			lessonName.setVisibility(View.VISIBLE);
+        			lessonContent.setVisibility(View.VISIBLE);
+        			
+        			ImageView icon = (ImageView) convertView.findViewById(R.id.lesson_icon);
+        			
+        			if (urls[position].contains("youtube"))
+        				icon.setImageResource(R.drawable.ic_action_youtube);
+        			else if (urls[position].contains("video"))
+        				icon.setImageResource(R.drawable.ic_action_video);
+        			else
+        				icon.setImageResource(R.drawable.ic_action_bookmark);
+        				
         		}
-        		
         		return convertView;
         	}
         };
@@ -67,14 +82,12 @@ public class LessonsActivity extends ConsentedActivity
         {
 			public void onItemClick(AdapterView<?> arg0, View view, int which, long id)
 			{
-				String title = titles[which];
 				String url = urls[which];
 				
 				if (url.trim().length() > 0)
 				{
-					Intent intent = new Intent(me, LessonActivity.class);
-					intent.putExtra(LessonActivity.TITLE, title);
-					intent.putExtra(LessonActivity.URL, url);
+					Intent intent = new Intent(Intent.ACTION_VIEW);
+					intent.setData(Uri.parse(url));
         
 					me.startActivity(intent);
 				}

@@ -82,7 +82,7 @@
         <item>Other</item>
  	</string-array>
 
-    <string name="event_name" formatted="false">Move Me: %s</string>
+    <string name="event_name" formatted="false">MoveME: %s</string>
     <string name="event_description">(Created by MoveME)</string>
     <string name="exercise_unknown">Unknown Exercise</string>
 
@@ -90,7 +90,7 @@
     <string name="message_calendar_error">Calendar scheduling is only available on Android 4.0 and newer devices.</string>
     
     <string name="action_toggle">Toggle Timer</string>
-    <string name="title_exercise_timer">Timer</string>
+    <string name="title_exercise_timer">Exercise Timer</string>
 
     <string name="title_pre_mood">Select Pre-Exercise Mood</string>
     <string name="title_post_mood">Select Post-Exercise Mood</string>
@@ -166,7 +166,8 @@
     <string name="title_log">Exercise Log</string>
     
 	<string name="db_create_exercises_table">CREATE TABLE IF NOT EXISTS exercises (_id INTEGER PRIMARY KEY NOT NULL, duration INTEGER NOT NULL, recorded INTEGER NOT NULL, premood INTEGER NOT NULL, postmood INTEGER NOT NULL);</string>
-	
+	<string name="db_create_fitbit_table">CREATE TABLE IF NOT EXISTS fitbit (_id INTEGER PRIMARY KEY NOT NULL, timestamp INTEGER NOT NULL, logged INTEGER NOT NULL, goal INTEGER NOT NULL);</string>
+		
 	<string name="mood_range" formatted="false">From %d to %d</string>
 	<string name="duration_label" formatted="false">Time Spent: %ss</string>
 	
@@ -183,7 +184,7 @@
 	<string name="title_calendar">Exercise Calendar</string>
 	<string name="subtitle_calendar" formatted="false">%d upcoming exercises</string>
 	<string name="subtitle_calendar_single" formatted="false">1 upcoming exercise</string>
-	<string name="message_nothing_scheduled">No exercised scheduled.\n\nTap here to schedule an exercise.</string>
+	<string name="message_nothing_scheduled">No exercises scheduled.\n\nTap here to schedule an exercise.</string>
 	
 	<string name="title_motivators">Motivators</string>
 	<string name="subtitle_motivators">Lessons, Tips &amp; Videos</string>
@@ -352,5 +353,190 @@
         <item>file:///android_asset/www/content/motivator_8.html</item>
         <item>file:///android_asset/www/content/motivator_9.html</item>
    	</string-array>
+   	
+    <string name="settings_media_player">Media Options</string>
+    <string name="settings_notifications">Notifications</string>
     
+    <string name="action_schedule_reminder">Schedule</string>
+    
+    <string name="pref_morning_enable">Enable Morning Notification</string>
+    <string name="pref_morning_time">Morning Notification Time</string>
+    <string name="pref_afternoon_enable">Enable Afternoon Notification</string>
+    <string name="pref_afternoon_time">Afternoon Notification Time</string>
+    <string name="pref_evening_enable">Enable Evening Notification</string>
+    <string name="pref_evening_time">Evening Notification Time</string>
+    
+    <string name="title_reminder_note">MoveME Tip</string>
+    <string-array name="array_morning_messages">
+        <item>Exercise is an excellent way to start the day.</item>
+        <item>Early morning time is excellent "me" time.</item>
+        <item>All day you get to enjoy the sense of accomplishment of having already exercised.</item>
+        <item>Remember that you made your decision to exercise when you had an AWAKE MIND the previous evening!</item>
+ 	</string-array>
+    
+    <string-array name="array_afternoon_messages">
+        <item>Looking forward to your break from work or housework to get your workout in?</item>
+        <item>Some experts say the best time to workout is a couple hours after lunch - good luck with your afternoon workout!</item>
+        <item>Activity in the middle of your day can help you be more productive and focused!</item>
+ 	</string-array>
+
+    <string-array name="array_evening_messages">
+        <item>After work is the best time to move and shake out the day’s tension!</item>
+        <item>Exercise is an excellent way to end your day.</item>
+        <item>Evening is exceptional "me" time.</item>
+ 	</string-array>
+
+    <string name="label_minutes_complete" formatted="false">%d min. (Done)</string>
+    <string name="label_minutes_remaining" formatted="false">%d min. (To Do)</string>
+    
+    <string name="settings_fitness_trackers">Fitness Trackers &amp; Services</string>
+    <string name="settings_fitbit">FitBit</string>
+    <string name="prefs_enable_fitbit">Enable FitBit</string>
+    <string name="prefs_fitbit_login">Login to FitBit</string>
+    <string name="prefs_fitbit_logout">Log out of FitBit</string>
+    
+    <string name="label_today" formatted="false">Today: %d of %d minutes</string>
+    <string name="label_week" formatted="false">This Week: %d of %d minutes</string>
+
+    <string name="action_help">Help</string>
+    
+    <string name="reminder_morning_one">Here are some common motivation-sapping thoughts for morning exercise. Have you had any of these thoughts before?</string>
+    <string name="reminder_morning_two">Remind yourself of these advantages of early morning exercise:</string>
+    <string name="reminder_afternoon_one">Here are some common motivation-sapping thoughts for afternoon exercise. Have you had any of these thoughts before?</string>
+    <string name="reminder_afternoon_two">Remember that afternoon exercise may enhance your problem-solving levels while reducing your stress. \n\nHere are some more positive self-talk suggestions instead:</string>
+    <string name="reminder_evening_one">Here are some common motivation-sapping thoughts for evening exercise. Have you had any of these thoughts today?</string>
+    <string name="reminder_evening_two">Here are some tips and tricks to help you manage these thoughts:</string>
+    
+    <string-array name="morning_one">
+        <item>I\'ll skip my workout just this one time</item> 
+        <item>It is too cold to get out of bed</item>
+        <item>Sleep will be better for my mood</item>
+        <item>Missing my workout once won\'t matter</item>
+        <item>I\'ll just turn over in bed once more</item>
+        <item>10 more minutes in bed won\'t matter</item>
+        <item>I am too tired to exercise well</item>
+        <item>I can always exercise this evening</item>
+    </string-array>
+    
+    <string-array name="morning_two">
+        <item>Exercise is an excellent way to start the day</item>
+      	<item>Early morning time is excellent "me" time</item>
+		<item>All day you get to enjoy the sense of accomplishment of having already exercised</item>
+    </string-array>
+    
+    <string-array name="afternoon_one">
+        <item>I am working well, I shouldn\'t stop</item>
+        <item>I am too busy now</item>
+        <item>I have to finish this now</item>
+        <item>I will get just one more thing done</item>
+        <item>I better not take a break till later</item> 
+        <item>I need to digest lunch first</item>
+        <item>I don\'t have time right now</item>
+    </string-array>
+    <string-array name="afternoon_two">
+        <item>I am taking a break for some activity to have a fresh mind for my afternoon job demands.</item>
+        <item>I know that I feel different after exercise; let me see what work feels like under those conditions.</item>
+        <item>Activity helps me manage stress and boost my mood - and is one way I am helping myself be more productive.</item>
+    </string-array>
+
+    <string-array name="evening_one">
+        <item>I am too tired</item> 
+        <item>It is about to get dark</item>
+        <item>It will be too cold</item>
+        <item>I just ate dinner and need to digest</item> 
+        <item>I need to get to sleep early</item>
+        <item>I can just put it off until morning</item>
+    </string-array>
+    
+    <string-array name="evening_two">
+        <item>Consider going straight to the gym from work/school.</item>
+        <item>If you go home, avoid your low motivation zones (i.e., couch, bed).</item>
+        <item>Put your workout clothes on as soon as you get home. Don’t sit - just get out the door!</item>
+    </string-array>
+    
+    <string name="title_morning_reminder">Morning Reminder</string>
+    <string name="title_afternoon_reminder">Afternoon Reminder</string>
+    <string name="title_evening_reminder">Evening Reminder</string>
+    
+    <string name="message_exercise_reminder">It\'s been more than two days since your last logged exercise session. Tap here for some help&#8230;</string>
+
+    <string-array name="external_resource_titles">
+        <item>Challenges*</item> 
+        <item>30 Day Abs Challenge</item> 
+        <item>30 Day Legs Challenge</item> 
+        <item>30 Day Arms Challenge</item> 
+        <item>30 Day Squat Challenge</item> 
+        <item>How To*</item> 
+        <item>The perfect plank</item> 
+        <item>A good squat</item> 
+        <item>A proper lunge</item> 
+        <item>Three good crunches</item> 
+        <item>12 Minute Seated Core Workout</item> 
+        <item>14 Minute Basic Yoga</item> 
+        <item>10 Minute Cardio Kickboxing Workout</item> 
+        <item>2 Moves for a Better Butt</item> 
+        <item>9 Minute Arms and Shoulders</item> 
+        <item>Depression Resources*</item>
+        <item>Short film on depression</item> 
+        <item>The Road Back - depression and teens</item> 
+        <item>Six minutes on CBT for depression</item> 
+        <item>Automatic Thoughts - Wellcast</item> 
+        <item>How to Stop Procrastinating - Wellcast</item>
+        <item>How to Break Bad Habits - Wellcast</item>
+        <item>5 Good Reasons to Go for a Less Intense Workout</item>
+        <item>Nike Training Club Videos</item>
+        <item>Lateral shuffle into split jumps</item>
+        <item>Sculpting workout</item>
+        <item>Suitcases</item>
+        <item>Pike Butt Pushups</item>
+        <item>Side V-Ups with Leg Kicks</item>
+        <item>Supermans</item>
+        <item>Fun Videos*</item>
+        <item>Ew! with Michelle Obama</item>
+    </string-array>
+
+    <string-array name="external_resource_urls">
+        <item></item>
+        <item>https://www.youtube.com/watch?v=Tufb3aLdt8M</item> 
+        <item>https://www.youtube.com/watch?v=VTTKxJdEuOM</item> 
+        <item>https://www.youtube.com/watch?v=ygr9PrBireU</item> 
+        <item>https://www.youtube.com/watch?v=PMcj3CCIDYc</item> 
+        <item></item>
+        <item>http://greatist.com/fitness/perfect-plank</item> 
+        <item>http://www.youtube.com/watch?v=aPYCiuiB4PA</item> 
+        <item>http://www.youtube.com/watch?v=m_RYVmpWDq4</item> 
+        <item>http://www.wikihow.com/Do-Crunches</item> 
+        <item>http://www.sparkpeople.com/resource/videos-detail.asp?video=42</item> 
+        <item>http://www.sparkpeople.com/resource/videos-detail.asp?video=27</item> 
+        <item>http://www.sparkpeople.com/resource/videos-detail.asp?video=61</item> 
+        <item>http://www.sparkpeople.com/resource/videos-detail.asp?video=23</item> 
+        <item>http://www.sparkpeople.com/resource/videos-detail.asp?video=39</item> 
+        <item></item>
+        <item>http://www.youtube.com/playlist?list=PL06049559DF3C9488</item>
+        <item>http://www.youtube.com/watch?v=Zn_5V8zfUT0</item>
+        <item>http://www.youtube.com/watch?v=hlmUlCDbTgA</item>
+        <item>http://www.youtube.com/watch?v=tqvIl-5rqhE</item>
+        <item>http://www.youtube.com/watch?v=HXFVrB98yKQ</item>
+        <item>http://www.youtube.com/watch?v=kVIxpugcgwk</item>
+        <item>http://www.youtube.com/watch?v=pb59vFaGCcQ</item>
+        <item>https://www.youtube.com/watch?v=4mwCxAilEAs</item> 
+        <item>https://www.youtube.com/watch?v=HRjSVNYlwBE</item> 
+        <item>https://www.youtube.com/watch?v=ds3wHkwiuCo</item> 
+        <item>https://www.youtube.com/watch?v=m2zRA5zCA6M</item> 
+        <item>https://www.youtube.com/watch?v=Qvcx7Y4caQE</item>
+        <item>https://www.youtube.com/watch?v=OnFVFfAImEg</item>
+        <item>http://www.huffingtonpost.com/2014/02/24/moderate-low-intensity-workout-exercise_n_4818063.html</item>
+        <item></item>
+        <item>https://www.youtube.com/watch?v=HOK4aBYNh3s</item>
+    </string-array>
+    
+    <string name="title_do_it_now">Do It Now</string>
+    <string name="subtitle_do_it_now">Videos &amp; web pages to help you out</string>
+    
+    <string name="subtitle_remaining_minutes" formatted="false">%d minutes left (weekly goal)</string>
+    <string name="subtitle_remaining_minute">1 minute left (weekly goal)</string>
+    
+    <string name="prefs_daily_goal">Daily Goal</string>
+    <string name="prompt_daily_goal">Daily Goal</string>
+    <string name="settings_goals">Goals</string>
 </resources>

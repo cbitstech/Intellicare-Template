@@ -68,8 +68,6 @@ public class ScheduleManager {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(now);
 
-        long scheduled = c.getTimeInMillis();
-
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
 
@@ -109,36 +107,5 @@ public class ScheduleManager {
             StatusNotificationManager.getInstance(this._context).notifyBigText(ScheduleManager.HELPER_NOTIFICATION_ID, R.drawable.ic_action_process_start, title, message, pendingIntent, u);
         }
 
-        /* Profile notification, depricate
-        if (hour == ScheduleManager.DEFAULT_PROFILE_HOUR && minute == ScheduleManager.DEFAULT_PROFILE_MINUTE &&
-                Calendar.MONDAY == day)
-        {
-            Intent intent = new Intent(this._context, ProfileActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this._context);
-            builder.setContentIntent(pendingIntent);
-            builder.setAutoCancel(true);
-            builder.setContentTitle(this._context.getString(R.string.profile_note_title));
-            builder.setContentText(this._context.getString(R.string.profile_note_message));
-            builder.setTicker(this._context.getString(R.string.profile_note_message));
-            builder.setSmallIcon(R.drawable.notification);
-
-            Notification note = builder.build();
-
-            NotificationManager noteManager = (NotificationManager) this._context.getSystemService(android.content.Context.NOTIFICATION_SERVICE);
-            noteManager.notify(ScheduleManager.PROFILE_NOTIFICATION_ID, note);
-       } */
-
-       /* int helpFrequency = 0;
-
-        String[] columns = { "help_frequency"};
-
-        Cursor k = this._context.getContentResolver().query(RuminantsContentProvider.PROFILE_URI, columns, null, null, "_id DESC");
-
-        if (k.moveToNext())
-            helpFrequency = k.getInt(k.getColumnIndex("help_frequency"));
-
-        k.close(); */
     }
 }

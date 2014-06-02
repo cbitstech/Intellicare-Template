@@ -1,14 +1,17 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:background="#ff000000"
+    android:background="#fff"
     android:layout_height="fill_parent">
     <ImageView android:id="@+id/background_image"
 	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:scaleType="centerCrop" 
-	    android:src="@drawable/intro_background" />
+	    android:layout_height="wrap_content"
+	    android:scaleType="fitEnd"
+        android:longClickable="false"
+        android:adjustViewBounds="false"
+        android:layout_gravity="bottom" />
 	<android.support.v4.view.ViewPager 
     	android:id="@+id/pager_content"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent" /> 
+		android:layout_height="match_parent" />
+
 </FrameLayout>

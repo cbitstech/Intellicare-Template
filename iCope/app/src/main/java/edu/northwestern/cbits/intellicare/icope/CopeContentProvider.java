@@ -237,7 +237,24 @@ public class CopeContentProvider extends ContentProvider
 					r.date = date;
 					r.cardId = cursor.getLong(cursor.getColumnIndex(CopeContentProvider.REMINDER_CARD_ID));
 					r.reminderId = cursor.getLong(cursor.getColumnIndex(CopeContentProvider.ID));
-					list.add(r);
+
+                    // TODO : Remove once we're sure we no longer need it.
+
+                    String where = CopeContentProvider.CARD_ID + " = ?";
+                    String[] args = { "" + r.cardId };
+
+                    Cursor cardCursor = context.getContentResolver().query(CopeContentProvider.CARD_URI, null, where, args, null);
+
+                    if (cardCursor.getCount() > 0)
+    					list.add(r);
+                    else
+                    {
+                        args[0] = "" + r.reminderId;
+
+                        context.getContentResolver().delete(CopeContentProvider.REMINDER_URI, where, args);
+                    }
+
+                    cardCursor.close();
 				}
 			}
 		}

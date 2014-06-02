@@ -26,7 +26,7 @@ import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.SingleClientConnManager;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
@@ -41,6 +41,7 @@ import org.scribe.model.Token;
 import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.ContentValues;
@@ -255,6 +256,7 @@ public class ScheduleManager
 		
 	}
 	
+	@SuppressLint("SimpleDateFormat")
 	private Set<String> todayFitbitGoals()
 	{
 		Set<String> metGoals = new HashSet<String>();
@@ -373,7 +375,7 @@ public class ScheduleManager
 				HttpConnectionParams.setConnectionTimeout(params, 180000);
 				HttpConnectionParams.setSoTimeout(params, 180000);
 	
-				SingleClientConnManager mgr = new SingleClientConnManager(params, registry);
+				ThreadSafeClientConnManager mgr = new ThreadSafeClientConnManager(params, registry);
 				HttpClient httpClient = new DefaultHttpClient(mgr, params);
 	
 				HttpsURLConnection.setDefaultHostnameVerifier(hostnameVerifier);
@@ -446,6 +448,7 @@ public class ScheduleManager
 		return metGoals;
 	}
 
+	@SuppressLint("SimpleDateFormat")
 	private JSONArray todayCommits()
 	{
         JSONArray commits = new JSONArray();
