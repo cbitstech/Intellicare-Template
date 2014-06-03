@@ -8,6 +8,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.drawable.Drawable;
 
+/**
+ * Defines the straight-SQL database interactions for Mantra. (A ContentProvider pattern was not used.)
+ * @author mohrlab
+ *
+ */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
 	private static final int DATABASE_VERSION = 1;

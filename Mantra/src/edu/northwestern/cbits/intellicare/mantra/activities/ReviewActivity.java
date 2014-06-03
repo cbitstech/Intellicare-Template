@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
+import edu.northwestern.cbits.intellicare.mantra.EventLogging;
 import edu.northwestern.cbits.intellicare.mantra.MantraBoard;
 import edu.northwestern.cbits.intellicare.mantra.MantraBoardManager;
 import edu.northwestern.cbits.intellicare.mantra.NotificationAlarm;
@@ -47,29 +48,6 @@ public class ReviewActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_review);
-		
-//		// set the change listener on the rating bar
-//		RatingBar rb = (RatingBar) this.findViewById(R.id.mantraAppRatingBar);
-//		rb.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
-//			
-//			@Override
-//			public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-//				Toast.makeText(self, "(via ReviewActivity.onCreate.onRatingChanged) TODO: integrate this rating bar's change with the Intellicare server.", Toast.LENGTH_LONG).show();
-//			}
-//		});
-//		
-//		// set the on-button-tap-to-review button
-//		Button btnGoHome = (Button) this.findViewById(R.id.btnGoHome);
-//		btnGoHome.setOnClickListener(new OnClickListener() {
-//			
-//			@Override
-//			public void onClick(View v) {
-//				self.startActivity(new Intent(self, IndexActivity.class));
-//				self.finish();
-//			}
-//		});
-//		
-		
 		reviewDialog(self);
 	}
 
@@ -118,7 +96,6 @@ public class ReviewActivity extends Activity {
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		
-//		setPhotoCount(self);
 		String photoCountText = self.setPhotoCount(activity);
 		Log.d(CN+".reviewDialog", "photoCountText = " + photoCountText);
 		LayoutInflater inflater = LayoutInflater.from(activity);		
@@ -133,8 +110,7 @@ public class ReviewActivity extends Activity {
 		{
 			public void onClick(DialogInterface dialog, int which) 
 			{
-				
-				
+				EventLogging.log(self, "Clicked OK.", "reviewDialog.onClick", CN);
 				activity.finish();
 			}
 		});
@@ -143,6 +119,7 @@ public class ReviewActivity extends Activity {
 		{
 			public void onClick(DialogInterface dialog, int which) 
 			{
+				EventLogging.log(self, "Clicked Cancel.", "reviewDialog.onClick", CN);
 				activity.finish();
 			}
 		});

@@ -116,9 +116,6 @@ public class ImageExtractor
 		conn.setRequestMethod("HEAD");
 		
 		return conn.getContentLength();
-//		String len = conn.getHeaderField("Content-Length");
-//		log("getRemoteContentLength", "exiting; len = " + len);
-//		return len != null ? Integer.parseInt(len) : -1;
 	}
 	
 	/**

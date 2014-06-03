@@ -35,6 +35,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.northwestern.cbits.intellicare.mantra.DatabaseHelper.MantraImageCursor;
+import edu.northwestern.cbits.intellicare.mantra.EventLogging;
 import edu.northwestern.cbits.intellicare.mantra.MantraBoard;
 import edu.northwestern.cbits.intellicare.mantra.MantraBoardManager;
 import edu.northwestern.cbits.intellicare.mantra.MantraImage;
@@ -45,6 +46,11 @@ import edu.northwestern.cbits.intellicare.mantra.R;
 import edu.northwestern.cbits.intellicare.mantra.Util;
 import edu.northwestern.cbits.intellicare.views.UriImageView;
 
+/**
+ * Displays the images and handles the behaviors for a single Mantra board.
+ * @author mohrlab
+ *
+ */
 public class SingleMantraBoardActivity extends ActionBarActivity {
 
 	public final static String MANTRA_BOARD_ID = "edu.northwestern.cbits.intellicare.mantra.FOCUS_BOARD_ID";
@@ -63,7 +69,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		Log.d(CN+".onCreate", "entered");
 
-		this.setContentView(R.layout.solo_focus_board_activity);
+		this.setContentView(R.layout.single_mantra_board_activity);
 
 		ActionBar actionBar = this.getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
@@ -73,6 +79,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 	protected void onResume() {
 		super.onResume();
 		Log.d(CN+".onResume", "entered");
+		EventLogging.log(self, "entered...", "onResume", CN);
 
 		Intent intent = this.getIntent();
 
@@ -88,7 +95,6 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 			handleSelectedImageIntent();
 		} 
 		catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -107,6 +113,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 			{
 				public void onClick(DialogInterface dialog, int which) 
 				{
+					EventLogging.log(self, "Starting image browser.", "onResume.onClick", CN);
 					SingleMantraBoardActivity.startBrowsePhotosActivity(me);
 				}
 			});
@@ -115,6 +122,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 			{
 				public void onClick(DialogInterface dialog, int which) 
 				{
+					EventLogging.log(self, "Starting camera.", "onResume.onClick", CN);
 					me.startCollectCameraActivity();
 				}
 			});
@@ -123,7 +131,6 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 		}
 		
 		cursor.close();
-
 		attachGridView();
 	}
 	
@@ -131,11 +138,11 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 	 * Creates, binds to data, and fills the main view for this activity.
 	 */
 	private void attachGridView() {
-		setContentView(R.layout.no_fragments_home_activity);
+		setContentView(R.layout.index_activity);
 		final GridView gv = (GridView) this.findViewById(R.id.gridview);
 
 		final MantraImageCursor cursor = MantraBoardManager.get(this).queryMantraImages(this.mMantraBoardId);
-		Util.logCursor(cursor);
+//		Util.logCursor(cursor);
 		
 		@SuppressWarnings("deprecation")
 		CursorAdapter adapter = new CursorAdapter(this, cursor) {
@@ -147,13 +154,8 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 					MantraImageCursor mFocusImageCursor = (MantraImageCursor) c;
 					MantraImage mantraImage = mFocusImageCursor.getMantraImage();
 					UriImageView imageView = (UriImageView) view.findViewById(R.id.imageThumb);
-					// Drawable d = PictureUtils.getScaledDrawable(self, mantraImage.getPath());
-					// imageView.setImageDrawable(d);
-					
 					Uri imageUri = Uri.fromFile(new File(mantraImage.getPath()));
 					imageView.setCachedImageUri(imageUri, -1, true);
-
-					// view.setBackgroundColor(0x80ff0000);
 
 					// set the caption
 					TextView tv = (TextView) view.findViewById(R.id.imageCaption);
@@ -183,6 +185,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 				String filePath = cursor.getString(MantraBoardManager.COL_INDEX_FILE_PATH);
 				Log.d(CN+".onItemClick", "filePath = " + filePath);
 				intent.setDataAndType(Uri.fromFile(new File(filePath)), "image/*");
+				EventLogging.log(self, "Opening image in image viewer. File path = " + filePath, "onResume.onClick", CN);
 				startActivity(intent);
 			}
 		});
@@ -204,7 +207,6 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 					// on user clicking the Edit or Delete option...
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-//						Toast.makeText(self, "You chose " + optionItems[which] + "; which = " + which, Toast.LENGTH_SHORT).show();
 						
 						// which option from the dialog menu did the user select?
 						switch(which) {
@@ -225,12 +227,12 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 									@Override
 									public void onClick(DialogInterface dialog, int which) {
 										// update the selected mantra's text
-//										Toast.makeText(self, "Mantra text should change.", Toast.LENGTH_SHORT).show();
 										String newCaption = ((EditText) v.findViewById(R.id.text_dialog)).getText().toString();
 										MantraImage fi = MantraBoardManager.get(self).getMantraImage(id);
 										fi.setCaption(newCaption);
 										long updateRet = MantraBoardManager.get(self).setMantraImage(fi);
 										Log.d(CN+".onItemLongClick....onClick", "updateRet = " + updateRet);
+										EventLogging.log(self, "Edited mantra text (id = " + id +").", "onItemLongClick.onClick.onClick", CN);
 										attachGridView();
 									}
 								});
@@ -252,14 +254,18 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 									public void onClick(DialogInterface dialog, int which) {
 										int rowsDeleted = MantraBoardManager.get(self).deleteMantraImage(id);
 										attachGridView();
-										Log.d(CN+".onItemLongClick....onClick", "deleted row = " + id + "; deleted row count = " + rowsDeleted);
+										String m = "Deleted row = " + id + "; deleted row count = " + rowsDeleted;
+										Log.d(CN+".onItemLongClick....onClick", m);
+										EventLogging.log(self, m, "onItemLongClick.onClick.onClick", CN);
 									}
 								});
 								dlg1.setNegativeButton(self.getString(R.string.no), new OnClickListener() {
 									
 									@Override
 									public void onClick(DialogInterface dialog, int which) {
-										Log.d(CN+".onItemLongClick....onClick", "not deleting " + id);
+										String m = "Not deleting " + id;
+										Log.d(CN+".onItemLongClick....onClick", m);
+										EventLogging.log(self, m, "onItemLongClick.onClick.onClick", CN);
 									}
 								});
 								dlg1.show();
@@ -278,7 +284,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		Log.d(CN+".onCreateOptionsMenu", "entered");
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.focus_board_activity_actions, menu);
+		inflater.inflate(R.menu.mantra_board_activity_actions, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -286,14 +292,16 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Log.d(CN+".onOptionsItemSelected", "entered");
 		switch (item.getItemId()) {
-		case R.id.new_image_action:
-			startCollectCameraActivity();
-			return true;
-		case R.id.existing_image_action:
-			startBrowsePhotosActivity(this);
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
+			case R.id.new_image_action:
+				EventLogging.log(self, "Starting camera.", "onItemLongClick.onClick.onClick", CN);
+				startCollectCameraActivity();
+				return true;
+			case R.id.existing_image_action:
+				EventLogging.log(self, "Starting image browser.", "onItemLongClick.onClick.onClick", CN);
+				startBrowsePhotosActivity(this);
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -354,7 +362,7 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 		// then associate it. 
 		MantraImageCursor fic = mManager.queryMantraImages(mMantraBoardId );
 		boolean imageAlreadyAssociated = false;
-		Util.logCursor(fic);
+//		Util.logCursor(fic);
 		while(fic.moveToNext()) {
 			String path = fic.getString(MantraBoardManager.COL_INDEX_FILE_PATH).trim();
 			Log.d(CN+".applyNewImageToMantra", "path.equals(filePathToImage) = " + (path.equals(imageFile.getAbsolutePath())) + "; path = \"" + path + "\"" + "; imageFile.getAbsolutePath() = \"" + imageFile.getAbsolutePath() + "\"");
@@ -384,12 +392,10 @@ public class SingleMantraBoardActivity extends ActionBarActivity {
 		// ATTEMPT 4: query the content provider and log the contents of the thumbnail and media images sets.
 		Log.d(CN+".deleteAllFilesInImageFolder", "logging content provider contents for MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI = " + MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI);
 		Cursor imagesThumbsCursor = managedQuery(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, null, null, null, null);
-		Util.logCursor(imagesThumbsCursor);
-//		imagesThumbsCursor.moveToPosition(-1);
+//		Util.logCursor(imagesThumbsCursor);
 		Log.d(CN+".deleteAllFilesInImageFolder", "logging content provider contents for MediaStore.Images.Media.EXTERNAL_CONTENT_URI = " + MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		Cursor imagesMediaCursor = managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, null);
 		Util.logCursor(imagesMediaCursor);
-//		imagesMediaCursor.moveToPosition(-1);
 
 		// get the set of images to delete
 		ArrayList<Integer> imageIdsToDelete = getImageFilePaths(folderPath, imagesMediaCursor);

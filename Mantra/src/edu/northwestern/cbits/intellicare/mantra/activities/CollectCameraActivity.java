@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.io.InputStream;
 
-import edu.northwestern.cbits.intellicare.mantra.CameraPreview;
 import edu.northwestern.cbits.intellicare.mantra.GetImagesTask;
 import edu.northwestern.cbits.intellicare.mantra.MantraBoardManager;
 import edu.northwestern.cbits.intellicare.mantra.MantraImage;
@@ -31,6 +30,11 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+/**
+ * Gets camera images.
+ * @author mohrlab
+ *
+ */
 public class CollectCameraActivity extends Activity {
 
 
@@ -58,7 +62,6 @@ public class CollectCameraActivity extends Activity {
 
 
 	  private void startMantraBoardActivity() {
-// CJK		Intent intent = new Intent(CollectCameraActivity.this,
 		Intent intent = new Intent(CollectCameraActivity.this, SingleMantraBoardActivity.class);
 		intent.putExtra(SingleMantraBoardActivity.MANTRA_BOARD_ID, mFocusBoardId);
 		startActivity(intent);
@@ -135,21 +138,6 @@ public class CollectCameraActivity extends Activity {
 	  }
 	  
 	  
-	  /**
-	   * Creates and saves a thumbnail image given an existing full-size image.
-	   * @param fullSizeFileUri
-	   * @return A File object to the new thumbnail file.
-	   */
-	  public static Uri createAndSaveThumbnail(Uri fullSizeFileUri) {
-
-		  Uri thumbUri = Uri.parse(Paths.MANTRA_IMAGES_TMP_THUMBNAILS + "/" + fullSizeFileUri.getLastPathSegment());
-		  
-		  
-		  
-		  return thumbUri;
-	  }
-
-	
 	  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    Log.d(CN+".onActivityResult", "entered; requestCode = " + requestCode + "; resultCode = " + resultCode + "; data = " + data);
 
@@ -160,68 +148,8 @@ public class CollectCameraActivity extends Activity {
 				mFocusBoardId, fileUri.getPath(), getString(R.string.some_image_caption)
 			);
 		
-		// create thumbnail too
-		createAndSaveThumbnail(fileUri);
-		
 	    startMantraBoardActivity();
 		
 		this.finish();
 	  }
-	  
-	  
-//	  //-------------------------------------------------------------------------------------------------------------------------
-//	  
-//	  
-//	  static final int REQUEST_IMAGE_CAPTURE = 1;
-//
-//	  @Override
-//	  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//	      if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-//	          Bundle extras = data.getExtras();
-//	          Bitmap imageBitmap = (Bitmap) extras.get("data");
-////	          mImageView.setImageBitmap(imageBitmap);
-//	      }
-//	  }
-//
-//	  String mCurrentPhotoPath;
-//
-//	  private File createImageFile() throws IOException {
-//	      // Create an image file name
-//	      String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-//	      String imageFileName = "JPEG_" + timeStamp + "_";
-//	      File storageDir = Environment.getExternalStoragePublicDirectory(
-//	              Environment.DIRECTORY_PICTURES);
-//	      File image = File.createTempFile(
-//	          imageFileName,  /* prefix */
-//	          ".jpg",         /* suffix */
-//	          storageDir      /* directory */
-//	      );
-//
-//	      // Save a file: path for use with ACTION_VIEW intents
-//	      mCurrentPhotoPath = "file:" + image.getAbsolutePath();
-//	      return image;
-//	  }
-//	  
-//	  static final int REQUEST_TAKE_PHOTO = 1;
-//
-//	  private void dispatchTakePictureIntent() {
-//	      Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//	      // Ensure that there's a camera activity to handle the intent
-//	      if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//	          // Create the File where the photo should go
-//	          File photoFile = null;
-//	          try {
-//	              photoFile = createImageFile();
-//	          } catch (IOException ex) {
-//	              // Error occurred while creating the File
-//	              Log.e(CN+".displatchTakePictureIntent", ex.getLocalizedMessage());
-//	          }
-//	          // Continue only if the File was successfully created
-//	          if (photoFile != null) {
-//	              takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-//	                      Uri.fromFile(photoFile));
-//	              startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-//	          }
-//	      }
-//	  }
 }

@@ -31,7 +31,6 @@ public class SingleMediaScanner implements MediaScannerConnectionClient {
 		mFile = f;
 		isDone = isCompleted;
 		mMs = new MediaScannerConnection(context, this);
-//		Log.d(CN+".ctor", "connecting for file: " + f.getAbsolutePath());
 		mMs.connect();
 	}
 
@@ -42,9 +41,7 @@ public class SingleMediaScanner implements MediaScannerConnectionClient {
 
 	@Override
 	public void onScanCompleted(String path, Uri uri) {
-//		Log.d(CN+".onScanCompleted", "disconnecting for path: " + path + " and uri = " + uri);
 		mMs.disconnect();
 		isDone = true;
-//		Log.d(CN+".onScanCompleted", "scanning file (end): " + path + "; isDone = " + isDone);
 	}
 }

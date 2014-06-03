@@ -65,10 +65,8 @@ public class NotificationAlarm extends BroadcastReceiver
          Calendar currentCalendarInstance = Calendar.getInstance();
          Calendar currentCalendarInstanceMinusPollingRate = (Calendar) currentCalendarInstance.clone();
          currentCalendarInstanceMinusPollingRate.add(Calendar.MINUTE, -(IMAGE_SCAN_RATE_MINUTES));
-//         Log.d(CN+".onReceive", "currentCalendarInstance.getTime() = " + currentCalendarInstance.getTime() + "; currentCalendarInstanceMinusPollingRate.getTime() = " + currentCalendarInstanceMinusPollingRate.getTime());
          int currHour = currentCalendarInstance.get(Calendar.HOUR_OF_DAY);
          int currMin = currentCalendarInstance.get(Calendar.MINUTE);
-//         Log.d(CN+".onReceive", "h = " + currHour + "; m = " + currMin + "; startHour = " + startHour + "; startMinute = " + startMinute + "; endHour = " + endHour + "; endMinute = " + endMinute);
          
          // beginning-of-day notification 
          if		 (currHour == startHour && currMin == startMinute) {
@@ -84,35 +82,16 @@ public class NotificationAlarm extends BroadcastReceiver
         		 
         		 message += "\n" + mantra.getMantra();
         	 }
-        	 // destinationless notification
-//        	 makeNotification(
-//        			 context, 
-//        			 context.getString(R.string.notification_start_day), 
-//        			 R.drawable.abc_ic_go, 
-//        			 al.toArray(new String[al.size()]), 
-//        			 null,
-//        			 0);
         	 
         	 NotificationAlarm.makeNotification(context, message, R.drawable.abc_ic_go, null, NotificationAlarm.NOTE_ID, null);
          }
          // end-of-day notification
          else if (currHour == endHour && currMin == endMinute) {
         	 Log.d(CN+".onReceive", "at h = " + currHour + ", m = " + currMin + ", MAKE ENDING NOTIFICATION");
-        	 // notification destination: Review activity
-//        	 makeNotification(
-//        			 context, 
-//        			 context.getString(R.string.notification_end_day), 
-//        			 R.drawable.abc_ic_go, 
-//        			 null,
-//        			 new Intent(context, ReviewActivity.class),
-//        			 1);
         	 
         	 // v1: display ReviewActivity as a whole activity unto itself
         	 PendingIntent pi = PendingIntent.getActivity(context, 0, new Intent(context, ReviewActivity.class), 0);
         	 Uri u = ReviewActivity.activityUri(context);
-
-        	 // v2: display review as a dialog
-//        	 ReviewActivity.reviewDialog(context);
 
         	 NotificationAlarm.makeNotification(context, context.getString(R.string.notification_end_day), R.drawable.abc_ic_go, pi, NotificationAlarm.NOTE_ID, u);
          }
@@ -120,9 +99,7 @@ public class NotificationAlarm extends BroadcastReceiver
          boolean intentHasDelayedAlarmDate = intent.getExtras().containsKey(DELAYED_ALARM_DATE_KEY);
          
          // if it's time to scan for an image
-//         Log.d(CN+".onReceive", "m % IMAGE_SCAN_RATE_MINUTES = " + currMin % IMAGE_SCAN_RATE_MINUTES);
          if (currMin % IMAGE_SCAN_RATE_MINUTES == 0) {
-//        	 Log.d(CN+".onReceive", "at h = " + currHour + ", m = " + currMin + ", SCAN FOR IMAGES");
         	 
         	 ArrayList<String> newImageIds = getCameraImagesSinceDate(context, currentCalendarInstanceMinusPollingRate.getTime());
         	 if(newImageIds.size() > 0) {
@@ -141,12 +118,6 @@ public class NotificationAlarm extends BroadcastReceiver
                 	 NotificationAlarm.makeNotification(context, context.getString(R.string.note_add_images), R.drawable.abc_ic_go, pi, NotificationAlarm.NOTE_ID, u);
 
             		 Log.d(CN+".onReceive", "1 New photo found; making notification...");
-//            		 makeNotification(context,
-//            				 "1 Tap to attach your new photos to a mantra!", 
-//            				 R.drawable.abc_ic_go, 
-//            				 null, 
-//            				 progressActivityIntent, 
-//            				 2);
             		 
         			 // set an alarm 12h in the future that displays a reminder notification
             		 Calendar c = Calendar.getInstance();
@@ -162,17 +133,13 @@ public class NotificationAlarm extends BroadcastReceiver
         	 }
          }
 
-//         // check for and handle the delayed notification
-//		 for (String k : intent.getExtras().keySet()) {
-//			 Log.d(CN+".onReceive", "INTENT EXTRA = " + intent.getExtras().getLong(k));
-//		 }
+         // check for and handle the delayed notification
          long delayedAlarmDateMillis = !intentHasDelayedAlarmDate ? -1 : intent.getExtras().getLong(DELAYED_ALARM_DATE_KEY);
          long currDateMillis = (new Date()).getTime();
          boolean waitedLongEnough = (delayedAlarmDateMillis - currDateMillis) >= NUM_MILLIS_IN_INTERVAL;
          Log.d(CN+".onReceive", "*** waitedLongEnough = " + waitedLongEnough + "; intentHasDelayedAlarmDate = " + intentHasDelayedAlarmDate + "; delayedAlarmDateMillis = " + (new Date(delayedAlarmDateMillis)).toString() + "; currDateMillis = " + (new Date(currDateMillis)).toString());
          
          if(waitedLongEnough) {
-    		 // from TransparentActivity...
     		 Intent progressActivityIntent = new Intent(context, ProgressActivity.class);
     		 progressActivityIntent.putExtra(MediaScannerService.INTENT_KEY_TO_RECEIVER_STRINGARRAY, true);
 
@@ -180,13 +147,6 @@ public class NotificationAlarm extends BroadcastReceiver
         	 Uri u = ProgressActivity.activityUri(context);
 
     		 Log.d(CN+".onReceive", "2 New photo found; making notification...");
-//    		 makeNotification(context,
-//    				 "2 Tap to attach your new photos to a mantra!", 
-//    				 R.drawable.abc_ic_go, 
-//    				 null, 
-//    				 progressActivityIntent, 
-//    				 2);
-    		 
         	 NotificationAlarm.makeNotification(context, context.getString(R.string.note_add_images), R.drawable.abc_ic_go, pi, NotificationAlarm.NOTE_ID, u);
          }
          
@@ -197,8 +157,8 @@ public class NotificationAlarm extends BroadcastReceiver
      public static int callCounter = 0;
      public static String DELAYED_ALARM_DATE_KEY = "NotificationAlarmDate";
      public static int INTERVAL_SCALAR = 3;
-//     public static long NUM_MILLIS_IN_INTERVAL = 1000*60*60*INTERVAL_SCALAR;	// uncomment for prod
-     public static long NUM_MILLIS_IN_INTERVAL = 1000*INTERVAL_SCALAR;	// for dev/test
+     public static long NUM_MILLIS_IN_INTERVAL = 1000*60*60*INTERVAL_SCALAR;	// uncomment for prod
+//     public static long NUM_MILLIS_IN_INTERVAL = 1000*INTERVAL_SCALAR;	// for dev/test
      private PendingIntent alarmSender;
  	
  	/**
@@ -224,24 +184,6 @@ public class NotificationAlarm extends BroadcastReceiver
  	}
 
 
-//		/**
-//	 * @param context
-//	 * @param newImageIds
-//	 */
-//	public void dialogOnNewPhotos(final Context context, ArrayList<String> newImageIds) {
-//		// if any files have modification date after 5 minutes ago, then prompt the user to select one and apply it to a mantra
-//		 if(newImageIds.size() > 0) {
-//			 Intent intent = new Intent(context, TransparentActivity.class);
-//			 intent.putExtra(TransparentActivity.INTENT_IMAGES_FOUND, true);
-//			 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//			 context.startActivity(intent);
-//
-//			
-////			 set12hFlag(context);
-//		 }
-//	}
-
-
 	/**
 	 * Gets the set of camera image references from the local Android media store where the photo was taken within some period of most-recent time.
 	 * DB contents sample:
@@ -263,7 +205,6 @@ public class NotificationAlarm extends BroadcastReceiver
 				 };
 		 Cursor imagesMediaCursor = context.getContentResolver().query(mediaImagesUri, imagesMediaProjection, null, null, null);
 		 ArrayList<String> ids = new ArrayList<String>();
-//		 Util.logCursor(imagesMediaCursor);
 		 
 		 while(imagesMediaCursor.moveToNext()) {
 			 long imageDateTaken = imagesMediaCursor.getLong(imagesMediaCursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));

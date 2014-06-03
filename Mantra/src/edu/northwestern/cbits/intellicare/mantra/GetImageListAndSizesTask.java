@@ -40,7 +40,6 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 	private final ProgressBar progressBar;
 	private final View progressBarView;
 		
-//	public GetImageListAndSizesTask(SharedUrlActivity sua, ProgressBar p) {
 	public GetImageListAndSizesTask(Activity a, ProgressBar p, View pbv) {
 		activity = a;
 		progressBar = p;
@@ -129,7 +128,7 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 					    new DialogInterface.OnClickListener() {
 					        public void onClick(DialogInterface dialog, int which) {
 					          activity.finish();
-					        	//dismiss the dialog  
+					          EventLogging.log(activity, "Clicked OK on a network exception message = " + e.getMessage(), "displayNetworkExceptionMessage.run.onClick", CN);
 					        }
 					    });
 				dlgAlert.create().show();

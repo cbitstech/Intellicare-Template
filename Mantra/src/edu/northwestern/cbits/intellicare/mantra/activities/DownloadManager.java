@@ -66,9 +66,6 @@ public class DownloadManager
 		{
 			File folder = this._context.getFilesDir();
 
-//			final String[] urls = this._context.getResources().getStringArray(R.array.remote_media_urls);
-//			final String[] urls = new String[] { "foo", "bar" };
-			
 			for (String url : urls)
 			{
 				Uri u = Uri.parse(url);
@@ -94,8 +91,6 @@ public class DownloadManager
 			return;
 		
 		this._checking  = true;
-		
-//		final String[] urls = this._context.getResources().getStringArray(R.array.remote_media_urls);
 		
 		final DownloadManager me = this;
 
