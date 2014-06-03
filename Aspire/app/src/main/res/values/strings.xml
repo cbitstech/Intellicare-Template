@@ -110,7 +110,7 @@
 
     <!-- Database -->
     
-   	<string name="db_create_cards_table">CREATE TABLE IF NOT EXISTS cards(_id INTEGER PRIMARY KEY, name TEXT, description TEXT);</string>
+   	<string name="db_create_cards_table">CREATE TABLE IF NOT EXISTS cards(_id INTEGER PRIMARY KEY, name TEXT, description TEXT, enabled INTEGER DEFAULT 0);</string>
 
     <string name="db_create_bank_table">CREATE TABLE IF NOT EXISTS bank(_id INTEGER PRIMARY KEY, virtue TEXT, path TEXT);</string>
 
@@ -199,15 +199,15 @@
     <string name="db_insert_tradition_path_02">INSERT INTO bank(virtue, path) VALUES(\'tradition\', \'Cook a dish that has been passed on in your family\');</string>
     <string name="db_insert_tradition_path_03">INSERT INTO bank(virtue, path) VALUES(\'tradition\', \'Write down one tradition or ritual you would like to do every week\');</string>
 
-	<string name="db_insert_card_1">INSERT INTO cards (name, description) VALUES(\'COMPASSION\', \'to feel and act on concern for others\');</string>
-	<string name="db_insert_card_2">INSERT INTO cards (name, description) VALUES(\'CONTRIBUTION\', \'to make a lasting contribution in the world\');</string>
-	<string name="db_insert_card_3">INSERT INTO cards (name, description) VALUES(\'DUTY\', \'to carry out my duties and obligations\');</string>
-	<string name="db_insert_card_4">INSERT INTO cards (name, description) VALUES(\'FAMILY\', \'to have a happy, loving family\');</string>
-	<string name="db_insert_card_5">INSERT INTO cards (name, description) VALUES(\'FITNESS\', \'to be physically fit and strong\');</string>
-	<string name="db_insert_card_6">INSERT INTO cards (name, description) VALUES(\'FRIENDSHIP\', \'to have close, supportive friends\');</string>
-	<string name="db_insert_card_7">INSERT INTO cards (name, description) VALUES(\'FUN\', \'to play and have fun\');</string>
-	<string name="db_insert_card_8">INSERT INTO cards (name, description) VALUES(\'GENEROSITY\', \'to give what I have to others\');</string>
-	<string name="db_insert_card_9">INSERT INTO cards (name, description) VALUES(\'GROWTH\', \'to keep changing and growing\');</string>
+	<string name="db_insert_card_01">INSERT INTO cards (name, description) VALUES(\'COMPASSION\', \'to feel and act on concern for others\');</string>
+	<string name="db_insert_card_02">INSERT INTO cards (name, description) VALUES(\'CONTRIBUTION\', \'to make a lasting contribution in the world\');</string>
+	<string name="db_insert_card_03">INSERT INTO cards (name, description) VALUES(\'DUTY\', \'to carry out my duties and obligations\');</string>
+	<string name="db_insert_card_04">INSERT INTO cards (name, description) VALUES(\'FAMILY\', \'to have a happy, loving family\');</string>
+	<string name="db_insert_card_05">INSERT INTO cards (name, description) VALUES(\'FITNESS\', \'to be physically fit and strong\');</string>
+	<string name="db_insert_card_06">INSERT INTO cards (name, description) VALUES(\'FRIENDSHIP\', \'to have close, supportive friends\');</string>
+	<string name="db_insert_card_07">INSERT INTO cards (name, description) VALUES(\'FUN\', \'to play and have fun\');</string>
+	<string name="db_insert_card_08">INSERT INTO cards (name, description) VALUES(\'GENEROSITY\', \'to give what I have to others\');</string>
+	<string name="db_insert_card_09">INSERT INTO cards (name, description) VALUES(\'GROWTH\', \'to keep changing and growing\');</string>
 	<string name="db_insert_card_10">INSERT INTO cards (name, description) VALUES(\'HELPFULNESS\', \'to be helpful to others\');</string>
 	<string name="db_insert_card_11">INSERT INTO cards (name, description) VALUES(\'HOPE\', \'to maintain a positive and optimistic outlook\');</string>
 	<string name="db_insert_card_12">INSERT INTO cards (name, description) VALUES(\'HUMOR\', \'to see the humorous side of myself and the world\');</string>

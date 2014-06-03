@@ -244,7 +244,9 @@ public class MainActivity extends ConsentedActivity
 		
 		while(c.moveToNext())
 		{
-			uniqueIds.add(c.getLong(c.getColumnIndex(AspireContentProvider.PATH_CARD_ID)));
+            if (c.getInt(c.getColumnIndex(AspireContentProvider.CARD_ENABLED)) != 0){
+                uniqueIds.add(c.getLong(c.getColumnIndex(AspireContentProvider.PATH_CARD_ID)));
+             }
 		}
 		
 		this._count = uniqueIds.size();
@@ -253,23 +255,10 @@ public class MainActivity extends ConsentedActivity
 		
 		if (this._count == 0)
 		{
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			
-			builder.setTitle(R.string.title_path_needed);
-			
-			builder.setMessage(R.string.message_path_needed);
-			
-			builder.setPositiveButton(R.string.action_add_path, new DialogInterface.OnClickListener()
-			{
-				public void onClick(DialogInterface dialog, int which) 
-				{
-					Intent cardIntent = new Intent(me, CardActivity.class);
-					
-					me.startActivity(cardIntent);
-				}
-			});
-			
-			builder.create().show();
+            /* causing an issue
+            Intent picker = new Intent(this, CardActivity.class);
+            this.startActivity(picker); */
+
 		}
 		else
 		{
