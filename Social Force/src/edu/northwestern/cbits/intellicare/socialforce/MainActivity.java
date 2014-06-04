@@ -12,7 +12,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -95,8 +98,66 @@ public class MainActivity extends ConsentedActivity
 	        Intent introIntent = new Intent(this, RatingActivity.class);
 	        this.startActivity(introIntent);
         }
-        
-        this.refreshBubbles();
+        else
+        {
+            final MainActivity me = this;
+            
+    		List<ContactRecord> contacts = ContactCalibrationHelper.fetchContactRecords(this);
+    		
+    		if (contacts.size() == 0)
+    		{
+    			if (ContactCalibrationHelper.commWithoutContacts(this))
+    			{
+	    			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	    			
+	    			builder.setTitle(R.string.title_no_contacts_comms);
+	    			builder.setMessage(R.string.message_no_contacts_comms);
+	    			
+	    			builder.setPositiveButton(R.string.action_continue, new DialogInterface.OnClickListener()
+	    			{
+	    				public void onClick(DialogInterface dialog, int which) 
+	    				{
+	    				    Intent i = new Intent();
+	    				    i.setComponent(new ComponentName("com.android.contacts", "com.android.contacts.DialtactsContactsEntryActivity"));
+	    				    i.setAction("android.intent.action.MAIN");
+	    				    i.addCategory("android.intent.category.LAUNCHER");
+	    				    i.addCategory("android.intent.category.DEFAULT");
+	    				    me.startActivity(i);
+	    				    
+	    				    me.finish();
+	    				}
+	    			});
+	
+	    			builder.create().show();
+    			}
+    			else
+    			{    				
+	    			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	    			
+	    			builder.setTitle(R.string.title_no_contacts);
+	    			builder.setMessage(R.string.message_no_contacts);
+	    			
+	    			builder.setPositiveButton(R.string.action_continue, new DialogInterface.OnClickListener()
+	    			{
+	    				public void onClick(DialogInterface dialog, int which) 
+	    				{
+	    				    Intent i = new Intent();
+	    				    i.setComponent(new ComponentName("com.android.contacts", "com.android.contacts.DialtactsContactsEntryActivity"));
+	    				    i.setAction("android.intent.action.MAIN");
+	    				    i.addCategory("android.intent.category.LAUNCHER");
+	    				    i.addCategory("android.intent.category.DEFAULT");
+	    				    me.startActivity(i);
+	    				    
+	    				    me.finish();
+	    				}
+	    			});
+	
+	    			builder.create().show();
+    			}
+    		}
+    		else
+    			this.refreshBubbles();
+		}
     }
 
     @SuppressLint({ "SetJavaScriptEnabled", "JavascriptInterface" })
@@ -211,6 +272,9 @@ public class MainActivity extends ConsentedActivity
 				bubble.put("name", contact.name);
 				bubble.put("size", contact.count);
 				
+				if (contact.count == 0)
+					bubble.put("size", 1);
+				
 				JSONArray colors = new JSONArray();
 				boolean include = false;
 				
@@ -270,6 +334,11 @@ public class MainActivity extends ConsentedActivity
 		{
 			Intent settingsIntent = new Intent(this, SettingsActivity.class);
 			this.startActivity(settingsIntent);
+		}
+		else if (itemId == R.id.action_help)
+		{
+			Intent helpIntent = new Intent(this, IntroActivity.class);
+			this.startActivity(helpIntent);
 		}
 		else if (itemId == R.id.action_rating)
 		{

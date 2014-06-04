@@ -10,6 +10,8 @@
     <string name="action_cordova">HTML5 Activity</string>
     <string name="action_rating">Rating Activity</string>
     
+    <string name="action_help">Help</string>
+    
     <string name="title_drawables_activity">Available Icons</string>
 
     <string name="title_consent">Consent Form (STU00074405)</string>

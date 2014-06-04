@@ -122,5 +122,13 @@
     <string name="title_settings">Settings</string>
     <string name="label_contact_count" formatted="false">%s (%d calls &amp; texts)</string>
     <string name="label_contact_count_single" formatted="false">%s (1 call or text)</string>
+    
+    <string name="title_no_contacts">No Contacts Found</string>
+    <string name="message_no_contacts">Social Force uses your contacts and communication logs to highlight your supporters.\n\nPlease restart the app once you\'ve added your contacts to your device.</string>
+
+    <string name="title_no_contacts_comms">No Contacts Found</string>
+    <string name="message_no_contacts_comms">Social Force uses your contacts to highlight supporters.\n\nPlease add contact records for people you\'ve called or texted.</string>
+    
+    <string name="label_no_phone">(No phone number found.)</string>
 </resources>
 
