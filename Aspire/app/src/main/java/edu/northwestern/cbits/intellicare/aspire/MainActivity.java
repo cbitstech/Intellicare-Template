@@ -208,21 +208,20 @@ public class MainActivity extends ConsentedActivity
 
     protected long currentCardId()
     {
-        ArrayList<Long> cardIds = new ArrayList<Long>();
+        String where = AspireContentProvider.CARD_ENABLED + " != 0";
 
-        Cursor c = this.getContentResolver().query(AspireContentProvider.ASPIRE_PATH_URI, null, null, null, AspireContentProvider.PATH_CARD_ID);
+        Cursor c = this.getContentResolver().query(AspireContentProvider.ASPIRE_CARD_URI, null, where, null, AspireContentProvider.ID);
 
-        while (c.moveToNext())
+        long cardId = 0;
+
+        if (c.moveToPosition(this._index))
         {
-            Long cardId = Long.valueOf(c.getLong(c.getColumnIndex(AspireContentProvider.PATH_CARD_ID)));
-
-            if (cardIds.contains(cardId) == false)
-                cardIds.add(cardId);
+            cardId = c.getLong(c.getColumnIndex(AspireContentProvider.ID));
         }
 
         c.close();
 
-        return cardIds.get(this._index);
+        return cardId;
     }
 
 	protected void onResume()
@@ -433,7 +432,7 @@ public class MainActivity extends ConsentedActivity
                     String where = AspireContentProvider.PATH_CARD_ID + " = ?";
                     String[] args = { "" + cardId };
 
-                    Cursor c = me.getContentResolver().query(AspireContentProvider.ASPIRE_CARD_URI, null, where, args, AspireContentProvider.PATH_PATH);
+                    Cursor c = me.getContentResolver().query(AspireContentProvider.ASPIRE_PATH_URI, null, where, args, AspireContentProvider.PATH_PATH);
 
                     ArrayList<String> paths = new ArrayList<String>();
 
@@ -604,7 +603,7 @@ public class MainActivity extends ConsentedActivity
 	    					{
 	    						TextView path = (TextView) view.findViewById(R.id.path_name);
 	    						TextView card = (TextView) view.findViewById(R.id.card_name);
-	    						
+
 	    						long pathId = cursor.getLong(cursor.getColumnIndex(AspireContentProvider.TASK_PATH_ID));
 	    						
 	    						String where = AspireContentProvider.ID + " = ?";

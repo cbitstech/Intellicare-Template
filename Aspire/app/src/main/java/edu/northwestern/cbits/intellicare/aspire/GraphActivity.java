@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -17,6 +18,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
@@ -49,7 +51,9 @@ public class GraphActivity extends ConsentedActivity
 		
 		try 
 		{
-			JSONArray data = GraphActivity.graphValues(this);
+			JSONObject data = GraphActivity.graphValues(this);
+
+            Log.e("Aspire ", data.toString(2));
 		
 			if (data.length() == 1)
 				actionBar.setSubtitle(R.string.subtitle_graph_single);
@@ -91,7 +95,7 @@ public class GraphActivity extends ConsentedActivity
 		
 		try 
 		{
-			JSONArray graphValues = GraphActivity.graphValues(context);
+			JSONObject graphValues = GraphActivity.graphValues(context);
 
 			graphString = graphString.replaceAll("VALUES_JSON", graphValues.toString());
 		}
@@ -119,7 +123,7 @@ public class GraphActivity extends ConsentedActivity
 		return graphString;
 	}
 	
-	private static JSONArray graphValues(Context context) throws JSONException 
+	private static JSONObject graphValues(Context context) throws JSONException
 	{
 		ArrayList<String> cards = new ArrayList<String>();
 		ArrayList<Long> cardIds = new ArrayList<Long>();
@@ -128,7 +132,7 @@ public class GraphActivity extends ConsentedActivity
 		
 		while (c.moveToNext())
 		{
-			String where = AspireContentProvider.ID + " = ?";
+			String where = AspireContentProvider.ID + " = ? AND " + AspireContentProvider.CARD_ENABLED + " != 0";
 			String[] args = {"" + c.getLong(c.getColumnIndex(AspireContentProvider.PATH_CARD_ID)) };
 			
 			Cursor cardCursor = context.getContentResolver().query(AspireContentProvider.ASPIRE_CARD_URI, null, where, args, null);
@@ -149,8 +153,6 @@ public class GraphActivity extends ConsentedActivity
 		
 		c.close();
 		
-		JSONArray values = new JSONArray();
-		
 		String[] colorWheel = { "#0099CC", "#9933CC", "#669900", "#FF8800", "#CC0000" };
 
 		long day = 1000 * 60 * 60 * 24;
@@ -163,16 +165,18 @@ public class GraphActivity extends ConsentedActivity
 		
 		long start = calendar.getTimeInMillis() - (day * 6);
 
+        JSONArray data = new JSONArray();
+        JSONArray colors = new JSONArray();
+        JSONArray names = new JSONArray();
+
 		for (int j = 0; j < cards.size(); j++)
 		{
-			String cardName = cards.get(j);
+            colors.put(colorWheel[j % colorWheel.length]);
+            names.put(cards.get(j));
+
 			long cardId = cardIds.get(j);
-			
-			JSONObject dataObj = new JSONObject();
-			dataObj.put("color", colorWheel[j % colorWheel.length]);
-			dataObj.put("name", cardName);
-			
-			JSONArray points = new JSONArray();
+
+            int count = 0;
 			
 			for (int i = 0; i < 7; i++)
 			{
@@ -183,12 +187,7 @@ public class GraphActivity extends ConsentedActivity
 				
 				Calendar thisCal = Calendar.getInstance();
 				thisCal.setTimeInMillis(cellMid);
-				
-				JSONObject point = new JSONObject();
-				
-				point.put("x", cardName);
 
-				int count = 0;
 				
 				String pathSelect = AspireContentProvider.PATH_CARD_ID + " = ?";
 				String[] pathArgs = { "" + cardId };
@@ -209,23 +208,18 @@ public class GraphActivity extends ConsentedActivity
 					
 					taskCursor.close();
 				}
-				
+
 				pathCursor.close();
-
-				if (count != 0)
-					point.put("y", count);
-				else
-					point.put("y", 0);
-
-				points.put(point);
 			}
-
-			dataObj.put("data", points);
-			
-			values.put(dataObj);
+        data.put(count);
 		}
 
-		return values;
+        JSONObject dataObj = new JSONObject();
+        dataObj.put("data", data);
+        dataObj.put("colors", colors);
+        dataObj.put("names", names);
+
+		return dataObj;
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) 
