@@ -215,7 +215,25 @@ public class RatingActivity extends ConsentedActivity
 							if (contact.level >= 0 && contact.level < 3)
 								contacts.add(contact);
 						}
+
 						
+						if (contacts.size() == 0)
+						{
+							AlertDialog.Builder builder = new AlertDialog.Builder(me);
+							
+							builder.setTitle(R.string.title_no_positive_contacts);
+							builder.setMessage(R.string.message_no_positive_contacts);
+							
+							builder.setPositiveButton(R.string.action_continue, new DialogInterface.OnClickListener() 
+							{
+								public void onClick(DialogInterface dialog, int which) 
+								{
+								}
+							});
+							
+							builder.create().show();
+						}
+
 						Collections.sort(contacts, new Comparator<ContactRecord>()
 						{
 							public int compare(ContactRecord one, ContactRecord two) 
@@ -446,8 +464,6 @@ public class RatingActivity extends ConsentedActivity
     					adviceCircle.getPaint().setColor(0xff0099CC);
     					
     					advice.setImageDrawable(adviceCircle);
-
-
 
 						break;
 					case 4:

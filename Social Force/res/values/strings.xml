@@ -130,5 +130,8 @@
     <string name="message_no_contacts_comms">Social Force uses your contacts to highlight supporters.\n\nPlease add contact records for people you\'ve called or texted.</string>
     
     <string name="label_no_phone">(No phone number found.)</string>
+    
+    <string name="title_no_positive_contacts">No positive supporters?</string>
+    <string name="message_no_positive_contacts">Let\'s work together to BUILD and STRENGTHEN your supports!</string>
 </resources>
 

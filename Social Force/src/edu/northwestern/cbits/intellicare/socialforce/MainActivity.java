@@ -7,6 +7,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.CrashManagerListener;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,6 +39,8 @@ public class MainActivity extends ConsentedActivity
 	private final static int STATE_COMPANIONSHIP = 4;
 	private final static int STATE_PRACTICAL = 8;
 	protected static final int STATE_ALL = STATE_ADVICE | STATE_EMOTIONAL | STATE_COMPANIONSHIP | STATE_PRACTICAL;
+	
+	private static final String APP_ID = "f57d1487b7510be09172d7f5e012fd46";
 	
 	protected int _state = MainActivity.STATE_ALL;
 	
@@ -85,6 +90,14 @@ public class MainActivity extends ConsentedActivity
     protected void onResume()
     {
     	super.onResume();
+    	
+		CrashManager.register(this, APP_ID, new CrashManagerListener() 
+		{
+			public boolean shouldAutoUploadCrashes() 
+			{
+				    return true;
+			}
+		});
     	
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         
