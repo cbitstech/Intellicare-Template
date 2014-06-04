@@ -21,11 +21,11 @@
 	<string name="subtitle_main">Pinch to zoom, tap a friend</string>
 	
     <string-array name="contact_roles">
-        <item>Very Positive</item>
-        <item>Positive</item>
-        <item>Neutral / Don\'t Know</item>
-        <item>Negative</item>
-        <item>Very Negative</item>
+        <item>++ Very Positive</item>
+        <item> + Positive</item>
+        <item>"? Neutral"</item>
+        <item> - Negative</item>
+        <item>-- Very Negative</item>
     </string-array>
     
     <string name="toast_practical" formatted="false">%s provides practical support.</string>

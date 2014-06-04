@@ -28,12 +28,13 @@ import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class MainActivity extends ConsentedActivity 
 {
-	public enum UserState
-	{
-	    LONELY, BORED, ADVICE, HELP, HAPPY
-	}
-
-	protected UserState _state = UserState.HAPPY;
+	private final static int STATE_ADVICE = 1;
+	private final static int STATE_EMOTIONAL = 2;
+	private final static int STATE_COMPANIONSHIP = 4;
+	private final static int STATE_PRACTICAL = 8;
+	protected static final int STATE_ALL = STATE_ADVICE | STATE_EMOTIONAL | STATE_COMPANIONSHIP | STATE_PRACTICAL;
+	
+	protected int _state = MainActivity.STATE_ALL;
 	
     protected void onCreate(Bundle savedInstanceState) 
     {
@@ -52,23 +53,23 @@ public class MainActivity extends ConsentedActivity
 			{
 				if (id == R.id.button_lonely)
 				{
-					me._state  = UserState.LONELY;
+					me._state = MainActivity.STATE_COMPANIONSHIP;
 				}
 				else if (id == R.id.button_bored)
 				{
-					me._state = UserState.BORED;
+					me._state = MainActivity.STATE_COMPANIONSHIP | MainActivity.STATE_EMOTIONAL | MainActivity.STATE_PRACTICAL;
 				}
 				else if (id == R.id.button_advice)
 				{
-					me._state = UserState.ADVICE;
+					me._state = MainActivity.STATE_EMOTIONAL | MainActivity.STATE_PRACTICAL;
 				}
 				else if (id == R.id.button_help)
 				{
-					me._state = UserState.HELP;
+					me._state = MainActivity.STATE_ADVICE;
 				}
 				else
 				{
-					me._state = UserState.HAPPY;
+					me._state = MainActivity.STATE_COMPANIONSHIP | MainActivity.STATE_EMOTIONAL | MainActivity.STATE_PRACTICAL | MainActivity.STATE_ADVICE;
 				}
 				
 				me.refreshBubbles();
@@ -138,7 +139,7 @@ public class MainActivity extends ConsentedActivity
 		}
     }
 
-	public static String generateBubbles(Context context, UserState state) 
+	public static String generateBubbles(Context context, int state) 
 	{
 	    StringBuilder buffer = new StringBuilder();
 	    
@@ -179,7 +180,7 @@ public class MainActivity extends ConsentedActivity
 		return graphString;
 	}
 
-	private static JSONObject bubbleValues(Context context, UserState state) throws JSONException 
+	private static JSONObject bubbleValues(Context context, int state) throws JSONException 
 	{
 		/*
 		 * 
@@ -213,25 +214,25 @@ public class MainActivity extends ConsentedActivity
 				JSONArray colors = new JSONArray();
 				boolean include = false;
 				
-				if (ContactCalibrationHelper.isAdvice(context, contact) && (state == UserState.ADVICE || state == UserState.HAPPY))
+				if (ContactCalibrationHelper.isAdvice(context, contact) && (state & MainActivity.STATE_ADVICE) == MainActivity.STATE_ADVICE)
 				{
 					colors.put("#0099CC");
 					include = true;
 				}
 				
-				if (ContactCalibrationHelper.isCompanion(context, contact) && (state == UserState.LONELY || state == UserState.HAPPY))
+				if (ContactCalibrationHelper.isCompanion(context, contact) && (state & MainActivity.STATE_COMPANIONSHIP) == MainActivity.STATE_COMPANIONSHIP)
 				{
 					colors.put("#9933CC");
 					include = true;
 				}
 
-				if (ContactCalibrationHelper.isEmotional(context, contact) && (state == UserState.HELP || state == UserState.HAPPY))
+				if (ContactCalibrationHelper.isEmotional(context, contact) && (state & MainActivity.STATE_EMOTIONAL) == MainActivity.STATE_EMOTIONAL)
 				{
 					colors.put("#CC0000");
 					include = true;
 				}
 				
-				if (ContactCalibrationHelper.isPractical(context, contact) && (state == UserState.BORED || state == UserState.HAPPY))
+				if (ContactCalibrationHelper.isPractical(context, contact) && (state & MainActivity.STATE_PRACTICAL) == MainActivity.STATE_PRACTICAL)
 				{
 					colors.put("#669900");
 					include = true;

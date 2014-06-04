@@ -2,6 +2,7 @@ package edu.northwestern.cbits.intellicare.socialforce;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import android.content.Context;
@@ -12,11 +13,15 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.CallLog;
 import android.provider.CallLog.Calls;
+import android.provider.ContactsContract.CommonDataKinds;
+import android.provider.ContactsContract.PhoneLookup;
 import android.telephony.PhoneNumberUtils;
 
 public class ContactCalibrationHelper 
 {
 	private static SharedPreferences _cachedPrefs = null;
+	private static long _lastContactFetch = 0;
+	private static List<ContactRecord> _cachedRecords = null;
 	
 	public static int getLevel(Context context, String key) 
 	{
@@ -41,9 +46,18 @@ public class ContactCalibrationHelper
 
     public static List<ContactRecord> fetchContactRecords(Context context)
     {
+    	long now = System.currentTimeMillis();
+    	
+    	if (now - ContactCalibrationHelper._lastContactFetch < 60000)
+    		return ContactCalibrationHelper._cachedRecords ;
+    	
+    	ContactCalibrationHelper._lastContactFetch = now;
+    	
     	ArrayList<ContactRecord> contacts = new ArrayList<ContactRecord>();
     	
 		Cursor c = context.getContentResolver().query(CallLog.Calls.CONTENT_URI, null, null, null, null);
+		
+		HashMap<String, String> nameCache = new HashMap<String, String>();
 
 		while (c.moveToNext())
 		{
@@ -74,20 +88,40 @@ public class ContactCalibrationHelper
 				}
 			}
 			
-			if (found == false)
+			if (phoneNumber.trim().length() > 0)
 			{
-				ContactRecord contact = new ContactRecord();
-				contact.name = numberName;
-				contact.number = phoneNumber;
-				
-				contact.key = contact.name;
-				
-				if ("".equals(contact.key))
-					contact.key = contact.number;
-				
-				contact.level = ContactCalibrationHelper.getLevel(context, contact.key);
+				if (nameCache.containsKey(phoneNumber) == false)
+				{
+					nameCache.put(phoneNumber, "");
 
-				contacts.add(contact);
+					Uri uri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
+					Cursor contactsCursor = context.getContentResolver().query(uri, null, null, null, null);
+
+					while (contactsCursor.moveToNext())
+					{
+						nameCache.put(phoneNumber, contactsCursor.getString(contactsCursor.getColumnIndex(CommonDataKinds.Identity.DISPLAY_NAME)));
+					}
+
+					contactsCursor.close();
+				}
+
+				if (found == false && nameCache.get(phoneNumber).length() > 0)
+				{
+
+					ContactRecord contact = new ContactRecord();
+					contact.name = nameCache.get(phoneNumber);
+					contact.number = phoneNumber;
+					
+					contact.key = contact.name;
+					
+					if ("".equals(contact.key))
+						contact.key = contact.number;
+					
+					contact.level = ContactCalibrationHelper.getLevel(context, contact.key);
+	
+					contacts.add(contact);
+				}
+				
 			}
 		}
 		
@@ -124,10 +158,25 @@ public class ContactCalibrationHelper
 				}
 			}
 			
-			if (found == false)
+			if (nameCache.containsKey(phoneNumber) == false)
+			{
+				nameCache.put(phoneNumber, "");
+
+				Uri uri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
+				Cursor contactsCursor = context.getContentResolver().query(uri, null, null, null, null);
+
+				while (contactsCursor.moveToNext())
+				{
+					nameCache.put(phoneNumber, contactsCursor.getString(contactsCursor.getColumnIndex(CommonDataKinds.Identity.DISPLAY_NAME)));
+				}
+
+				contactsCursor.close();
+			}
+
+			if (found == false && nameCache.get(phoneNumber).length() > 0)
 			{
 				ContactRecord contact = new ContactRecord();
-				contact.name = numberName;
+				contact.name = nameCache.get(phoneNumber);
 				contact.number = phoneNumber;
 				
 				contact.key = contact.name;
@@ -176,10 +225,26 @@ public class ContactCalibrationHelper
 				}
 			}
 			
-			if (found == false)
+
+			if (nameCache.containsKey(phoneNumber) == false)
+			{
+				nameCache.put(phoneNumber, "");
+
+				Uri uri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
+				Cursor contactsCursor = context.getContentResolver().query(uri, null, null, null, null);
+
+				while (contactsCursor.moveToNext())
+				{
+					nameCache.put(phoneNumber, contactsCursor.getString(contactsCursor.getColumnIndex(CommonDataKinds.Identity.DISPLAY_NAME)));
+				}
+
+				contactsCursor.close();
+			}
+
+			if (found == false && nameCache.get(phoneNumber).length() > 0)
 			{
 				ContactRecord contact = new ContactRecord();
-				contact.name = numberName;
+				contact.name = nameCache.get(phoneNumber);
 				contact.number = phoneNumber;
 				
 				contact.key = contact.name;
@@ -223,6 +288,8 @@ public class ContactCalibrationHelper
 		}
 		
 		Collections.sort(normalizedContacts);
+		
+		ContactCalibrationHelper._cachedRecords = normalizedContacts;
 		
     	return normalizedContacts;
     }

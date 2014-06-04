@@ -5,22 +5,23 @@
     android:orientation="horizontal" 
     android:padding="8dp">
     <LinearLayout android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp">
     	<TextView
         	android:id="@+id/label_contact_name"
         	android:layout_width="match_parent"
        	 	android:layout_height="wrap_content"
+       	 	android:singleLine="true"
         	android:textAppearance="?android:attr/textAppearanceMedium" />
     	<TextView
         	android:id="@+id/label_contact_number"
         	android:layout_width="match_parent"
        	 	android:layout_height="wrap_content"
+       	 	android:singleLine="true"
         	android:textAppearance="?android:attr/textAppearanceSmall" />
    	</LinearLayout>
-   	<View android:layout_width="0dp"
-   	    android:layout_height="1dp"
-   	    android:layout_weight="1" />
     <ImageView android:id="@+id/practical_item"
         android:layout_width="24dp"
 	    android:layout_height="?android:attr/listPreferredItemHeight"
