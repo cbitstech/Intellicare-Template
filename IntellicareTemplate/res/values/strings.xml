@@ -236,4 +236,6 @@
    	
     <string name="action_not_now">Not Now</string>
     
+    <string name="label_app_version">Application Version</string>
+    <string name="placeholder_app_version">(Application version goes here&#8230;)</string>
 </resources>
