@@ -38,7 +38,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
-import edu.northwestern.cbits.intellicare.socialforce.MainActivity.UserState;
 
 public class RatingActivity extends ConsentedActivity 
 {
@@ -565,7 +564,7 @@ public class RatingActivity extends ConsentedActivity
 							graphView.setInitialScale(1);
 							
 							graphView.addJavascriptInterface(me, "android");
-							graphView.loadDataWithBaseURL("file:///android_asset/viz/", MainActivity.generateBubbles(me, UserState.HAPPY), "text/html", null, null);
+							graphView.loadDataWithBaseURL("file:///android_asset/viz/", MainActivity.generateBubbles(me, MainActivity.STATE_ALL), "text/html", null, null);
 							
 							break;
 					}

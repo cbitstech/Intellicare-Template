@@ -1,5 +1,6 @@
 package edu.northwestern.cbits.intellicare.socialforce;
 
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -17,6 +18,17 @@ public class SettingsActivity extends PreferenceActivity
 		this.setTitle(R.string.title_settings);
 		
 		this.addPreferencesFromResource(R.layout.activity_settings);
+		
+		Preference version = this.findPreference("app_version");
+
+		try 
+		{
+			version.setTitle(this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName);
+		} 
+		catch (NameNotFoundException e) 
+		{
+			LogManager.getInstance(this).logException(e);
+		}
 	}
 	
 	public void onResume()
