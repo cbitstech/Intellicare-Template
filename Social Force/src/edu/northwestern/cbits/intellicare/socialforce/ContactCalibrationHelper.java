@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.CallLog;
 import android.provider.CallLog.Calls;
+import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds;
 import android.provider.ContactsContract.PhoneLookup;
 import android.telephony.PhoneNumberUtils;
@@ -261,6 +262,26 @@ public class ContactCalibrationHelper
 		c.close();
 		
 		Collections.sort(contacts);
+		
+		if (contacts.size() == 0)
+		{
+			Cursor cc = context.getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+			
+			while (cc.moveToNext())
+			{
+				ContactRecord contact = new ContactRecord();
+				contact.name = cc.getString(cc.getColumnIndex(CommonDataKinds.Identity.DISPLAY_NAME));
+				contact.number = context.getString(R.string.label_no_phone);
+				
+				contact.key = contact.name;
+				
+				contact.level = ContactCalibrationHelper.getLevel(context, contact.key);
+				
+				contacts.add(contact);
+			}
+			
+			cc.close();
+		}
 
 		ArrayList<ContactRecord> normalizedContacts = new ArrayList<ContactRecord>();
 		
@@ -294,6 +315,33 @@ public class ContactCalibrationHelper
     	return normalizedContacts;
     }
 
+    public static boolean commWithoutContacts(Context context)
+    {
+    	int contactCount = ContactCalibrationHelper.fetchContactRecords(context).size();
+    	
+    	int commCount = 0;
+    	
+		Cursor c = context.getContentResolver().query(CallLog.Calls.CONTENT_URI, null, null, null, null);
+		
+		commCount += c.getCount();
+		
+		c.close();
+
+		c = context.getContentResolver().query(Uri.parse("content://sms/inbox"), null, null, null, "date");
+
+		commCount += c.getCount();
+		
+		c.close();
+
+		c = context.getContentResolver().query(Uri.parse("content://sms/sent"), null, null, null, "date");
+
+		commCount += c.getCount();
+		
+		c.close();
+		
+		return (commCount != 0 && contactCount == 0);
+    }
+    
 	public static boolean isCompanion(Context context, ContactRecord contact) 
 	{
 		if (ContactCalibrationHelper._cachedPrefs == null)
