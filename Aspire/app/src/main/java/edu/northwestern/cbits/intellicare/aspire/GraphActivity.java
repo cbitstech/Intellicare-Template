@@ -186,7 +186,7 @@ public class GraphActivity extends ConsentedActivity
 				
 				JSONObject point = new JSONObject();
 				
-				point.put("x", cellMid / 1000);
+				point.put("x", cardName);
 
 				int count = 0;
 				
@@ -215,11 +215,11 @@ public class GraphActivity extends ConsentedActivity
 				if (count != 0)
 					point.put("y", count);
 				else
-					point.put("y", 0.1);
-				
+					point.put("y", 0);
+
 				points.put(point);
 			}
-			
+
 			dataObj.put("data", points);
 			
 			values.put(dataObj);

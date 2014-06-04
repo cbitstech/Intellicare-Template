@@ -36,19 +36,16 @@ public class AspireContentProvider extends ContentProvider
 	private static final int CARDS = 1;
 	private static final int PATHS = 2;
 	private static final int TASKS = 3;
-    private static final int BANK = 4;
 	
     private static final String AUTHORITY = "edu.northwestern.cbits.intellicare.aspire";
 
     private static final String CARD_TABLE = "cards";
     private static final String PATH_TABLE = "paths";
     private static final String TASK_TABLE = "tasks";
-    private static final String PATH_BANK_TABLE = "bank";
 
 	protected static final Uri ASPIRE_CARD_URI = Uri.parse("content://" + AUTHORITY + "/" + CARD_TABLE);
 	protected static final Uri ASPIRE_PATH_URI = Uri.parse("content://" + AUTHORITY + "/" + PATH_TABLE);
 	protected static final Uri ASPIRE_TASK_URI = Uri.parse("content://" + AUTHORITY + "/" + TASK_TABLE);
-    protected static final Uri PATH_BANK_URI = Uri.parse("content://" + AUTHORITY + "/" + PATH_BANK_TABLE);
 
 	protected static final String CARD_NAME = "name";
 	protected static final String CARD_DESCRIPTION = "description";
@@ -57,8 +54,6 @@ public class AspireContentProvider extends ContentProvider
 
 	protected static final String PATH_CARD_ID = "card_id";
 	protected static final String PATH_PATH = "path";
-
-    protected static final String BANK_PATH = "bank_path";
 
 	protected static final String TASK_PATH_ID = "path_id";
 	protected static final String TASK_YEAR = "year";
@@ -80,7 +75,6 @@ public class AspireContentProvider extends ContentProvider
         this._matcher.addURI(AUTHORITY, CARD_TABLE, CARDS);
         this._matcher.addURI(AUTHORITY, PATH_TABLE, PATHS);
         this._matcher.addURI(AUTHORITY, TASK_TABLE, TASKS);
-        this._matcher.addURI(AUTHORITY, PATH_BANK_TABLE, BANK);
     }
 
     public boolean onCreate() 
@@ -91,7 +85,6 @@ public class AspireContentProvider extends ContentProvider
         {
             public void onCreate(SQLiteDatabase db)
             {
-                db.execSQL(context.getString(R.string.db_create_bank_table));
 
                 db.execSQL(context.getString(R.string.db_create_cards_table));
 
@@ -214,8 +207,6 @@ public class AspireContentProvider extends ContentProvider
 	            return this._db.delete(AspireContentProvider.PATH_TABLE, where, whereArgs);
 	        case AspireContentProvider.TASKS:
 	            return this._db.delete(AspireContentProvider.TASK_TABLE, where, whereArgs);
-            case AspireContentProvider.BANK:
-                return this._db.delete(AspireContentProvider.PATH_BANK_TABLE, where, whereArgs);
         }
         
         return 0;
@@ -242,9 +233,7 @@ public class AspireContentProvider extends ContentProvider
 	        case AspireContentProvider.TASKS:
 	        	newId = this._db.insert(AspireContentProvider.TASK_TABLE, null, values);
 	        	break;
-            case AspireContentProvider.BANK:
-                newId = this._db.insert(AspireContentProvider.PATH_BANK_TABLE, null, values);
-                break;
+
         }
 		
 		if (newId != -1)
@@ -263,8 +252,7 @@ public class AspireContentProvider extends ContentProvider
 	        	return this._db.query(AspireContentProvider.PATH_TABLE, columns, selection, selectionArgs, null, null, orderBy);
 	        case AspireContentProvider.TASKS:
 	        	return this._db.query(AspireContentProvider.TASK_TABLE, columns, selection, selectionArgs, null, null, orderBy);
-            case AspireContentProvider.BANK:
-                return this._db.query(AspireContentProvider.PATH_BANK_TABLE, columns, selection, selectionArgs, null, null, orderBy);
+
         }
 		
 		return null;
@@ -280,8 +268,7 @@ public class AspireContentProvider extends ContentProvider
 	        	return this._db.update(AspireContentProvider.PATH_TABLE, values, selection, selectionArgs);
 	        case AspireContentProvider.TASKS:
 	        	return this._db.update(AspireContentProvider.TASK_TABLE, values, selection, selectionArgs);
-            case AspireContentProvider.BANK:
-                return this._db.update(AspireContentProvider.PATH_BANK_TABLE, values, selection, selectionArgs);
+
         }
 		
 		return 0;

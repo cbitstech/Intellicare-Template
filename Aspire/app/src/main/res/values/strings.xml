@@ -112,92 +112,90 @@
     
    	<string name="db_create_cards_table">CREATE TABLE IF NOT EXISTS cards(_id INTEGER PRIMARY KEY, name TEXT, description TEXT, enabled INTEGER DEFAULT 0);</string>
 
-    <string name="db_create_bank_table">CREATE TABLE IF NOT EXISTS bank(_id INTEGER PRIMARY KEY, virtue TEXT, path TEXT);</string>
-
    	<string name="db_update_cards_add_card_image">ALTER TABLE cards ADD COLUMN card_image TEXT;</string>
    	
    	<string name="db_create_paths_table">CREATE TABLE IF NOT EXISTS paths(_id INTEGER PRIMARY KEY, card_id INTEGER, path TEXT);</string>
    	<string name="db_create_tasks_table">CREATE TABLE IF NOT EXISTS tasks(_id INTEGER PRIMARY KEY, path_id INTEGER, year INTEGER, month INTEGER, day INTEGER);</string>
 
-    <string name="db_insert_compassion_path_01">INSERT INTO bank(virtue, path) VALUES(\'compassion\', \'Do an act of kindness for someone\');</string>
-    <string name="db_insert_compassion_path_02">INSERT INTO bank(virtue, path) VALUES(\'compassion\', \'Write a sympathy note to a friend in need\');</string>
-    <string name="db_insert_compassion_path_03">INSERT INTO bank(virtue, path) VALUES(\'compassion\', \'Practice empathy\: Ask a clerk how his or her day is going\. Listen\.\');</string>
+    <string name="db_insert_compassion_path_01">INSERT INTO paths(card_id, path) VALUES(01, \'Do an act of kindness for someone\');</string>
+    <string name="db_insert_compassion_path_02">INSERT INTO paths(card_id, path) VALUES(01, \'Write a sympathy note to a friend in need\');</string>
+    <string name="db_insert_compassion_path_03">INSERT INTO paths(card_id, path) VALUES(01, \'Practice empathy\: Ask a clerk how his or her day is going\. Listen\.\');</string>
 
-    <string name="db_insert_contribution_path_01">INSERT INTO bank(virtue, path) VALUES(\'contribution\', \'Write down a long-term goal and the steps necessary to get there\');</string>
-    <string name="db_insert_contribution_path_02">INSERT INTO bank(virtue, path) VALUES(\'contribution\', \'Call your kids\');</string>
-    <string name="db_insert_contribution_path_03">INSERT INTO bank(virtue, path) VALUES(\'contribution\', \'Volunteer\');</string>
+    <string name="db_insert_contribution_path_01">INSERT INTO paths(card_id, path) VALUES(02, \'Write down a long-term goal and the steps necessary to get there\');</string>
+    <string name="db_insert_contribution_path_02">INSERT INTO paths(card_id, path) VALUES(02, \'Call your kids\');</string>
+    <string name="db_insert_contribution_path_03">INSERT INTO paths(card_id, path) VALUES(02, \'Volunteer\');</string>
 
-    <string name="db_insert_duty_path_01">INSERT INTO bank(virtue, path) VALUES(\'duty\', \'Make a list of people who rely on you\');</string>
-    <string name="db_insert_duty_path_02">INSERT INTO bank(virtue, path) VALUES(\'duty\', \'Do a chore you have been putting off\');</string>
-    <string name="db_insert_duty_path_03">INSERT INTO bank(virtue, path) VALUES(\'duty\', \'Make a list of important tasks\');</string>
+    <string name="db_insert_duty_path_01">INSERT INTO paths(card_id, path) VALUES(03, \'Make a list of people who rely on you\');</string>
+    <string name="db_insert_duty_path_02">INSERT INTO paths(card_id, path) VALUES(03, \'Do a chore you have been putting off\');</string>
+    <string name="db_insert_duty_path_03">INSERT INTO paths(card_id, path) VALUES(03, \'Make a list of important tasks\');</string>
 
-    <string name="db_insert_family_path_01">INSERT INTO bank(virtue, path) VALUES(\'family\', \'Call a family member you have not talked to in awhile\');</string>
-    <string name="db_insert_family_path_02">INSERT INTO bank(virtue, path) VALUES(\'family\', \'Do a chore for a family member\');</string>
-    <string name="db_insert_family_path_03">INSERT INTO bank(virtue, path) VALUES(\'family\', \'Write a letter to a family member\');</string>
+    <string name="db_insert_family_path_01">INSERT INTO paths(card_id, path) VALUES(04, \'Call a family member you have not talked to in awhile\');</string>
+    <string name="db_insert_family_path_02">INSERT INTO paths(card_id, path) VALUES(04, \'Do a chore for a family member\');</string>
+    <string name="db_insert_family_path_03">INSERT INTO paths(card_id, path) VALUES(04, \'Write a letter to a family member\');</string>
 
-    <string name="db_insert_fitness_path_01">INSERT INTO bank(virtue, path) VALUES(\'fitness\', \'Go for a walk\');</string>
-    <string name="db_insert_fitness_path_02">INSERT INTO bank(virtue, path) VALUES(\'fitness\', \'Go to the gym\');</string>
-    <string name="db_insert_fitness_path_03">INSERT INTO bank(virtue, path) VALUES(\'fitness\', \'Go for a run\');</string>
+    <string name="db_insert_fitness_path_01">INSERT INTO paths(card_id, path) VALUES(05, \'Go for a walk\');</string>
+    <string name="db_insert_fitness_path_02">INSERT INTO paths(card_id, path) VALUES(05, \'Go to the gym\');</string>
+    <string name="db_insert_fitness_path_03">INSERT INTO paths(card_id, path) VALUES(05, \'Go for a run\');</string>
 
-    <string name="db_insert_friendship_path_01">INSERT INTO bank(virtue, path) VALUES(\'friendship\', \'Call a friend you have not talked to in awhile\');</string>
-    <string name="db_insert_friendship_path_02">INSERT INTO bank(virtue, path) VALUES(\'friendship\', \'Do a chore for a friend\');</string>
-    <string name="db_insert_friendship_path_03">INSERT INTO bank(virtue, path) VALUES(\'friendship\', \'Schedule some time to get together with a friend\');</string>
+    <string name="db_insert_friendship_path_01">INSERT INTO paths(card_id, path) VALUES(06, \'Call a friend you have not talked to in awhile\');</string>
+    <string name="db_insert_friendship_path_02">INSERT INTO paths(card_id, path) VALUES(06, \'Do a chore for a friend\');</string>
+    <string name="db_insert_friendship_path_03">INSERT INTO paths(card_id, path) VALUES(06, \'Schedule some time to get together with a friend\');</string>
 
-    <string name="db_insert_fun_path_01">INSERT INTO bank(virtue, path) VALUES(\'fun\', \'Go see a movie\');</string>
-    <string name="db_insert_fun_path_02">INSERT INTO bank(virtue, path) VALUES(\'fun\', \'Plan an activity you have not done in awhile\');</string>
-    <string name="db_insert_fun_path_03">INSERT INTO bank(virtue, path) VALUES(\'fun\', \'Play a sport\');</string>
+    <string name="db_insert_fun_path_01">INSERT INTO paths(card_id, path) VALUES(07, \'Go see a movie\');</string>
+    <string name="db_insert_fun_path_02">INSERT INTO paths(card_id, path) VALUES(07, \'Plan an activity you have not done in awhile\');</string>
+    <string name="db_insert_fun_path_03">INSERT INTO paths(card_id, path) VALUES(07, \'Play a sport\');</string>
 
-    <string name="db_insert_generosity_path_01">INSERT INTO bank(virtue, path) VALUES(\'generosity\', \'Do an act of kindness\');</string>
-    <string name="db_insert_generosity_path_02">INSERT INTO bank(virtue, path) VALUES(\'generosity\', \'Volunteer \');</string>
-    <string name="db_insert_generosity_path_03">INSERT INTO bank(virtue, path) VALUES(\'generosity\', \'Make a donation to a charity\');</string>
+    <string name="db_insert_generosity_path_01">INSERT INTO paths(card_id, path) VALUES(08, \'Do an act of kindness\');</string>
+    <string name="db_insert_generosity_path_02">INSERT INTO paths(card_id, path) VALUES(08, \'Volunteer \');</string>
+    <string name="db_insert_generosity_path_03">INSERT INTO paths(card_id, path) VALUES(08, \'Make a donation to a charity\');</string>
 
-    <string name="db_insert_growth_path_01">INSERT INTO bank(virtue, path) VALUES(\'growth\', \'Identify a skill\');</string>
-    <string name="db_insert_growth_path_02">INSERT INTO bank(virtue, path) VALUES(\'growth\', \'Practice a goal\');</string>
-    <string name="db_insert_growth_path_03">INSERT INTO bank(virtue, path) VALUES(\'growth\', \'Watch a \"how to\" video on YouTube\');</string>
+    <string name="db_insert_growth_path_01">INSERT INTO paths(card_id, path) VALUES(09, \'Identify a skill\');</string>
+    <string name="db_insert_growth_path_02">INSERT INTO paths(card_id, path) VALUES(09, \'Practice a goal\');</string>
+    <string name="db_insert_growth_path_03">INSERT INTO paths(card_id, path) VALUES(09, \'Watch a \"how to\" video on YouTube\');</string>
 
-    <string name="db_insert_helpfulness_path_01">INSERT INTO bank(virtue, path) VALUES(\'helpfulness\', \'Volunteer\');</string>
-    <string name="db_insert_helpfulness_path_02">INSERT INTO bank(virtue, path) VALUES(\'helpfulness\', \'Do a chore for someone else\');</string>
-    <string name="db_insert_helpfulness_path_03">INSERT INTO bank(virtue, path) VALUES(\'helpfulness\', \'Reach out to a stranger\');</string>
+    <string name="db_insert_helpfulness_path_01">INSERT INTO paths(card_id, path) VALUES(10, \'Volunteer\');</string>
+    <string name="db_insert_helpfulness_path_02">INSERT INTO paths(card_id, path) VALUES(10, \'Do a chore for someone else\');</string>
+    <string name="db_insert_helpfulness_path_03">INSERT INTO paths(card_id, path) VALUES(10, \'Reach out to a stranger\');</string>
 
-    <string name="db_insert_hope_path_01">INSERT INTO bank(virtue, path) VALUES(\'hope\', \'Reflect on the affirmation: \"The only thing I can control is my attitude towards life.\"\');</string>
-    <string name="db_insert_hope_path_02">INSERT INTO bank(virtue, path) VALUES(\'hope\', \'Write down a long-term goal\');</string>
-    <string name="db_insert_hope_path_03">INSERT INTO bank(virtue, path) VALUES(\'hope\', \'Write down a negative thought you have and come up with a more optimistic alternative\');</string>
+    <string name="db_insert_hope_path_01">INSERT INTO paths(card_id, path) VALUES(11, \'Reflect on the affirmation: \"The only thing I can control is my attitude towards life.\"\');</string>
+    <string name="db_insert_hope_path_02">INSERT INTO paths(card_id, path) VALUES(11, \'Write down a long-term goal\');</string>
+    <string name="db_insert_hope_path_03">INSERT INTO paths(card_id, path) VALUES(11, \'Write down a negative thought you have and come up with a more optimistic alternative\');</string>
 
-    <string name="db_insert_humor_path_01">INSERT INTO bank(virtue, path) VALUES(\'humor\', \'Watch a funny movie\');</string>
-    <string name="db_insert_humor_path_02">INSERT INTO bank(virtue, path) VALUES(\'humor\', \'Go to a comedy show\');</string>
-    <string name="db_insert_humor_path_03">INSERT INTO bank(virtue, path) VALUES(\'humor\', \'Smile\');</string>
+    <string name="db_insert_humor_path_01">INSERT INTO paths(card_id, path) VALUES(12, \'Watch a funny movie\');</string>
+    <string name="db_insert_humor_path_02">INSERT INTO paths(card_id, path) VALUES(12, \'Go to a comedy show\');</string>
+    <string name="db_insert_humor_path_03">INSERT INTO paths(card_id, path) VALUES(12, \'Smile\');</string>
 
-    <string name="db_insert_inner_peace_path_01">INSERT INTO bank(virtue, path) VALUES(\'inner_peace\', \'Meditate\');</string>
-    <string name="db_insert_inner_peace_path_02">INSERT INTO bank(virtue, path) VALUES(\'inner_peace\', \'Write down three things that went well today\');</string>
-    <string name="db_insert_inner_peace_path_03">INSERT INTO bank(virtue, path) VALUES(\'inner_peace\', \'Practice deep breathing for 5 minutes\');</string>
+    <string name="db_insert_inner_peace_path_01">INSERT INTO paths(card_id, path) VALUES(13, \'Meditate\');</string>
+    <string name="db_insert_inner_peace_path_02">INSERT INTO paths(card_id, path) VALUES(13, \'Write down three things that went well today\');</string>
+    <string name="db_insert_inner_peace_path_03">INSERT INTO paths(card_id, path) VALUES(13, \'Practice deep breathing for 5 minutes\');</string>
 
-    <string name="db_insert_mastery_path_01">INSERT INTO bank(virtue, path) VALUES(\'mastery\', \'Practice a skill\');</string>
-    <string name="db_insert_mastery_path_02">INSERT INTO bank(virtue, path) VALUES(\'mastery\', \'List out things you want to improve\');</string>
-    <string name="db_insert_mastery_path_03">INSERT INTO bank(virtue, path) VALUES(\'mastery\', \'Break down a task into smaller steps\');</string>
+    <string name="db_insert_mastery_path_01">INSERT INTO paths(card_id, path) VALUES(14, \'Practice a skill\');</string>
+    <string name="db_insert_mastery_path_02">INSERT INTO paths(card_id, path) VALUES(14, \'List out things you want to improve\');</string>
+    <string name="db_insert_mastery_path_03">INSERT INTO paths(card_id, path) VALUES(14, \'Break down a task into smaller steps\');</string>
 
-    <string name="db_insert_mindfulness_path_01">INSERT INTO bank(virtue, path) VALUES(\'mindfulness\', \'Meditate\');</string>
-    <string name="db_insert_mindfulness_path_02">INSERT INTO bank(virtue, path) VALUES(\'mindfulness\', \'When you eat a meal, take time to truly experience it\');</string>
-    <string name="db_insert_mindfulness_path_03">INSERT INTO bank(virtue, path) VALUES(\'mindfulness\', \'Drink your coffee mindfully \');</string>
+    <string name="db_insert_mindfulness_path_01">INSERT INTO paths(card_id, path) VALUES(15, \'Meditate\');</string>
+    <string name="db_insert_mindfulness_path_02">INSERT INTO paths(card_id, path) VALUES(15, \'When you eat a meal, take time to truly experience it\');</string>
+    <string name="db_insert_mindfulness_path_03">INSERT INTO paths(card_id, path) VALUES(15, \'Drink your coffee mindfully \');</string>
 
-    <string name="db_insert_purpose_path_01">INSERT INTO bank(virtue, path) VALUES(\'purpose\', \'Write a to do list of long-term goals\');</string>
-    <string name="db_insert_purpose_path_02">INSERT INTO bank(virtue, path) VALUES(\'purpose\', \'Write down three things you accomplished today\');</string>
-    <string name="db_insert_purpose_path_03">INSERT INTO bank(virtue, path) VALUES(\'purpose\', \'Ask a friend about what they see as your strengths and contributions\');</string>
+    <string name="db_insert_purpose_path_01">INSERT INTO paths(card_id, path) VALUES(16, \'Write a to do list of long-term goals\');</string>
+    <string name="db_insert_purpose_path_02">INSERT INTO paths(card_id, path) VALUES(16, \'Write down three things you accomplished today\');</string>
+    <string name="db_insert_purpose_path_03">INSERT INTO paths(card_id, path) VALUES(16, \'Ask a friend about what they see as your strengths and contributions\');</string>
 
-    <string name="db_insert_responsibility_path_01">INSERT INTO bank(virtue, path) VALUES(\'responsibility\', \'Write out a pro\/con list for a decision you need to make\');</string>
-    <string name="db_insert_responsibility_path_02">INSERT INTO bank(virtue, path) VALUES(\'responsibility\', \'Post a value somewhere you can see it throughout the day\');</string>
-    <string name="db_insert_responsibility_path_03">INSERT INTO bank(virtue, path) VALUES(\'responsibility\', \'Do a chore\');</string>
+    <string name="db_insert_responsibility_path_01">INSERT INTO paths(card_id, path) VALUES(17, \'Write out a pro\/con list for a decision you need to make\');</string>
+    <string name="db_insert_responsibility_path_02">INSERT INTO paths(card_id, path) VALUES(17, \'Post a value somewhere you can see it throughout the day\');</string>
+    <string name="db_insert_responsibility_path_03">INSERT INTO paths(card_id, path) VALUES(17, \'Do a chore\');</string>
 
-    <string name="db_insert_self_acceptance_path_01">INSERT INTO bank(virtue, path) VALUES(\'self_acceptance\', \'Write down three things you did well today\');</string>
-    <string name="db_insert_self_acceptance_path_02">INSERT INTO bank(virtue, path) VALUES(\'self_acceptance\', \'Practice one of your strengths or abilities\');</string>
-    <string name="db_insert_self_acceptance_path_03">INSERT INTO bank(virtue, path) VALUES(\'self_acceptance\', \'Reward yourself for something you have accomplished\');</string>
+    <string name="db_insert_self_acceptance_path_01">INSERT INTO paths(card_id, path) VALUES(18, \'Write down three things you did well today\');</string>
+    <string name="db_insert_self_acceptance_path_02">INSERT INTO paths(card_id, path) VALUES(18, \'Practice one of your strengths or abilities\');</string>
+    <string name="db_insert_self_acceptance_path_03">INSERT INTO paths(card_id, path) VALUES(18, \'Reward yourself for something you have accomplished\');</string>
 
-    <string name="db_insert_virtue_path_01">INSERT INTO bank(virtue, path) VALUES(\'virtue\', \'Do an act of kindness\');</string>
-    <string name="db_insert_virtue_path_02">INSERT INTO bank(virtue, path) VALUES(\'virtue\', \'Express gratitude to someone\');</string>
-    <string name="db_insert_virtue_path_03">INSERT INTO bank(virtue, path) VALUES(\'virtue\', \'Volunteer\');</string>
+    <string name="db_insert_virtue_path_01">INSERT INTO paths(card_id, path) VALUES(19, \'Do an act of kindness\');</string>
+    <string name="db_insert_virtue_path_02">INSERT INTO paths(card_id, path) VALUES(19, \'Express gratitude to someone\');</string>
+    <string name="db_insert_virtue_path_03">INSERT INTO paths(card_id, path) VALUES(19, \'Volunteer\');</string>
 
-    <string name="db_insert_tradition_path_01">INSERT INTO bank(virtue, path) VALUES(\'tradition\', \'Call a family member to learn about family traditions\');</string>
-    <string name="db_insert_tradition_path_02">INSERT INTO bank(virtue, path) VALUES(\'tradition\', \'Cook a dish that has been passed on in your family\');</string>
-    <string name="db_insert_tradition_path_03">INSERT INTO bank(virtue, path) VALUES(\'tradition\', \'Write down one tradition or ritual you would like to do every week\');</string>
+    <string name="db_insert_tradition_path_01">INSERT INTO paths(card_id, path) VALUES(20, \'Call a family member to learn about family traditions\');</string>
+    <string name="db_insert_tradition_path_02">INSERT INTO paths(card_id, path) VALUES(20, \'Cook a dish that has been passed on in your family\');</string>
+    <string name="db_insert_tradition_path_03">INSERT INTO paths(card_id, path) VALUES(20, \'Write down one tradition or ritual you would like to do every week\');</string>
 
 	<string name="db_insert_card_01">INSERT INTO cards (name, description) VALUES(\'COMPASSION\', \'to feel and act on concern for others\');</string>
 	<string name="db_insert_card_02">INSERT INTO cards (name, description) VALUES(\'CONTRIBUTION\', \'to make a lasting contribution in the world\');</string>

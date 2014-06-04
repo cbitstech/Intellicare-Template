@@ -28,6 +28,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -204,25 +205,25 @@ public class MainActivity extends ConsentedActivity
             }
         }
     }
-	
-	protected long currentCardId() 
-	{
-		ArrayList<Long> cardIds = new ArrayList<Long>();
 
-		Cursor c = this.getContentResolver().query(AspireContentProvider.ASPIRE_PATH_URI, null, null, null, AspireContentProvider.PATH_CARD_ID);
-		
-		while (c.moveToNext())
-		{
-			Long cardId = Long.valueOf(c.getLong(c.getColumnIndex(AspireContentProvider.PATH_CARD_ID)));
-			
-			if (cardIds.contains(cardId) == false)
-				cardIds.add(cardId);
-		}
-		
-		c.close();
-		
-		return cardIds.get(this._index);
-	}
+    protected long currentCardId()
+    {
+        ArrayList<Long> cardIds = new ArrayList<Long>();
+
+        Cursor c = this.getContentResolver().query(AspireContentProvider.ASPIRE_PATH_URI, null, null, null, AspireContentProvider.PATH_CARD_ID);
+
+        while (c.moveToNext())
+        {
+            Long cardId = Long.valueOf(c.getLong(c.getColumnIndex(AspireContentProvider.PATH_CARD_ID)));
+
+            if (cardIds.contains(cardId) == false)
+                cardIds.add(cardId);
+        }
+
+        c.close();
+
+        return cardIds.get(this._index);
+    }
 
 	protected void onResume()
 	{
@@ -238,26 +239,25 @@ public class MainActivity extends ConsentedActivity
 		
 		final MainActivity me = this;
 		
-		Cursor c = this.getContentResolver().query(AspireContentProvider.ASPIRE_PATH_URI, null, null, null, AspireContentProvider.ID);
-		
-		HashSet<Long> uniqueIds = new HashSet<Long>();
+		Cursor c = this.getContentResolver().query(AspireContentProvider.ASPIRE_CARD_URI, null, null, null, AspireContentProvider.ID);
+
+        final ArrayList<Long> cardIds = new ArrayList<Long>();
 		
 		while(c.moveToNext())
 		{
             if (c.getInt(c.getColumnIndex(AspireContentProvider.CARD_ENABLED)) != 0){
-                uniqueIds.add(c.getLong(c.getColumnIndex(AspireContentProvider.PATH_CARD_ID)));
+                cardIds.add(c.getLong(c.getColumnIndex(AspireContentProvider.ID)));
              }
 		}
 		
-		this._count = uniqueIds.size();
+		this._count = cardIds.size();
 
 		c.close();
 		
 		if (this._count == 0)
 		{
-            /* causing an issue
             Intent picker = new Intent(this, CardActivity.class);
-            this.startActivity(picker); */
+            this.startActivity(picker);
 
 		}
 		else
@@ -266,25 +266,20 @@ public class MainActivity extends ConsentedActivity
 				this._index = 0;
 			
 			final HashMap<Long, Integer> cardCount = new HashMap<Long, Integer>();
-			final ArrayList<Long> cardIds = new ArrayList<Long>();
 			
 			c = this.getContentResolver().query(AspireContentProvider.ASPIRE_PATH_URI, null, null, null, AspireContentProvider.PATH_CARD_ID);
-			
+
+            Log.e("AS", "CARD_ID COUNT: " + c.getCount());
+
 			while (c.moveToNext())
 			{
-				Long cardId = Long.valueOf(c.getLong(c.getColumnIndex(AspireContentProvider.PATH_CARD_ID)));
+				Long cardId = Long.valueOf(c.getLong(c.getColumnIndex(AspireContentProvider.ID)));
+
+                Log.e("AS", "CARD_ID: " + cardId);
+
+                int count = Integer.valueOf(c.getInt(c.getColumnIndex(AspireContentProvider.PATH_CARD_ID)));
 				
-				if (cardIds.contains(cardId) == false)
-					cardIds.add(cardId);
-				
-				int count = 0;
-				
-				if (cardCount.containsKey(cardId))
-					count = cardCount.get(cardId).intValue();
-				
-				count += 1;
-				
-				cardCount.put(cardId, Integer.valueOf(count));
+				cardCount.put(cardId, count);
 			}
 			
 			c.close();
@@ -434,8 +429,20 @@ public class MainActivity extends ConsentedActivity
 
 					TextView description = (TextView) me.findViewById(R.id.card_description);
 					final long cardId = cardIds.get(position).longValue();
-					
-					int count = cardCount.get(Long.valueOf(cardId)).intValue();
+
+                    String where = AspireContentProvider.PATH_CARD_ID + " = ?";
+                    String[] args = { "" + cardId };
+
+                    Cursor c = me.getContentResolver().query(AspireContentProvider.ASPIRE_CARD_URI, null, where, args, AspireContentProvider.PATH_PATH);
+
+                    ArrayList<String> paths = new ArrayList<String>();
+
+                    while (c.moveToNext())
+                    {
+                        paths.add(c.getString(c.getColumnIndex(AspireContentProvider.PATH_PATH)));
+                    }
+
+                    int count = paths.size();
 
 					View view = pager.findViewWithTag("" + position);
 					
