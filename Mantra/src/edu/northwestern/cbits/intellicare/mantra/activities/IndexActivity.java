@@ -338,6 +338,7 @@ public class IndexActivity extends ConsentedActivity {
 			case R.id.action_faq:
 				EventLogging.log(this, "Opening the FAQ.", "onOptionsItemSelected", CN);
 				this.showFaq(this.getString(R.string.app_name));
+				return true;
 	
 			case R.id.action_help:
 				startOnboardingActivity();

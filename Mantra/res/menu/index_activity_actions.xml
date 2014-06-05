@@ -5,6 +5,10 @@
         android:title="@string/action_new_mantra_board"
         mantra:showAsAction="always" />
     
+    <item android:id="@+id/action_help"
+        android:title="@string/action_help"
+        mantra:showAsAction="never"
+        android:showAsAction="never" />
     <item android:id="@+id/action_faq"
         android:title="@string/action_faq"
         mantra:showAsAction="never"
@@ -15,10 +19,6 @@
         android:title="@string/action_settings"/>
     <item android:id="@+id/action_feedback"
         android:title="@string/action_feedback"
-        mantra:showAsAction="never"
-        android:showAsAction="never" />
-    <item android:id="@+id/action_help"
-        android:title="@string/action_help"
         mantra:showAsAction="never"
         android:showAsAction="never" />
     

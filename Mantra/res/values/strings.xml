@@ -46,13 +46,12 @@
     <string name="hello_world">Hello world!</string>
     <string name="existing_image_action">Existing Image</string>
     <string name="title_activity_shared_url">Mantra </string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_settings">Settings</string>
     <string name="notification_start_day">These are your mantras, live them.</string>
     <string name="notification_end_day">Tap here to review your day, mantras, and the Mantra app!</string>
     <string name="title_activity_review">ReviewActivity</string>
     <string name="title_activity_transparent">TransparentActivity</string>
     <string name="title_activity_progress">Mantra</string>
-    <string name="default_image_caption">Press and hold to change caption</string>
     <string name="title_download_queue">Image Downloads</string>
     <string name="subtitle_download_queue" formatted="false">Remaining downloads: %d of %d</string>
     <string name="title_create_board">Add New Mantra?</string>
@@ -75,7 +74,7 @@
     <string name="network_error_are_you_connected_to_the_internet_error_message_for_url_">Network error. Are you connected to the Internet? Error message for URL (</string>
     <string name="_bytes_downloading_">" bytes) Downloading: "</string>
     <string name="media_file_timestamp_format">yyyyMMdd_HHmmss</string>
-    <string name="some_image_caption">Press and hold to change caption</string>
+    <string name="some_image_caption">Change Caption</string>
     <string name="remove">Remove</string>
     <string name="image_applied_">Image applied!</string>
     <string name="image_already_applied_consider_choosing_a_different_one_">Image already applied. Consider choosing a different one!</string>
@@ -98,11 +97,12 @@
     <string name="shared_prefs_name">edu.northwestern.cbits.intellicare.Mantra</string>
     <string name="shared_prefs_key_lastMantraBoardId">lastMantraBoardId</string>
     <string name="title_activity_onboarding">OnboardingActivity</string>
+    <string name="label_app_version">Application Version</string>
 
     <string-array name="onboarding_slide_titles">
-        <item>Slide 1</item>
-        <item>Slide 2</item>
-        <item>Slide 3</item>
+        <item>What is a mantra?</item>
+        <item>What this app does</item>
+        <item>How this app works</item>
     </string-array>
     <string-array name="onboarding_slide_texts">
         <item>file:///android_asset/www/onboarding_0.html</item>
