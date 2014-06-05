@@ -341,7 +341,7 @@ public class SettingsActivity extends PreferenceActivity
 		
 		Preference version = this.findPreference("app_version");
 
-		try 
+		try  
 		{
 			version.setTitle(this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName);
 		} 
