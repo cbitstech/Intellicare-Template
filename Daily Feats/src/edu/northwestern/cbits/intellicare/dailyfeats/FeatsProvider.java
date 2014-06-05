@@ -416,13 +416,13 @@ public class FeatsProvider extends android.content.ContentProvider
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
 		
-		calendar.set(Calendar.HOUR, 0);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
 
 		long start = calendar.getTimeInMillis();
 		
-		calendar.set(Calendar.HOUR, 23);
+		calendar.set(Calendar.HOUR_OF_DAY, 23);
 		calendar.set(Calendar.MINUTE, 59);
 		calendar.set(Calendar.MILLISECOND, 999);
 
@@ -445,19 +445,14 @@ public class FeatsProvider extends android.content.ContentProvider
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
 		
-		calendar.set(Calendar.HOUR, 0);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
 
 		long start = calendar.getTimeInMillis();
+		long end = start + FeatsProvider.DAY_LENGTH;
 		
-		calendar.set(Calendar.HOUR, 23);
-		calendar.set(Calendar.MINUTE, 59);
-		calendar.set(Calendar.MILLISECOND, 999);
-
-		long end = calendar.getTimeInMillis();
-
-		String selection = "recorded >= ? AND recorded <= ?";
+		String selection = "recorded >= ? AND recorded < ?";
 		String[] args = { "" + start, "" + end };
 		
 		HashSet<String> feats = new HashSet<String>();
@@ -469,7 +464,9 @@ public class FeatsProvider extends android.content.ContentProvider
 			String feat = c.getString(c.getColumnIndex("feat"));
 			
 			if (feats.contains(feat) == false)
+			{
 				feats.add(feat);
+			}
 		}
 		
 		c.close();
@@ -482,13 +479,13 @@ public class FeatsProvider extends android.content.ContentProvider
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
 		
-		calendar.set(Calendar.HOUR, 0);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
 
 		long start = calendar.getTimeInMillis();
 		
-		calendar.set(Calendar.HOUR, 23);
+		calendar.set(Calendar.HOUR_OF_DAY, 23);
 		calendar.set(Calendar.MINUTE, 59);
 		calendar.set(Calendar.MILLISECOND, 999);
 
@@ -669,31 +666,34 @@ public class FeatsProvider extends android.content.ContentProvider
 
 		long start = c.getTimeInMillis();
 		long end = start + FeatsProvider.DAY_LENGTH;
-
-		String where = "recorded >= ? AND recorded <= ?";
+		
+		String where = "recorded >= ? AND recorded < ?";
 		String[] args = { "" + start, "" + end };
 		
 		Cursor cursor = context.getContentResolver().query(FeatsProvider.RESPONSES_URI, null, where, args, null);
 		
-		int level = -1;
 		int count = 0;
+		
+		HashSet<String> seen = new HashSet<String>();
 		
 		while (cursor.moveToNext())
 		{
 			int recordLevel = cursor.getInt(cursor.getColumnIndex("depression_level"));
 			
-			if (level == -1)
-				level = recordLevel;
-
 			String featsWhere = "feat_name = ?";
-			String[] featsArgs = { "" + cursor.getString(cursor.getColumnIndex("feat")) };
-			
+			String[] featsArgs = { cursor.getString(cursor.getColumnIndex("feat")) };
+
 			Cursor featCursor = context.getContentResolver().query(FeatsProvider.FEATS_URI, null, featsWhere, featsArgs, null);
 			
+			String featName = cursor.getString(cursor.getColumnIndex("feat"));
+
 			while (featCursor.moveToNext())
 			{
-				if (level == featCursor.getInt(featCursor.getColumnIndex("feat_level")))
+				if (recordLevel == featCursor.getInt(featCursor.getColumnIndex("feat_level")) && seen.contains(featName) == false)
+				{
 					count += 1;
+					seen.add(featName);
+				}
 			}
 			
 			featCursor.close();
