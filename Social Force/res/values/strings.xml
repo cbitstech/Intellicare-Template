@@ -14,18 +14,27 @@
 	<string name="action_yes">Yes</string>
 	<string name="action_no">No</string>
 	<string name="action_rate">Rate</string>
+	<string name="action_rate_contacts">Rate Contacts</string>
 	
 	<string name="action_schedule_again">Yes, schedule again</string>
 	<string name="action_plan_activity">No, plan new activity</string>
 				
 	<string name="subtitle_main">Pinch to zoom, tap a friend</string>
 	
-    <string-array name="contact_roles">
+    <!-- <string-array name="contact_roles">
         <item>++ Very Positive</item>
         <item> + Positive</item>
         <item>"? Neutral"</item>
         <item> - Negative</item>
-        <item>-- Very Negative</item>
+        <item>- Very Negative</item>
+    </string-array>  -->
+
+    <string-array name="contact_roles">
+        <item>Very Positive</item>
+        <item>Positive</item>
+        <item>Neutral or Don\'t Know</item>
+        <item>Negative</item>
+        <item>Very Negative</item>
     </string-array>
     
     <string name="toast_practical" formatted="false">%s provides practical support.</string>
@@ -72,7 +81,7 @@
     
     <string name="title_be_friendly">Be Friendly</string>
     
-    <string name="instructions_review">Use this sliding scale to rate your experience of the activity you scheduled. Remember to rate what the activity was like WITH THAT PERSON.\n\nBy ""terrible"", we mean you didn\'t interact at all with the person, kind of like you were standing together in the same space but not talking the person you were with was rude doing the activity with this person lowered your mood you most likely not interact with this person in this way again.</string>
+    <string name="instructions_review">Use this sliding scale to rate your experience of the activity you scheduled. Remember to rate what the activity was like WITH THAT PERSON.\n\nBy ""terrible"", we mean\n\n&#8226; you didn\'t interact at all with the person, kind of like you were standing together in the same space but not talking\n\n&#8226; the person you were with was rude\n\n&#8226; doing the activity with this person lowered your mood\n\n&#8226; you most likely will not interact with this person in this way again.\n\nBy "great", we mean\n\n&#8226; your interaction with the person you were with was easy - you didn’t even have to work at it\n\n&#8226; the person you were with was easy to get along with\n\n&#8226; doing this activity with this person really boosted your mood\n\n&#8226; you will most likely do this again with this same person</string>
     <string name="title_review">Please rate your experience!</string>
 
     <string name="title_make_time">What could you do this week?</string>
@@ -133,5 +142,39 @@
     
     <string name="title_no_positive_contacts">No positive supporters?</string>
     <string name="message_no_positive_contacts">Let\'s work together to BUILD and STRENGTHEN your supports!</string>
+    
+    <string name="title_need_rater_help">Need More Help?</string>
+    <string name="message_need_rater_help">If you\'re finding it hard to rate people, consider the following questions:\n\nDo I walk away from time with this person feeling happy? Understood? Valued?\n\nDo I walk away from time with this person feeling spent? Used? Unsatisfied?\n\nHow does interacting with this person change my mood - up or down?\n\nHow does interacting with this person change how I feel about myself?</string>
+
+    <string name="title_rater_categories">Support Categories</string>
+    <string name="message_rater_categories">Practical Support: Who will drive you to the hospital? Lend you money?\n\nAdvice: Who do you go to for help when you don\'t know how to do something? When you don\'t feel well? When you need help navigating a tricky situation?\n\nCompanionship: Who do you walk around a park with? Who would spend a quiet afternoon with you? Who shares your tears and your joys?\n\nEmotional Support: Who do you go to for encouragement? understanding? to share your feelings? to help lift your mood?</string>
+    
+    <string name="title_network_meetup">Join a Club or Meetup Group</string>
+    <string name="message_network_meetup">There are tons of groups in your area, doing a lot of the things you like to do! If meetup.com isn\'t right for you, there are other networks out there - find them and look for what interests you.</string>
+    
+    <string name="title_network_volunteer">Volunteer</string>
+    <string name="message_network_volunteer">Volunteering is a great way to do something you think is worthwhile, while giving you a chance to meet people with similar interests and hearts.</string>
+    
+    <string name="title_network_smile">Smile</string>
+    <string name="message_network_smile">Even if you\'re feeling down, depressed, or uncomfortable, putting a smile on your face biologically signals to others that you are open. Friendliness attracts friends! Smiles can open you up to having something to smile about!</string>
+
+    <string name="title_network_yes">Say Yes</string>
+    <string name="message_network_yes">Pick a day, a week, or any time period and vow to say "yes"" to every invitation, opportunity, and date. If no invitations come along, pick another date! Give yourself plenty of chances to interact with new people.</string>
+
+    <string name="title_network_missing">Are You Missing Anything?</string>
+    <string name="message_network_missing">Go back through your contacts - are there people in the "neutral" or ""don\'t know" category that you want to know better? Is there anyone missing or anyone you just met that might make a potential friend?</string>
+    
+    <string-array name="friendly_urls">
+        <item>file:///android_asset/www/friendly_0.html</item>
+        <item>file:///android_asset/www/friendly_1.html</item>
+        <item>file:///android_asset/www/friendly_2.html</item>
+    </string-array>
+
+    <string-array name="friendly_titles">
+        <item>How to Start a Conversation</item>
+        <item>How to Listen Actively</item>
+        <item>How to Look and Speak Confidently</item>
+    </string-array>
+    
 </resources>
 

@@ -28,7 +28,7 @@
 	        android:layout_weight="1"
 	        android:paddingTop="2dp"
 	        android:text="@string/label_practical_support"
-	        android:textSize="12sp" />
+	        android:textSize="14sp" />
 	    <ImageView android:id="@+id/legend_advice_item"
 	        android:layout_width="24dp"
 		    android:layout_height="24dp"
@@ -40,7 +40,7 @@
 	        android:layout_weight="1"
 	        android:paddingTop="2dp"
 	        android:text="@string/label_advice"
-	        android:textSize="12sp" />
+	        android:textSize="14sp" />
    	</LinearLayout>
 	<LinearLayout android:orientation="horizontal"
 	    android:layout_width="match_parent"
@@ -60,7 +60,7 @@
 	        android:layout_weight="1"
 	        android:paddingTop="2dp"
 	        android:text="@string/label_companionship"
-	        android:textSize="12sp" />
+	        android:textSize="14sp" />
 	    <ImageView android:id="@+id/legend_emotional_item"
 	        android:layout_width="24dp"
 		    android:layout_height="24dp"
@@ -72,6 +72,6 @@
 	        android:layout_weight="1"
 	        android:paddingTop="2dp"
 	        android:text="@string/label_emotional_support"
-	        android:textSize="12sp" />
+	        android:textSize="14sp" />
    	</LinearLayout>
 </LinearLayout>    

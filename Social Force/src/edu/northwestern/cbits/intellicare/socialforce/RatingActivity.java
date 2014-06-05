@@ -536,6 +536,7 @@ public class RatingActivity extends ConsentedActivity
 				{
 					MenuItem nextItem = me._menu.findItem(R.id.action_next);
 					MenuItem backItem = me._menu.findItem(R.id.action_back);
+					MenuItem helpItem = me._menu.findItem(R.id.action_help);
 					MenuItem doneItem = me._menu.findItem(R.id.action_done);
 
 					switch(page)
@@ -545,31 +546,35 @@ public class RatingActivity extends ConsentedActivity
 							nextItem.setVisible(true);
 							backItem.setVisible(false);
 							doneItem.setVisible(false);
+							helpItem.setVisible(false);
 							break;
 						case 1:
 							actionBar.setTitle(R.string.title_people_rater_tool);
 							nextItem.setVisible(true);
 							backItem.setVisible(true);
 							doneItem.setVisible(false);
+							helpItem.setVisible(true);
 							break;
 						case 2:
 							actionBar.setTitle(R.string.title_people_rater);
 							nextItem.setVisible(true);
 							backItem.setVisible(true);
 							doneItem.setVisible(false);
+							helpItem.setVisible(false);
 							break;
 						case 3:
 							actionBar.setTitle(R.string.title_people_category_tool);
 							nextItem.setVisible(true);
 							backItem.setVisible(true);
 							doneItem.setVisible(false);
+							helpItem.setVisible(true);
 							break;
 						case 4:
 							actionBar.setTitle(R.string.title_my_network);
 							nextItem.setVisible(false);
 							backItem.setVisible(true);
 							doneItem.setVisible(false);
-
+							helpItem.setVisible(false);
 							
 							WebView graphView = (WebView) me.findViewById(R.id.network_visualization);
 							graphView.getSettings().setJavaScriptEnabled(true);
@@ -622,6 +627,43 @@ public class RatingActivity extends ConsentedActivity
     	else if (item.getItemId() == R.id.action_back)
     	{
     		pager.setCurrentItem(pager.getCurrentItem() - 1);
+    		
+    		return true;
+    	}
+    	else if (item.getItemId() == R.id.action_help)
+    	{
+    		if (pager.getCurrentItem() == 1)
+    		{
+    			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    			builder.setTitle(R.string.title_need_rater_help);
+    			builder.setMessage(R.string.message_need_rater_help);
+    			
+    			builder.setPositiveButton(R.string.action_close, new DialogInterface.OnClickListener() 
+    			{
+					public void onClick(DialogInterface dialog, int which) 
+					{
+
+					}
+				});
+				
+				builder.create().show();
+    		}
+    		else if (pager.getCurrentItem() == 3)
+    		{
+    			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    			builder.setTitle(R.string.title_rater_categories);
+    			builder.setMessage(R.string.message_rater_categories);
+    			
+    			builder.setPositiveButton(R.string.action_close, new DialogInterface.OnClickListener() 
+    			{
+					public void onClick(DialogInterface dialog, int which) 
+					{
+
+					}
+				});
+				
+				builder.create().show();
+    		}
     		
     		return true;
     	}

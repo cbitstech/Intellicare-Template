@@ -3,6 +3,10 @@
         android:title="@string/action_back"
         app:showAsAction="always"
         android:visible="false" />
+    <item android:id="@+id/action_help"
+        android:title="@string/action_help"
+        app:showAsAction="always"
+        android:visible="false" />
     <item android:id="@+id/action_next"
         android:title="@string/action_next"
         app:showAsAction="always"

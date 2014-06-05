@@ -96,19 +96,7 @@ public class NetworkActivity extends ConsentedActivity
 								{
 									public void onClick(DialogInterface dialog, int which) 
 									{
-										AlertDialog.Builder builder = new AlertDialog.Builder(me);
-										builder.setTitle(R.string.title_network_meet);
-										builder.setMessage(R.string.network_step_one_a_content);
-										
-										builder.setPositiveButton(R.string.action_close, new DialogInterface.OnClickListener()
-										{
-											public void onClick(DialogInterface dialog, int which) 
-											{
-
-											}
-										});
-										
-										builder.create().show();
+										me.showMeetupDialog();
 									}
 								});
 								
@@ -122,19 +110,10 @@ public class NetworkActivity extends ConsentedActivity
 						{
 							public void onClick(View arg0) 
 							{
-								AlertDialog.Builder builder = new AlertDialog.Builder(me);
-								builder.setTitle(R.string.title_be_friendly);
-								builder.setMessage(R.string.network_step_two_content);
+								Intent intent = new Intent(me, FriendlyActivity.class);
+								me.startActivity(intent);
 								
-								builder.setPositiveButton(R.string.action_close, new DialogInterface.OnClickListener()
-								{
-									public void onClick(DialogInterface dialog, int which) 
-									{
-
-									}
-								});
-								
-								builder.create().show();
+								me.finish();
 							}
 						});
 
@@ -260,7 +239,115 @@ public class NetworkActivity extends ConsentedActivity
 		actionBar.setSubtitle(me.getString(R.string.subtitle_rating, 1));
     }
     
-    public boolean onCreateOptionsMenu(Menu menu) 
+    protected void showMeetupDialog() 
+    {
+    	final NetworkActivity me = this;
+    	
+		AlertDialog.Builder builder = new AlertDialog.Builder(me);
+		builder.setTitle(R.string.title_network_meetup);
+		builder.setMessage(R.string.message_network_meetup);
+		
+		builder.setPositiveButton(R.string.action_next, new DialogInterface.OnClickListener()
+		{
+			public void onClick(DialogInterface dialog, int which) 
+			{
+				me.showVolunteerDialog();
+			}
+		});
+		
+		builder.create().show();
+	}
+    
+    protected void showVolunteerDialog() 
+    {
+    	final NetworkActivity me = this;
+    	
+		AlertDialog.Builder builder = new AlertDialog.Builder(me);
+		builder.setTitle(R.string.title_network_volunteer);
+		builder.setMessage(R.string.message_network_volunteer);
+		
+		builder.setPositiveButton(R.string.action_next, new DialogInterface.OnClickListener()
+		{
+			public void onClick(DialogInterface dialog, int which) 
+			{
+				me.showSmileDialog();
+			}
+		});
+		
+		builder.create().show();
+	}
+
+
+    protected void showSmileDialog() 
+    {
+    	final NetworkActivity me = this;
+    	
+		AlertDialog.Builder builder = new AlertDialog.Builder(me);
+		builder.setTitle(R.string.title_network_smile);
+		builder.setMessage(R.string.message_network_smile);
+		
+		builder.setPositiveButton(R.string.action_next, new DialogInterface.OnClickListener()
+		{
+			public void onClick(DialogInterface dialog, int which) 
+			{
+				me.showYesDialog();
+			}
+		});
+		
+		builder.create().show();
+	}
+
+    protected void showYesDialog() 
+    {
+    	final NetworkActivity me = this;
+    	
+		AlertDialog.Builder builder = new AlertDialog.Builder(me);
+		builder.setTitle(R.string.title_network_yes);
+		builder.setMessage(R.string.message_network_yes);
+		
+		builder.setPositiveButton(R.string.action_next, new DialogInterface.OnClickListener()
+		{
+			public void onClick(DialogInterface dialog, int which) 
+			{
+				me.showMissingDialog();
+			}
+		});
+		
+		builder.create().show();
+	}
+    
+    protected void showMissingDialog() 
+    {
+    	final NetworkActivity me = this;
+    	
+		AlertDialog.Builder builder = new AlertDialog.Builder(me);
+		builder.setTitle(R.string.title_network_missing);
+		builder.setMessage(R.string.message_network_missing);
+		
+		builder.setPositiveButton(R.string.action_rate_contacts, new DialogInterface.OnClickListener()
+		{
+			public void onClick(DialogInterface dialog, int which) 
+			{
+				Intent intent = new Intent(me, RatingActivity.class);
+				me.startActivity(intent);
+				
+				me.finish();
+			}
+		});
+
+		builder.setNegativeButton(R.string.action_close, new DialogInterface.OnClickListener()
+		{
+			public void onClick(DialogInterface dialog, int which) 
+			{
+
+			}
+		});
+		
+		builder.create().show();
+	}
+
+
+	public boolean onCreateOptionsMenu(Menu menu) 
     {
         this.getMenuInflater().inflate(R.menu.menu_rate, menu);
         

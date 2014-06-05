@@ -282,6 +282,89 @@ public class ContactCalibrationHelper
 			
 			cc.close();
 		}
+		
+		if (contacts.size() == 0)
+		{
+			ContactRecord contact = new ContactRecord();
+			contact.name = "Birdman";
+			contact.number = context.getString(R.string.label_no_phone);
+			contact.key = contact.name;
+			contact.level = ContactCalibrationHelper.getLevel(context, contact.key);
+			
+			contacts.add(contact);
+
+			contact = new ContactRecord();
+			contact.name = "Space Ghost";
+			contact.number = context.getString(R.string.label_no_phone);
+			contact.key = contact.name;
+			contact.level = ContactCalibrationHelper.getLevel(context, contact.key);
+			
+			contacts.add(contact);
+			
+			contact = new ContactRecord();
+			contact.name = "George Jetson";
+			contact.number = context.getString(R.string.label_no_phone);
+			contact.key = contact.name;
+			contact.level = ContactCalibrationHelper.getLevel(context, contact.key);
+			
+			contacts.add(contact);
+
+			contact = new ContactRecord();
+			contact.name = "Fred Flinstone";
+			contact.number = context.getString(R.string.label_no_phone);
+			contact.key = contact.name;
+			contact.level = ContactCalibrationHelper.getLevel(context, contact.key);
+			
+			contacts.add(contact);
+
+			contact = new ContactRecord();
+			contact.name = "Yogi Bear";
+			contact.number = context.getString(R.string.label_no_phone);
+			contact.key = contact.name;
+			contact.level = ContactCalibrationHelper.getLevel(context, contact.key);
+			
+			contacts.add(contact);
+
+			contact = new ContactRecord();
+			contact.name = "Hong Kong Phooey";
+			contact.number = context.getString(R.string.label_no_phone);
+			contact.key = contact.name;
+			contact.level = ContactCalibrationHelper.getLevel(context, contact.key);
+			
+			contacts.add(contact);
+			
+			contact = new ContactRecord();
+			contact.name = "Johnny Quest";
+			contact.number = context.getString(R.string.label_no_phone);
+			contact.key = contact.name;
+			contact.level = ContactCalibrationHelper.getLevel(context, contact.key);
+			
+			contacts.add(contact);
+			
+			contact = new ContactRecord();
+			contact.name = "Quick Draw McGraw";
+			contact.number = context.getString(R.string.label_no_phone);
+			contact.key = contact.name;
+			contact.level = ContactCalibrationHelper.getLevel(context, contact.key);
+			
+			contacts.add(contact);
+
+			contact = new ContactRecord();
+			contact.name = "Scooby-Doo";
+			contact.number = context.getString(R.string.label_no_phone);
+			contact.key = contact.name;
+			contact.level = ContactCalibrationHelper.getLevel(context, contact.key);
+			
+			contacts.add(contact);
+
+			contact = new ContactRecord();
+			contact.name = "Dick Dastardly";
+			contact.number = context.getString(R.string.label_no_phone);
+			contact.key = contact.name;
+			contact.level = ContactCalibrationHelper.getLevel(context, contact.key);
+			
+			contacts.add(contact);
+		}
 
 		ArrayList<ContactRecord> normalizedContacts = new ArrayList<ContactRecord>();
 		
