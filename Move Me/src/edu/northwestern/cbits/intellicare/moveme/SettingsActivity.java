@@ -338,6 +338,17 @@ public class SettingsActivity extends PreferenceActivity
 		});
 
 		this.updateEnabled();
+		
+		Preference version = this.findPreference("app_version");
+
+		try 
+		{
+			version.setTitle(this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName);
+		} 
+		catch (NameNotFoundException e) 
+		{
+			LogManager.getInstance(this).logException(e);
+		}
 	}
 	
 	private void fetchFitbitAuth() 

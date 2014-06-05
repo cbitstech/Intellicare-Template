@@ -41,4 +41,5 @@
    		<Preference android:title="@string/creator_dcm" android:summary="@string/role_clinical_consultant" />
 		<Preference android:title="@string/copy_disclaimer" android:key="copyright_statement" />
 	</PreferenceCategory>
+	<Preference android:title="@string/placeholder_app_version" android:summary="@string/label_app_version" android:key="app_version" />
 </PreferenceScreen>
