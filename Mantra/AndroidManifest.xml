@@ -117,6 +117,7 @@
             android:name="edu.northwestern.cbits.intellicare.mantra.activities.ProgressActivity"
             android:label="@string/title_activity_progress"
             android:theme="@style/Theme.AppCompat.Light" >
+            
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 
@@ -125,6 +126,7 @@
 
                 <data android:mimeType="text/plain" />
             </intent-filter>
+            
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -136,6 +138,7 @@
                     android:pathPrefix="/add_photos"
                     android:scheme="intellicare" />
             </intent-filter>
+            
         </activity>
         <activity
             android:name="edu.northwestern.cbits.intellicare.mantra.DownloadActivity"

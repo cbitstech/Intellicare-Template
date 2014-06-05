@@ -1,11 +1,15 @@
 package edu.northwestern.cbits.intellicare.mantra.activities;
 
+import java.io.File;
+
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.mantra.Constants;
 import edu.northwestern.cbits.intellicare.mantra.GetImageListAndSizesTask;
 import edu.northwestern.cbits.intellicare.mantra.GetImagesTask;
 import edu.northwestern.cbits.intellicare.mantra.MediaScannerService;
+import edu.northwestern.cbits.intellicare.mantra.Paths;
 import edu.northwestern.cbits.intellicare.mantra.R;
+import edu.northwestern.cbits.intellicare.mantra.Util;
 import edu.northwestern.cbits.intellicare.mantra.R.layout;
 import edu.northwestern.cbits.intellicare.mantra.R.menu;
 import android.net.Uri;
@@ -105,7 +109,7 @@ public class ProgressActivity extends ConsentedActivity {
 	}
 
 	/**
-	 * Handles a response from the MediaScannerService.
+	 * Handles a response from the MediaScannerService by loading an image viewer of the user's choice (or default assignment).
 	 * Src: https://developer.android.com/training/run-background-service/report-status.html
 	 * @author mohrlab
 	 *
@@ -126,7 +130,12 @@ public class ProgressActivity extends ConsentedActivity {
 				if(!extras.containsKey(MediaScannerService.INTENT_KEY_TO_RECEIVER_STRINGARRAY)) {
 					// display the Android image gallery for the folder
 					// ATTEMPT 1; displays Gallery or Photos, but only allows picking 1 image
-					Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+//					Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+
+					// attempt to open the Mantra images folder, specifically
+					Intent intent = new Intent(Intent.ACTION_PICK);
+					intent.setDataAndType(Util.getContentUriViaImageFilePath(arg0, Paths.MANTRA_IMAGES_TMP), "image/*");
+					
 					self.startActivityForResult(intent, GetImagesTask.RESULT_LOAD_IMAGE);
 				}
 			}
