@@ -1,20 +1,22 @@
 package edu.northwestern.cbits.intellicare.dailyfeats;
 
-import java.util.HashMap;
-
-import android.app.TimePickerDialog;
-import android.app.TimePickerDialog.OnTimeSetListener;
+import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.text.format.DateFormat;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TimePicker;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
@@ -33,6 +35,17 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		this.setTitle(R.string.title_settings);
 		
 		this.addPreferencesFromResource(R.layout.activity_settings);
+		
+		Preference version = this.findPreference("app_version");
+
+		try 
+		{
+			version.setTitle(this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName);
+		} 
+		catch (NameNotFoundException e) 
+		{
+			LogManager.getInstance(this).logException(e);
+		}
 	}
 	
 	public void onResume()
@@ -193,9 +206,84 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		}
 		else if (key.equals("settings_reminder_time"))
 		{
-			final SettingsActivity me = this;
-			
-			TimePickerDialog dialog = new TimePickerDialog(this, new OnTimeSetListener()
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle("RemiNdEr TimE");
+
+			LayoutInflater inflater = LayoutInflater.from(this);
+			final View view = inflater.inflate(R.layout.view_week_time_picker, null, false);
+
+			final CheckBox sunday = (CheckBox) view.findViewById(R.id.check_sun);
+			final CheckBox monday = (CheckBox) view.findViewById(R.id.check_mon);
+			final CheckBox tuesday = (CheckBox) view.findViewById(R.id.check_tue);
+			final CheckBox wednesday = (CheckBox) view.findViewById(R.id.check_wed);
+			final CheckBox thursday = (CheckBox) view.findViewById(R.id.check_thu);
+			final CheckBox friday = (CheckBox) view.findViewById(R.id.check_fri);
+			final CheckBox saturday = (CheckBox) view.findViewById(R.id.check_sat);
+
+			final TimePicker timePicker = (TimePicker) view.findViewById(R.id.time_picker);
+
+			timePicker.setCurrentHour(prefs.getInt(ScheduleManager.REMINDER_HOUR, 18));
+			timePicker.setCurrentMinute(prefs.getInt(ScheduleManager.REMINDER_MINUTE, 0));
+
+			builder.setView(view);
+
+			sunday.setChecked(prefs.getBoolean(ScheduleManager.REMINDER_SUNDAY, ScheduleManager.SUNDAY_ENABLED_DEFAULT));
+			monday.setChecked(prefs.getBoolean(ScheduleManager.REMINDER_MONDAY, ScheduleManager.MONDAY_ENABLED_DEFAULT));
+			tuesday.setChecked(prefs.getBoolean(ScheduleManager.REMINDER_TUESDAY, ScheduleManager.TUESDAY_ENABLED_DEFAULT));
+			wednesday.setChecked(prefs.getBoolean(ScheduleManager.REMINDER_WEDNESDAY, ScheduleManager.WEDNESDAY_ENABLED_DEFAULT));
+			thursday.setChecked(prefs.getBoolean(ScheduleManager.REMINDER_THURSDAY, ScheduleManager.THURSDAY_ENABLED_DEFAULT));
+			friday.setChecked(prefs.getBoolean(ScheduleManager.REMINDER_FRIDAY, ScheduleManager.FRIDAY_ENABLED_DEFAULT));
+			saturday.setChecked(prefs.getBoolean(ScheduleManager.REMINDER_SATURDAY, ScheduleManager.SATURDAY_ENABLED_DEFAULT));
+
+			builder.setPositiveButton(R.string.action_schedule_reminder, new OnClickListener()
+			{
+				public void onClick(DialogInterface arg0, int which) 
+				{
+					Editor e = prefs.edit();
+
+					int hour = timePicker.getCurrentHour();
+					int minute = timePicker.getCurrentMinute();
+
+					e.putBoolean(ScheduleManager.REMINDER_SUNDAY, sunday.isChecked());
+					e.putBoolean(ScheduleManager.REMINDER_MONDAY, monday.isChecked());
+					e.putBoolean(ScheduleManager.REMINDER_TUESDAY, tuesday.isChecked());
+					e.putBoolean(ScheduleManager.REMINDER_WEDNESDAY, wednesday.isChecked());
+					e.putBoolean(ScheduleManager.REMINDER_THURSDAY, thursday.isChecked());
+					e.putBoolean(ScheduleManager.REMINDER_FRIDAY, friday.isChecked());
+					e.putBoolean(ScheduleManager.REMINDER_SATURDAY, saturday.isChecked());
+					e.putInt(ScheduleManager.REMINDER_HOUR, hour);
+					e.putInt(ScheduleManager.REMINDER_MINUTE, minute);
+
+					e.commit();
+
+					/*
+					HashMap<String, Object> payload = new HashMap<String, Object>();
+					payload.put("hour", hour);
+					payload.put("minute", minute);
+					payload.put("sunday", sunday.isChecked());
+					payload.put("monday", monday.isChecked());
+					payload.put("tuesday", tuesday.isChecked());
+					payload.put("wednesday", wednesday.isChecked());
+					payload.put("thursday", thursday.isChecked());
+					payload.put("friday", friday.isChecked());
+					payload.put("saturday", saturday.isChecked());
+
+					LogManager.getInstance(me).log("scheduled_reminder", payload);
+					*/
+				}
+			});
+
+			builder.setNegativeButton(R.string.action_not_now, new OnClickListener()
+			{
+				public void onClick(DialogInterface dialog, int which) 
+				{
+//					HashMap<String, Object> payload = new HashMap<String, Object>();
+//					LogManager.getInstance(me).log("canceled_scheduled_reminder", payload);
+				}
+			});
+
+			builder.create().show();
+/*			TimePickerDialog dialog = new TimePickerDialog(this, new OnTimeSetListener()
 			{
 				public void onTimeSet(TimePicker arg0, int hour, int minute) 
 				{
@@ -216,7 +304,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			}, prefs.getInt(ScheduleManager.REMINDER_HOUR, 18), prefs.getInt(ScheduleManager.REMINDER_MINUTE, 0), DateFormat.is24HourFormat(this));
 			
 			dialog.show();
-
+*/
 			return true;
 		}
 		else if (key.equals("copyright_statement"))

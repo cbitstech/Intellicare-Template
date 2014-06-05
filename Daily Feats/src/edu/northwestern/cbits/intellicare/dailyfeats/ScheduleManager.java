@@ -64,6 +64,21 @@ public class ScheduleManager
 	public static final int DEFAULT_MINUTE = 0;
 	private static final String LAST_NOTIFICATION = "last_notification";
 
+	public static final String REMINDER_SUNDAY = "remind_sunday";
+	public static final String REMINDER_MONDAY = "remind_monday";
+	public static final String REMINDER_TUESDAY = "remind_tuesday";
+	public static final String REMINDER_WEDNESDAY = "remind_wednesday";
+	public static final String REMINDER_THURSDAY = "remind_thursday";
+	public static final String REMINDER_FRIDAY = "remind_friday";
+	public static final String REMINDER_SATURDAY = "remind_saturday";
+	public static final boolean SUNDAY_ENABLED_DEFAULT = true;
+	public static final boolean MONDAY_ENABLED_DEFAULT = true;
+	public static final boolean TUESDAY_ENABLED_DEFAULT = true;
+	public static final boolean WEDNESDAY_ENABLED_DEFAULT = true;
+	public static final boolean THURSDAY_ENABLED_DEFAULT = true;
+	public static final boolean FRIDAY_ENABLED_DEFAULT = true;
+	public static final boolean SATURDAY_ENABLED_DEFAULT = true;
+
 	private static ScheduleManager _instance = null;
 
 	private Context _context = null;
