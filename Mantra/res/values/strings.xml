@@ -101,9 +101,9 @@
     <string name="label_app_version">Application Version</string>
 
     <string-array name="onboarding_slide_titles">
-        <item>Slide 1</item>
-        <item>Slide 2</item>
-        <item>Slide 3</item>
+        <item>What is a mantra?</item>
+        <item>What this app does</item>
+        <item>How this app works</item>
     </string-array>
     <string-array name="onboarding_slide_texts">
         <item>file:///android_asset/www/onboarding_0.html</item>
