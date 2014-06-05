@@ -52,7 +52,6 @@
     <string name="title_activity_review">ReviewActivity</string>
     <string name="title_activity_transparent">TransparentActivity</string>
     <string name="title_activity_progress">Mantra</string>
-    <string name="default_image_caption">Press and hold to change caption</string>
     <string name="title_download_queue">Image Downloads</string>
     <string name="subtitle_download_queue" formatted="false">Remaining downloads: %d of %d</string>
     <string name="title_create_board">Add New Mantra?</string>
@@ -75,7 +74,7 @@
     <string name="network_error_are_you_connected_to_the_internet_error_message_for_url_">Network error. Are you connected to the Internet? Error message for URL (</string>
     <string name="_bytes_downloading_">" bytes) Downloading: "</string>
     <string name="media_file_timestamp_format">yyyyMMdd_HHmmss</string>
-    <string name="some_image_caption">Press and hold to change caption</string>
+    <string name="some_image_caption">Change Caption</string>
     <string name="remove">Remove</string>
     <string name="image_applied_">Image applied!</string>
     <string name="image_already_applied_consider_choosing_a_different_one_">Image already applied. Consider choosing a different one!</string>
