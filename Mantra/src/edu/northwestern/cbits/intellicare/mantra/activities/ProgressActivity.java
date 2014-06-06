@@ -162,6 +162,9 @@ public class ProgressActivity extends ConsentedActivity {
 			this.startActivity(intent);
         	self.finish();
 		}
+		else if (data == null) {
+			self.finish();
+		}
 	}
 
 	
