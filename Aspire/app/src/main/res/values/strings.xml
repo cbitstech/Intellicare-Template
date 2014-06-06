@@ -218,4 +218,5 @@
 	<string name="db_insert_card_19">INSERT INTO cards (name, description) VALUES(\'TRADITION\', \'to follow respected patterns of the past\');</string>
 	<string name="db_insert_card_20">INSERT INTO cards (name, description) VALUES(\'VIRTUE\', \'to live a morally pure and excellent life\');</string>
     <string name="view_intro">View Intro</string>
+    <string name="view_faq">FAQ</string>
 </resources>

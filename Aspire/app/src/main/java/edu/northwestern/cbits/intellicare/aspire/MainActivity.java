@@ -686,6 +686,9 @@ public class MainActivity extends ConsentedActivity
                 this.startActivity(introIntent);
 
                 break;
+
+            case R.id.action_faq:
+                this.showFaq(this.getString(R.string.app_name));
 		}
 		
 		return true;

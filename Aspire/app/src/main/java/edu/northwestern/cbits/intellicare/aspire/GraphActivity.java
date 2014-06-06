@@ -25,46 +25,40 @@ import android.webkit.WebView;
 import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 
-public class GraphActivity extends ConsentedActivity 
-{
-	public static final Uri URI = Uri.parse("intellicare://aspire/graph");
+public class GraphActivity extends ConsentedActivity {
+    public static final Uri URI = Uri.parse("intellicare://aspire/graph");
 
-	protected void onCreate(Bundle savedInstanceState) 
-	{
-		super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		this.setContentView(R.layout.activity_graph);
-	}
+        this.setContentView(R.layout.activity_graph);
+    }
 
-	@SuppressLint("SetJavaScriptEnabled")
-	protected void onResume()
-	{
-		super.onResume();
-		
-		WebView graphView = (WebView) this.findViewById(R.id.graph_web_view);
-		graphView.getSettings().setJavaScriptEnabled(true);
-		
-		graphView.loadDataWithBaseURL("file:///android_asset/", GraphActivity.generateGraph(this), "text/html", null, null);
-		
-		ActionBar actionBar = this.getSupportActionBar();
-		actionBar.setTitle(R.string.title_graph);
-		
-		try 
-		{
-			JSONObject data = GraphActivity.graphValues(this);
+    @SuppressLint("SetJavaScriptEnabled")
+    protected void onResume() {
+        super.onResume();
+
+        WebView graphView = (WebView) this.findViewById(R.id.graph_web_view);
+        graphView.getSettings().setJavaScriptEnabled(true);
+
+        graphView.loadDataWithBaseURL("file:///android_asset/", GraphActivity.generateGraph(this), "text/html", null, null);
+
+        ActionBar actionBar = this.getSupportActionBar();
+        actionBar.setTitle(R.string.title_graph);
+
+        try {
+            JSONObject data = GraphActivity.graphValues(this);
 
             Log.e("Aspire ", data.toString(2));
-		
-			if (data.length() == 1)
-				actionBar.setSubtitle(R.string.subtitle_graph_single);
-			else
-				actionBar.setSubtitle(this.getString(R.string.subtitle_graph, data.length()));
-		}
-		catch (JSONException e) 
-		{
-			LogManager.getInstance(this).logException(e);
-		}
-	}
+
+            if (data.length() == 1)
+                actionBar.setSubtitle(R.string.subtitle_graph_single);
+            else
+                actionBar.setSubtitle(this.getString(R.string.subtitle_graph, data.length()));
+        } catch (JSONException e) {
+            LogManager.getInstance(this).logException(e);
+        }
+    }
 	
 	private static String generateGraph(Context context) 
 	{
@@ -92,12 +86,15 @@ public class GraphActivity extends ConsentedActivity
 		}
 
 		String graphString = buffer.toString();
+
 		
 		try 
 		{
 			JSONObject graphValues = GraphActivity.graphValues(context);
 
 			graphString = graphString.replaceAll("VALUES_JSON", graphValues.toString());
+
+
 		}
 		catch (JSONException e) 
 		{

@@ -38,6 +38,7 @@
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.MotivationActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.DemographicActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.RecruitmentActivity" android:label="@string/app_name" />
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.FaqActivity" android:label="@string/app_name" />
         <provider android:name=".AspireContentProvider" android:authorities="edu.northwestern.cbits.intellicare.aspire" android:exported="false" />
         <receiver android:name=".ScheduleHelper">
 		    <intent-filter>

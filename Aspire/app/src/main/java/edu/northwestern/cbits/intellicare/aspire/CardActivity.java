@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -215,6 +216,11 @@ public class CardActivity extends ConsentedActivity
                 builder.create().show();
 
                 break;
+
+            case R.id.action_close:
+
+                Intent htmlIntent = new Intent(me, MainActivity.class);
+                me.startActivity(htmlIntent);
         }
 
         return true;

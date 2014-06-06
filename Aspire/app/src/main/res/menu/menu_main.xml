@@ -17,7 +17,11 @@
         robot:showAsAction="never"
         android:showAsAction="never" />
     <item android:id="@+id/action_intro"
-        android:title="@string/view_intro"
+    android:title="@string/view_intro"
+    robot:showAsAction="never"
+    android:showAsAction="never" />
+    <item android:id="@+id/action_faq"
+        android:title="@string/view_faq"
         robot:showAsAction="never"
         android:showAsAction="never" />
 </menu>

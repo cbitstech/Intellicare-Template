@@ -5,13 +5,8 @@
         android:title="@string/action_add_card"
         android:icon="@drawable/ic_action_add" />
     <item
-        android:id="@+id/action_list_view"
+        android:id="@+id/action_close"
         robot:showAsAction="always"
-        android:title="@string/action_list_view"
-        android:icon="@drawable/ic_action_list" />
-    <item
-        android:id="@+id/action_cards_view"
-        robot:showAsAction="always"
-        android:title="@string/action_cards_view"
-        android:icon="@drawable/ic_cards" />
+        android:title="@string/action_close"
+        android:icon="@drawable/ic_action_cancel" />
 </menu>

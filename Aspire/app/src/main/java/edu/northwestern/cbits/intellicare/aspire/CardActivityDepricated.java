@@ -26,7 +26,7 @@ import edu.northwestern.cbits.intellicare.ConsentedActivity;
 import edu.northwestern.cbits.intellicare.logging.LogManager;
 
 public class CardActivityDepricated extends ConsentedActivity
-{
+{ /*
     private int _count = 0;
     private Menu _menu = null;
     private boolean _cardsVisible = false;
@@ -348,4 +348,5 @@ public class CardActivityDepricated extends ConsentedActivity
 
         return true;
     }
+    */
 }
