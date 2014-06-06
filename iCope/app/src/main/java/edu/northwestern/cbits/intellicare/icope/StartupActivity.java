@@ -16,11 +16,11 @@ public class StartupActivity extends ConsentedActivity
         super.onCreate(savedInstanceState);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-        
-		if (prefs.getBoolean(IntroActivity.INTRO_SHOWN, false))
-			this.startActivity(new Intent(this, IntroActivity.class));
-		else
-			this.startActivity(new Intent(this, MainActivity.class));
+
+        if (prefs.getBoolean(IntroActivity.INTRO_SHOWN, false))
+            this.startActivity(new Intent(this, MainActivity.class));
+        else
+            this.startActivity(new Intent(this, IntroActivity.class));
 		
 		ScheduleManager.getInstance(this);
     }

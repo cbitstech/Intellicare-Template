@@ -3,6 +3,7 @@ package edu.northwestern.cbits.intellicare.aspire;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import edu.northwestern.cbits.intellicare.SequentialPageActivity;
 
@@ -30,6 +31,8 @@ public class IntroActivity extends SequentialPageActivity {
         SharedPreferences.Editor e = prefs.edit();
         e.putBoolean(IntroActivity.INTRO_SHOWN, true);
         e.commit();
+
+        Log.e("intro activity", INTRO_SHOWN);
 
         Intent mainIntent = new Intent(this, MainActivity.class);
         this.startActivity(mainIntent);
