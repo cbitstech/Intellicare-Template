@@ -1,6 +1,5 @@
-package edu.northwestern.cbits.intellicare.aspire;
+package edu.northwestern.cbits.intellicare.icope;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,7 +9,7 @@ import edu.northwestern.cbits.intellicare.ConsentedActivity;
 
 public class StartupActivity extends ConsentedActivity
 {
-    // public static final Uri URI = Uri.parse("intellicare://aspire/home");
+    // public static final Uri URI = Uri.parse("intellicare://iCope/home");
 
 	protected void onCreate(Bundle savedInstanceState) 
     {

@@ -1,5 +1,6 @@
 package edu.northwestern.cbits.intellicare.aspire;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -29,5 +30,8 @@ public class IntroActivity extends SequentialPageActivity {
         SharedPreferences.Editor e = prefs.edit();
         e.putBoolean(IntroActivity.INTRO_SHOWN, true);
         e.commit();
+
+        Intent mainIntent = new Intent(this, MainActivity.class);
+        this.startActivity(mainIntent);
     }
 }
