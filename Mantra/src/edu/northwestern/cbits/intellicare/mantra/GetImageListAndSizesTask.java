@@ -38,7 +38,7 @@ class GetImageListAndSizesTaskBackgroundReturn {
  */
 public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageListAndSizesTaskBackgroundReturn> {
 	private static final String CN = "GetImageListAndSizesTask";
-	public Activity activity;
+	public ProgressActivity activity;
 
 	private final ProgressBar progressBar;
 	private final View progressBarView;
@@ -46,7 +46,7 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 	private TextView currentProgressActionText;
 
 	
-	public GetImageListAndSizesTask(Activity a, ProgressBar p, View pbv) {
+	public GetImageListAndSizesTask(ProgressActivity a, ProgressBar p, View pbv) {
 		activity = a;
 		progressBar = p;
 		Log.d(CN+".GetImageListAndSizesTask", "pbv == null = " + (pbv == null));
@@ -65,9 +65,12 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 
 			try {
 				// get the set of image URLs, then get their file sizes
+				activity.updateActionBarSubtitle("Getting page content...");
 				long startTime = System.currentTimeMillis();
 				Set<String> imageList = ImageExtractor.getImageList(url, false);
 				long imageListTime = System.currentTimeMillis();
+				
+				activity.updateActionBarSubtitle("Getting image sizes...");
 				Map<String,Integer> imageUrlsAndSizes = ImageExtractor.getRemoteContentLength(imageList);
 				long endTime = System.currentTimeMillis();
 				Log.d(CN + ".doInBackground", 

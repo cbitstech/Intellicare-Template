@@ -54,20 +54,12 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 	
 	@Override
 	protected Object doInBackground(GetImagesTaskParams... arg0) {
-		final Activity activity = arg0[0].activity;
+		final ProgressActivity activity = arg0[0].activity;
 		Map<String, Integer> imagesToDownload = arg0[0].imagesToDownload;
 //		progressBarView = arg0[0].progressBarView;
 		
 		currentProgressActionText = (TextView) progressBarView.findViewById(R.id.currentProgressAction);
 		Log.d(CN+".doInBackground", "currentProgressActionText = " + currentProgressActionText.getText());
-//        activity.runOnUiThread(new Runnable() {
-//			
-//			@Override
-//			public void run() {
-//				currentProgressActionText.setText("TESTING");
-//				}
-//			});
-//		Log.d(CN+".doInBackground", "currentProgressActionText = " + currentProgressActionText.getText());
 		
 		int count = imagesToDownload.keySet().size();
 		int totalSize = 0;
@@ -89,7 +81,8 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 
 		// set the max progress bar value
 		progress.setMax(imageCount + 1);	// +1 for the image-size download
-		currentProgressActionTextValue = "Getting image file sizes...;";
+		activity.updateActionBarSubtitle("Downloading images...");
+		currentProgressActionTextValue = "Downloading images...;";
         updateProgress(activity);
 
 		String[] fullFilePathsToScan = new String[imageCount];
@@ -115,6 +108,7 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 		}
 		
 		// ATTEMPT 3: run the image-scanning in a service called via an intent.
+		activity.updateActionBarSubtitle("Updating image database...");
 		scanFilePathsForImages(activity, fullFilePathsToScan);
 		
 		long endTime = System.currentTimeMillis();
