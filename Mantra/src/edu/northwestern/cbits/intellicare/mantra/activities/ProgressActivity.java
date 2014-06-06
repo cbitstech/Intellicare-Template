@@ -45,11 +45,14 @@ public class ProgressActivity extends ConsentedActivity {
 	public static final String INTENT_KEY_TYPE_GETIMAGESANDSIZES = "getImagesAndSizes";
 	public static final int INTENT_VAL_TYPE_GETIMAGESANDSIZES = 1;
 
+	View progressBarView; 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_progress);
+		progressBarView = this.findViewById(R.id.activityProgressLayout);
+
 
 //		new ContextThemeWrapper(this, R.style.Theme_AppCompat_Light)
 		
@@ -90,12 +93,12 @@ public class ProgressActivity extends ConsentedActivity {
 		Log.d(CN+".onResume", "exiting");
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.progress, menu);
-		return true;
-	}
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		// Inflate the menu; this adds items to the action bar if it is present.
+//		getMenuInflater().inflate(R.menu.progress, menu);
+//		return true;
+//	}
 
 	
 	@Override
@@ -204,7 +207,7 @@ public class ProgressActivity extends ConsentedActivity {
 		        	Log.d(CN + ".promptConfirmDownloadPageImages", "Yes path");
 
 					final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar1);
-					final View progressBarView = self.getLayoutInflater().inflate(R.layout.activity_progress, null);
+//					final View progressBarView = self.getLayoutInflater().inflate(R.layout.activity_progress, null);
 					
 					Log.d(CN+".promptConfirmDownloadPageImages", "progressBarView == null = " + (progressBarView == null));
 					new GetImageListAndSizesTask(self, progressBar, progressBarView).execute(url);
@@ -222,7 +225,9 @@ public class ProgressActivity extends ConsentedActivity {
 
 //		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Theme_AppCompat_Light));
-		builder.setMessage(self.getString(R.string.download_and_choose_from_the_images_at_this_url_) + ": \"" + url + "\"")
+		builder
+			.setTitle(self.getString(R.string.title_fetch_images))
+			.setMessage(self.getString(R.string.download_and_choose_from_the_images_at_this_url_) + ": \n\n" + url)
 			.setPositiveButton(self.getString(R.string.yes), dialogClickListener)
 		    .setNegativeButton(self.getString(R.string.no), dialogClickListener)
 		    .show();

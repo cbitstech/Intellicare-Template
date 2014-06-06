@@ -41,13 +41,14 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 	
 	public static final int RESULT_LOAD_IMAGE = 1;
 	private ProgressBar progress;
+	private final View progressBarView;
 	private String currentProgressActionTextValue;
-	private TextView currentProgressActionText = null;
-	private View progressBarView;
+	private TextView currentProgressActionText;
 
 	
-	public GetImagesTask(ProgressBar p) {
+	public GetImagesTask(ProgressBar p, View pbv) {
 		progress = p;
+		progressBarView = pbv;
 	}
 
 	
@@ -55,11 +56,19 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 	protected Object doInBackground(GetImagesTaskParams... arg0) {
 		final Activity activity = arg0[0].activity;
 		Map<String, Integer> imagesToDownload = arg0[0].imagesToDownload;
-		progressBarView = arg0[0].progressBarView;
+//		progressBarView = arg0[0].progressBarView;
 		
 		currentProgressActionText = (TextView) progressBarView.findViewById(R.id.currentProgressAction);
-		Log.d(CN+".doInBackground", "currentProgressActionText = " + currentProgressActionText);
-				
+		Log.d(CN+".doInBackground", "currentProgressActionText = " + currentProgressActionText.getText());
+//        activity.runOnUiThread(new Runnable() {
+//			
+//			@Override
+//			public void run() {
+//				currentProgressActionText.setText("TESTING");
+//				}
+//			});
+//		Log.d(CN+".doInBackground", "currentProgressActionText = " + currentProgressActionText.getText());
+		
 		int count = imagesToDownload.keySet().size();
 		int totalSize = 0;
 
@@ -81,7 +90,7 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 		// set the max progress bar value
 		progress.setMax(imageCount + 1);	// +1 for the image-size download
 		currentProgressActionTextValue = "Getting image file sizes...;";
-		publishProgress();
+        updateProgress(activity);
 
 		String[] fullFilePathsToScan = new String[imageCount];
 		Thread thread = null;
@@ -90,14 +99,8 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 	        
 			int imageSize = imagesToDownload.get(url);
 			totalSize += imageSize;
-			currentProgressActionTextValue = "(" + imageSize + " bytes) " + activity.getString(R.string._bytes_downloading_) +" " + url;
-	        activity.runOnUiThread(new Runnable() {
-				
-				@Override
-				public void run() {
-					publishProgress();
-				}
-			});
+			currentProgressActionTextValue = "(" + imageSize + " bytes) " + activity.getString(R.string._bytes_downloading_) + "\n\n" + url;
+	        updateProgress(activity);
 			
 	        // Escape early if cancel() is called
 	        if (isCancelled()) break;
@@ -120,6 +123,16 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 		return null;
 	}
 
+	
+	private void updateProgress(Activity activity) {
+        activity.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				publishProgress();
+			}
+		});
+	}
+
 
 	/**
 	 * @param activity
@@ -131,14 +144,31 @@ public class GetImagesTask extends AsyncTask<GetImagesTaskParams, Void, Object> 
 		activity.startService(mediaScannerIntent);
 	}
 	
+	/**
+	 * The update function to run after an image is downloaded.
+	 */
 	@Override
 	protected void onProgressUpdate(Void... values) {
 		super.onProgressUpdate(values);
 		Log.d(CN+".onProgressUpdate", "entered");
 
 		progress.incrementProgressBy(1);
-		Log.d(CN+".onProgressUpdate", "Should set progress bar text to: " + currentProgressActionTextValue);
+		Log.d(CN+".onProgressUpdate", "Should set progress current status text to: " + currentProgressActionTextValue);
 		currentProgressActionText.setText(currentProgressActionTextValue);
+		currentProgressActionText.refreshDrawableState();
 	}
 
+	
+	// ONLY RUNS ONCE.
+	// 
+//	@Override
+//	protected void onPostExecute(Object result) {
+//		// TODO Auto-generated method stub
+//		super.onPostExecute(result);
+//		Log.d(CN+".onPostExecute", "Should set progress current status text to: " + currentProgressActionTextValue);
+//		currentProgressActionText.setText(currentProgressActionTextValue);
+//		currentProgressActionText.refreshDrawableState();
+//	
+//	}
+	
 }

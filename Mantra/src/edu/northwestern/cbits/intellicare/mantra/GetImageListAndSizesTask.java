@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import edu.northwestern.cbits.intellicare.mantra.activities.ProgressActivity;
 
 /**** Async tasks *****/
@@ -28,6 +29,8 @@ class GetImageListAndSizesTaskBackgroundReturn {
 	}
 }
 
+
+
 /**
  * Fetches the set of image URLs from webpage at a specified URL.
  * @author mohrlab
@@ -39,7 +42,10 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 
 	private final ProgressBar progressBar;
 	private final View progressBarView;
-		
+	private String currentProgressActionTextValue;
+	private TextView currentProgressActionText;
+
+	
 	public GetImageListAndSizesTask(Activity a, ProgressBar p, View pbv) {
 		activity = a;
 		progressBar = p;
@@ -53,6 +59,10 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 		try {
 			String url = arg0[0];
 			Log.d(CN + ".doInBackground", "entered for url = " + url);
+
+			currentProgressActionText = (TextView) progressBarView.findViewById(R.id.currentProgressAction);
+			Log.d(CN+".doInBackground", "currentProgressActionText = " + currentProgressActionText.getText());
+
 			try {
 				// get the set of image URLs, then get their file sizes
 				long startTime = System.currentTimeMillis();
@@ -65,7 +75,7 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 						", getImageList (ms) = " + ((double)(imageListTime - startTime)) + 
 						", getRemoteContentLength (ms) = " + ((double)(endTime - imageListTime))
 						);
-		        publishProgress();
+		        updateProgress();
 				
 				// heuristically determine the set of images to download 
 				Map<String,Integer> imagesToDownload = new HashMap<String, Integer>();
@@ -74,6 +84,8 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 					Log.d(CN + ".onPostExecute", "size = " + sz + " for image " + key);
 					if(ProgressActivity.shouldDownloadImage(sz)) {
 						imagesToDownload.put(key, sz);
+						currentProgressActionTextValue = "Image size is " +sz + " bytes for image:\n\n" + key;
+				        updateProgress();
 					}
 				}
 				
@@ -90,6 +102,16 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 
 		return null;
 	}
+
+	
+	private void updateProgress() {
+        activity.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				publishProgress();
+			}
+		});
+	}
 	
 	@Override
 	protected void onProgressUpdate(Void... values) {
@@ -98,6 +120,9 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 			Log.d(CN+".onProgressUpdate", values[i].toString());
 		}
 		progressBar.incrementProgressBy(1);
+
+		currentProgressActionText.setText(currentProgressActionTextValue);
+		currentProgressActionText.refreshDrawableState();
 	}
 
 	@Override
@@ -107,7 +132,7 @@ public class GetImageListAndSizesTask extends AsyncTask<String, Void, GetImageLi
 		if(backgroundRet == null) { 
 			return;
 		}
-		new GetImagesTask(progressBar).execute(
+		new GetImagesTask(progressBar, progressBarView).execute(
 				new GetImagesTaskParams(backgroundRet.imagesToDownload, activity, progressBar, progressBarView)
 			);
 	}
