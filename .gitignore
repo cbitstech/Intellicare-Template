@@ -27,3 +27,5 @@ project.properties
 Thumbs.db
 
 lint.xml
+
+build/

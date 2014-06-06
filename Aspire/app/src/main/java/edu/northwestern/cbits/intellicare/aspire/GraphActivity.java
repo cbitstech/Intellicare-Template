@@ -150,7 +150,7 @@ public class GraphActivity extends ConsentedActivity {
 		
 		c.close();
 		
-		String[] colorWheel = { "#0099CC", "#9933CC", "#669900", "#FF8800", "#CC0000" };
+		String[] colorWheel = { "#2cb1e1", "#c182e0", "#92c500", "#ffb61c", "#ff5f5f" };
 
 		long day = 1000 * 60 * 60 * 24;
 		
