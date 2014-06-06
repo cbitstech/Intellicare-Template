@@ -682,7 +682,7 @@ public class MainActivity extends ConsentedActivity
 
 				break;
             case R.id.action_intro:
-                Intent introIntent = new Intent(this, IntroActivityDepricated.class);
+                Intent introIntent = new Intent(this, IntroActivity.class);
                 this.startActivity(introIntent);
 
                 break;
