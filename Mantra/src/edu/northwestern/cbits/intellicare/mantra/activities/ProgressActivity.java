@@ -211,6 +211,7 @@ public class ProgressActivity extends ConsentedActivity {
 		        case DialogInterface.BUTTON_NEGATIVE:
 		            //No button clicked
 		        	Log.d(CN + ".promptConfirmDownloadPageImages", "No path");
+		        	self.finish();
 		            break;
 		        }
 		    }
