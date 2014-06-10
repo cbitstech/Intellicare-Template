@@ -38,21 +38,58 @@ import android.widget.ProgressBar;
  *
  */
 public class ProgressActivity extends ConsentedActivity {
+
+	/**
+	 * Handles a response from the MediaScannerService by loading an image viewer of the user's choice (or default assignment).
+	 * Src: https://developer.android.com/training/run-background-service/report-status.html
+	 * @author mohrlab
+	 *
+	 */
+	private class MediaScannerServiceResponseReceiver extends BroadcastReceiver {
+		public static final String CN = "MediaScannerServiceResponseReceiver";
+		
+		@Override
+		public void onReceive(Context arg0, Intent arg1) {
+			Log.d(CN+".onReceive", "arg1 = " + arg1);
+			
+			Bundle extras = arg1.getExtras();
+			if(extras != null) {
+				Log.d(CN+".onReceive", "intent not null");
+				Log.d(CN+".onReceive", "message = " + arg1.getStringExtra("message"));
+				
+				if(!extras.containsKey(MediaScannerService.INTENT_KEY_TO_RECEIVER_STRINGARRAY)) {
+					// display the Android image gallery for the folder
+					// ATTEMPT 1; displays Gallery or Photos, but only allows picking 1 image
+//					Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+
+					// attempt to open the Mantra images folder, specifically
+					Intent intent = new Intent(Intent.ACTION_PICK);
+					intent.setDataAndType(Util.getContentUriViaImageFilePath(arg0, Paths.MANTRA_IMAGES_TMP), "image/*");
+					
+					self.startActivityForResult(intent, GetImagesTask.RESULT_LOAD_IMAGE);
+				}
+			}
+			else {
+				Log.d(CN+".onReceive", "intent is null");
+			}
+		}
+	}
+
 	private static final String CN = "ProgressActivity";
-	private Activity self;
+	private ProgressActivity self;
+	private MediaScannerServiceResponseReceiver mediaScannerServiceResponseReceiver;
 	
 	public static final String INTENT_KEY_URL = "url"; 
 	public static final String INTENT_KEY_TYPE_GETIMAGESANDSIZES = "getImagesAndSizes";
 	public static final int INTENT_VAL_TYPE_GETIMAGESANDSIZES = 1;
 
+	View progressBarView; 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_progress);
-
-//		new ContextThemeWrapper(this, R.style.Theme_AppCompat_Light)
-		
+		progressBarView = this.findViewById(R.id.activityProgressLayout);
 		self = this;
 
 		// set-up the image-scanner service + response.
@@ -90,12 +127,12 @@ public class ProgressActivity extends ConsentedActivity {
 		Log.d(CN+".onResume", "exiting");
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.progress, menu);
-		return true;
-	}
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		// Inflate the menu; this adds items to the action bar if it is present.
+//		getMenuInflater().inflate(R.menu.progress, menu);
+//		return true;
+//	}
 
 	
 	@Override
@@ -108,66 +145,7 @@ public class ProgressActivity extends ConsentedActivity {
 		Log.d(CN+".onDestroy", "exiting");
 	}
 
-	/**
-	 * Handles a response from the MediaScannerService by loading an image viewer of the user's choice (or default assignment).
-	 * Src: https://developer.android.com/training/run-background-service/report-status.html
-	 * @author mohrlab
-	 *
-	 */
-	private class MediaScannerServiceResponseReceiver extends BroadcastReceiver {
-		public static final String CN = "MediaScannerServiceResponseReceiver";
-		
-		@Override
-		public void onReceive(Context arg0, Intent arg1) {
-			// TODO Auto-generated method stub
-			Log.d(CN+".onReceive", "arg1 = " + arg1);
-			
-			Bundle extras = arg1.getExtras();
-			if(extras != null) {
-				Log.d(CN+".onReceive", "intent not null");
-				Log.d(CN+".onReceive", "message = " + arg1.getStringExtra("message"));
-				
-				if(!extras.containsKey(MediaScannerService.INTENT_KEY_TO_RECEIVER_STRINGARRAY)) {
-					// display the Android image gallery for the folder
-					// ATTEMPT 1; displays Gallery or Photos, but only allows picking 1 image
-//					Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
 
-					// attempt to open the Mantra images folder, specifically
-					Intent intent = new Intent(Intent.ACTION_PICK);
-					intent.setDataAndType(Util.getContentUriViaImageFilePath(arg0, Paths.MANTRA_IMAGES_TMP), "image/*");
-					
-					self.startActivityForResult(intent, GetImagesTask.RESULT_LOAD_IMAGE);
-				}
-			}
-			else {
-				Log.d(CN+".onReceive", "intent is null");
-			}
-		}
-	}
-	private MediaScannerServiceResponseReceiver mediaScannerServiceResponseReceiver;
-
-	/**
-	 * Handles the response from the image gallery activity.
-	 */
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data); 
-		Log.d(CN + ".onActivityResult", "requestCode = " + requestCode + "; resultCode = " + resultCode + "; data = " + data);
-		
-		if(requestCode == GetImagesTask.RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
-			Intent intent = new Intent(this, IndexActivity.class);
-			Uri uriFromImageBrowser = data.getData();
-			Log.d(CN+".onActivityResult", "uriFromImageBrowser = " + uriFromImageBrowser.toString());
-			intent.setData(uriFromImageBrowser);
-			this.startActivity(intent);
-        	self.finish();
-		}
-		else if (data == null) {
-			self.finish();
-		}
-	}
-
-	
 	/**
 	 * Handle external intents; src: http://developer.android.com/training/sharing/receive.html
 	 */
@@ -204,9 +182,10 @@ public class ProgressActivity extends ConsentedActivity {
 		        	Log.d(CN + ".promptConfirmDownloadPageImages", "Yes path");
 
 					final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar1);
-					final View progressBarView = self.getLayoutInflater().inflate(R.layout.activity_progress, null);
+//					final View progressBarView = self.getLayoutInflater().inflate(R.layout.activity_progress, null);
 					
 					Log.d(CN+".promptConfirmDownloadPageImages", "progressBarView == null = " + (progressBarView == null));
+					
 					new GetImageListAndSizesTask(self, progressBar, progressBarView).execute(url);
 
 		        	break;
@@ -222,11 +201,37 @@ public class ProgressActivity extends ConsentedActivity {
 
 //		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Theme_AppCompat_Light));
-		builder.setMessage(self.getString(R.string.download_and_choose_from_the_images_at_this_url_) + ": \"" + url + "\"")
+		builder
+			.setTitle(self.getString(R.string.title_fetch_images))
+			.setMessage(self.getString(R.string.download_and_choose_from_the_images_at_this_url_) + ": \n\n" + url)
 			.setPositiveButton(self.getString(R.string.yes), dialogClickListener)
 		    .setNegativeButton(self.getString(R.string.no), dialogClickListener)
 		    .show();
 	}
+	
+	
+	/**
+	 * Handles the response from the image gallery activity.
+	 */
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data); 
+		Log.d(CN + ".onActivityResult", "requestCode = " + requestCode + "; resultCode = " + resultCode + "; data = " + data);
+		
+		updateActionBarSubtitle("Done!");
+		if(requestCode == GetImagesTask.RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
+			Intent intent = new Intent(this, IndexActivity.class);
+			Uri uriFromImageBrowser = data.getData();
+			Log.d(CN+".onActivityResult", "uriFromImageBrowser = " + uriFromImageBrowser.toString());
+			intent.setData(uriFromImageBrowser);
+			this.startActivity(intent);
+        	self.finish();
+		}
+		else if (data == null) {
+			self.finish();
+		}
+	}
+
 	
 	/**
 	 * Heuristic function to determine whether to download an image. 
@@ -241,4 +246,19 @@ public class ProgressActivity extends ConsentedActivity {
 	{
 		return Uri.parse("intellicare://mantra/add_photos");
 	}
+	
+	
+	/**
+	 * Updates the action bar subtitle. 
+	 */
+	public void updateActionBarSubtitle(final String msg) {
+        self.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				self.getActionBar().setSubtitle(msg);
+			}
+		});
+	}
+
+	
 }

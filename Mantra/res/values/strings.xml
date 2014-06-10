@@ -68,10 +68,11 @@
     <string name="now_tap_on_a_mantra_to_attach_your_selected_image_to_it_">Now tap on a mantra to attach your selected image to it!</string>
     <string name="crash_manager_app_id">fcd8e6aab20e0e4ce94c0f86da7deb96</string>
     <string name="download_and_choose_from_the_images_at_this_url_">Download and choose from the images at this URL?</string>
+    <string name="title_fetch_images">Fetch Images?</string>
     <string name="no">No</string>
     <string name="the_image_and_caption_will_be_removed_from_this_mantra_but_will_not_be_permanently_deleted_from_your_device_proceed_">The image and caption will be removed from this mantra, but will not be permanently deleted from your device. Proceed?</string>
     <string name="network_error_are_you_connected_to_the_internet_error_message_for_url_">Network error. Are you connected to the Internet? Error message for URL (</string>
-    <string name="_bytes_downloading_">" bytes) Downloading: "</string>
+    <string name="_bytes_downloading_">Downloading: </string>
     <string name="media_file_timestamp_format">yyyyMMdd_HHmmss</string>
     <string name="some_image_caption">Change Caption</string>
     <string name="remove">Remove</string>

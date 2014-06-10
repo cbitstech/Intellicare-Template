@@ -31,7 +31,7 @@
     <string name="desc_worry_practice">Control when you worry.</string>
     <string name="tool_replay_intro">Intro</string>
     <string name="desc_replay_intro"></string> <!-- Mark -->
-    <string name="profile_wizard">Worry Profile</string>
+    <string name="profile_wizard">Worry Profiler</string>
     <string name="desc_profile_wizard">Your worry profile</string>
     <string name="main_activity_title">Cows Are Ruminants</string>
 
