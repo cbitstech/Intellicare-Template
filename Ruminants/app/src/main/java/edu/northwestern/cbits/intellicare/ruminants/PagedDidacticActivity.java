@@ -83,7 +83,7 @@ public class PagedDidacticActivity extends ConsentedActivity
 
                 content.setText(me._content[position]);
 
-                int[] chickens = {R.drawable.rumination_7, R.drawable.specific_1, R.drawable.specific_4, R.drawable.specific_11};
+                int[] chickens = {R.drawable.specific_2, R.drawable.specific_1, R.drawable.specific_4, R.drawable.specific_11};
 
                 Random rand = new Random();
                 int chicken = rand.nextInt(4);

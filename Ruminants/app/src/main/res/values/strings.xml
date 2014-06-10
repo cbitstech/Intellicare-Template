@@ -7,20 +7,19 @@
     <string name="next">Next</string>
     <string name="previous">Back</string>
 
-    <!-- Profile Questions -->
-    <string name="question_ruminating_lately">Have you been ruminating lately?</string> <!-- x it -->
-    <string name="question_rumination_content">What have you been ruminating about?</string> <!-- store in database -->
-    <string name="question_help_frequency">How often would you like help?</string> <!-- add note that this is notification -->
-    <string name="times_per_day">time(s) per day</string>
-
     <string name="action_save_profile">Done</string>
     <string name="toast_profile_recorded">Your profile has been saved.</string>
 
     <string name="title_settings">Settings</string>
 
     <!-- Notification text -->
-    <string name="help_note_title">MOO! Check in with Cows are Ruminants?</string>
-    <string name="help_note_message">Tap to go to your log, or swipe to dismiss.</string>
+    <string name="help_note_title">MOO!</string>
+    <string name="help_note_message">Do you have time to check in with "Cows are Ruminants?"</string>
+    <string name="title_schedule_reminder">Schedule Reminder</string>
+    <string name="go_to_log">Log Rumination</string>
+
+    <!-- find out what this is supposed to say -->
+    <string name="settings_group_notification">Notifications</string>
 
     <!-- Main menu -->
     <string name="tool_didactic_content">View random strategy</string>
@@ -31,11 +30,10 @@
     <string name="desc_worry_practice">Control when you worry.</string>
     <string name="tool_replay_intro">Intro</string>
     <string name="desc_replay_intro"></string> <!-- Mark -->
-    <string name="profile_wizard">Worry Profiler</string>
-    <string name="desc_profile_wizard">Your worry profile</string>
+    <string name="profile_wizard">Worry Profile</string>
     <string name="main_activity_title">Cows Are Ruminants</string>
 
-    <string name="hint_comments">Your worry concerns...</string>
+    <string name="hint_comments">Describe your thoughts...</string>
 
     <!-- Worry Practice Tool Details -->
     <string name="wpt_instructions_title">Using the Worry Practice Tool</string>
@@ -76,26 +74,20 @@
 
 
     <!-- Wizard One / Rumination Diary Questions -->
-    <string name="question_rumination_bool">Are you ruminating?</string>
-    <string name="question_rumination_trigger">What happened before the rumination started?</string>
-    <string name="question_pre_rumination_feeling">How did you feel at the time?</string>
-    <string name="question_rumination_duration">How long did the rumination last?</string>
-    <string name="question_rumination_strategy">What did you try?</string>
-    <string name="question_strategy_success">What stopped the rumination?</string>
+    <string name="question_rumination_bool">Have you been ruminating about anything?</string>
+    <string name="question_rumination_trigger">What were you ruminating about?</string>
+    <string name="question_rumination_duration">How often do you ruminate on this?</string>
 
     <!-- Wizard One Completion Prompts -->
-    <string name="message_complete_rum">Record if you are ruminating now to continue.</string>
-    <string name="message_complete_rum_duration">Answer how long your rumination lasted.</string>
-    <string name="message_complete_helpful">Respond if the rumination was helpful.</string>
-    <string name="message_complete_better">Identify if the rumination made you feel better.</string>
+    <string name="message_complete_rum">Record if you have been ruminating to continue.</string>
+    <string name="message_complete_rum_duration">Answer how often your rumination occurs.</string>
     <string name="toast_survey_wizard_recorded">Successfully submitted.</string>
 
     <string-array name="durations">
-        <item>A Few Minutes</item>
-        <item>30 Minutes</item>
-        <item>An Hour</item>
-        <item>A Few Hours</item>
-        <item>All Day</item>
+        <item>Every Now and Then</item>
+        <item>Sometimes</item>
+        <item>All the Time</item>
+
     </string-array>
 
 
@@ -119,24 +111,24 @@
     </string-array>
 
     <string-array name="intro_content">
-        <item>HAY there friend ... and Doctor Chicken!</item>
+        <item>Hello there! I\'m Bessie!</item>
         <item>How now, Bessie the cow?</item>
-        <item>I feel more blue than a blueberry.</item>
-        <item>Uh oh... worrying again?</item>
+        <item>I keep chewing on the same thoughts over and over.</item>
+        <item>Uh oh... ruminating again?</item>
         <item>I can\'t help it!</item>
         <item>We\'ve talked about this -- I have a few thoughts.</item>
         <item>I made this app for you.</item>
-        <item>An appetizer? I\'m not very hungry.</item>
-        <item>No, no, a phone app, to help you with your rumination.</item>
-        <item>I ruminate? Do you mean when I worry all the time?</item>
+        <item>\"Cows are Ruminants\" -- oh, it is for me!</item>
+        <item>Yes, it will help you with your rumination.</item>
+        <item>I ruminate? Do you mean when I chew grass, or when I worry all the time?</item>
         <item>Sometimes I hardly notice it.</item>
         <item>I can\'t seem to stop.</item>
-        <item>Sometimes cows do that Bessie. It\'s ok to do it sometimes.</item>
-        <item>When it is all the time -- that is a problem.</item>
-        <item>I\'m just worried there is something wrong with me.</item>
+        <item>Sometimes cows do that Bessie. It\'s ok to ruminate sometimes.</item>
+        <item>When you ruminate all the time -- that is a problem.</item>
+        <item>I\'m worry there is something wrong with me.</item>
         <item>Worries are something we ALL have to chew on. Even the people on the other side of the screen!</item>
-        <item>This app is for you.</item>
-        <item>First, we\'ll have you identify a worry you may be thinking about too often.</item>
+        <item>This app is for you. Bessie the cow is a ruminant, and you are too, in a way.</item>
+        <item>First, we\'ll have you identify a negative thought you may be thinking about too often.</item>
         <item>Then we will ask you about them every now and then.</item>
         <item>There are a few ways for you to respond.</item>
         <item>If you have some extended time, we\'re going to ask you to practice your worries using the \"WORRY PRACTICE TOOL\"</item>

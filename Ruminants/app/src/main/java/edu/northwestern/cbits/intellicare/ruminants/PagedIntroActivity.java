@@ -75,21 +75,9 @@ public class PagedIntroActivity extends ConsentedActivity
 
 		        String[] contentValues = me.getResources().getStringArray(R.array.intro_content);
 
-                int[] introImages = {R.drawable.greet_1, R.drawable.greet_1, R.drawable.greet_2, R.drawable.greet_3,
-                        R.drawable.intent_1, R.drawable.intent_2, R.drawable.intent_3,
-                        R.drawable.intent_4, R.drawable.intent_5, R.drawable.intent_6,
-                        R.drawable.rumination_1, R.drawable.rumination_2, R.drawable.rumination_3,
-                        R.drawable.rumination_4, R.drawable.rumination_5, R.drawable.rumination_6,
-                        R.drawable.rumination_7, R.drawable.specific_1, R.drawable.specific_2, R.drawable.specific_2,
-                        R.drawable.specific_4, R.drawable.specific_5, R.drawable.specific_7,
-                        R.drawable.specific_9,  R.drawable.specific_11,
-                        R.drawable.conclusion_1, R.drawable.conclusion_2, R.drawable.conclusion_3};
-
-
                 TextView content = (TextView) view.findViewById(R.id.content_text);
 
 		        content.setText(contentValues[position]);
-				background.setImageResource(introImages[position]);
 
 				view.setTag("" + position);
 
@@ -122,6 +110,18 @@ public class PagedIntroActivity extends ConsentedActivity
 		        MenuItem back = me._menu.findItem(R.id.action_previous);
 		        MenuItem next = me._menu.findItem(R.id.action_next);
 		        MenuItem done = me._menu.findItem(R.id.action_done);
+
+                int[] introImages = {R.drawable.greet_1, R.drawable.greet_2, R.drawable.greet_3,
+                        R.drawable.intent_1, R.drawable.intent_2, R.drawable.intent_3,
+                        R.drawable.intent_4, R.drawable.intent_5, R.drawable.intent_6,
+                        R.drawable.rumination_1, R.drawable.rumination_2, R.drawable.rumination_3,
+                        R.drawable.rumination_4, R.drawable.rumination_5, R.drawable.rumination_6,
+                        R.drawable.specific_4, R.drawable.specific_1, R.drawable.specific_2, R.drawable.specific_2,
+                        R.drawable.specific_4, R.drawable.specific_5, R.drawable.specific_7,
+                        R.drawable.specific_9,  R.drawable.specific_11,
+                        R.drawable.conclusion_1, R.drawable.conclusion_2, R.drawable.conclusion_3};
+
+                background.setImageResource(introImages[position]);
 
 		        back.setVisible(true);
 		        next.setVisible(true);

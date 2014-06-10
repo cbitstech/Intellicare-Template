@@ -8,9 +8,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.view.accessibility.AccessibilityNodeInfo;
 
 
 import java.util.Calendar;
@@ -42,7 +44,7 @@ public class ScheduleManager {
         Intent broadcast = new Intent(this._context, ScheduleHelper.class);
         PendingIntent pi = PendingIntent.getBroadcast(this._context, 0, broadcast, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, 15000, pi);
+        alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, 30000, pi);
     }
 
     public static ScheduleManager getInstance(Context context)
@@ -83,7 +85,7 @@ public class ScheduleManager {
         // Helper notification...
         if (timeToFire)
         {
-            Intent intent = new Intent(this._context, MainActivity.class);
+            Intent intent = new Intent(this._context, WizardOneActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
             String title = this._context.getString(R.string.help_note_title);

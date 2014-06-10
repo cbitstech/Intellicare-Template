@@ -18,17 +18,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".IntroActivity" android:label="@string/app_name"
-            android:screenOrientation="portrait">
- <!--           <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="intellicare" android:host="ruminants" android:pathPrefix="/intro" />
-            </intent-filter> -->
-        </activity>
-
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".PagedIntroActivity" android:label="@string/app_name" 
+        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".PagedIntroActivity" android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity android:theme="@style/Theme.AppCompat.Light" android:name=".PagedDidacticActivity" android:label="@string/app_name" 
             android:screenOrientation="portrait" />
