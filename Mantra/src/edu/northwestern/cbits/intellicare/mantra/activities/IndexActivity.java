@@ -134,7 +134,12 @@ public class IndexActivity extends ConsentedActivity {
 		// if this activity was opened by a response to the image gallery,
 		// then inform the user they need to tap on a mantra with which they
 		// wish to associate an image.
-		if (!displayedMantraAttachToast && getIntent().getData() != null) {
+		boolean isContentUri = false;
+		if(getIntent() != null && getIntent().getData() != null) {
+			isContentUri =getIntent().getData().toString().startsWith("content");
+		}
+		if (!displayedMantraAttachToast && isContentUri) {
+			Log.d(CN+".onResume", "getIntent().getData() = " + getIntent().getData());
 			Toast.makeText(this,
 					self.getString(R.string.now_tap_on_a_mantra_to_attach_your_selected_image_to_it_),
 					Toast.LENGTH_LONG).show();
