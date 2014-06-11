@@ -162,7 +162,8 @@ public class ProgressActivity extends ConsentedActivity {
 				promptConfirmDownloadPageImages(urlFromBrowser);
 			}
 		}
-		else if(extras.getBoolean(MediaScannerService.INTENT_KEY_TO_RECEIVER_STRINGARRAY)) {
+//		else if(extras != null && extras.getBoolean(MediaScannerService.INTENT_KEY_TO_RECEIVER_STRINGARRAY)) {
+		else if(extras == null) {
 			Log.d(CN+".handleExternalIntents", "intent from new-images notification alarm");
 			SingleMantraBoardActivity.startBrowsePhotosActivity(this);
 		}

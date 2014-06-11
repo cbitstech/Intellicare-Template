@@ -38,8 +38,6 @@ public class NotificationAlarm extends BroadcastReceiver
 
 	public static final String _12H_RENOTIFICATION = "12hRenotification";
 	private static final String CN = "NotificationAlarm";
-	public final static int IMAGE_SCAN_RATE_MINUTES = 5;
-	private final static int ALARM_POLLING_RATE_MILLIS = 1000 * 60; //  * IMAGE_SCAN_RATE_MINUTES; 				// Millisec * Second * Minute
 
 	
 	private static boolean isAlreadyCalled = false;
@@ -64,7 +62,7 @@ public class NotificationAlarm extends BroadcastReceiver
          int endMinute = sp.getInt(Constants.REMINDER_END_MINUTE, Constants.DEFAULT_MINUTE);
          Calendar currentCalendarInstance = Calendar.getInstance();
          Calendar currentCalendarInstanceMinusPollingRate = (Calendar) currentCalendarInstance.clone();
-         currentCalendarInstanceMinusPollingRate.add(Calendar.MINUTE, -(IMAGE_SCAN_RATE_MINUTES));
+         currentCalendarInstanceMinusPollingRate.add(Calendar.MINUTE, -(Constants.IMAGE_SCAN_RATE_MINUTES));
          int currHour = currentCalendarInstance.get(Calendar.HOUR_OF_DAY);
          int currMin = currentCalendarInstance.get(Calendar.MINUTE);
          
@@ -99,7 +97,7 @@ public class NotificationAlarm extends BroadcastReceiver
          boolean intentHasDelayedAlarmDate = intent.getExtras().containsKey(DELAYED_ALARM_DATE_KEY);
          
          // if it's time to scan for an image
-         if (currMin % IMAGE_SCAN_RATE_MINUTES == 0) {
+         if (currMin % Constants.IMAGE_SCAN_RATE_MINUTES == 0) {
         	 
         	 ArrayList<String> newImageIds = getCameraImagesSinceDate(context, currentCalendarInstanceMinusPollingRate.getTime());
         	 if(newImageIds.size() > 0) {
@@ -290,7 +288,7 @@ public class NotificationAlarm extends BroadcastReceiver
 	         AlarmManager am=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 	         Intent i = new Intent(context, NotificationAlarm.class);
 	         PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
-	         am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), ALARM_POLLING_RATE_MILLIS, pi); 
+	         am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), Constants.ALARM_POLLING_RATE_MILLIS, pi); 
 	    	 Log.d(CN+".SetAlarm","exiting; am = " + am.toString());
 		 }
 	 }
