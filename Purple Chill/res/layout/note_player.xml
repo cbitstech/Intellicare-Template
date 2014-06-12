@@ -35,10 +35,11 @@
             android:singleLine="true"
             android:fadingEdge="horizontal"
             android:ellipsize="marquee" />
-	</LinearLayout>
+    </LinearLayout>
 	<ImageView android:id="@+id/note_toggle"
 	    android:src="@drawable/ic_av_pause" 
 	    android:layout_width="32dp"
 	    android:layout_height="32dp"
 	    android:layout_margin="16dp" />
+
 </LinearLayout>

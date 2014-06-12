@@ -17,6 +17,73 @@
 
 				-webkit-animation: breathe 100s; 
 				-webkit animation-timing-function: linear;
+                
+			}
+            
+            #in {			
+                -webkit-animation: in 100s; 
+				-webkit animation-timing-function: linear;
+                text-align: center;
+                text-size: 36px;
+                font-family: Roboto Light;
+                font-style: italic;
+             }
+            
+            #out {				
+                -webkit-animation: out 100s; 
+				-webkit animation-timing-function: linear;
+                text-align: center;
+                text-size: 36px;
+                font-family: Roboto Light;
+                font-style: italic;
+             }
+                
+            @-webkit-keyframes in {
+				0%  { opacity: 1;}
+				7%  {opacity: 1;}
+				10% {opacity: 0;}
+				17% { opacity: 0;}
+				20% { opacity: 1;}
+				27% {opacity: 1;}
+				30% {opacity: 0;}
+				37% { opacity: 0;}
+				40% { opacity: 1;}
+				47% {opacity: 1;}
+				50% {opacity: 0;}
+				57% { opacity: 0;}
+				60% { opacity: 1;}
+				67% {opacity: 1;}
+				70% {opacity: 0;}
+				77% { opacity: 0;}
+				80% { opacity: 1;}
+				87% {opacity: 1;}
+				90% {opacity: 0;}
+				97% { opacity: 0;}
+				100% { opacity: 0;}
+			}
+            
+            @-webkit-keyframes out {
+				0%  {opacity: 0;}
+				7%  { opacity: 0;}
+				10% { opacity: 1;}
+				17% {opacity: 1;}
+				20% {opacity: 0;}
+				27% { opacity: 0;}
+				30% { opacity: 1;}
+				37% {opacity: 1;}
+				40% {opacity: 0;}
+				47% { opacity: 0;}
+				50% { opacity: 1;}
+				57% {opacity: 1;}
+				60% {opacity: 0;}
+				67% { opacity: 0;}
+				70% { opacity: 1;}
+				77% {opacity: 1;}
+				80% {opacity: 0;}
+				87% { opacity: 0;}
+				90% { opacity: 1;}
+				97% {opacity: 1;}
+				100% {opacity: 0;}
 			}
 
 			@-webkit-keyframes breathe {
@@ -69,6 +136,8 @@
         });</script>
     <div id="pbar_outerdiv" style="width: 80%; margin-left: auto; margin-right: auto; height: 10px; border: 2px solid grey; z-index: 1; position: relative; border-radius: 5px; -moz-border-radius: 5px;">
         <div id="pbar_innerdiv" style="background-color: #ac73a6; z-index: 2; height: 100%; width: 0%;"></div>
+               <div id="in"> <p>breathe in</p> </div>
+               <div id="out"> <p>breathe out</p> </div>
     </div>
 		<div id="dot"></div>
 	</body>
