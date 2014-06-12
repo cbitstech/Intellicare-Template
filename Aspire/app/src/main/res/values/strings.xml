@@ -22,7 +22,7 @@
     <string name="title_path_needed">Choose Value</string>
     <string name="message_path_needed">Please select your first value.</string>
 
-    <string name="message_no_paths">No paths for this day&#8230;</string>
+    <string name="message_no_paths">No paths recorded on this day&#8230;</string>
     
     <string name="subtitle_single_value">1 value</string>
     <string name="subtitle_values" formatted="false">%d values</string>

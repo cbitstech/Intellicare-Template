@@ -101,9 +101,6 @@ public class ScheduleManager {
 
             Notification note = builder.build();
 
-            NotificationManager noteManager = (NotificationManager) this._context.getSystemService(android.content.Context.NOTIFICATION_SERVICE);
-            noteManager.notify(ScheduleManager.HELPER_NOTIFICATION_ID, note);
-
             Uri u = Uri.parse("intellicare://ruminants/main");
 
             StatusNotificationManager.getInstance(this._context).notifyBigText(ScheduleManager.HELPER_NOTIFICATION_ID, R.drawable.ic_action_process_start, title, message, pendingIntent, u);
