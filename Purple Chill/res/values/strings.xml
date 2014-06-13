@@ -423,4 +423,5 @@
   	<string name="subtitle_dot_exercise">Duration: 1 minute, 40 seconds</string>
   	<string name="message_dot_exercise">To use this tool, inhale as the dot expands. Try to match the timing of the dot. When the dot contracts, exhale along with it. If you begin to feel lightheaded, try to slow down your breath. You may wish to watch the dot first without breathing along. The dot will guide you through five deep breathing cycles. Remember to sit comfortably and breathe into your stomach.</string>
     <string name="swipe_instructions">Swipe to change the track image.</string>
+    <string name="db_create_uses_table">CREATE TABLE IF NOT EXISTS use(_id INTEGER PRIMARY KEY, start_time INTEGER, end_time INTEGER, start_stress INTEGER, end_stress INTEGER, resource_id TEXT);</string>
 </resources>
