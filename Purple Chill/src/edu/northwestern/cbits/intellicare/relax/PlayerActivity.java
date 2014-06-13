@@ -3,6 +3,7 @@ package edu.northwestern.cbits.intellicare.relax;
 import java.util.HashMap;
 
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -38,7 +39,7 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
 {
 	public static String REQUEST_STRESS = "request_stress";
 	
-	private Uri _trackUri = null;
+	protected Uri _trackUri = null;
 	private String _trackTitle = null;
 	private String _trackDescription = null;
 	private PersistentMediaController _controller = null;
@@ -63,38 +64,40 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
 	
 	final PlayerActivity me = this;
 
-	private void fetchStress()
-	{
-		LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		
-		View body = inflater.inflate(R.layout.view_stress_rating, null);
-        
+	private void fetchEndStress() {
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View body = inflater.inflate(R.layout.view_stress_rating, null);
+
         final TextView ratingNumber = (TextView) body.findViewById(R.id.rating_number);
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		
-		builder = builder.setTitle(R.string.title_rate_stress);
-		builder = builder.setPositiveButton(R.string.button_continue, new OnClickListener()
-		{
-			public void onClick(DialogInterface arg0, int arg1) 
-			{
-				try
-				{
-					int stressLevel = Integer.parseInt(ratingNumber.getText().toString());
-					
-            		HashMap<String,Object> payload = new HashMap<String, Object>();
-            		payload.put(GroupActivity.STRESS_RATING, stressLevel);
-            		payload.put(GroupActivity.TRACK_END, true);
-            		LogManager.getInstance(me).log("rated_stress", payload);
-				}
-				catch (NumberFormatException e)
-				{
-					Toast.makeText(me, R.string.toast_rate_stress, Toast.LENGTH_LONG).show();
-					
-					me.fetchStress();
-				}
-			}
-		});
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder = builder.setTitle(R.string.title_rate_stress);
+        builder = builder.setPositiveButton(R.string.button_continue, new OnClickListener() {
+            public void onClick(DialogInterface arg0, int arg1) {
+                try {
+                    int stressLevel = Integer.parseInt(ratingNumber.getText().toString());
+
+                    ContentValues values = new ContentValues();
+
+                    values.put(ChillContentProvider.USE_RESOURCE_ID, _trackUri.toString());
+                    values.put(ChillContentProvider.USE_END_STRESS, stressLevel);
+                    values.put(ChillContentProvider.USE_END_TIME, System.currentTimeMillis());
+
+                    HashMap<String, Object> payload = new HashMap<String, Object>();
+                    payload.put(GroupActivity.STRESS_RATING, stressLevel);
+                    payload.put(GroupActivity.TRACK_END, true);
+                    LogManager.getInstance(me).log("rated_stress", payload);
+                } catch (NumberFormatException e) {
+                    Toast.makeText(me, R.string.toast_rate_stress, Toast.LENGTH_LONG).show();
+
+                    me.fetchEndStress();
+                }
+            }
+        });
+
+        // need to add end stress values somehow?
 
         final SeekBar ratingBar = (SeekBar) body.findViewById(R.id.stress_rating);
         
@@ -312,7 +315,7 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
 		this._controller.setAnchorView(pager);
 		
 		if (this.getIntent().getBooleanExtra(PlayerActivity.REQUEST_STRESS, false))
-			this.fetchStress();
+			this.fetchEndStress();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 

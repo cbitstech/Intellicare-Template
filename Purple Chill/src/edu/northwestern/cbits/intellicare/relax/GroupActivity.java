@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -193,6 +194,12 @@ public class GroupActivity extends ConsentedActivity
 								
 								String title = titles.get(i);
 								String description = descriptions.get(i);
+
+                                ContentValues values = new ContentValues();
+
+                                values.put(ChillContentProvider.USE_RESOURCE_ID, u.toString());
+                                values.put(ChillContentProvider.USE_START_STRESS, stressLevel);
+                                values.put(ChillContentProvider.USE_START_TIME, System.currentTimeMillis());
 	
 								me.startActivity(AudioFileManager.getInstance(me).launchIntentForUri(u, title, description));
 	                		}
