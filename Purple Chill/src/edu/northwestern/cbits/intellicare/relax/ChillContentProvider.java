@@ -25,6 +25,9 @@ public class ChillContentProvider extends ContentProvider {
     protected static final String USE_START_STRESS = "start_stress";
     protected static final String USE_END_STRESS = "end_stress";
     protected static final String USE_RESOURCE_ID = "resource_id";
+    protected static final String USE_STRESS_REDUCTION = "stress_reduction";
+
+    public static final Uri USE_URI = Uri.parse("content://" + AUTHORITY + "/" + USE_TABLE);
 
     private static final int DATABASE_VERSION = 1;
     public static final String ID = "_id";
@@ -32,31 +35,25 @@ public class ChillContentProvider extends ContentProvider {
     private UriMatcher _matcher = new UriMatcher(UriMatcher.NO_MATCH);
     private SQLiteDatabase _db = null;
 
-    public ChillContentProvider()
-    {
+    public ChillContentProvider() {
         super();
 
         this._matcher.addURI(AUTHORITY, USE_TABLE, USE);
     }
 
 
-    public boolean onCreate()
-    {
+    public boolean onCreate() {
         final Context context = this.getContext().getApplicationContext();
 
-        SQLiteOpenHelper helper = new SQLiteOpenHelper(context, "chill.db", null, ChillContentProvider.DATABASE_VERSION)
-        {
-            public void onCreate(SQLiteDatabase db)
-            {
+        SQLiteOpenHelper helper = new SQLiteOpenHelper(context, "chill.db", null, ChillContentProvider.DATABASE_VERSION) {
+            public void onCreate(SQLiteDatabase db) {
                 db.execSQL(context.getString(R.string.db_create_uses_table));
 
                 this.onUpgrade(db, 0, ChillContentProvider.DATABASE_VERSION);
             }
 
-            public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
-            {
-                switch (oldVersion)
-                {
+            public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+                switch (oldVersion) {
                     case 0:
 
                     default:
@@ -64,15 +61,13 @@ public class ChillContentProvider extends ContentProvider {
                 }
             }
         };
-        this._db  = helper.getWritableDatabase();
+        this._db = helper.getWritableDatabase();
 
         return true;
     }
 
-    public int delete(Uri uri, String where, String[] whereArgs)
-    {
-        switch(this._matcher.match(uri))
-        {
+    public int delete(Uri uri, String where, String[] whereArgs) {
+        switch (this._matcher.match(uri)) {
             case ChillContentProvider.USE:
                 return this._db.delete(ChillContentProvider.USE_TABLE, where, whereArgs);
         }
@@ -81,17 +76,14 @@ public class ChillContentProvider extends ContentProvider {
     }
 
     @Override
-    public String getType(Uri arg0)
-    {
+    public String getType(Uri arg0) {
         return null;
     }
 
-    public Uri insert(Uri uri, ContentValues values)
-    {
+    public Uri insert(Uri uri, ContentValues values) {
         long newId = -1;
 
-        switch(this._matcher.match(uri))
-        {
+        switch (this._matcher.match(uri)) {
             case ChillContentProvider.USE:
                 newId = this._db.insert(ChillContentProvider.USE_TABLE, null, values);
                 break;
@@ -103,27 +95,25 @@ public class ChillContentProvider extends ContentProvider {
         return null;
     }
 
-    public Cursor query(Uri uri, String[] columns, String selection, String[] selectionArgs, String orderBy)
-    {
-        switch(this._matcher.match(uri))
-        {
+    public Cursor query(Uri uri, String[] columns, String selection, String[] selectionArgs, String orderBy) {
+        switch (this._matcher.match(uri)) {
             case ChillContentProvider.USE:
                 return this._db.query(ChillContentProvider.USE_TABLE, columns, selection, selectionArgs, null, null, orderBy);
-
         }
 
         return null;
     }
 
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs)
-    {
-        switch(this._matcher.match(uri))
-        {
+    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        switch (this._matcher.match(uri)) {
             case ChillContentProvider.USE:
                 return this._db.update(ChillContentProvider.USE_TABLE, values, selection, selectionArgs);
-
         }
 
         return 0;
+    }
+
+    public void calcStress(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+
     }
 }

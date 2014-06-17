@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
@@ -81,9 +82,39 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
 
                     ContentValues values = new ContentValues();
 
-                    values.put(ChillContentProvider.USE_RESOURCE_ID, _trackUri.toString());
-                    values.put(ChillContentProvider.USE_END_STRESS, stressLevel);
-                    values.put(ChillContentProvider.USE_END_TIME, System.currentTimeMillis());
+                    String where = ChillContentProvider.USE_RESOURCE_ID + " = ?";
+                    String[] args = { "" + _trackUri};
+
+                    Cursor ratingCursor = me.getContentResolver().query(ChillContentProvider.USE_URI, null, where, args, ChillContentProvider.USE_START_TIME + " desc");
+
+                    if (ratingCursor.moveToNext()){
+                        Long id = ratingCursor.getLong(ratingCursor.getColumnIndex("_id"));
+
+                        int startRating = ratingCursor.getInt(ratingCursor.getColumnIndex(ChillContentProvider.USE_START_STRESS));
+
+                        int stressChange = startRating - stressLevel;
+
+                        values.put(ChillContentProvider.USE_END_STRESS, stressLevel);
+                        values.put(ChillContentProvider.USE_END_TIME, System.currentTimeMillis());
+                        values.put(ChillContentProvider.USE_STRESS_REDUCTION, stressChange);
+
+                        where = "_id" + " = ?";
+                        args[0] = "" + id;
+
+                        me.getContentResolver().update(ChillContentProvider.USE_URI, values, where, args);
+
+                    }
+
+                    ratingCursor.close();
+
+                    ratingCursor = me.getContentResolver().query(ChillContentProvider.USE_URI, null, where, args, ChillContentProvider.USE_START_TIME + " desc");
+                    if (ratingCursor.moveToNext()) {
+                        Log.e("PC", "STRESS REDUCTION: " + ratingCursor.getInt(ratingCursor.getColumnIndex(ChillContentProvider.USE_STRESS_REDUCTION)));
+                    }
+                    else
+                        Log.e("PC", "CHAOS!!!!!");
+
+                    ratingCursor.close();
 
                     HashMap<String, Object> payload = new HashMap<String, Object>();
                     payload.put(GroupActivity.STRESS_RATING, stressLevel);
@@ -96,8 +127,6 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
                 }
             }
         });
-
-        // need to add end stress values somehow?
 
         final SeekBar ratingBar = (SeekBar) body.findViewById(R.id.stress_rating);
         
@@ -316,6 +345,7 @@ public class PlayerActivity extends ConsentedActivity implements OnPreparedListe
 		
 		if (this.getIntent().getBooleanExtra(PlayerActivity.REQUEST_STRESS, false))
 			this.fetchEndStress();
+
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 

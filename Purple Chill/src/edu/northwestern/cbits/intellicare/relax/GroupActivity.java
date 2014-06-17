@@ -1,6 +1,7 @@
 package edu.northwestern.cbits.intellicare.relax;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -200,6 +202,8 @@ public class GroupActivity extends ConsentedActivity
                                 values.put(ChillContentProvider.USE_RESOURCE_ID, u.toString());
                                 values.put(ChillContentProvider.USE_START_STRESS, stressLevel);
                                 values.put(ChillContentProvider.USE_START_TIME, System.currentTimeMillis());
+
+                                me.getContentResolver().insert(ChillContentProvider.USE_URI, values);
 	
 								me.startActivity(AudioFileManager.getInstance(me).launchIntentForUri(u, title, description));
 	                		}
@@ -304,7 +308,38 @@ public class GroupActivity extends ConsentedActivity
 
 		return R.array.mindful_titles;
 	}
-	
+
+    // use cursor to identify helpful tracks
+	private void findHelpful {
+
+	String where = ChillContentProvider.USE_RESOURCE_ID + " = ?";
+    String[] args = { "" + _trackUri};
+
+    //make an array of resource uris where stress reduction >= 2
+    String[] helpfuls = {};
+
+    Cursor ratingCursor = this.getContentResolver().query(ChillContentProvider.USE_URI, null, where, args, ChillContentProvider.USE_STRESS_REDUCTION + " desc");
+
+    if (ratingCursor.moveToNext()){
+
+        Integer stressReduction = ratingCursor.getInt(ratingCursor.getColumnIndex("stress_reduction"));
+
+        String resourceId = ratingCursor.getString(ratingCursor.getColumnIndex(ChillContentProvider.USE_RESOURCE_ID));
+
+        // trying to get a list of all the helpful URIS to match later
+        if (stressReduction >= 2){
+            helpfuls.append(resourceId);
+        };
+
+        };
+
+    // close cursor
+    ratingCursor.close();
+
+    // amend layout somehow to highlight helpful tracks
+
+    }
+
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
 		this.getMenuInflater().inflate(R.menu.menu_group, menu);
