@@ -1,13 +1,8 @@
 package edu.northwestern.cbits.intellicare.ruminants;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -120,7 +115,7 @@ public class MainActivity extends ConsentedActivity
 
        tools.add(new Tool(this.getString(R.string.tool_use_log), this.getString(R.string.desc_tool_chooser_log), R.drawable.ic_action_view_as_list, new Intent(this, ToolTrackerActivity.class)));
        tools.add(new Tool(this.getString(R.string.tool_worry_practice), this.getString(R.string.desc_worry_practice), R.drawable.ic_action_alarms, new Intent(this, WorryPracticeActivity.class)));
-       tools.add(new Tool(this.getString(R.string.survey_wizard_title), this.getString(R.string.desc_survey_wizard), R.drawable.ic_action_keyboard, new Intent(this, WizardOneActivity.class)));
+       tools.add(new Tool(this.getString(R.string.survey_wizard_title), this.getString(R.string.desc_survey_wizard), R.drawable.ic_action_keyboard, new Intent(this, RuminationLogActivity.class)));
        tools.add(new Tool(this.getResources().getString(R.string.tool_didactic_content), this.getString(R.string.desc_didactic_content), R.drawable.ic_action_slideshow, new Intent(this, PagedDidacticActivity.class)));
 
        ListView toolsList = (ListView) this.findViewById(R.id.list_tools);

@@ -119,7 +119,7 @@ public class MainActivity extends ConsentedActivity
                             card.setBackgroundResource(R.drawable.background_green);
                         }
                         else if ("two".equals(importance)){
-                            card.setBackgroundResource(R.drawable.background_yellow);
+                            card.setBackgroundResource(R.drawable.background_blue);
                         }
                         else if ("three".equals(importance)) {
                             card.setBackgroundResource(R.drawable.background_red);

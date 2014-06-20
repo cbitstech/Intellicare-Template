@@ -13,17 +13,6 @@
             android:src="@drawable/writing"
             android:longClickable="false" />
 
-        <TextView android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/question_rumination_bool"
-                android:textColor="#000"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp"
-                android:focusable="true" />
         <RadioGroup android:id="@+id/radios_ruminating"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,25 +21,12 @@
             android:layout_marginTop="0dp"
             android:layout_marginBottom="8dp"
             android:layout_marginRight="8dp">
-            <RadioButton android:id="@+id/rum_yes"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="@string/label_yes"
-                android:textSize="18sp"
-                android:layout_marginBottom="16dp" />
-            <RadioButton android:id="@+id/rum_no"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="@string/label_no"
-                android:textSize="18sp"
-                android:layout_marginBottom="16dp" />
+
         </RadioGroup>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/question_rumination_trigger"
+            android:text="@string/question_rumination_theme"
             android:textColor="#000"
             android:textStyle="bold"
             android:textSize="18sp"
@@ -58,8 +34,33 @@
             android:layout_marginTop="0dp"
             android:layout_marginBottom="16dp"
             android:layout_marginRight="8dp"
-            android:focusable="true" />
-        <EditText android:id="@+id/field_trigger"
+            android:focusable="true"
+            android:id="@+id/" />
+        <EditText android:id="@+id/field_theme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="16dp"
+            android:inputType="text"
+            android:singleLine="false"
+            android:hint="@string/hint_comments"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/question_rumination_thought"
+            android:textColor="#000"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="8dp"
+            android:focusable="true"
+     />
+        <EditText android:id="@+id/field_thought"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="24dp"
@@ -100,6 +101,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/duration_spinner"
+                android:layout_weight="2"
+                android:layout_marginBottom="12dp" />
+
+        </LinearLayout>
+
+        <TextView android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/question_rumination_intensity"
+            android:textColor="#000"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginBottom="16dp"
+            android:focusable="true" />
+
+
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginTop="8dp">
+
+            <TextView android:id="@+id/label_rumination_intensity"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:gravity="center" />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/intensity_spinner"
                 android:layout_weight="2" />
 
         </LinearLayout>

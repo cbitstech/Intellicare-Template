@@ -2,17 +2,14 @@ package edu.northwestern.cbits.intellicare.ruminants;
 
 import android.app.AlarmManager;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.view.accessibility.AccessibilityNodeInfo;
 
 
 import java.util.Calendar;
@@ -85,7 +82,7 @@ public class ScheduleManager {
         // Helper notification...
         if (timeToFire)
         {
-            Intent intent = new Intent(this._context, WizardOneActivity.class);
+            Intent intent = new Intent(this._context, RuminationLogActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(this._context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
             String title = this._context.getString(R.string.help_note_title);

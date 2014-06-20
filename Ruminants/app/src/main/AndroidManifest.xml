@@ -45,7 +45,7 @@
         </activity>
 
         <activity android:theme="@style/Theme.AppCompat.Light"
-            android:name=".WizardOneActivity"
+            android:name=".RuminationLogActivity"
             android:label="@string/survey_wizard_title" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

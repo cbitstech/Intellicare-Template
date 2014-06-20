@@ -17,11 +17,11 @@
     <string name="subtitle_today_messages">%d upcoming cards</string>
     <string name="message_no_reminders">No upcoming reminders.\n\nTap a button above to add a new card and reminder, or to reschedule an existing card.</string>
     
-    <string name="question_event">What is the important situation or event?</string>
+    <string name="question_event">What is the stressful or difficult situation or event?</string>
     <string name="hint_event">Example: I get nervous about speaking at meetings.</string>
 
-    <string name="question_reminder">What do you want to remind yourself of when this happens?</string>
-    <string name="hint_reminder">Example: Remind myself that almost everyone is nervous speaking publicly.</string>
+    <string name="question_reminder">What is your management plan? What do you want to do or remind yourself of when this happens?</string>
+    <string name="hint_reminder">Example: Remind myself that \"Almost everyone is nervous speaking in public\" or \"Take some deep breaths to help relax\".</string>
     
     <string name="question_event_type">What kind of event is this?</string>
     <string name="hint_event_type">What kind of event is this? (e.g. work)</string>

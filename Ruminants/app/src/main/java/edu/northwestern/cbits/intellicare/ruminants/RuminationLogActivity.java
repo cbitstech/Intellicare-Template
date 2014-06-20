@@ -1,26 +1,21 @@
 package edu.northwestern.cbits.intellicare.ruminants;
 
 import java.util.HashMap;
-import java.util.logging.LogManager;
 
 import android.app.Activity;
 import android.content.ContentValues;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.RadioGroup;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class WizardOneActivity extends Activity
+public class RuminationLogActivity extends Activity
 {
 
     private static final String SELECTED_RADIO_ISRUM = "selected_radio_isrum";
@@ -43,14 +38,14 @@ public class WizardOneActivity extends Activity
         int rumChecked = rumRadios.getCheckedRadioButtonId();
 
         if (rumChecked != -1)
-            outState.putInt(WizardOneActivity.SELECTED_RADIO_ISRUM, rumChecked);
+            outState.putInt(RuminationLogActivity.SELECTED_RADIO_ISRUM, rumChecked);
 
         if (this._rumDuration != -1)
-            outState.putInt(WizardOneActivity.SELECTED_RUM_DURATION, this._rumDuration);
+            outState.putInt(RuminationLogActivity.SELECTED_RUM_DURATION, this._rumDuration);
 
         EditText trigger = (EditText) this.findViewById(R.id.field_trigger);
 
-        outState.putString(WizardOneActivity.SELECTED_RUM_TRIGGER, trigger.getEditableText().toString());
+        outState.putString(RuminationLogActivity.SELECTED_RUM_TRIGGER, trigger.getEditableText().toString());
 
     }
 
@@ -63,11 +58,11 @@ public class WizardOneActivity extends Activity
         if (savedInstanceState == null)
             savedInstanceState = new Bundle();
 
-        this.setContentView(R.layout.activity_wizard_one);
+        this.setContentView(R.layout.activity_rumination_log);
 
         //this.getSupportActionBar().setTitle(R.string.wizard_one_title);
 
-        final WizardOneActivity me = this;
+        final RuminationLogActivity me = this;
 
 
         final TextView duration = (TextView) this.findViewById(R.id.label_rumination_duration);
@@ -84,12 +79,12 @@ public class WizardOneActivity extends Activity
             durationSpinner.setText(savedInstanceState.getString(WizardOneActivity.SELECTED_RUM_DURATION)); */
 
         RadioGroup rumination = (RadioGroup) this.findViewById(R.id.radios_ruminating);
-        if (savedInstanceState.containsKey(WizardOneActivity.SELECTED_RADIO_ISRUM))
-            rumination.check(savedInstanceState.getInt(WizardOneActivity.SELECTED_RADIO_ISRUM));
+        if (savedInstanceState.containsKey(RuminationLogActivity.SELECTED_RADIO_ISRUM))
+            rumination.check(savedInstanceState.getInt(RuminationLogActivity.SELECTED_RADIO_ISRUM));
 
         EditText trigger = (EditText) this.findViewById(R.id.field_trigger);
-        if (savedInstanceState.containsKey(WizardOneActivity.SELECTED_RUM_TRIGGER))
-           trigger.setText(savedInstanceState.getString(WizardOneActivity.SELECTED_RUM_TRIGGER));
+        if (savedInstanceState.containsKey(RuminationLogActivity.SELECTED_RUM_TRIGGER))
+           trigger.setText(savedInstanceState.getString(RuminationLogActivity.SELECTED_RUM_TRIGGER));
 
     }
 

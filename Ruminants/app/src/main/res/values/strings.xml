@@ -274,5 +274,8 @@
     <string name="reuse_tool">Touch here to use this tool again</string>
     <string name="action_set_notification_preferences">Notification Preferences</string>
     <string name="settings_reminder_time">Set Reminder Time</string>
+    <string name="question_rumination_intensity">How intense is this rumination?</string>
+    <string name="question_rumination_theme">What is the theme of your rumination?</string>
+    <string name="question_rumination_thought">What do you think about?</string>
 
 </resources>
