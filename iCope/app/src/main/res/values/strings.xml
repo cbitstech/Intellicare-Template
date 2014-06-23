@@ -13,10 +13,6 @@
     <string name="action_filter">Filter</string>
 
     <string name="title_filter">Filter Cards</string>
-
-    <string name="label_app_version">1.1.0</string>
-    <string name="placeholder_app_version">App Version</string>
-
     
     <string name="subtitle_today_messages">%d upcoming cards</string>
     <string name="message_no_reminders">No upcoming reminders.\n\nTap a button above to add a new card and reminder, or to reschedule an existing card.</string>

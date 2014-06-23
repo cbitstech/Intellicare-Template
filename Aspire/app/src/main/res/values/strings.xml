@@ -228,6 +228,4 @@
     <string name="view_intro">View Intro</string>
     <string name="view_faq">FAQ</string>
 
-    <string name="placeholder_app_version">App Version</string>
-    <string name="label_app_version">1.1.0</string>
 </resources>

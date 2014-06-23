@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -52,6 +53,16 @@ public class SettingsActivity extends PreferenceActivity
 		this.setTitle(R.string.title_settings);
 		
 		this.addPreferencesFromResource(R.layout.activity_settings);
+
+        Preference version = this.findPreference("app_version");
+        try
+        {
+            version.setTitle(this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName);
+        }
+        catch (PackageManager.NameNotFoundException e)
+        {
+            LogManager.getInstance(this).logException(e);
+        }
 		
 	}
 	
