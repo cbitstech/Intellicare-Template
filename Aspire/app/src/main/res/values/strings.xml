@@ -227,4 +227,7 @@
 	<string name="db_insert_card_20">INSERT INTO cards (name, description) VALUES(\'virtue\', \'to live a morally pure and excellent life\');</string>
     <string name="view_intro">View Intro</string>
     <string name="view_faq">FAQ</string>
+
+    <string name="placeholder_app_version">App Version</string>
+    <string name="label_app_version">1.1.0</string>
 </resources>
