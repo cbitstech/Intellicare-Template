@@ -14,6 +14,6 @@
    		<Preference android:title="@string/creator_kmf" android:summary="@string/role_clinical_consultant" />
   		<Preference android:title="@string/creator_lkt" android:summary="@string/role_clinical_consultant" />
 		<Preference android:title="@string/copy_disclaimer" android:key="copyright_statement" />
-        <Preference android:title="@string/placeholder_app_version" android:summary="@string/label_app_version" android:key="app_version" />
 	</PreferenceCategory>
+    <Preference android:title="@string/placeholder_app_version" android:summary="@string/label_app_version" android:key="app_version" />
 </PreferenceScreen>
