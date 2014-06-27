@@ -121,7 +121,8 @@
    	<string name="db_create_cards_table">CREATE TABLE IF NOT EXISTS cards(_id INTEGER PRIMARY KEY, name TEXT, description TEXT, enabled INTEGER DEFAULT 0);</string>
 
    	<string name="db_update_cards_add_card_image">ALTER TABLE cards ADD COLUMN card_image TEXT;</string>
-   	
+   	<string name="db_update_cards_add_card_enabled">ALTER TABLE cards ADD COLUMN enabled INTEGER DEFAULT 0;</string>
+   		
    	<string name="db_create_paths_table">CREATE TABLE IF NOT EXISTS paths(_id INTEGER PRIMARY KEY, card_id INTEGER, path TEXT);</string>
    	<string name="db_create_tasks_table">CREATE TABLE IF NOT EXISTS tasks(_id INTEGER PRIMARY KEY, path_id INTEGER, year INTEGER, month INTEGER, day INTEGER);</string>
 
