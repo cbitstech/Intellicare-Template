@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="edu.northwestern.cbits.intellicare.aspire"
-    android:versionCode="10001" android:versionName="1.0.1" >
+    android:versionCode="10003" android:versionName="1.0.3" >
     <uses-sdk android:minSdkVersion="13" android:targetSdkVersion="19" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.INTERNET" />

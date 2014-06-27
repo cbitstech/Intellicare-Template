@@ -60,7 +60,7 @@ public class AspireContentProvider extends ContentProvider
 	protected static final String TASK_MONTH = "month";
 	protected static final String TASK_DAY = "day";
 
-	private static final int DATABASE_VERSION = 4;
+	private static final int DATABASE_VERSION = 5;
 	public static final String ID = "_id";
 
 	private static HashMap<String, String> _cachedHashes = new HashMap<String, String>();
@@ -186,6 +186,17 @@ public class AspireContentProvider extends ContentProvider
 	    	            db.execSQL(context.getString(R.string.db_create_tasks_table));
 	                case 3:
 	    	            db.execSQL(context.getString(R.string.db_update_cards_add_card_image));
+	                case 4:
+	                	Cursor c = db.query(AspireContentProvider.CARD_TABLE, null, null, null, null, null, null);
+	                	
+	                	if (c.getColumnIndex(AspireContentProvider.CARD_ENABLED) == -1)
+	                	{
+	                		
+		    	            db.execSQL(context.getString(R.string.db_update_cards_add_card_enabled));
+	                	}
+	                	
+	                	c.close();
+	                	
 	                default:
                         break;
             	}
