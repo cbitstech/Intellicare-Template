@@ -127,8 +127,17 @@ public class GroupActivity extends ConsentedActivity
                 
                 String url = recordings.get(position);
 
-                if (AudioFileManager.getInstance(me).isPlaceholder(Uri.parse(url)))
+                if (titles.get(position).equals("The Breathing Dot")){
+                    d = me.getResources().getDrawable(R.drawable.ic_action_eye_open);
+                }
+
+                else if (titles.get(position).equals("Muscle Group Visualization")){
+                    d = me.getResources().getDrawable(R.drawable.ic_action_eye_open);
+                }
+
+                else
                     d = me.getResources().getDrawable(R.drawable.ic_action_playback_play);
+
                 
                 title.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
 
