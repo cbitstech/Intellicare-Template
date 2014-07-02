@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.northwestern.cbits.intellicare.ruminants"
-    android:versionCode="10000"
-    android:versionName="1.0.0">
+    android:versionCode="10001"
+    android:versionName="1.0.1">
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -18,14 +18,14 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".PagedIntroActivity" android:label="@string/app_name"
+        <activity android:theme="@style/Theme.Intellicare" android:name=".PagedIntroActivity" android:label="@string/app_name"
             android:screenOrientation="portrait" />
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".PagedDidacticActivity" android:label="@string/app_name" 
+        <activity android:theme="@style/Theme.Intellicare" android:name=".PagedDidacticActivity" android:label="@string/app_name" 
             android:screenOrientation="portrait" />
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".SettingsActivity" android:label="@string/app_name" 
+        <activity android:theme="@style/Theme.Intellicare" android:name=".SettingsActivity" android:label="@string/app_name" 
             android:screenOrientation="portrait" />
 
-     <activity android:theme="@style/Theme.AppCompat.Light"
+     <activity android:theme="@style/Theme.Intellicare"
             android:name=".WorryPracticeActivity"
             android:label="@string/tool_worry_practice"
             android:screenOrientation="portrait">
@@ -35,7 +35,7 @@
 
         </activity>
 
-        <activity android:theme="@style/Theme.AppCompat.Light"
+        <activity android:theme="@style/Theme.Intellicare"
             android:name=".ToolTrackerActivity"
             android:label="@string/tool_log_title"
             android:screenOrientation="portrait">
@@ -44,7 +44,7 @@
                 android:value="edu.northwestern.cbits.intellicare.ruminants.MainActivity" />
         </activity>
 
-        <activity android:theme="@style/Theme.AppCompat.Light"
+        <activity android:theme="@style/Theme.Intellicare"
             android:name=".RuminationLogActivity"
             android:label="@string/survey_wizard_title" >
             <meta-data
@@ -52,7 +52,7 @@
                 android:value="edu.northwestern.cbits.intellicare.ruminants.MainActivity" />
         </activity>
 
-        <activity android:theme="@style/Theme.AppCompat.Light"
+        <activity android:theme="@style/Theme.Intellicare"
             android:name=".MainActivity"
             android:label="@string/main_activity_title"
             android:screenOrientation="portrait">
@@ -74,14 +74,14 @@
             </intent-filter>
         </receiver>
 
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.ConsentActivity" android:label="@string/app_name" />
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.RecruitmentActivity" android:label="@string/app_name" />
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.MotivationActivity" android:label="@string/app_name" />
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.DemographicActivity" android:label="@string/app_name" />
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.FaqActivity" android:label="@string/app_name" />
+        <activity android:theme="@style/Theme.Intellicare" android:name="edu.northwestern.cbits.intellicare.ConsentActivity" android:label="@string/app_name" />
+        <activity android:theme="@style/Theme.Intellicare" android:name="edu.northwestern.cbits.intellicare.RecruitmentActivity" android:label="@string/app_name" />
+        <activity android:theme="@style/Theme.Intellicare" android:name="edu.northwestern.cbits.intellicare.MotivationActivity" android:label="@string/app_name" />
+        <activity android:theme="@style/Theme.Intellicare" android:name="edu.northwestern.cbits.intellicare.DemographicActivity" android:label="@string/app_name" />
+        <activity android:theme="@style/Theme.Intellicare" android:name="edu.northwestern.cbits.intellicare.FaqActivity" android:label="@string/app_name" />
         
         <!--
-        <activity android:theme="@style/Theme.AppCompat.Light" android:name=".WizardOneActivity" android:label="@string/app_name">
+        <activity android:theme="@style/Theme.Intellicare" android:name=".WizardOneActivity" android:label="@string/app_name">
                 <intent-filter>
                     <action android:name="android.intent.action.VIEW" />
                     <category android:name="android.intent.category.DEFAULT" />
@@ -90,15 +90,15 @@
                 </intent-filter>
             </activity>
 
-            <activity android:theme="@style/Theme.AppCompat.Light" android:name=".SettingsActivity" android:label="@string/app_name" />
-            <activity android:theme="@style/Theme.AppCompat.Light" android:name=".TipsActivity" android:label="@string/app_name" />
+            <activity android:theme="@style/Theme.Intellicare" android:name=".SettingsActivity" android:label="@string/app_name" />
+            <activity android:theme="@style/Theme.Intellicare" android:name=".TipsActivity" android:label="@string/app_name" />
 
 
 
-            <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.ConsentActivity" android:label="@string/app_name" />
-            <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.RecruitmentActivity" android:label="@string/app_name" />
-            <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.MotivationActivity" android:label="@string/app_name" />
-            <activity android:theme="@style/Theme.AppCompat.Light" android:name="edu.northwestern.cbits.intellicare.DemographicActivity" android:label="@string/app_name" />
+            <activity android:theme="@style/Theme.Intellicare" android:name="edu.northwestern.cbits.intellicare.ConsentActivity" android:label="@string/app_name" />
+            <activity android:theme="@style/Theme.Intellicare" android:name="edu.northwestern.cbits.intellicare.RecruitmentActivity" android:label="@string/app_name" />
+            <activity android:theme="@style/Theme.Intellicare" android:name="edu.northwestern.cbits.intellicare.MotivationActivity" android:label="@string/app_name" />
+            <activity android:theme="@style/Theme.Intellicare" android:name="edu.northwestern.cbits.intellicare.DemographicActivity" android:label="@string/app_name" />
         -->
     </application>
 
