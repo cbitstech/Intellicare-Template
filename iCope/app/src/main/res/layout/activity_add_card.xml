@@ -38,8 +38,6 @@
 	        android:layout_height="wrap_content"
 	        android:inputType="textCapSentences|textMultiLine"
 	        android:singleLine="false"
-	        android:maxLines="2" 
-	        android:minLines="2"
             android:layout_marginBottom="4dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp" />
@@ -57,8 +55,6 @@
 	        android:layout_height="wrap_content"
 	        android:inputType="textCapSentences|textMultiLine" 
 	        android:singleLine="false"
-	        android:maxLines="2"
-	        android:minLines="2"
             android:layout_marginBottom="4dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp" />
