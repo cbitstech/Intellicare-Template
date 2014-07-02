@@ -43,9 +43,9 @@ public class RuminationLogActivity extends Activity
         if (this._rumDuration != -1)
             outState.putInt(RuminationLogActivity.SELECTED_RUM_DURATION, this._rumDuration);
 
-        EditText trigger = (EditText) this.findViewById(R.id.field_trigger);
+      //  EditText trigger = (EditText) this.findViewById(R.id.field_trigger);
 
-        outState.putString(RuminationLogActivity.SELECTED_RUM_TRIGGER, trigger.getEditableText().toString());
+     //   outState.putString(RuminationLogActivity.SELECTED_RUM_TRIGGER, trigger.getEditableText().toString());
 
     }
 
@@ -82,9 +82,9 @@ public class RuminationLogActivity extends Activity
         if (savedInstanceState.containsKey(RuminationLogActivity.SELECTED_RADIO_ISRUM))
             rumination.check(savedInstanceState.getInt(RuminationLogActivity.SELECTED_RADIO_ISRUM));
 
-        EditText trigger = (EditText) this.findViewById(R.id.field_trigger);
-        if (savedInstanceState.containsKey(RuminationLogActivity.SELECTED_RUM_TRIGGER))
-           trigger.setText(savedInstanceState.getString(RuminationLogActivity.SELECTED_RUM_TRIGGER));
+     //   EditText trigger = (EditText) this.findViewById(R.id.field_trigger);
+     //   if (savedInstanceState.containsKey(RuminationLogActivity.SELECTED_RUM_TRIGGER))
+    //       trigger.setText(savedInstanceState.getString(RuminationLogActivity.SELECTED_RUM_TRIGGER));
 
     }
 
@@ -119,9 +119,9 @@ public class RuminationLogActivity extends Activity
                 return true;
             }
 
-            values.put(RuminantsContentProvider.WIZARD_ONE_RUMINATION_ISOVER, (rumChecked == R.id.rum_yes));
+     //       values.put(RuminantsContentProvider.WIZARD_ONE_RUMINATION_ISOVER, (rumChecked == R.id.rum_yes));
 
-            payload.put("rumination_isOver", (rumChecked == R.id.rum_yes));
+     //       payload.put("rumination_isOver", (rumChecked == R.id.rum_yes));
 
            /* if (this._rumDuration == -1)
             {
@@ -162,9 +162,9 @@ public class RuminationLogActivity extends Activity
             values.put(RuminantsContentProvider.WIZARD_ONE_DURATION, this._rumDuration);
             payload.put("rumination_duration", _rumDuration);
 
-            EditText trigger = (EditText) this.findViewById(R.id.field_trigger);
-            values.put(RuminantsContentProvider.WIZARD_ONE_TRIGGER, trigger.getEditableText().toString());
-            payload.put("trigger", trigger);
+      //      EditText trigger = (EditText) this.findViewById(R.id.field_trigger);
+     //       values.put(RuminantsContentProvider.WIZARD_ONE_TRIGGER, trigger.getEditableText().toString());
+     //       payload.put("trigger", trigger);
 
             values.put(RuminantsContentProvider.WIZARD_ONE_TIMESTAMP, System.currentTimeMillis());
 
