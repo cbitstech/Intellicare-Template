@@ -165,7 +165,10 @@ public class ScheduleManager
                     Notification note = builder.build();
                     note.flags = note.flags | Notification.FLAG_AUTO_CANCEL;
 
-                    LogManager.getInstance(this._context).log("iCope reminder fired : " + event, null);
+                    HashMap<String, Object> payload = new HashMap<String, Object>();
+                    payload.put("event", event + timeToFire);
+
+                    LogManager.getInstance(this._context).log("iCope_reminder", payload);
 
                     // note.flags = Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE | Notification.PRIORITY_HIGH;
 
