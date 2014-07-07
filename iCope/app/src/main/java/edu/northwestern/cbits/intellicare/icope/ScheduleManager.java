@@ -131,7 +131,7 @@ public class ScheduleManager
             int reminderHour = (cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_HOUR)));
             int reminderMinute = (cursor.getInt(cursor.getColumnIndex(CopeContentProvider.REMINDER_MINUTE)));
 
-            if (hour == reminderHour && minute == reminderMinute) {
+            if (hour == reminderHour && minute == reminderMinute && today == true) {
                 timeToFire = true;
             }
             else  {
