@@ -39,6 +39,7 @@ public class MainActivity extends ConsentedActivity
 		this.setContentView(R.layout.activity_main);
 		
 		ScheduleManager.getInstance(this).updateSchedule();
+		LogManager.getInstance(this).attemptUpload();
 	}
 	
 	protected void onResume()
