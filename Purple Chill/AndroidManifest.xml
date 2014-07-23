@@ -1,11 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" 
     package="edu.northwestern.cbits.intellicare.relax" 
-    android:versionCode="11004" android:versionName="1.1.4" >
+    android:versionCode="11005" android:versionName="1.1.5" >
    	<uses-permission android:name="android.permission.INTERNET" />
    	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
    	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-sdk android:minSdkVersion="11" android:targetSdkVersion="19" />
+   	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+   	<uses-sdk android:minSdkVersion="11" android:targetSdkVersion="19" />
     <application android:allowBackup="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:theme="@style/AppTheme">
 		<receiver android:name="edu.northwestern.cbits.intellicare.relax.ScheduleHelper">
 		    <intent-filter>
@@ -53,5 +55,11 @@
         <activity android:theme="@style/Theme.Intellicare" android:name="edu.northwestern.cbits.intellicare.MotivationActivity" android:label="@string/app_name" />
         <activity android:theme="@style/Theme.Intellicare" android:name="edu.northwestern.cbits.intellicare.DemographicActivity" android:label="@string/app_name" />
    		<activity android:name="net.hockeyapp.android.UpdateActivity" />
-    </application>
+        <provider android:name="edu.northwestern.cbits.anthracite.LogContentProvider" android:authorities="edu.northwestern.cbits.intellicare.relax.logging" android:exported="false" />
+  		<service android:enabled="true" android:name="edu.northwestern.cbits.anthracite.LogService" android:exported="false">
+			<intent-filter>
+				<action android:name="edu.northwestern.cbits.intellicare.relax.UPLOAD_LOGS_INTENT" />
+			</intent-filter>
+	    </service>
+   	</application>
 </manifest>

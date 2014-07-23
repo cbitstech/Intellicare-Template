@@ -38,6 +38,8 @@ public class IndexActivity extends ConsentedActivity
 		
 		UpdateManager.register(this, APP_ID);
 		ScheduleManager.getInstance(this);
+		
+		LogManager.getInstance(this).attemptUpload();
 	}
 	
 	public void onPause()
