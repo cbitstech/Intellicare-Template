@@ -1,11 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="edu.northwestern.cbits.intellicare.aspire"
-    android:versionCode="10003" android:versionName="1.0.3" >
+    android:versionCode="10004" android:versionName="1.0.4" >
     <uses-sdk android:minSdkVersion="13" android:targetSdkVersion="19" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
    	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <application android:allowBackup="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:theme="@style/AppTheme">
+   	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+   	<application android:allowBackup="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:theme="@style/AppTheme">
         <activity android:name=".MainActivity" android:theme="@style/Theme.AppCompat.Light" android:label="@string/app_name">
 
             <intent-filter>
@@ -45,5 +46,11 @@
 		        <action android:name="android.intent.action.BOOT_COMPLETED"/>
 		    </intent-filter>
 		</receiver>
-	</application>
+        <provider android:name="edu.northwestern.cbits.anthracite.LogContentProvider" android:authorities="edu.northwestern.cbits.intellicare.aspire.logging" android:exported="false" />
+  		<service android:enabled="true" android:name="edu.northwestern.cbits.anthracite.LogService" android:exported="false">
+			<intent-filter>
+				<action android:name="edu.northwestern.cbits.intellicare.aspire.UPLOAD_LOGS_INTENT" />
+			</intent-filter>
+	    </service>
+   	</application>
 </manifest>
