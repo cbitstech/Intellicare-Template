@@ -57,6 +57,8 @@ public class MainActivity extends ConsentedActivity
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_main);
 		
+		LogManager.getInstance(this).attemptUpload();
+		
 		ScheduleManager.getInstance(this);
 		
         final MainActivity me = this;
